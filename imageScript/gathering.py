@@ -5,12 +5,13 @@ def downloadImages(keyword):
   response = google_images_download.googleimagesdownload()
   arguments = {
     'keywords': keyword,
-    'limit':5,
-    'usage_rights': 'labeled-for-reuse-with-modifications',
+    'limit': 10,
+    'size': 'large',
+    # 'format': 'jpg',
     'image_directory': keyword,
     'print_urls': True
   }
-  response.download(arguments)
+  paths = response.download(arguments)
 
 def renameImages(keyword):
   oldFolder = os.getcwd() + '\\downloads\\' + keyword
@@ -25,11 +26,14 @@ def renameImages(keyword):
   
   i = 1
   for filename in os.listdir(newFolder + '\\'):
-    fileType = filename.split('.')
-    dst = keyword.replace(' ', '-') + str(i) + '.' + fileType[-1]
+    fileType = filename.split('.')[-1]
+    dst = keyword.replace(' ', '-') + str(i) + '.' + fileType
     src = newFolder + '\\' + filename
     dst = newFolder + '\\' + dst
-    os.rename(src, dst)
+    try:
+      os.rename(src, dst)
+    except:
+      continue
     i += 1
 
 if __name__ == '__main__':
