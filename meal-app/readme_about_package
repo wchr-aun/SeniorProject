@@ -1,0 +1,10 @@
+expo install react-navigation react-native-gesture-handler react-native-reanimated react-native-screens
+
+npm install react-navigation-header-buttons
+
+npm install --save @expo/vector-icons
+
+expo install react-navigation-tabs
+expo install react-navigation-material-bottom-tabs
+expo install react-native-paper
+expo install react-navigation-drawer
