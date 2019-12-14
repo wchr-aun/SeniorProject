@@ -5,13 +5,13 @@ def downloadImages(keyword):
   response = google_images_download.googleimagesdownload()
   arguments = {
     'keywords': keyword,
-    'limit': 10,
-    'size': 'large',
-    # 'format': 'jpg',
+    'limit': 100,
+    # 'size': 'large',
+    'format': 'jpg',
     'image_directory': keyword,
     'print_urls': True
   }
-  paths = response.download(arguments)
+  response.download(arguments)
 
 def renameImages(keyword):
   oldFolder = os.getcwd() + '\\downloads\\' + keyword
@@ -37,6 +37,7 @@ def renameImages(keyword):
     i += 1
 
 if __name__ == '__main__':
-  keyword = 'plastic'
-  downloadImages(keyword)
-  renameImages(keyword)
+  keywords = ['arduino board','circuit board','sensor board']
+  for keyword in keywords:
+    downloadImages(keyword)
+    renameImages(keyword)

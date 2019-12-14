@@ -1,1 +1,3 @@
-/imageScript/downloads/pending*/
+/downloads
+/*/downloads
+downloadImage.py
