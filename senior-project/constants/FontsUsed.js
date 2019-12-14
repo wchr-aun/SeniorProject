@@ -1,5 +1,5 @@
 export default {
-  bodyText: "acme",
-  titleText: "acme",
-  buttonText: "acme"
+  Text: "REG_K2D",
+  titleText: "BOLD_K2D",
+  buttonText: "MD_K2D"
 };

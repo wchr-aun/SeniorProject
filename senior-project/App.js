@@ -1,14 +1,26 @@
-import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import React, { useState } from "react";
 import SellerNavigation from "./navigation/SellerNavigation.js";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
+
+import ImportedFonts from "./constants/ImportedFonts.js";
+
+// --- App'sFont Set-up --- //
+const fetchFonts = () => {
+  return Font.loadAsync(ImportedFonts);
+};
 
 export default function App() {
+  // -- Get font, test
+  const [fontIsLoaded, setFontIsLoaded] = useState(false);
+  if (!fontIsLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setFontIsLoaded(true)}
+      />
+    );
+  }
+
   return <SellerNavigation />;
 }
-
-// Styling
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-});
