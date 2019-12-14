@@ -16,16 +16,36 @@ export default UserHomepageScreen = props => {
     <View style={styles.screen}>
       <View style={styles.userInfoContainer}>
         <View style={styles.userInfoContentContainer}>
-          <View style={styles.imgContainer}>
-            <Image
-              source={require("../../assets/img/user.png")}
-              style={styles.userImg}
-              resizeMode="center"
-            />
+          {/* Row 1 */}
+          <View style={styles.userInfoContentContainerRow1}>
+            <View style={{ ...styles.imgContainer, backgroundColor: "yellow" }}>
+              <Image
+                source={require("../../assets/img/user.png")}
+                style={styles.userImg}
+                resizeMode="center"
+              />
+            </View>
+            <View
+              style={{
+                width: "70%",
+                backgroundColor: "green",
+                paddingLeft: 20
+              }}
+            >
+              <ThaiText style={styles.userName}>นราวิชญ์ ทับทิมโต</ThaiText>
+              <Text>226/17</Text>
+            </View>
           </View>
-          <View>
-            <ThaiText>นราวิชญ์ ทับทิมโต</ThaiText>
-            <Text>226/17</Text>
+          <View
+            style={{
+              borderBottomColor: "black",
+              borderBottomWidth: 1
+            }}
+          />
+          {/* Row 2 */}
+          <View style={styles.userInfoContentContainerRow2}>
+            <ThaiText style={{ fontSize: 14 }}>การรับซื้อขยะรอบต่อไป</ThaiText>
+            <ThaiText style={{ fontSize: 20 }}>18 มกรา 15.00 น.</ThaiText>
           </View>
         </View>
       </View>
@@ -57,17 +77,36 @@ const styles = StyleSheet.create({
   userInfoContentContainer: {
     flex: 1,
     margin: 20,
-    backgroundColor: "red"
-    // width: "100%",
-    // height: "100%"
+    backgroundColor: "red",
+    height: "100%"
   },
   imgContainer: {
-    width: "20%",
-    height: "20%"
+    width: "30%"
+    // height: "100%"
+  },
+  userInfoContentContainerRow1: {
+    height: "50%",
+    width: "100%",
+    flexDirection: "row",
+    backgroundColor: "#f67280"
+  },
+  userInfoContentContainerRow2: {
+    height: "50%",
+    width: "100%",
+    flexDirection: "column",
+    backgroundColor: "#f67280",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 10,
+    fontSize: 16
   },
   userImg: {
     // If don't specify this, img size can't resize and organize
     width: "100%",
-    height: "100%"
+    height: "100%",
+    paddingTop: 0
+  },
+  userName: {
+    fontSize: 18
   }
 });
