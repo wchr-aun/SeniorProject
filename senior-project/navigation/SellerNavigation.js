@@ -17,13 +17,21 @@ import SellingTransactionScreen from "../screens/SellerScreen/SellingTransaction
 import UserHomepageScreen from "../screens/SellerScreen/UserHomepageScreen";
 import UserAuthenScreen from "../screens/UserAuthenScreen";
 import { Ionicons } from "@expo/vector-icons";
-// import FontsInUse from "./../constants/FontsInUse";
-// import * as authenticate from "../store/actions/authAction";
+import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
+
+// for UserHomepageScreen
+const UserhomepageNavigator = createStackNavigator(
+  {
+    UserHomepageScreen: UserHomepageScreen,
+    SellingTransactionDetailScreen: SellingTransactionDetailScreen
+  },
+  { headerMode: "none" }
+);
 
 // Trash Main
 const SellerBottomTabConfig = {
   Home: {
-    screen: UserHomepageScreen,
+    screen: UserhomepageNavigator,
     navigationOptions: {
       tabBarLabel: "หน้าหลัก",
       tabBarIcon: tabInfo => {
