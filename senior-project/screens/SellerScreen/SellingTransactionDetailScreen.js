@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   Button,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -18,32 +19,27 @@ export default SellingTransactionDetailScreen = props => {
   const transactionItem = props.navigation.getParam("transactionItem");
   console.log(transactionItem);
 
-  //   // Get data from redux store
-  //   const selectedProduct = useSelector(reducers =>
-  //     reducers.productsReducer.availableProducts.find(
-  //       prod => prod.id === productId
-  //     )
-  //   );
-
-  //   const dispatch = useDispatch();
-
   return (
-    // <ScrollView>
-    //   <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
-    //   <View style={styles.actions}>
-    //     <Button
-    //       color={Colors.secondary}
-    //       title="Add to Cart"
-    //       onPress={() => {
-    //         dispatch(cartActions.addToCart(selectedProduct));
-    //       }}
-    //     />
-    //   </View>
-    //   <Text style={styles.price}>{selectedProduct.price}</Text>
-    //   <Text style={styles.description}>{selectedProduct.description}</Text>
-    // </ScrollView>
-    <View>
-      <ThaiText>{transactionItem.buyerName}</ThaiText>
+    <View style={styles.screen}>
+      <View style={styles.infoContainerCard}>
+        <View style={styles.userInfo}>
+          <View style={{ ...styles.imgContainer }}>
+            <Image
+              source={{
+                uri: transactionItem.imgUrl
+              }}
+              style={styles.userImg}
+              resizeMode="center"
+            />
+          </View>
+          <View>
+            <ThaiText>{transactionItem.buyerName}</ThaiText>
+          </View>
+          <View>
+            <ThaiText>{transactionItem.tel}</ThaiText>
+          </View>
+        </View>
+      </View>
     </View>
   );
 };
@@ -55,24 +51,32 @@ export default SellingTransactionDetailScreen = props => {
 // };
 
 const styles = StyleSheet.create({
-  image: {
-    width: "100%",
-    height: 300
-    // backgroundColor: 'red'
+  screen: {
+    flex: 1,
+    paddingTop: Dimensions.get("window").height * 0.05,
+    backgroundColor: Colors.screen
   },
-  actions: {
-    marginVertical: 10,
+  infoContainerCard: {
+    backgroundColor: Colors.on_primary,
+    borderRadius: 10,
+    width: Dimensions.get("window").width * 0.9,
+    height: Dimensions.get("window").height * 0.9,
+    alignSelf: "center",
+    padding: 10
+  },
+  userInfo: {
     alignItems: "center"
   },
-  price: {
-    fontSize: 20,
-    color: Colors.accent,
-    textAlign: "center",
-    marginVertical: 20
+  imgContainer: {
+    width: "20%",
+    height: "30%",
+    padding: 5
+    // borderRadius: 500,
+    // overflow: "hidden",
+    // backgroundColor: "red"
   },
-  description: {
-    fontSize: 14,
-    textAlign: "center",
-    marginHorizontal: 20
+  userImg: {
+    width: "100%",
+    height: "100%"
   }
 });

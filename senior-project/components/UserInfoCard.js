@@ -35,7 +35,7 @@ export default UserInfoCard = props => {
             }}
           >
             <ThaiText style={styles.userName}>{props.userName}</ThaiText>
-            <Text>226/17</Text>
+            <Text>{props.address}</Text>
           </View>
           <View style={{ width: "10%" }}>
             <Ionicons name="ios-settings" size={30} color={Colors.primary} />

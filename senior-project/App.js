@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SellerNavigation from "./navigation/SellerNavigation.js";
+import SellerNavigator from "./navigation/SellerNavigator.js";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 
@@ -22,5 +22,5 @@ export default function App() {
     );
   }
 
-  return <SellerNavigation />;
+  return <SellerNavigator />;
 }
