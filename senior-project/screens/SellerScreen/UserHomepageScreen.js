@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, FlatList, View, Dimensions } from "react-native";
 import Colors from "../../constants/Colors";
 
@@ -7,7 +7,14 @@ import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
 
+import firebaseUtil from "../../firebase";
+
 export default UserHomepageScreen = props => {
+  // // User profile
+  const [userName, setUserName] = useState("");
+  const [userAddr, setUserAddr] = useState("");
+  const [userImgUrl, setUserImgUrl] = useState("");
+
   // For look into selling transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
@@ -18,16 +25,51 @@ export default UserHomepageScreen = props => {
     });
   };
 
+  //Get user data
+  const getUserProfile = async () => {
+    let user = await firebaseUtil.auth().currentUser; // get uid
+    let uid = user.uid;
+    console.log("uid state: " + uid);
+
+    let docRef = firebaseUtil
+      .firestore()
+      .collection("users")
+      .doc(uid);
+
+    await docRef
+      .get()
+      .then(function(doc) {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          console.log(doc.data());
+          setUserName(doc.data().name + " " + doc.data().surname);
+          setUserAddr(doc.data().addr);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+  };
+
+  useEffect(() => {
+    getUserProfile(); // Getting
+  }, []);
+
   return (
     <View style={styles.screen}>
       <UserInfoCard
         style={styles.userInfoCard}
         imgUrl={
-          "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/s960x960/74584040_2528070227472512_8048909192494317568_o.jpg?_nc_cat=106&_nc_oc=AQkjvDIqS0y8XhjOs3Y2U3onMrJl-kknJS9qk3I3z87yjDyNPXBKbgwJOakqkXDXrZg&_nc_ht=scontent.fbkk17-1.fna&oh=db0bbf687fea4431b25d56e5328e28df&oe=5E745A6E"
+          userImgUrl
+            ? userImgUrl
+            : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
         }
-        userName={"นราวิชญ์ รูปไม่กลม"}
+        userName={userName}
         meetTime={"18 มกรา 15.00 น."}
-        address={"126 ถนนประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพฯ 10140"}
+        address={userAddr}
       />
       <View style={styles.recentSellTransactionContainer}>
         <View>
@@ -55,10 +97,6 @@ export default UserHomepageScreen = props => {
     </View>
   );
 };
-
-// UserHomepageScreen.navigationOptions = navData => {
-//   return null;
-// };
 
 const styles = StyleSheet.create({
   screen: {

@@ -1,11 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
+import { useSelector } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import TrashCard from "../../components/TrashCard";
+import firebaseUtil from "../../firebase";
+import { Button } from "react-native-paper";
 
 export default ShowAllUserTrashScreen = props => {
+  // Get firebase document
+  const getSellerList = async () => {
+    let user = await firebaseUtil.auth().currentUser; // get uid
+    console.log("from getUserProfile" + user); // why null ?
+    console.log(user); // why null ?
+    console.log(user.uid);
+    let uid = user.uid;
+    console.log("uid state: " + uid);
+
+    let docRef = firebaseUtil
+      .firestore()
+      .collection("sellerItems")
+      .doc(uid);
+
+    await docRef
+      .get()
+      .then(function(doc) {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+  };
+  useEffect(() => {
+    getSellerList();
+  }, []);
+
   return (
     <View style={styles.screen}>
       <View style={styles.titleScreen}>
@@ -29,6 +64,14 @@ export default ShowAllUserTrashScreen = props => {
           amountOfTrash={23}
           trashAdjustPrice={"0.7-0.9"}
           style={styles.eachTrashCard}
+        />
+        <Button
+          title="Add Trash"
+          color={Colors.primary}
+          onPress={() => {
+            // props.navigation.navigate('');
+            console.log("temp");
+          }}
         />
       </View>
     </View>

@@ -15,9 +15,10 @@ import ShowAllUserTrashScreen from "../screens/SellerScreen/ShowAllUserTrashScre
 import OptionTrashCheck from "../screens/SellerScreen/OptionTrashCheck";
 import SellingTransactionScreen from "../screens/SellerScreen/SellingTransactionScreen";
 import UserHomepageScreen from "../screens/SellerScreen/UserHomepageScreen";
-import UserAuthenScreen from "../screens/UserAuthenScreen";
+import UserSigninScreen from "../screens/UserSigninScreen";
 import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
+import UserSignupScreen from "../screens/UserSignupScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
@@ -84,19 +85,26 @@ const SellerBottomNavigator =
         shifting: true,
         labeled: true
       })
-    : createBottomTabNavigator(
-        { tabScreenConfig: SellerBottomTabConfig },
-        {
-          tabBarOptions: {
-            // when using like 'color={tabTintColor}
-            activeTintColor: Colors.on_primary
-          }
+    : createBottomTabNavigator(SellerBottomTabConfig, {
+        tabBarOptions: {
+          // when using like 'color={tabTintColor}
+          activeTintColor: Colors.on_primary
         }
-      );
+      });
+
+// for UserHomepageScreen
+const UserAuthenNavigator = createStackNavigator(
+  {
+    UserSigninScreen: UserSigninScreen,
+    UserSignupScreen: UserSignupScreen
+  },
+  { headerMode: "none" }
+);
 
 const MainNavigator = createSwitchNavigator({
-  SellerNavigation: SellerBottomNavigator,
-  UserAuthenScreen: UserAuthenScreen
+  UserAuthenNavigator: UserAuthenNavigator,
+
+  SellerNavigation: SellerBottomNavigator
 });
 
 export default createAppContainer(MainNavigator);
