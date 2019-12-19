@@ -85,11 +85,39 @@ exports.chooseBuyerSelling = functions.https.onCall((data, context) => {
           txStatus: "Waiting"
         }).then(() => {
           return true
+        }).catch(err => {
+          return {err}
         })
+      }).catch(err => {
+        return {err}
       })
     }
+    else return {err: "The document doesn't exist"}
   }).catch(err => {
     return {err}
   })
 })
 
+exports.toggleEnableAddr = functions.https.onCall((data, context) => {
+  return usersDB.doc(context.auth.uid).get(doc => {
+    return usersDB.doc(context.auth.uid).set({enableAddr: !doc.data().enableAddr}, {merge: true}).then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }).catch(err => {
+    return {err}
+  })
+})
+
+exports.toggleEnableSearch = functions.https.onCall((data, context) => {
+  return buyerDB.doc(context.auth.uid).get(doc => {
+    return buyerDB.doc(context.auth.uid).set({enableSearch: !doc.data().enableAddr}, {merge: true}).then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }).catch(err => {
+    return {err}
+  })
+})
