@@ -10,34 +10,60 @@ import {
 import { Dropdown } from "react-native-material-dropdown";
 
 import Colors from "../../constants/Colors";
+import firebaseUtil from "../../firebase";
 
 export default EditTrashForSellerScreen = props => {
-  const [type, setType] = useState(null);
+  const [wasteType, setWasteType] = useState(null);
   const [amount, setAmount] = useState(0);
 
-  const addTrashHandler = () => {};
+  const addTrashHandler = () => {
+    // data that sent
+    let newTrash = {
+      items: [{ amount: Number(amount), wasteType: wasteType }]
+    };
+
+    let addWaste = firebaseUtil.functions().httpsCallable("addWaste");
+    // Call firebase cloud functio
+    return addWaste(newTrash)
+      .then(function(result) {
+        // Read result of the Cloud Function.
+        console.log("From EditTrashForSeller: addWaste added");
+        console.log(result);
+      })
+      .catch(function(error) {
+        // Getting the Error details.
+        var code = error.code;
+        var message = error.message;
+        var details = error.details;
+        console.log("From EditTrashForSeller: error code :" + code);
+        console.log("From EditTrashForSeller: error message :" + message);
+        console.log("From EditTrashForSeller: error details :" + details);
+      });
+  };
 
   return (
     <View style={styles.screen}>
       <Text>Test Adding Screen</Text>
-      <View style={{ width: "50%", height: "30%" }}>
+      <View style={{ width: "50%", height: "10%" }}>
         <Dropdown
           label="ประเภทของขยะ"
-          data={[{ value: "PETE" }, { value: "HDPE" }, { value: "PP" }]}
+          data={[
+            { value: "wasteType/PETE" },
+            { value: "wasteType/HDPE" },
+            { value: "wasteType/PP" }
+          ]}
           onChangeText={thisValue => {
             console.log(thisValue);
-            setType(thisValue);
+            setWasteType(thisValue);
           }}
         />
       </View>
-      <View>
+      <View style={styles.input}>
         <TextInput
-          style={styles.input}
           onChangeText={thisValue => {
             console.log(thisValue);
             setAmount(thisValue);
           }}
-          onBlur={lostFocusHandler}
         ></TextInput>
       </View>
       <View>
@@ -67,5 +93,10 @@ const styles = StyleSheet.create({
   },
   eachTrashCard: {
     marginBottom: 5
+  },
+  input: {
+    backgroundColor: Colors.on_primary,
+    width: "80%",
+    height: "20%"
   }
 });

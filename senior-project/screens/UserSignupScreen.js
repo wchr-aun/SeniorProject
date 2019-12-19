@@ -92,7 +92,6 @@ export default UserSignupScreen = props => {
       return;
     }
 
-    let createAccount = firebaseUtil.functions().httpsCallable("createAccount");
     let newUser = {
       username: formState.inputValues.username,
       email: formState.inputValues.email,
@@ -103,6 +102,7 @@ export default UserSignupScreen = props => {
       phoneNo: "+66" + formState.inputValues.phoneNo.toString()
     };
 
+    let createAccount = firebaseUtil.functions().httpsCallable("createAccount");
     // Call firebase cloud functio
     return createAccount(newUser).then(function(result) {
       // Read result of the Cloud Function.

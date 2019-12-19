@@ -57,9 +57,7 @@ export default TrashCard = props => {
 
 const styles = StyleSheet.create({
   trashCard: {
-    flexDirection: "row",
-    borderColor: "yellow",
-    borderWidth: 1
+    flexDirection: "row"
   },
   trashImg: {
     width: "100%",
@@ -68,13 +66,11 @@ const styles = StyleSheet.create({
   imgContainer: {
     height: "100%",
     width: "30%",
-    borderColor: "black",
     borderWidth: 1
   },
   descriptionContainer: {
     height: "100%",
     width: "70%",
-    borderColor: "black",
     borderWidth: 1
   },
   descriptionRowOne: {
@@ -83,7 +79,6 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     padding: 5,
     height: "30%",
-    borderColor: "red",
     borderWidth: 1
   },
   descriptionRowTwo: {
@@ -92,7 +87,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     height: "40%",
-    borderColor: "green",
     borderWidth: 1
   },
   trashName: {
