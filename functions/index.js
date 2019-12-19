@@ -16,30 +16,21 @@ const sellerDB = firestore.collection('sellerItems')
 const txDB = firestore.collection('transactions')
 
 exports.createAccount = functions.https.onCall((data, context) => {
-  let username = data.username
-  let email = data.email
-  let password = data.password
   let name = data.name
   let surname = data.surname
   let addr = data.addr
-  let phoneNo = data.phoneNo
   return auth.createUser({
-    uid: username,
-    email: email,
-    phoneNumber: phoneNo,
-    password: password
+    uid: data.username,
+    email: data.email,
+    phoneNumber: data.phoneNo,
+    password: data.password
   }).then(userRecord => {
     usersDB.doc(userRecord.uid).set({
-      name: name,
-      surname: surname,
-      addr: addr,
-      enableAddr: false
-    }).then(() => {
-      buyerDB.doc(userRecord.uid).set({
-        enableSearch: false
-      }).catch(err => {
-        return {err}
-      })
+      name,
+      surname,
+      addr,
+      enableAddr: false,
+      enableSearch: false
     }).catch(err => {
       return {err}
     })
@@ -51,73 +42,137 @@ exports.createAccount = functions.https.onCall((data, context) => {
 })
 
 exports.addWaste = functions.https.onCall((data, context) => {
-  let items = []
-  data.items.forEach(item => { items.push({wasteType: firestore.doc(item.wasteType), amount: Number(item.amount)}) })
-
-  return sellerDB.doc(context.auth.uid).set({
-    items: items
-  }).then(() => {
-    return true
-  }).catch(err => {
-    return {err}
-  })
+  if (context.auth != null){
+    let items = []
+    data.items.forEach(item => { items.push({wasteType: firestore.doc(item.wasteType), amount: Number(item.amount)}) })
+    return sellerDB.doc(context.auth.uid).set({ items: items }, {merge: true}).then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
 })
 
-exports.chooseBuyerSelling = functions.https.onCall((data, context) => {
-  let items = data.items
-  let buyer = data.buyer
-  let addr = data.addr
-  return sellerDB.doc(context.auth.uid).get().then(doc => {
-    if (doc.exists) {
-      for(let i = 0; i < items.length; i++)
-        if (items[i].amount <= doc.data().items[i].amount && items[i].wasteType == doc.data().items[i].wasteType)
-          items[i].amount = doc.data().items[i].amount - items[i].amount
-        else
-          return {err: "Item's amount doesn't match"}
-      return sellerDB.doc(context.auth.uid).set({items: items}).then(() => {
-        return txDB.add({
-          buyer,
-          seller: context.auth.uid,
-          items,
-          addr,
-          createTimestamp: admin.firestore.Timestamp.fromDate(new Date()),
-          assignedTime,
-          txStatus: "Waiting"
+exports.sellWaste = functions.https.onCall((data, context) => {
+  if (context.auth != null){
+    let items = data.items
+    let buyer = data.buyer || "TBA"
+    let addr = data.addr
+    let txType = data.txType
+    return sellerDB.doc(context.auth.uid).get().then(doc => {
+      if (doc.exists) {
+        let newAmount = doc.data().items
+        for(let i = 0; i < doc.data().items.length; i++) {
+          for(let j = 0; j < items.length; j++) {
+            if (items[j].wasteType == doc.data().items[i].wasteType) {
+              if (items[j].amount <= doc.data().items[i].amount)
+                newAmount[j].amount = doc.data().items[i].amount - items[j].amount
+              else return {err: "Item's amount doesn't match"}
+            }
+          }
+        }
+        return sellerDB.doc(context.auth.uid).set({items: newAmount}, {merge: true}).then(() => {
+          return txDB.add({
+            txType,
+            buyer,
+            seller: context.auth.uid,
+            items,
+            addr,
+            createTimestamp: new Date(),
+            assignedTime: new Date(data.assignedTime),
+            txStatus: "Waiting"
+          }).then(() => {
+            return true
+          }).catch(err => {
+            return {err}
+          })
+        }).catch(err => {
+          return {err}
+        })
+      }
+      else return {err: "The document doesn't exist"}
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
+})
+
+exports.toggleEnableAddr = functions.https.onCall((data, context) => {
+  if (context.auth != null){
+    return usersDB.doc(context.auth.uid).get(doc => {
+      return usersDB.doc(context.auth.uid).update({enableAddr: !doc.data().enableAddr}).then(() => {
+        return true
+      }).catch(err => {
+        return {err}
+      })
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
+})
+
+exports.toggleEnableSearch = functions.https.onCall((data, context) => {
+  if (context.auth != null){
+    return usersDB.doc(context.auth.uid).get(doc => {
+      return usersDB.doc(context.auth.uid).update({enableSearch: !doc.data().enableAddr}).then(() => {
+        return true
+      }).catch(err => {
+        return {err}
+      })
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
+})
+
+exports.respondRequest = functions.https.onCall((data, context) => {
+  if (context.auth != null){
+    if (data.txType == "Choose Buyer Selling") {
+      if (data.respond == "Completed" || data.respond == "Canceled") {
+        return txDB.doc(data.txID).update({
+          txStatus: data.respond,
+          completedTime: new Date()
         }).then(() => {
           return true
         }).catch(err => {
           return {err}
         })
+      }
+      else {
+        return txDB.doc(data.txID).update({
+          txStatus: data.respond
+        }).then(() => {
+          return true
+        }).catch(err => {
+          return {err}
+        })
+      }
+    }
+    else if (data.txType == "Quick Selling") {
+      return txDB.doc(data.txID).set({
+        txStatus: data.respond,
+        buyer: context.auth.uid,
+        items: data.items,
+        completedTime: new Date()
+      }, { merge: true }).then(() => {
+        return true
       }).catch(err => {
         return {err}
       })
     }
-    else return {err: "The document doesn't exist"}
-  }).catch(err => {
-    return {err}
-  })
+    else return {err: "Wrong format: There is no " + data.txType}
+  }
+  else return {err: "The request is denied because of authetication"}
 })
 
-exports.toggleEnableAddr = functions.https.onCall((data, context) => {
-  return usersDB.doc(context.auth.uid).get(doc => {
-    return usersDB.doc(context.auth.uid).set({enableAddr: !doc.data().enableAddr}, {merge: true}).then(() => {
-      return true
-    }).catch(err => {
-      return {err}
-    })
-  }).catch(err => {
-    return {err}
-  })
-})
 
-exports.toggleEnableSearch = functions.https.onCall((data, context) => {
-  return buyerDB.doc(context.auth.uid).get(doc => {
-    return buyerDB.doc(context.auth.uid).set({enableSearch: !doc.data().enableAddr}, {merge: true}).then(() => {
-      return true
-    }).catch(err => {
-      return {err}
-    })
-  }).catch(err => {
-    return {err}
-  })
-})
+// exports.quickSelling = functions.https.onCall((data, context) => {
+//   if (context.auth.uid != null) {
+
+//   }
+//   else return {err: "The request is denied because of authetication"}
+// })
