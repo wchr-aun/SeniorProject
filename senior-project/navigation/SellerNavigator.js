@@ -1,12 +1,7 @@
 import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { Platform, Button, View, SafeAreaView } from "react-native";
-import {
-  createDrawerNavigator,
-  DrawerNavigatorItems,
-  DrawerItems
-} from "react-navigation-drawer";
+import { Platform } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
@@ -19,12 +14,21 @@ import UserSigninScreen from "../screens/UserSigninScreen";
 import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
 import UserSignupScreen from "../screens/UserSignupScreen";
+import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
   {
     UserHomepageScreen: UserHomepageScreen,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen
+  },
+  { headerMode: "none" }
+);
+
+const ShowAllUserTrashNavigator = createStackNavigator(
+  {
+    ShowAllUserTrashScreen: ShowAllUserTrashScreen,
+    EditTrashForSellerScreen: EditTrashForSellerScreen
   },
   { headerMode: "none" }
 );
@@ -42,7 +46,7 @@ const SellerBottomTabConfig = {
     }
   },
   AllTrash: {
-    screen: ShowAllUserTrashScreen,
+    screen: ShowAllUserTrashNavigator,
     navigationOptions: {
       tabBarLabel: "ขยะที่สะสมอยู่",
       tabBarIcon: tabInfo => {

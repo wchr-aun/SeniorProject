@@ -77,25 +77,24 @@ export default UserAuthenScreen = props => {
   const authHandler = async () => {
     setError(null);
     setIsLoading(true);
+    let email = formState.inputValues.email || "sha256@mail.com";
+    let password = formState.inputValues.password
+      ? sha256(formState.inputValues.password)
+      : sha256("sha256");
+
     // do async task
     firebaseUtil
       .auth()
-      .signInWithEmailAndPassword(
-        formState.inputValues.email,
-        sha256(formState.inputValues.password)
-      )
+      .signInWithEmailAndPassword(email, password)
       .then(result => {
-        console.log("From userSigninScreen: " + result.user.uid);
         setIsLoading(false);
         props.navigation.navigate("SellerNavigation");
       })
       .catch(err => {
         // throw new Error(err.message);
         setIsLoading(false);
-        console.log("From  UserSignin: firebaseUtil catch" + err.message);
         setError(err.message);
       });
-    console.log("From UserSignin: firebaseUtil before finish function" + error);
   };
 
   const inputChangeHandler = useCallback(

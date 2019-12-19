@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, FlatList, View, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Dimensions,
+  ActivityIndicator
+} from "react-native";
 import Colors from "../../constants/Colors";
 
 import UserInfoCard from "../../components/UserInfoCard";
@@ -14,6 +20,7 @@ export default UserHomepageScreen = props => {
   const [userName, setUserName] = useState("");
   const [userAddr, setUserAddr] = useState("");
   const [userImgUrl, setUserImgUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   // For look into selling transaction detail
   const selectedHandler = transactionItem => {
@@ -29,7 +36,6 @@ export default UserHomepageScreen = props => {
   const getUserProfile = async () => {
     let user = await firebaseUtil.auth().currentUser; // get uid
     let uid = user.uid;
-    console.log("uid state: " + uid);
 
     let docRef = firebaseUtil
       .firestore()
@@ -40,10 +46,10 @@ export default UserHomepageScreen = props => {
       .get()
       .then(function(doc) {
         if (doc.exists) {
-          console.log("Document data:", doc.data());
           console.log(doc.data());
           setUserName(doc.data().name + " " + doc.data().surname);
           setUserAddr(doc.data().addr);
+          setIsLoading(false);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -60,39 +66,62 @@ export default UserHomepageScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <UserInfoCard
-        style={styles.userInfoCard}
-        imgUrl={
-          userImgUrl
-            ? userImgUrl
-            : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
-        }
-        userName={userName}
-        meetTime={"18 มกรา 15.00 น."}
-        address={userAddr}
-      />
+      {isLoading ? (
+        <View
+          style={{
+            ...styles.userInfoCardLoading,
+            alignSelf: "center",
+            justifyContent: "center"
+          }}
+        >
+          <ActivityIndicator size="small" color={Colors.primary} />
+        </View>
+      ) : (
+        <UserInfoCard
+          style={styles.userInfoCard}
+          imgUrl={
+            userImgUrl
+              ? userImgUrl
+              : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
+          }
+          userName={userName}
+          meetTime={"18 มกรา 15.00 น."}
+          address={userAddr}
+        />
+      )}
       <View style={styles.recentSellTransactionContainer}>
         <View>
           <ThaiTitleText style={{ color: Colors.on_primary }}>
             การรับซื้อขยะล่าสุด
           </ThaiTitleText>
         </View>
-        <FlatList
-          data={SELLINGTRANSACTION}
-          keyExtractor={item => item.transactionId}
-          renderItem={itemData => (
-            <SellTransactionCard
-              amountOfType={itemData.item.amountOfType}
-              imgUrl={itemData.item.imgUrl}
-              userName={itemData.item.buyerName}
-              meetTime={itemData.item.meetTime}
-              style={styles.sellTransactionCard}
-              onPress={() => {
-                selectedHandler(itemData.item);
-              }}
-            />
-          )}
-        />
+        {isLoading ? (
+          <View
+            style={{
+              alignSelf: "center",
+              justifyContent: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color={Colors.on_primary} />
+          </View>
+        ) : (
+          <FlatList
+            data={SELLINGTRANSACTION}
+            keyExtractor={item => item.transactionId}
+            renderItem={itemData => (
+              <SellTransactionCard
+                amountOfType={itemData.item.amountOfType}
+                imgUrl={itemData.item.imgUrl}
+                userName={itemData.item.buyerName}
+                meetTime={itemData.item.meetTime}
+                style={styles.sellTransactionCard}
+                onPress={() => {
+                  selectedHandler(itemData.item);
+                }}
+              />
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -107,6 +136,13 @@ const styles = StyleSheet.create({
   userInfoCard: {
     width: Dimensions.get("window").width * 0.9,
     height: Dimensions.get("window").height * 0.3
+  },
+  userInfoCardLoading: {
+    width: Dimensions.get("window").width * 0.9,
+    height: Dimensions.get("window").height * 0.3,
+    backgroundColor: Colors.on_primary,
+    borderRadius: 10,
+    alignSelf: "center"
   },
   recentSellTransactionContainer: {
     width: Dimensions.get("window").width * 0.9,

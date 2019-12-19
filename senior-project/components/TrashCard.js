@@ -57,8 +57,6 @@ export default TrashCard = props => {
 
 const styles = StyleSheet.create({
   trashCard: {
-    width: "100%",
-    height: "20%",
     flexDirection: "row",
     borderColor: "yellow",
     borderWidth: 1
