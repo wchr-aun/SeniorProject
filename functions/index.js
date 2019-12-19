@@ -60,41 +60,44 @@ exports.sellWaste = functions.https.onCall((data, context) => {
     let buyer = data.buyer || "TBA"
     let addr = data.addr
     let txType = data.txType
-    return sellerDB.doc(context.auth.uid).get().then(doc => {
-      if (doc.exists) {
-        let newAmount = doc.data().items
-        for(let i = 0; i < doc.data().items.length; i++) {
-          for(let j = 0; j < items.length; j++) {
-            if (items[j].wasteType == doc.data().items[i].wasteType) {
-              if (items[j].amount <= doc.data().items[i].amount)
-                newAmount[j].amount = doc.data().items[i].amount - items[j].amount
-              else return {err: "Item's amount doesn't match"}
+    if (txType == "Choose Buyer Selling" || txType == "Quick Selling") {
+      return sellerDB.doc(context.auth.uid).get().then(doc => {
+        if (doc.exists) {
+          let newAmount = doc.data().items
+          for(let i = 0; i < doc.data().items.length; i++) {
+            for(let j = 0; j < items.length; j++) {
+              if (items[j].wasteType == doc.data().items[i].wasteType) {
+                if (items[j].amount <= doc.data().items[i].amount)
+                  newAmount[j].amount = doc.data().items[i].amount - items[j].amount
+                else return {err: "Item's amount doesn't match"}
+              }
             }
           }
-        }
-        return sellerDB.doc(context.auth.uid).set({items: newAmount}, {merge: true}).then(() => {
-          return txDB.add({
-            txType,
-            buyer,
-            seller: context.auth.uid,
-            items,
-            addr,
-            createTimestamp: new Date(),
-            assignedTime: new Date(data.assignedTime),
-            txStatus: "Waiting"
-          }).then(() => {
-            return true
+          return sellerDB.doc(context.auth.uid).set({items: newAmount}, {merge: true}).then(() => {
+            return txDB.add({
+              txType,
+              buyer,
+              seller: context.auth.uid,
+              items,
+              addr,
+              createTimestamp: new Date(),
+              assignedTime: new Date(data.assignedTime),
+              txStatus: "Waiting"
+            }).then(() => {
+              return true
+            }).catch(err => {
+              return {err}
+            })
           }).catch(err => {
             return {err}
           })
-        }).catch(err => {
-          return {err}
-        })
-      }
-      else return {err: "The document doesn't exist"}
-    }).catch(err => {
-      return {err}
-    })
+        }
+        else return {err: "The document doesn't exist"}
+      }).catch(err => {
+        return {err}
+      })
+    }
+    else return {err: "Transaction type is incorrect"}
   }
   else return {err: "The request is denied because of authetication"}
 })
@@ -131,44 +134,77 @@ exports.toggleEnableSearch = functions.https.onCall((data, context) => {
 
 exports.respondRequest = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    if (data.txType == "Choose Buyer Selling") {
-      if (data.respond == "Completed" || data.respond == "Canceled") {
-        return txDB.doc(data.txID).update({
+    return txDB.doc(data.txID).get().then(doc => {
+      if (doc.data().txType == "Choose Buyer Selling") {
+        if (data.respond == "Completed" || data.respond == "Canceled") {
+          return txDB.doc(data.txID).update({
+            txStatus: data.respond,
+            completedTime: new Date()
+          }).then(() => {
+            return true
+          }).catch(err => {
+            return {err}
+          })
+        }
+        else {
+          return txDB.doc(data.txID).update({
+            txStatus: data.respond
+          }).then(() => {
+            return true
+          }).catch(err => {
+            return {err}
+          })
+        }
+      }
+      else if (doc.data().txType == "Quick Selling") {
+        return txDB.doc(data.txID).set({
           txStatus: data.respond,
+          buyer: context.auth.uid,
+          items: data.items,
           completedTime: new Date()
-        }).then(() => {
+        }, { merge: true }).then(() => {
           return true
         }).catch(err => {
           return {err}
         })
       }
-      else {
-        return txDB.doc(data.txID).update({
-          txStatus: data.respond
-        }).then(() => {
-          return true
-        }).catch(err => {
-          return {err}
-        })
-      }
-    }
-    else if (data.txType == "Quick Selling") {
-      return txDB.doc(data.txID).set({
-        txStatus: data.respond,
-        buyer: context.auth.uid,
-        items: data.items,
-        completedTime: new Date()
-      }, { merge: true }).then(() => {
-        return true
-      }).catch(err => {
-        return {err}
-      })
-    }
-    else return {err: "Wrong format: There is no " + data.txType}
+      else return {err: "The transaction format is incorrect"}
+    })
   }
   else return {err: "The request is denied because of authetication"}
 })
 
+exports.editBuyerInfo = functions.https.onCall((data, context) => {
+  if (context.auth.uid != null) {
+    let purchaseList = data.purchaseList
+    let description = data.desc
+    return buyerDB.doc(context.auth.id).update({
+      purchaseList,
+      description
+    }).then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
+})
+
+exports.editUserInfo = functions.https.onCall((data, context) => {
+  if (context.auth.uid != null) {
+    let name = data.name
+    let description = data.desc
+    return buyerDB.doc(context.auth.id).update({
+      purchaseList,
+      description
+    }).then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
+})
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {
