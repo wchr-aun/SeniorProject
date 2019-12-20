@@ -141,7 +141,7 @@ export default UserSignupScreen = props => {
     >
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps={"handled"}>
             {/* {error ? <Text style={{ color: "red" }}>{error}</Text> : null} */}
             <Input
               id="username"

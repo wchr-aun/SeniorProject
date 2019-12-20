@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
 import UserSignupScreen from "../screens/UserSignupScreen";
 import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
+import UserStartupScreen from "../screens/UserStartupScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
@@ -106,9 +107,9 @@ const UserAuthenNavigator = createStackNavigator(
 );
 
 const MainNavigator = createSwitchNavigator({
+  UserStartupScreen: UserStartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
-
-  SellerNavigation: SellerBottomNavigator
+  SellerNavigation: SellerBottomNavigator //bottom nav
 });
 
 export default createAppContainer(MainNavigator);

@@ -14,6 +14,7 @@ import { sha256 } from "js-sha256";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
+import * as authAction from "../store/actions/authAction";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
 
