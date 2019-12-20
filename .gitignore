@@ -1,1 +1,9 @@
-/imageScript/downloads/pending*/
+/downloads
+/*/downloads
+downloadImage.py
+node_modules
+.env
+service_account.json
+firebase_config.json
+firebase.js
+.expo
