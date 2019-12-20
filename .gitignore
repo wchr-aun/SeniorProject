@@ -7,3 +7,16 @@ service_account.json
 firebase_config.json
 firebase.js
 .expo
+.firebase
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+web-report/
+
+# macOS
+.DS_Store
