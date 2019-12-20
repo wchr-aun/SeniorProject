@@ -135,40 +135,43 @@ exports.toggleEnableSearch = functions.https.onCall((data, context) => {
 exports.respondRequest = functions.https.onCall((data, context) => {
   if (context.auth != null){
     return txDB.doc(data.txID).get().then(doc => {
-      if (doc.data().txType == "Choose Buyer Selling") {
-        if (data.respond == "Completed" || data.respond == "Canceled") {
-          return txDB.doc(data.txID).update({
+      if (doc.data().txStatus == "Waiting" || doc.data().txStatus == "Conditional Waiting") {
+        if (doc.data().txType == "Choose Buyer Selling") {
+          if (data.respond == "Completed" || data.respond == "Canceled") {
+            return txDB.doc(data.txID).update({
+              txStatus: data.respond,
+              completedTime: new Date()
+            }).then(() => {
+              return true
+            }).catch(err => {
+              return {err}
+            })
+          }
+          else {
+            return txDB.doc(data.txID).update({
+              txStatus: data.respond
+            }).then(() => {
+              return true
+            }).catch(err => {
+              return {err}
+            })
+          }
+        }
+        else if (doc.data().txType == "Quick Selling") {
+          return txDB.doc(data.txID).set({
             txStatus: data.respond,
+            buyer: context.auth.uid,
+            items: data.items,
             completedTime: new Date()
-          }).then(() => {
+          }, { merge: true }).then(() => {
             return true
           }).catch(err => {
             return {err}
           })
         }
-        else {
-          return txDB.doc(data.txID).update({
-            txStatus: data.respond
-          }).then(() => {
-            return true
-          }).catch(err => {
-            return {err}
-          })
-        }
+        else return {err: "The transaction format is incorrect"}
       }
-      else if (doc.data().txType == "Quick Selling") {
-        return txDB.doc(data.txID).set({
-          txStatus: data.respond,
-          buyer: context.auth.uid,
-          items: data.items,
-          completedTime: new Date()
-        }, { merge: true }).then(() => {
-          return true
-        }).catch(err => {
-          return {err}
-        })
-      }
-      else return {err: "The transaction format is incorrect"}
+      else return {err: "The transaction is already completed"}
     })
   }
   else return {err: "The request is denied because of authetication"}
@@ -193,10 +196,12 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
 exports.editUserInfo = functions.https.onCall((data, context) => {
   if (context.auth.uid != null) {
     let name = data.name
-    let description = data.desc
+    let surname = data.surname
+    let addr = data.addr
     return buyerDB.doc(context.auth.id).update({
-      purchaseList,
-      description
+      name,
+      surname,
+      addr
     }).then(() => {
       return true
     }).catch(err => {
