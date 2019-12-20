@@ -1,7 +1,5 @@
-// console.ignoredYellowBox = ["Setting a timer"];
-
 import { YellowBox } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SellerNavigator from "./navigation/SellerNavigator.js";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
@@ -13,7 +11,8 @@ import authReducer from "./store/reducers/authReducer";
 
 import ImportedFonts from "./constants/ImportedFonts.js";
 YellowBox.ignoreWarnings(["Setting a timer"]);
-
+// console.ignoredYellowBox = ["Setting a timer"];
+console.ignoredYellowBox = ["Warning: Setting a timer"];
 // --- App'sFont Set-up --- //
 const fetchFonts = () => {
   return Font.loadAsync(ImportedFonts);

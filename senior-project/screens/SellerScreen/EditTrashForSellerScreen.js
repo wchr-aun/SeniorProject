@@ -13,6 +13,9 @@ import Colors from "../../constants/Colors";
 import firebaseUtil from "../../firebase";
 
 export default EditTrashForSellerScreen = props => {
+  // Get value from provious page
+  const [items, setItems] = useState(props.navigation.getParam("items"));
+
   const [wasteType, setWasteType] = useState(null);
   const [amount, setAmount] = useState(0);
 

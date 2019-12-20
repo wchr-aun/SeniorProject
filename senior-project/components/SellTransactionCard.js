@@ -14,7 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiText from "./ThaiText";
-import formatDate from "../utils/dateFormat";
+import formatDate from "../utils/libary";
 
 export default SellTransactionCard = props => {
   // Set-up the touchable view
@@ -32,7 +32,7 @@ export default SellTransactionCard = props => {
               uri: props.imgUrl
             }}
             style={styles.userImg}
-            resizeMode="center"
+            resizeMode="contain"
           />
         </View>
         <View style={styles.infoContainer}>

@@ -25,7 +25,7 @@ export default UserInfoCard = props => {
                 uri: props.imgUrl
               }}
               style={styles.userImg}
-              resizeMode="center"
+              resizeMode="contain"
             />
           </View>
           <View
@@ -56,7 +56,6 @@ export default UserInfoCard = props => {
 const styles = StyleSheet.create({
   userInfoContainer: {
     backgroundColor: Colors.on_primary,
-    borderRadius: 10,
     alignSelf: "center"
   },
   userInfoContentContainer: {
@@ -65,8 +64,8 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   imgContainer: {
-    width: "30%"
-    // height: "100%"
+    width: "30%",
+    height: "100%"
   },
   userInfoContentContainerRow1: {
     height: "50%",

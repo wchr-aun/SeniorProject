@@ -1,48 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Button,
-  FlatList,
-  ActivityIndicator,
-  Text
-} from "react-native";
+import { StyleSheet, View, Dimensions, Button, FlatList } from "react-native";
 
 import Colors from "../../constants/Colors";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import TrashCard from "../../components/TrashCard";
-import queryFunctions from "../../utils/queryFunctions";
 
-export default ShowAllUserTrashScreen = props => {
-  const [items, setItems] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Mode setting
-  const [editingMode, setEditingMode] = useState(false);
-
-  // Load trash data
-  useEffect(() => {
-    setIsLoading(true);
-    queryFunctions.getSellerList().then(itemsReturned => {
-      // must 'then' for waiting itemRetured completed
-      setItems(itemsReturned);
-      setIsLoading(false);
-    });
-
-    return () => {
-      setItems(null);
-    };
-  }, []);
-
-  //add spinner loading
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+export default SellingTrashScreen = props => {
+  const [items, setItems] = useState(props.navigation.getParam("items"));
 
   return (
     <View style={styles.screen}>
@@ -50,9 +14,11 @@ export default ShowAllUserTrashScreen = props => {
         <ThaiTitleText>ขยะที่เก็บไว้</ThaiTitleText>
       </View>
       <View style={styles.allTrashContainer}>
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "100%", height: "50%" }}>
           <FlatList
             style={{
+              borderColor: "black",
+              borderWidth: 1,
               flex: 1
             }}
             keyExtractor={item => item.wasteType.id}
@@ -66,50 +32,27 @@ export default ShowAllUserTrashScreen = props => {
                 amountOfTrash={itemData.item.amount}
                 trashAdjustPrice={"0.7-0.9"}
                 style={styles.eachTrashCard}
-                editingMode={editingMode}
               />
             )}
           />
         </View>
       </View>
-
-      {editingMode ? (
-        <View style={styles.btnContainer}>
-          <View style={styles.navigateBtn}>
-            <Button
-              title="Confirm Amount"
-              color={Colors.primary}
-              onPress={() => {
-                setEditingMode(false);
-              }}
-            />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.btnContainer}>
-          <View style={styles.navigateBtn}>
-            <Button
-              title="Edit Trash infomation"
-              color={Colors.primary}
-              onPress={() => {
-                setEditingMode(true);
-              }}
-            />
-          </View>
-          <View style={styles.navigateBtn}>
-            <Button
-              title="Selling Trash infomation"
-              color={Colors.secondary}
-              onPress={() => {
-                props.navigation.navigate({
-                  routeName: "SellingTrashScreen",
-                  params: { items }
-                });
-              }}
-            />
-          </View>
-        </View>
-      )}
+      <View>
+        <Button
+          title="Edit Trash infomation"
+          color={Colors.primary}
+          onPress={() => {
+            props.navigation.navigate("SellingTrashScreen");
+          }}
+        />
+        <Button
+          title="Selling Trash infomation"
+          color={Colors.primary}
+          onPress={() => {
+            props.navigation.navigate("EditTrashForSellerScreen");
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -122,29 +65,19 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   allTrashContainer: {
-    width: "90%",
-    height: "70%",
+    width: Dimensions.get("window").width * 0.9,
+    height: Dimensions.get("window").height * 0.7,
     padding: 10,
     alignItems: "center",
-    backgroundColor: Colors.primary_variant,
+    backgroundColor: Colors.primary,
     borderRadius: 10
   },
   eachTrashCard: {
     marginBottom: 5,
-    backgroundColor: Colors.on_primary
+    width: "100%",
+    height: 100,
+    backgroundColor: Colors.on_primary,
+    borderRadius: 10
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  btnContainer: {
-    marginVertical: 5,
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "90%",
-    height: "20%"
-  },
-  navigateBtn: {
-    width: "50%",
-    height: "100%",
-    padding: 5,
-    borderRadius: 5
-  }
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });

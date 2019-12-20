@@ -1,13 +1,13 @@
 import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { Platform } from "react-native";
+import { Platform, Dimensions } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
 import Colors from "../constants/Colors";
 import ShowAllUserTrashScreen from "../screens/SellerScreen/ShowAllUserTrashScreen";
-import OptionTrashCheck from "../screens/SellerScreen/OptionTrashCheck";
+import OptionTrashCheckScreen from "../screens/SellerScreen/OptionTrashCheck";
 import SellingTransactionScreen from "../screens/SellerScreen/SellingTransactionScreen";
 import UserHomepageScreen from "../screens/SellerScreen/UserHomepageScreen";
 import UserSigninScreen from "../screens/UserSigninScreen";
@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
 import UserSignupScreen from "../screens/UserSignupScreen";
 import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
-import UserStartupScreen from "../screens/UserStartupScreen";
+import StartupScreen from "../screens/UserStartupScreen";
+import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
@@ -29,7 +30,8 @@ const UserhomepageNavigator = createStackNavigator(
 const ShowAllUserTrashNavigator = createStackNavigator(
   {
     ShowAllUserTrashScreen: ShowAllUserTrashScreen,
-    EditTrashForSellerScreen: EditTrashForSellerScreen
+    EditTrashForSellerScreen: EditTrashForSellerScreen,
+    SellingTrashScreen: SellingTrashScreen
   },
   { headerMode: "none" }
 );
@@ -57,7 +59,7 @@ const SellerBottomTabConfig = {
     }
   },
   CheckTrash: {
-    screen: OptionTrashCheck,
+    screen: OptionTrashCheckScreen,
     navigationOptions: {
       tabBarLabel: "เช็คขยะ",
       tabBarIcon: tabInfo => {
@@ -83,17 +85,25 @@ const SellerBottomTabConfig = {
 };
 
 // Like a root navigator
-const SellerBottomNavigator =
+const SellerNavigator =
   Platform.OS === "android"
     ? createMaterialBottomTabNavigator(SellerBottomTabConfig, {
         activeColor: Colors.on_primary,
         shifting: true,
-        labeled: true
+        labeled: true,
+        barStyle: {
+          height: Dimensions.get("window").height * 0.1,
+          backgroundColor: Colors.on_secondary
+        }
       })
     : createBottomTabNavigator(SellerBottomTabConfig, {
         tabBarOptions: {
           // when using like 'color={tabTintColor}
-          activeTintColor: Colors.on_primary
+          activeTintColor: Colors.on_primary,
+          style: {
+            backgroundColor: Colors.primary,
+            height: Dimensions.get("window").height * 0.1
+          }
         }
       });
 
@@ -107,9 +117,9 @@ const UserAuthenNavigator = createStackNavigator(
 );
 
 const MainNavigator = createSwitchNavigator({
-  UserStartupScreen: UserStartupScreen,
+  StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
-  SellerNavigation: SellerBottomNavigator //bottom nav
+  SellerNavigator: SellerNavigator //bottom nav
 });
 
 export default createAppContainer(MainNavigator);

@@ -9,8 +9,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/img/gradient.png",
-      "resizeMode": "contain",
+      "image": "./assets/img/projectname.jpg",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {

@@ -72,7 +72,7 @@ export default UserAuthenScreen = props => {
     allFormIsValid: false
   });
 
-  const authHandler = async () => {
+  const authHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     let email = formState.inputValues.email || "sha256@mail.com";
@@ -80,43 +80,21 @@ export default UserAuthenScreen = props => {
       ? sha256(formState.inputValues.password)
       : sha256("sha256");
 
-    // // check first
-    // firebaseUtil.auth().onAuthStateChanged(function(user) {
-    //   if (user) {
-    //     // User is signed in.
-    //     props.navigation.navigate("SellerNavigation");
-    //   } else {
-    //     // No user is signed in.
-    //     // do async task
-    //     firebaseUtil
-    //       .auth()
-    //       .signInWithEmailAndPassword(email, password)
-    //       .then(result => {
-    //         setIsLoading(false);
-    //         props.navigation.navigate("SellerNavigation");
-    //       })
-    //       .catch(err => {
-    //         // throw new Error(err.message);
-    //         setIsLoading(false);
-    //         setError(err.message);
-    //       });
-    //   }
-    // });
-
     // do async task
     firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(result => {
         setIsLoading(false);
-        props.navigation.navigate("SellerNavigation");
+        console.log(result);
+        props.navigation.navigate("SellerNavigator");
       })
       .catch(err => {
         // throw new Error(err.message);
         setIsLoading(false);
         setError(err.message);
       });
-  };
+  }, []);
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
