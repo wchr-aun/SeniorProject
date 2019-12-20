@@ -12,8 +12,7 @@ import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
-
-import firebaseUtil from "../../firebase";
+import queryFunctions from "../../utils/queryFunctions";
 
 export default UserHomepageScreen = props => {
   // // User profile
@@ -50,39 +49,45 @@ export default UserHomepageScreen = props => {
     });
   };
 
-  //Get user data
-  const getUserProfile = async () => {
-    let user = await firebaseUtil.auth().currentUser; // get uid
-    let uid = user.uid;
+  // //Get user data
+  // const getUserProfile = async () => {
+  //   let user = await firebaseUtil.auth().currentUser; // get uid
+  //   let uid = user.uid;
 
-    let docRef = firebaseUtil
-      .firestore()
-      .collection("users")
-      .doc(uid);
+  //   let docRef = firebaseUtil
+  //     .firestore()
+  //     .collection("users")
+  //     .doc(uid);
 
-    return docRef
-      .get()
-      .then(function(doc) {
-        if (doc.exists) {
-          console.log(doc.data());
-          let userProfile = {
-            name: doc.data().name + " " + doc.data().surname,
-            addr: doc.data().addr
-          };
-          return userProfile;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-          return;
-        }
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-  };
+  //   return docRef
+  //     .get()
+  //     .then(function(doc) {
+  //       if (doc.exists) {
+  //         console.log(doc.data());
+  //         let userProfile = {
+  //           name: doc.data().name + " " + doc.data().surname,
+  //           addr: doc.data().addr
+  //         };
+  //         return userProfile;
+  //       } else {
+  //         // doc.data() will be undefined in this case
+  //         console.log("No such document!");
+  //         return;
+  //       }
+  //     })
+  //     .catch(function(error) {
+  //       console.log("Error getting document:", error);
+  //     });
+  // };
 
   useEffect(() => {
-    getUserProfile(); // Getting
+    // Getting Userprofile
+    setIsLoading(true);
+    queryFunctions.getUserProfile().then(result => {
+      setUserName(result.name);
+      setUserAddr(result.addr);
+      setIsLoading(false);
+    });
   }, []);
 
   return (
