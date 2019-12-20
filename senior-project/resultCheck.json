@@ -1,0 +1,255 @@
+Object {
+    "amount": 12,
+    "wasteType": DocumentReference {
+      "_converter": undefined,
+      "_firestoreClient": FirestoreClient {
+        "asyncQueue": AsyncQueue {
+          "_isShuttingDown": false,
+          "delayedOperations": Array [],
+          "failure": null,
+          "operationInProgress": true,
+          "tail": Promise {
+            "_40": 0,
+            "_55": Promise {
+              "_40": 0,
+              "_55": null,
+              "_65": 0,
+              "_72": null,
+            },
+            "_65": 3,
+            "_72": null,
+          },
+          "timerIdsToSkip": Array [],
+        },
+        "clientId": "wFzzji1wyvnFZpHcf7bB",
+        "credentials": FirebaseCredentialsProvider {
+          "auth": Object {
+            "addAuthTokenListener": [Function bound ],
+            "getToken": [Function bound ],
+            "getUid": [Function bound ],
+            "removeAuthTokenListener": [Function bound ],
+          },
+          "changeListener": [Function anonymous],
+          "currentUser": User {
+            "uid": "nara",
+          },
+          "forceRefresh": false,
+          "receivedInitialUser": true,
+          "tokenCounter": 2,
+          "tokenListener": [Function anonymous],
+        },
+        "databaseInfo": DatabaseInfo {
+          "databaseId": DatabaseId {
+            "database": "(default)",
+            "projectId": "senior-project-83de1",
+          },
+          "forceLongPolling": false,
+          "host": "firestore.googleapis.com",
+          "persistenceKey": "[DEFAULT]",
+          "ssl": true,
+        },
+        "eventMgr": EventManager {
+          "onlineState": 1,
+          "queries": ObjectMap {
+            "inner": Object {},
+            "mapKeyFn": [Function anonymous],
+          },
+          "snapshotsInSyncListeners": Set {},
+          "syncEngine": SyncEngine {
+            "currentUser": User {
+              "uid": "nara",
+            },
+            "isPrimary": true,
+            "limboDocumentRefs": ReferenceSet {
+              "refsByKey": SortedSet {
+                "comparator": [Function anonymous],
+                "data": SortedMap {
+                  "comparator": [Function anonymous],
+                  "root": LLRBEmptyNode {
+                    "size": 0,
+                  },
+                },
+              },
+              "refsByTarget": SortedSet {
+                "comparator": [Function anonymous],
+                "data": SortedMap {
+                  "comparator": [Function anonymous],
+                  "root": LLRBEmptyNode {
+                    "size": 0,
+                  },
+                },
+              },
+            },
+            "limboResolutionsByTarget": Object {},
+            "limboTargetIdGenerator": TargetIdGenerator {
+              "generatorId": 1,
+              "nextId": 1,
+            },
+            "limboTargetsByKey": SortedMap {
+              "comparator": [Function anonymous],
+              "root": LLRBEmptyNode {
+                "size": 0,
+              },
+            },
+            "localStore": LocalStore {
+              "lastDocumentChangeReadTime": SnapshotVersion {
+                "timestamp": Timestamp {
+                  "nanoseconds": 0,
+                  "seconds": 0,
+                },
+              },
+              "localDocuments": LocalDocumentsView {
+                "indexManager": MemoryIndexManager {
+                  "collectionParentIndex": MemoryCollectionParentIndex {
+                    "index": Object {
+                      "sellerItems": SortedSet {
+                        "comparator": [Function anonymous],
+                        "data": SortedMap {
+                          "comparator": [Function anonymous],
+                          "root": LLRBNode {
+                            "color": false,
+                            "key": ResourcePath {
+                              "len": 0,
+                              "offset": 5,
+                              "segments": Array [
+                                "projects",
+                                "senior-project-83de1",
+                                "databases",
+                                "(default)",
+                                "documents",
+                                "sellerItems",
+                                "nara",
+                              ],
+                            },
+                            "left": LLRBEmptyNode {
+                              "size": 0,
+                            },
+                            "right": LLRBEmptyNode {
+                              "size": 0,
+                            },
+                            "size": 1,
+                            "value": true,
+                          },
+                        },
+                      },
+                      "users": SortedSet {
+                        "comparator": [Function anonymous],
+                        "data": SortedMap {
+                          "comparator": [Function anonymous],
+                          "root": LLRBNode {
+                            "color": false,
+                            "key": ResourcePath {
+                              "len": 0,
+                              "offset": 5,
+                              "segments": Array [
+                                "projects",
+                                "senior-project-83de1",
+                                "databases",
+                                "(default)",
+                                "documents",
+                                "users",
+                                "nara",
+                              ],
+                            },
+                            "left": LLRBEmptyNode {
+                              "size": 0,
+                            },
+                            "right": LLRBEmptyNode {
+                              "size": 0,
+                            },
+                            "size": 1,
+                            "value": true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                "mutationQueue": MemoryMutationQueue {
+                  "batchesByDocumentKey": SortedSet {
+                    "comparator": [Function anonymous],
+                    "data": SortedMap {
+                      "comparator": [Function anonymous],
+                      "root": LLRBEmptyNode {
+                        "size": 0,
+                      },
+                    },
+                  },
+                  "indexManager": MemoryIndexManager {
+                    "collectionParentIndex": MemoryCollectionParentIndex {
+                      "index": Object {
+                        "sellerItems": SortedSet {
+                          "comparator": [Function anonymous],
+                          "data": SortedMap {
+                            "comparator": [Function anonymous],
+                            "root": LLRBNode {
+                              "color": false,
+                              "key": ResourcePath {
+                                "len": 0,
+                                "offset": 5,
+                                "segments": Array [
+                                  "projects",
+                                  "senior-project-83de1",
+                                  "databases",
+                                  "(default)",
+                                  "documents",
+                                  "sellerItems",
+                                  "nara",
+                                ],
+                              },
+                              "left": LLRBEmptyNode {
+                                "size": 0,
+                              },
+                              "right": LLRBEmptyNode {
+                                "size": 0,
+                              },
+                              "size": 1,
+                              "value": true,
+                            },
+                          },
+                        },
+                        "users": SortedSet {
+                          "comparator": [Function anonymous],
+                          "data": SortedMap {
+                            "comparator": [Function anonymous],
+                            "root": LLRBNode {
+                              "color": false,
+                              "key": ResourcePath {
+                                "len": 0,
+                                "offset": 5,
+                                "segments": Array [
+                                  "projects",
+                                  "senior-project-83de1",
+                                  "databases",
+                                  "(default)",
+                                  "documents",
+                                  "users",
+                                  "nara",
+                                ],
+                              },
+                              "left": LLRBEmptyNode {
+                                "size": 0,
+                              },
+                              "right": LLRBEmptyNode {
+                                "size": 0,
+                              },
+                              "size": 1,
+                              "value": true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  "lastStreamToken": "",
+                  "mutationQueue": Array [],
+                  "nextBatchId": 1,
+                  "referenceDelegate": MemoryEagerDelegate {
+                    "_orphanedDocuments": null,
+                    "inMemoryPins": ReferenceSet {
+                      "refsByKey": SortedSet {
+                        "comparator": [Function anonymous],
+                        "data": SortedMap {
+                          "comparator": [Function anonymous],
+                          "root": LLRBEmptyNode {
+                 ...(truncated to the first 10000 characters)
