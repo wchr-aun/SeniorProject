@@ -6,7 +6,8 @@ import {
   Button,
   FlatList,
   ActivityIndicator,
-  Text
+  Text,
+  BackHandler
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -20,11 +21,6 @@ const MINUS_TRASH = "MINUS_TRASH";
 const INITIAL_TRASH = "INITIAL_TRASH";
 
 const addTrashHandler = items => {
-  // // data that sent
-  // let newTrash = {
-  //   items: [{ amount: Number(amount), wasteType: wasteType }]
-  // };
-
   let addWaste = firebaseUtil.functions().httpsCallable("addWaste");
   // Call firebase cloud functio
   return addWaste(items)
@@ -47,7 +43,6 @@ const addTrashHandler = items => {
 const amoutOfTrashsReducer = (state, action) => {
   let founded = false;
   let updatedItems = [...state.items];
-  console.log(updatedItems);
 
   switch (action.type) {
     case INITIAL_TRASH:
@@ -59,14 +54,11 @@ const amoutOfTrashsReducer = (state, action) => {
           wasteType: item.wasteType
         });
       });
-      console.log("updatedItems " + updatedItems);
-      console.log(updatedItems);
       return {
         items: updatedItems
       };
     case ADD_TRASH:
       // change or add
-      console.log("Before added " + updatedItems);
       updatedItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           founded = true;
@@ -79,13 +71,11 @@ const amoutOfTrashsReducer = (state, action) => {
           amount: 1
         });
       }
-      console.log("After added " + updatedItems);
       return {
         items: updatedItems
       };
     case MINUS_TRASH:
       // change or add
-      console.log("Before Minus " + updatedItems);
       updatedItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           founded = true;
@@ -93,7 +83,6 @@ const amoutOfTrashsReducer = (state, action) => {
           if (updatedItems[index].amount === 0) updatedItems.splice(index, 1);
         }
       });
-      console.log("After added " + updatedItems);
       return {
         items: updatedItems
       };
@@ -104,6 +93,7 @@ export default ShowAllUserTrashScreen = props => {
   // trash user snapshot
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [amountTrashsState, dispatchAmountTrashsState] = useReducer(
     amoutOfTrashsReducer,
@@ -115,9 +105,9 @@ export default ShowAllUserTrashScreen = props => {
   // Mode setting
   const [editingMode, setEditingMode] = useState(false);
 
-  // Load trash data
-  useEffect(() => {
-    setIsLoading(true);
+  // load data
+  const loadUserTrash = async () => {
+    setIsRefreshing(true);
     queryFunctions.getSellerList().then(itemsReturned => {
       // must 'then' for waiting itemRetured completedc
       itemsReturned.forEach((item, index) => {
@@ -128,13 +118,30 @@ export default ShowAllUserTrashScreen = props => {
         type: INITIAL_TRASH,
         items: [...itemsReturned]
       });
-      setIsLoading(false);
+      setIsRefreshing(false);
     });
-
+  };
+  // Load trash data for initial
+  useEffect(() => {
+    setIsLoading(true);
+    loadUserTrash().then(setIsLoading(false));
     return () => {
       setItems(null);
     };
   }, []);
+
+  // For back behavior
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      if (editingMode) {
+        setEditingMode(false);
+        return true;
+      }
+    });
+    return () => {
+      BackHandler.removeEventListener();
+    };
+  });
 
   //add spinner loading
   if (isLoading) {
@@ -150,9 +157,19 @@ export default ShowAllUserTrashScreen = props => {
       <View style={styles.titleScreen}>
         <ThaiTitleText>ขยะที่เก็บไว้</ThaiTitleText>
       </View>
-      <View style={styles.allTrashContainer}>
+      <View
+        style={{
+          ...styles.allTrashContainer,
+          width: "100%",
+          height: "80%",
+          padding: 10,
+          alignItems: "center"
+        }}
+      >
         <View style={{ width: "100%", height: "100%" }}>
           <FlatList
+            refreshing={isRefreshing}
+            onRefresh={loadUserTrash}
             style={{
               flex: 1
             }}
@@ -177,15 +194,15 @@ export default ShowAllUserTrashScreen = props => {
       </View>
 
       {editingMode ? (
-        <View style={styles.btnContainer}>
+        <View style={{ ...styles.btnContainer, width: "90%", height: "10%" }}>
           <View style={styles.navigateBtn}>
             <Button
               title="Confirm Amount"
               color={Colors.primary}
               onPress={() => {
                 setEditingMode(false);
-                console.log(amountTrashsState.items);
                 addTrashHandler(amountTrashsState);
+                loadUserTrash();
               }}
             />
           </View>
@@ -227,12 +244,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   allTrashContainer: {
-    width: "90%",
-    height: "70%",
-    padding: 10,
-    alignItems: "center",
-    backgroundColor: Colors.primary_variant,
-    borderRadius: 10
+    backgroundColor: Colors.primary_variant
   },
   eachTrashCard: {
     marginBottom: 5,
@@ -242,9 +254,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     marginVertical: 5,
     flexDirection: "row",
-    justifyContent: "center",
-    width: "90%",
-    height: "20%"
+    justifyContent: "center"
   },
   navigateBtn: {
     width: "50%",

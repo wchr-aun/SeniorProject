@@ -31,6 +31,9 @@ const AdjustAmountOfTrash = props => {
             type: MINUS_TRASH,
             wasteType: props.wasteType
           });
+          props.setAmountOfTrash(previousState =>
+            (parseInt(previousState, 10) - 1).toString()
+          );
         }}
       >
         <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
@@ -38,18 +41,24 @@ const AdjustAmountOfTrash = props => {
       <View style={{ width: 30 }}>
         <TextInput
           keyboardType="numeric"
+          onChangeText={text => {
+            props.setAmountOfTrash(text);
+          }}
           value={props.amountOfTrash}
           style={{ textAlign: "center" }}
         ></TextInput>
       </View>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircel}
-        onPress={() =>
+        onPress={() => {
           props.dispatchAmountTrashsState({
             type: ADD_TRASH,
             wasteType: props.wasteType
-          })
-        }
+          });
+          props.setAmountOfTrash(previousState =>
+            (parseInt(previousState, 10) + 1).toString()
+          );
+        }}
       >
         <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
@@ -85,7 +94,7 @@ export default TrashCard = props => {
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: availableDeviceWidth * 0.95,
+        width: availableDeviceWidth * 0.9,
         height: availableDeviceHeight * 0.28,
         alignSelf: "center"
       }}
@@ -97,7 +106,10 @@ export default TrashCard = props => {
           height: availableDeviceWidth * 0.25,
           borderRadius: (availableDeviceWidth * 0.25) / 2, // divide 2 to make circle
           overflow: "hidden",
-          alignSelf: "center"
+          alignSelf: "center",
+          borderWidth: 1,
+          borderColor: "red",
+          marginHorizontal: 10
         }}
       >
         <Image
@@ -115,9 +127,12 @@ export default TrashCard = props => {
       <View
         style={{
           ...styles.descriptionContainer,
-          width: availableDeviceWidth * 0.55, // width --> 0.8(all) - 0.55(this) = 0.55 (img container)
-          height: "100%",
-          padding: 10
+          // width: availableDeviceWidth * 0.55, // width --> 0.8(all) - 0.55(this) = 0.55 (img container)
+          // height: "100%",
+          flex: 1,
+          padding: 10,
+          borderWidth: 1,
+          borderColor: "yellow"
         }}
       >
         <View style={{ ...styles.descriptionRow, flexWrap: "wrap" }}>
@@ -150,6 +165,7 @@ export default TrashCard = props => {
               amountOfTrash={amountOfTrash}
               dispatchAmountTrashsState={props.dispatchAmountTrashsState}
               style={{ alignItem: "center" }}
+              setAmountOfTrash={setAmountOfTrash}
             />
           </View>
         )}
