@@ -13,6 +13,21 @@ import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
 
+const AdjustAmountOfTrash = props => {
+  return (
+    <View style={styles.adjustAmountView}>
+      <ThaiText style={{ ...styles.amountOfTrash }}>จำนวน</ThaiText>
+      <TouchableWithoutFeedback style={styles.plusAndMinusCircel}>
+        <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
+      </TouchableWithoutFeedback>
+      <TextInput keyboardType="numeric" value={props.amountOfTrash}></TextInput>
+      <TouchableWithoutFeedback>
+        <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
+      </TouchableWithoutFeedback>
+    </View>
+  );
+};
+
 export default TrashCard = props => {
   // Resolve change vertical and horizontal affect to width
   const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
@@ -32,7 +47,9 @@ export default TrashCard = props => {
     };
   });
 
-  const [amountOfTrash, setAmountOfTrash] = useState(props.amountOfTrash);
+  const [amountOfTrash, setAmountOfTrash] = useState(
+    props.amountOfTrash.toString()
+  );
 
   return (
     <View
@@ -99,7 +116,7 @@ export default TrashCard = props => {
               padding: 5
             }}
           >
-            <View style={styles.adjustAmountView}>
+            {/* <View style={styles.adjustAmountView}>
               <ThaiText style={{ ...styles.amountOfTrash }}>จำนวน</ThaiText>
               <TouchableWithoutFeedback style={styles.plusAndMinusCircel}>
                 <Entypo
@@ -108,9 +125,6 @@ export default TrashCard = props => {
                   color={Colors.primary}
                 />
               </TouchableWithoutFeedback>
-              {/* <ThaiText style={{ ...styles.amountOfTrash }}>
-                {props.amountOfTrash}
-              </ThaiText> */}
               <TextInput
                 keyboardType="numeric"
                 value={amountOfTrash}
@@ -122,7 +136,8 @@ export default TrashCard = props => {
                   color={Colors.primary}
                 />
               </TouchableWithoutFeedback>
-            </View>
+            </View> */}
+            <AdjustAmountOfTrash amountOfTrash={amountOfTrash} />
           </View>
         )}
       </View>
