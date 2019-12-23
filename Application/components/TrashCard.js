@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
-  TextInput
+  TextInput,
+  Text
 } from "react-native";
 
 import { Entypo, Ionicons } from "@expo/vector-icons";
@@ -15,10 +16,17 @@ import Colors from "../constants/Colors";
 
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
+const EDIT_TRASH = "EDIT_TRASH";
 
 const AdjustAmountOfTrash = props => {
   return (
-    <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center"
+      }}
+    >
       <View style={{ marginRight: 5 }}>
         <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
           จำนวน
@@ -31,9 +39,6 @@ const AdjustAmountOfTrash = props => {
             type: MINUS_TRASH,
             wasteType: props.wasteType
           });
-          props.setAmountOfTrash(previousState =>
-            (parseInt(previousState, 10) - 1).toString()
-          );
         }}
       >
         <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
@@ -42,9 +47,13 @@ const AdjustAmountOfTrash = props => {
         <TextInput
           keyboardType="numeric"
           onChangeText={text => {
-            props.setAmountOfTrash(text);
+            props.dispatchAmountTrashsState({
+              type: EDIT_TRASH,
+              wasteType: props.wasteType,
+              value: parseInt(text, 10)
+            });
           }}
-          value={props.amountOfTrash}
+          value={props.amountOfTrash.toString()}
           style={{ textAlign: "center" }}
         ></TextInput>
       </View>
@@ -55,13 +64,33 @@ const AdjustAmountOfTrash = props => {
             type: ADD_TRASH,
             wasteType: props.wasteType
           });
-          props.setAmountOfTrash(previousState =>
-            (parseInt(previousState, 10) + 1).toString()
-          );
         }}
       >
         <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
+    </View>
+  );
+};
+
+const AmountOfTrash = props => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center"
+      }}
+    >
+      <View style={{ marginRight: 5 }}>
+        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
+          จำนวน
+        </ThaiText>
+      </View>
+      <View style={{ width: 30 }}>
+        <Text style={{ textAlign: "center" }}>
+          {props.amountOfTrash.toString()}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -84,10 +113,6 @@ export default TrashCard = props => {
       Dimensions.removeEventListener("change", updateScreen);
     };
   });
-
-  const [amountOfTrash, setAmountOfTrash] = useState(
-    props.amountOfTrash.toString()
-  );
 
   return (
     <View
@@ -137,7 +162,7 @@ export default TrashCard = props => {
       >
         <View style={{ ...styles.descriptionRow, flexWrap: "wrap" }}>
           <ThaiTitleText style={styles.trashName}>
-            {props.wasteName}
+            {props.wasteType}
           </ThaiTitleText>
         </View>
         <View style={styles.descriptionRow}>
@@ -151,7 +176,18 @@ export default TrashCard = props => {
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
         </View>
-        {!props.editingMode ? null : (
+        {!props.editingMode ? (
+          <View
+            style={{
+              ...styles.descriptionRow,
+              flexDirection: "row",
+              justifyContent: "center",
+              padding: 5
+            }}
+          >
+            <AmountOfTrash amountOfTrash={props.amountOfTrash} />
+          </View>
+        ) : (
           <View
             style={{
               ...styles.descriptionRow,
@@ -162,10 +198,8 @@ export default TrashCard = props => {
           >
             <AdjustAmountOfTrash
               wasteType={props.wasteType}
-              amountOfTrash={amountOfTrash}
+              amountOfTrash={props.amountOfTrash}
               dispatchAmountTrashsState={props.dispatchAmountTrashsState}
-              style={{ alignItem: "center" }}
-              setAmountOfTrash={setAmountOfTrash}
             />
           </View>
         )}

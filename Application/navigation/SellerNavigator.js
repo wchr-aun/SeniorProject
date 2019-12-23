@@ -44,6 +44,17 @@ const ShowAllUserTrashNavigator = createStackNavigator(
   { headerMode: Platform.OS === "android" ? "screen" : "float" }
 );
 
+// Hiding bottom tabbar
+ShowAllUserTrashNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
+
 // Trash Main
 const SellerBottomTabConfig = {
   Home: {
