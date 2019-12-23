@@ -4,8 +4,29 @@ import { StyleSheet, View, Dimensions, Button, FlatList } from "react-native";
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 
+// const trashSellingReducer = (state, action) => {
+//   let updatedItems = [...state.items];
+
+//   switch(action.type){
+//     // case:
+//   }
+// }
+
 export default SellingTrashScreen = props => {
   const [items, setItems] = useState(props.navigation.getParam("items"));
+
+  // For back behavior
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      if (editingMode) {
+        setEditingMode(false);
+        return true; //Prevent go back to homepage
+      }
+    });
+    return () => {
+      BackHandler.removeEventListener();
+    };
+  });
 
   return (
     <View

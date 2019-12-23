@@ -1,8 +1,8 @@
 import firebaseUtil from "../firebase";
 
 // Get firebase document (trashOfUser)
-const getSellerList = async () => {
-  let user = await firebaseUtil.auth().currentUser; // get uid
+const getSellerItems = async () => {
+  let user = firebaseUtil.auth().currentUser; // get uid
   let uid = user.uid;
 
   let docRef = firebaseUtil
@@ -29,8 +29,8 @@ const getSellerList = async () => {
 };
 
 // Get firebase UserProfile
-const getUserProfile = async () => {
-  let user = await firebaseUtil.auth().currentUser; // get uid
+const getUsers = async () => {
+  let user = firebaseUtil.auth().currentUser; // get uid
   let uid = user.uid;
 
   let docRef = firebaseUtil
@@ -42,7 +42,6 @@ const getUserProfile = async () => {
     .get()
     .then(function(doc) {
       if (doc.exists) {
-        console.log(doc.data());
         let userProfile = {
           name: doc.data().name + " " + doc.data().surname,
           addr: doc.data().addr
@@ -59,7 +58,34 @@ const getUserProfile = async () => {
     });
 };
 
+// Get firebase UserProfile
+const getWasteTypeDetail = async wasteTypeId => {
+  let docRef = firebaseUtil
+    .firestore()
+    .collection("wasteType")
+    .doc(wasteTypeId);
+
+  return docRef
+    .get()
+    .then(function(doc) {
+      if (doc.exists) {
+        return {
+          description: doc.data().description,
+          disposal: doc.data().disposal
+        };
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        return;
+      }
+    })
+    .catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+};
+
 export default {
-  getSellerList,
-  getUserProfile
+  getSellerList: getSellerItems,
+  getUserProfile: getUsers,
+  getWasteTypeDetail
 };

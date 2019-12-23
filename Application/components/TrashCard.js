@@ -168,7 +168,7 @@ export default TrashCard = props => {
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
           <ThaiText style={styles.trashDisposal}>
-            {props.trashDisposal ? props.trashDisposal : "ขยะรีไซเคิล"}
+            {props.wasteDisposal}
           </ThaiText>
         </View>
         <View style={styles.descriptionRow}>
