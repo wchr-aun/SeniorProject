@@ -1,4 +1,4 @@
-import {getTransactions} from './queryFunctions'
+import firebaseFunctions from './firebaseFunctions'
 
 const formatDate = date => {
   let monthNames = [
@@ -21,7 +21,7 @@ const formatDate = date => {
 const getTransactionList = async (role) => {
   let allTx = []
   for (let i = 0; i < 6; i++) {
-    await getTransactions(role, i).then(eachTxStatus => {
+    await firebaseFunctions.getTransactions(role, i).then(eachTxStatus => {
       allTx.push(eachTxStatus)
     }).catch(error => {
       throw new error("Error getting document:", error)
