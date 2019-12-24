@@ -64,6 +64,7 @@ export default SellingTrashScreen = props => {
         }}
       >
         <View style={{ width: "100%", height: "100%" }}>
+
           <FlatList
             style={{
               borderColor: "black",
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.screen
   },
   allTrashContainer: {
+
     backgroundColor: Colors.primary,
     borderRadius: 10
   },

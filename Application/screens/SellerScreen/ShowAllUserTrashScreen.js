@@ -244,6 +244,7 @@ export default ShowAllUserTrashScreen = props => {
         )}
       </View>
     </KeyboardAvoidingView>
+
   );
 };
 

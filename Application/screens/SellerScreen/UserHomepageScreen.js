@@ -7,7 +7,6 @@ import {
   ActivityIndicator
 } from "react-native";
 import Colors from "../../constants/Colors";
-
 import { useSelector } from "react-redux";
 
 import UserInfoCard from "../../components/UserInfoCard";
@@ -16,6 +15,7 @@ import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
 
 export default UserHomepageScreen = props => {
+
   // Resolve change vertical and horizontal affect to width
   const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
     Dimensions.get("window").width

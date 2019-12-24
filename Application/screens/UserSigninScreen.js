@@ -52,6 +52,7 @@ export default UserAuthenScreen = props => {
 
   // For alerting user an signin-signup action
   useEffect(() => {
+
     if (error) {
       Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }]);
     }
