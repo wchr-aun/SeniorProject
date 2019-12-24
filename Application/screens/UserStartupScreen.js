@@ -15,13 +15,18 @@ export default UserStartupScreen = props => {
     firebaseUtil.auth().onAuthStateChanged(async user => {
       if (user != null) {
         // get user profile from redux
-        dispatch(authAction.signin());
+        await dispatch(authAction.signin());
+
+        console.log(
+          "firebaseUtil.auth().currentUser from startup" +
+            firebaseUtil.auth().currentUser
+        );
 
         // auto login
         props.navigation.navigate("SellerNavigator");
       } else {
         // No user no exist in firebase firestore
-        props.navigation.navigate("UserAuthenNavigator");
+        props.navigation.navigate("UserAuthenNavigator"); //uid
       }
     });
   };

@@ -86,52 +86,31 @@ export default ShowAllUserTrashScreen = props => {
   // Mode setting
   const [editingMode, setEditingMode] = useState(false);
 
-  // // load data from firebase
-  // const loadUserTrash = async () => {
-  //   setIsRefreshing(true);
-  //   queryFunctions.getSellerList().then(itemsReturned => {
-  //     new Promise((resolve, reject) => {
-  //       itemsReturned.forEach((item, index) => {
-  //         queryFunctions
-  //           .getWasteTypeDetail(item.wasteType)
-  //           .then(wasteTypeDetail => {
-  //             itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-  //             itemsReturned[index].wasteDescription =
-  //               wasteTypeDetail.description;
-  //             if (index === itemsReturned.length - 1) {
-  //               resolve();
-  //             }
-  //           });
-  //       });
-  //     }).then(() => {
-  //       console.log(itemsReturned);
-  //       dispatchAmountTrashsState({
-  //         type: SET_TRASH,
-  //         items: [...itemsReturned]
-  //       });
-  //       setIsRefreshing(false);
-  //     });
-  //   });
-  // };
-
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    queryFunctions.getSellerList().then(async itemsReturned => {
-      await itemsReturned.forEach((item, index) => {
-        queryFunctions
-          .getWasteTypeDetail(item.wasteType)
-          .then(wasteTypeDetail => {
-            itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-            itemsReturned[index].wasteDescription = wasteTypeDetail.description;
-          });
+    queryFunctions.getSellerList().then(itemsReturned => {
+      new Promise((resolve, reject) => {
+        itemsReturned.forEach((item, index) => {
+          queryFunctions
+            .getWasteTypeDetail(item.wasteType)
+            .then(wasteTypeDetail => {
+              itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
+              itemsReturned[index].wasteDescription =
+                wasteTypeDetail.description;
+              if (index === itemsReturned.length - 1) {
+                resolve();
+              }
+            });
+        });
+      }).then(() => {
+        console.log(itemsReturned);
+        dispatchAmountTrashsState({
+          type: SET_TRASH,
+          items: [...itemsReturned]
+        });
+        setIsRefreshing(false);
       });
-      console.log(itemsReturned);
-      dispatchAmountTrashsState({
-        type: SET_TRASH,
-        items: [...itemsReturned]
-      });
-      setIsRefreshing(false);
     });
   };
 
