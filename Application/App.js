@@ -8,6 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 import authReducer from "./store/reducers/authReducer";
+import sellerItemsReducer from "./store/reducers/sellerItemsReducer";
 
 import ImportedFonts from "./constants/ImportedFonts.js";
 // Ignore warning timer
@@ -21,7 +22,8 @@ const fetchFonts = () => {
 
 // --- Redux Settup --- //
 const rootReducer = combineReducers({
-  authReducer: authReducer
+  authReducer: authReducer,
+  sellerItemsReducer: sellerItemsReducer
 });
 const store = createStore(
   rootReducer,
