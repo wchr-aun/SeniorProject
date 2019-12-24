@@ -52,7 +52,7 @@ export default UserAuthenScreen = props => {
 
   // For alerting user an signin-signup action
   useEffect(() => {
-    console.log("From UserSignin: useEffect" + error);
+
     if (error) {
       Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }]);
     }
@@ -75,7 +75,7 @@ export default UserAuthenScreen = props => {
   const authHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
-    let email = formState.inputValues.email || "sha256@mail.com";
+    let email = formState.inputValues.email;
     let password = formState.inputValues.password
       ? sha256(formState.inputValues.password)
       : sha256("sha256");
@@ -86,15 +86,14 @@ export default UserAuthenScreen = props => {
       .signInWithEmailAndPassword(email, password)
       .then(result => {
         setIsLoading(false);
-        console.log(result);
-        props.navigation.navigate("SellerNavigator");
+        props.navigation.navigate("StartupScreen");
       })
       .catch(err => {
         // throw new Error(err.message);
         setIsLoading(false);
-        setError(err.message);
+        // setError(err.message);
       });
-  }, []);
+  }, [formState]);
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -104,7 +103,8 @@ export default UserAuthenScreen = props => {
         isValid: inputValidity,
         inputIdentifier: inputIdentifier
       });
-    }
+    },
+    [dispatchFormState]
   );
 
   return (

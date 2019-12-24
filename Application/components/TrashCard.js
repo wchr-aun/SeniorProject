@@ -5,13 +5,95 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
-  TextInput
+  TextInput,
+  Text
 } from "react-native";
 
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
+
+const ADD_TRASH = "ADD_TRASH";
+const MINUS_TRASH = "MINUS_TRASH";
+const EDIT_TRASH = "EDIT_TRASH";
+
+const AmountOfTrash = props => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center"
+      }}
+    >
+      <View style={{ marginRight: 5 }}>
+        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
+          จำนวน
+        </ThaiText>
+      </View>
+      <View style={{ width: 30 }}>
+        <Text style={{ textAlign: "center" }}>
+          {props.amountOfTrash.toString()}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const AdjustAmountOfTrash = props => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center"
+      }}
+    >
+      <View style={{ marginRight: 5 }}>
+        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
+          จำนวน
+        </ThaiText>
+      </View>
+      <TouchableWithoutFeedback
+        style={styles.plusAndMinusCircel}
+        onPress={() => {
+          props.dispatchAmountTrashsState({
+            type: MINUS_TRASH,
+            wasteType: props.wasteType
+          });
+        }}
+      >
+        <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
+      </TouchableWithoutFeedback>
+      <View style={{ width: 30 }}>
+        <TextInput
+          keyboardType="numeric"
+          onChangeText={text => {
+            props.dispatchAmountTrashsState({
+              type: EDIT_TRASH,
+              wasteType: props.wasteType,
+              value: parseInt(text, 10)
+            });
+          }}
+          value={props.amountOfTrash.toString()}
+          style={{ textAlign: "center" }}
+        ></TextInput>
+      </View>
+      <TouchableWithoutFeedback
+        style={styles.plusAndMinusCircel}
+        onPress={() => {
+          props.dispatchAmountTrashsState({
+            type: ADD_TRASH,
+            wasteType: props.wasteType
+          });
+        }}
+      >
+        <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
+      </TouchableWithoutFeedback>
+    </View>
+  );
+};
 
 export default TrashCard = props => {
   // Resolve change vertical and horizontal affect to width
@@ -31,15 +113,12 @@ export default TrashCard = props => {
       Dimensions.removeEventListener("change", updateScreen);
     };
   });
-
-  const [amountOfTrash, setAmountOfTrash] = useState(props.amountOfTrash);
-
   return (
     <View
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: availableDeviceWidth * 0.8,
+        width: availableDeviceWidth * 0.9,
         height: availableDeviceHeight * 0.28,
         alignSelf: "center"
       }}
@@ -51,7 +130,10 @@ export default TrashCard = props => {
           height: availableDeviceWidth * 0.25,
           borderRadius: (availableDeviceWidth * 0.25) / 2, // divide 2 to make circle
           overflow: "hidden",
-          alignSelf: "center"
+          alignSelf: "center",
+          borderWidth: 1,
+          borderColor: "red",
+          marginHorizontal: 10
         }}
       >
         <Image
@@ -69,20 +151,23 @@ export default TrashCard = props => {
       <View
         style={{
           ...styles.descriptionContainer,
-          width: availableDeviceWidth * 0.55, // width --> 0.8(all) - 0.55(this) = 0.55 (img container)
-          height: "100%",
-          padding: 10
+          // width: availableDeviceWidth * 0.55, // width --> 0.8(all) - 0.55(this) = 0.55 (img container)
+          // height: "100%",
+          flex: 1,
+          padding: 10,
+          borderWidth: 1,
+          borderColor: "yellow"
         }}
       >
         <View style={{ ...styles.descriptionRow, flexWrap: "wrap" }}>
           <ThaiTitleText style={styles.trashName}>
-            {props.trashName}
+            {props.wasteType}
           </ThaiTitleText>
         </View>
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
           <ThaiText style={styles.trashDisposal}>
-            {props.trashDisposal ? props.trashDisposal : "ขยะรีไซเคิล"}
+            {props.wasteDisposal}
           </ThaiText>
         </View>
         <View style={styles.descriptionRow}>
@@ -90,7 +175,7 @@ export default TrashCard = props => {
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
         </View>
-        {!props.editingMode ? null : (
+        {!props.editingMode ? (
           <View
             style={{
               ...styles.descriptionRow,
@@ -99,30 +184,22 @@ export default TrashCard = props => {
               padding: 5
             }}
           >
-            <View style={styles.adjustAmountView}>
-              <ThaiText style={{ ...styles.amountOfTrash }}>จำนวน</ThaiText>
-              <TouchableWithoutFeedback style={styles.plusAndMinusCircel}>
-                <Entypo
-                  name="circle-with-minus"
-                  size={24}
-                  color={Colors.primary}
-                />
-              </TouchableWithoutFeedback>
-              {/* <ThaiText style={{ ...styles.amountOfTrash }}>
-                {props.amountOfTrash}
-              </ThaiText> */}
-              <TextInput
-                keyboardType="numeric"
-                value={amountOfTrash}
-              ></TextInput>
-              <TouchableWithoutFeedback>
-                <Entypo
-                  name="circle-with-plus"
-                  size={24}
-                  color={Colors.primary}
-                />
-              </TouchableWithoutFeedback>
-            </View>
+            <AmountOfTrash amountOfTrash={props.amountOfTrash} />
+          </View>
+        ) : (
+          <View
+            style={{
+              ...styles.descriptionRow,
+              flexDirection: "row",
+              justifyContent: "center",
+              padding: 5
+            }}
+          >
+            <AdjustAmountOfTrash
+              wasteType={props.wasteType}
+              amountOfTrash={props.amountOfTrash}
+              dispatchAmountTrashsState={props.dispatchAmountTrashsState}
+            />
           </View>
         )}
       </View>
@@ -154,10 +231,6 @@ const styles = StyleSheet.create({
   },
   trashDisposal: {
     fontSize: 12
-  },
-  adjustAmountView: {
-    flexDirection: "row",
-    justifyContent: "flex-end"
   },
   plusAndMinusCircel: {
     marginHorizontal: 5

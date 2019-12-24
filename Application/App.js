@@ -10,9 +10,10 @@ import { Provider } from "react-redux";
 import authReducer from "./store/reducers/authReducer";
 
 import ImportedFonts from "./constants/ImportedFonts.js";
+// Ignore warning timer
+import "./utils/jsTimerFix";
 YellowBox.ignoreWarnings(["Setting a timer"]);
-// console.ignoredYellowBox = ["Setting a timer"];
-console.ignoredYellowBox = ["Warning: Setting a timer"];
+
 // --- App'sFont Set-up --- //
 const fetchFonts = () => {
   return Font.loadAsync(ImportedFonts);

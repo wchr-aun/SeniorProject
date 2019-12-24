@@ -7,19 +7,14 @@ import {
   ActivityIndicator
 } from "react-native";
 import Colors from "../../constants/Colors";
+import { useSelector } from "react-redux";
 
 import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
-import queryFunctions from "../../utils/queryFunctions";
 
 export default UserHomepageScreen = props => {
-  // // User profile
-  const [userName, setUserName] = useState("");
-  const [userAddr, setUserAddr] = useState("");
-  const [userImgUrl, setUserImgUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   // Resolve change vertical and horizontal affect to width
   const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
@@ -39,6 +34,15 @@ export default UserHomepageScreen = props => {
     };
   });
 
+  // Get user profile
+  const [isLoading, setIsLoading] = useState(true);
+  const userProfile = useSelector(reducers => reducers.authReducer.user);
+  useEffect(() => {
+    console.log(userProfile);
+    setIsLoading(true);
+    if (userProfile.uid) setIsLoading(false);
+  }, [userProfile]);
+
   // For look into selling transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
@@ -48,47 +52,6 @@ export default UserHomepageScreen = props => {
       }
     });
   };
-
-  // //Get user data
-  // const getUserProfile = async () => {
-  //   let user = await firebaseUtil.auth().currentUser; // get uid
-  //   let uid = user.uid;
-
-  //   let docRef = firebaseUtil
-  //     .firestore()
-  //     .collection("users")
-  //     .doc(uid);
-
-  //   return docRef
-  //     .get()
-  //     .then(function(doc) {
-  //       if (doc.exists) {
-  //         console.log(doc.data());
-  //         let userProfile = {
-  //           name: doc.data().name + " " + doc.data().surname,
-  //           addr: doc.data().addr
-  //         };
-  //         return userProfile;
-  //       } else {
-  //         // doc.data() will be undefined in this case
-  //         console.log("No such document!");
-  //         return;
-  //       }
-  //     })
-  //     .catch(function(error) {
-  //       console.log("Error getting document:", error);
-  //     });
-  // };
-
-  useEffect(() => {
-    // Getting Userprofile
-    setIsLoading(true);
-    queryFunctions.getUserProfile().then(result => {
-      setUserName(result.name);
-      setUserAddr(result.addr);
-      setIsLoading(false);
-    });
-  }, []);
 
   return (
     <View
@@ -119,13 +82,13 @@ export default UserHomepageScreen = props => {
               paddingTop: availableDeviceHeight * 0.05
             }}
             imgUrl={
-              userImgUrl
-                ? userImgUrl
+              userProfile.imgUrl
+                ? userProfile.imgUrl
                 : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
             }
-            userName={userName}
+            userName={userProfile.name + " " + userProfile.surname}
             meetTime={"18 มกรา 15.00 น."}
-            address={userAddr}
+            address={userProfile.addr}
           />
           <View style={styles.recentSellTransactionContainer}>
             <View

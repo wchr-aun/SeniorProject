@@ -29,12 +29,31 @@ const UserhomepageNavigator = createStackNavigator(
 
 const ShowAllUserTrashNavigator = createStackNavigator(
   {
-    ShowAllUserTrashScreen: ShowAllUserTrashScreen,
-    EditTrashForSellerScreen: EditTrashForSellerScreen,
-    SellingTrashScreen: SellingTrashScreen
+    ShowAllUserTrashScreen: {
+      screen: ShowAllUserTrashScreen,
+      navigationOptions: {
+        headerTitle: "ขยะที่สะสมไว้"
+      }
+    },
+    // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
+    SellingTrashScreen: {
+      screen: SellingTrashScreen,
+      navigationOptions: { headerTitle: "ขายขยะ" }
+    }
   },
-  { headerMode: "none" }
+  { headerMode: Platform.OS === "android" ? "screen" : "float" }
 );
+
+// Hiding bottom tabbar
+ShowAllUserTrashNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
 
 // Trash Main
 const SellerBottomTabConfig = {
