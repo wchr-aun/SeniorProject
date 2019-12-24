@@ -113,7 +113,6 @@ export default TrashCard = props => {
       Dimensions.removeEventListener("change", updateScreen);
     };
   });
-
   return (
     <View
       style={{
