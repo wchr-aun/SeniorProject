@@ -1,6 +1,6 @@
 import { YellowBox } from "react-native";
 import React, { useState, useEffect } from "react";
-import SellerNavigator from "./navigation/SellerNavigator.js";
+import AppNavigator from "./navigation/AppNavigator";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <SellerNavigator />
+      <AppNavigator />
     </Provider>
   );
 }

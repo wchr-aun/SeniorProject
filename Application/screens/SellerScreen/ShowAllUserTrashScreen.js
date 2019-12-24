@@ -114,7 +114,8 @@ export default ShowAllUserTrashScreen = props => {
     //     setIsRefreshing(false);
     //   });
     // });
-    dispatch(loadSellerItems());
+    await dispatch(loadSellerItems());
+    setIsRefreshing(false);
   };
 
   // Load trash data for initial
