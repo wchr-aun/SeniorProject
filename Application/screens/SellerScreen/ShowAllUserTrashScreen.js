@@ -12,8 +12,7 @@ import {
 
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
-import queryFunctions from "../../utils/queryFunctions";
-import cloudFunctions from "../../utils/cloudFunctions";
+import firebaseFunctions from "../../utils/firebaseFunctions";
 
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
@@ -89,10 +88,10 @@ export default ShowAllUserTrashScreen = props => {
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    queryFunctions.getSellerList().then(itemsReturned => {
+    firebaseFunctions.getSellerList().then(itemsReturned => {
       new Promise((resolve, reject) => {
         itemsReturned.forEach((item, index) => {
-          queryFunctions
+          firebaseFunctions
             .getWasteTypeDetail(item.wasteType)
             .then(wasteTypeDetail => {
               itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
@@ -208,7 +207,7 @@ export default ShowAllUserTrashScreen = props => {
                 color={Colors.primary}
                 onPress={() => {
                   setEditingMode(false);
-                  cloudFunctions.addTrashHandler({ items: trashsState.items });
+                  firebaseFunctions.addTrashHandler({ items: trashsState.items });
                   dispatchAmountTrashsState({
                     type: SET_TRASH,
                     items: trashsState.items
