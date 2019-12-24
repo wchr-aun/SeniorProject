@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useState, useEffect } from "react";
+import React, { useReducer, useCallback, useState, useEffect } from "react"
 import {
   ScrollView,
   View,
@@ -7,45 +7,48 @@ import {
   Button,
   ActivityIndicator,
   Alert
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { sha256 } from "js-sha256";
+} from "react-native"
+import { LinearGradient } from "expo-linear-gradient"
+import { sha256 } from "js-sha256"
 
-import Card from "../components/UI/Card";
-import Input from "../components/UI/Input";
-import Colors from "../constants/Colors";
-import firebaseUtil from "../firebase";
+import Card from "../components/UI/Card"
+import Input from "../components/UI/Input"
+import Colors from "../constants/Colors"
+import firebaseUtil from "../firebase"
 
-const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE"
 // for updaing value of variable form
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
       [action.inputIdentifier]: action.value
-    };
+    }
     const updatedValidities = {
       ...state.inputValidities,
       [action.inputIdentifier]: action.isValid
-    };
-    let updatedAllFormIsValid = true;
+    }
+    let updatedAllFormIsValid = true
     for (const key in updatedValidities) {
-      updatedAllFormIsValid = updatedAllFormIsValid && updatedValidities[key];
+      updatedAllFormIsValid = updatedAllFormIsValid && updatedValidities[key]
     }
     return {
       ...state,
       inputValues: updatedValues,
       inputValidities: updatedValidities,
       allFormIsValid: updatedAllFormIsValid
-    };
+    }
   }
-  return state;
-};
+  return state
+}
 
 export default UserSignupScreen = props => {
-  // isClick = false;
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  useEffect(() => {
+    console.log("signup")
+  }, [])
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
@@ -70,26 +73,26 @@ export default UserSignupScreen = props => {
       phoneNo: false
     },
     allFormIsValid: false
-  });
+  })
 
   // For alerting user an signin-signup action
   useEffect(() => {
     if (error) {
-      Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }]);
+      Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }])
     }
-  }, [error]);
+  }, [error])
 
   // firebase call cloud function
   const signupHandler = async () => {
-    setError(null);
-    setIsLoading(true);
+    setError(null)
+    setIsLoading(true)
 
     // Check password
     if (
       formState.inputValues.password !== formState.inputValues.confirmpassword
     ) {
-      setError("your password and confirmation password must match");
-      return;
+      setError("Your password and confirmation password must match")
+      return
     }
 
     let newUser = {
@@ -100,33 +103,31 @@ export default UserSignupScreen = props => {
       surname: formState.inputValues.surname,
       addr: formState.inputValues.addr,
       phoneNo: "+66" + formState.inputValues.phoneNo.toString()
-    };
+    }
 
-    let createAccount = firebaseUtil.functions().httpsCallable("createAccount");
+    let createAccount = firebaseUtil.functions().httpsCallable("createAccount")
     // Call firebase cloud functio
-    return createAccount(newUser).then(function(result) {
+    return createAccount(newUser).then(result => {
       // Read result of the Cloud Function.
-      setIsLoading(false);
-      console.log(result);
+      setIsLoading(true)
       if (result.data === true) {
-        firebaseUtil.auth().signInWithEmailAndPassword(formState.inputValues.email, sha256(formState.inputValues.password)).then(() => {
-          setIsLoading(false);
-          console.log('gogogogogogogogogogogogo')
-          props.navigation.navigate("UserSigninScreen");
-        })
-        .catch(err => {
-          // throw new Error(err.message);
-          setIsLoading(false);
-          // setError(err.message);
-        });
-        return;
+          firebaseUtil.auth().signInWithEmailAndPassword(formState.inputValues.email, sha256(formState.inputValues.password))
+          .then(() => {
+            setIsLoading(false)
+            props.navigation.navigate("StartupScreen")
+            return
+          })
+          .catch(error => {
+            console.log(error)
+            return
+          })
       } else {
-        console.log(result);
-        setError(result.data.errorInfo.message);
-        return;
+        setIsLoading(false)
+        setError(result.err)
+        return
       }
-    });
-  };
+    })
+  }
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -135,9 +136,9 @@ export default UserSignupScreen = props => {
         value: inputValue,
         isValid: inputValidity,
         inputIdentifier: inputIdentifier
-      });
+      })
     }
-  );
+  )
 
   return (
     <KeyboardAvoidingView
@@ -245,7 +246,7 @@ export default UserSignupScreen = props => {
                   title="ลงทะเบียน"
                   color={Colors.primary}
                   onPress={() => {
-                    signupHandler();
+                    signupHandler()
                   }}
                 />
               )}
@@ -255,7 +256,7 @@ export default UserSignupScreen = props => {
                 title="ย้อนกลับ"
                 color={Colors.secondary}
                 onPress={() => {
-                  props.navigation.navigate("UserSigninScreen");
+                  props.navigation.navigate("UserSigninScreen")
                 }}
               />
             </View>
@@ -263,8 +264,8 @@ export default UserSignupScreen = props => {
         </Card>
       </LinearGradient>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   screen: {
@@ -284,4 +285,4 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 10
   }
-});
+})

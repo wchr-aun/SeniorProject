@@ -42,7 +42,7 @@ const formReducer = (state, action) => {
 };
 
 export default ConfigAccountScreen = props => {
-  console.log('comecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecome')
+  console.log('config')
   const [switchOn1, setSwitchOn1] = useState(false);
 
   return (
@@ -71,10 +71,6 @@ export default ConfigAccountScreen = props => {
       </LinearGradient>
     </KeyboardAvoidingView>
   );
-};
-
-UserAuthenScreen.navigationOptions = {
-  headerTitle: "UserAuthenScreen"
 };
 
 const styles = StyleSheet.create({

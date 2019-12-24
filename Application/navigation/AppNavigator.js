@@ -131,16 +131,16 @@ const SellerNavigator =
 const UserAuthenNavigator = createStackNavigator(
   {
     UserSigninScreen: UserSigninScreen,
-    UserSignupScreen: UserSignupScreen,
-    ConfigAccountScreen
+    UserSignupScreen: UserSignupScreen
   },
   { headerMode: "none" }
 );
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createSwitchNavigator({
   StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
-  SellerNavigator: SellerNavigator //Seller Homepage
+  SellerNavigator: SellerNavigator, //Seller Homepage
+  ConfigAccountScreen: ConfigAccountScreen
 });
 
 export default createAppContainer(MainNavigator);

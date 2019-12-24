@@ -44,6 +44,9 @@ const formReducer = (state, action) => {
 };
 
 export default UserAuthenScreen = props => {
+  useEffect(() => {
+    console.log("login");
+  }, [])
   const signupBeforeSignin = props.navigation.getParam("signupBeforeSignin");
 
   // isClick = false;
@@ -75,7 +78,6 @@ export default UserAuthenScreen = props => {
   const authHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
-    console.log('ei yung wa')
     let email = formState.inputValues.email;
     let password = formState.inputValues.password
       ? sha256(formState.inputValues.password)

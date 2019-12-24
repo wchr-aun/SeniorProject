@@ -15,7 +15,9 @@ import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
 
 export default UserHomepageScreen = props => {
-
+  useEffect(() => {
+    console.log("homepage");
+  }, [])
   // Resolve change vertical and horizontal affect to width
   const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
     Dimensions.get("window").width

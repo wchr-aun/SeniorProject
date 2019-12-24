@@ -7,6 +7,8 @@ import * as authAction from "../store/actions/authAction";
 export default UserStartupScreen = props => {
   const dispatch = useDispatch();
 
+  console.log('startup')
+
   useEffect(() => {
     trySignin();
   }, [dispatch]);
@@ -15,15 +17,13 @@ export default UserStartupScreen = props => {
     firebaseUtil.auth().onAuthStateChanged(async user => {
       if (user != null) {
         // get user profile from redux
-        dispatch(authAction.signin());
+        await dispatch(authAction.signin());
 
-        // auto login
-        console.log('kuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuy')
-        props.navigation.navigate("SellerNavigator");
-      } else {
-        // No user no exist in firebase firestore
-        props.navigation.navigate("UserAuthenNavigator"); //uid
+        if (firebaseUtil.auth().currentUser.displayName !== "enable") 
+          props.navigation.navigate("ConfigAccountScreen")
+        else props.navigation.navigate("SellerNavigator")
       }
+      else props.navigation.navigate("UserAuthenNavigator")
     });
   };
 
