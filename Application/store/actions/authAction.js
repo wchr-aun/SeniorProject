@@ -1,10 +1,20 @@
 import { AsyncStorage } from "react-native";
-import firebaseUtil from "../../firebase";
+import queryFunctions from "../../utils/queryFunctions";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGIN = "LOGIN";
 export const CREATEACCOUNT = "CREATEACCOUNT";
 export const LOGOUT = "LOGOUT";
+export const SIGNIN = "SIGNIN";
+
+export const signin = () => {
+  return async dispatch => {
+    // do async task
+    await queryFunctions.getUserProfile().then(result => {
+      dispatch({ type: SIGNIN, userProfile: result });
+    });
+  };
+};
 
 export const logout = () => {
   // clearLogoutTimer();

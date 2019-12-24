@@ -30,8 +30,7 @@ const getSellerItems = async () => {
 
 // Get firebase UserProfile
 const getUsers = async () => {
-  let user = firebaseUtil.auth().currentUser; // get uid
-  let uid = user.uid;
+  let uid = firebaseUtil.auth().currentUser.uid; // get uid
 
   let docRef = firebaseUtil
     .firestore()
@@ -43,8 +42,12 @@ const getUsers = async () => {
     .then(function(doc) {
       if (doc.exists) {
         let userProfile = {
-          name: doc.data().name + " " + doc.data().surname,
-          addr: doc.data().addr
+          uid: uid,
+          name: doc.data().name,
+          surname: doc.data().surname,
+          addr: doc.data().addr,
+          enableAddr: doc.data().enableAddr,
+          enableSearch: doc.data().enableSearch
         };
         return userProfile;
       } else {

@@ -18,6 +18,29 @@ const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
 const EDIT_TRASH = "EDIT_TRASH";
 
+const AmountOfTrash = props => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center"
+      }}
+    >
+      <View style={{ marginRight: 5 }}>
+        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
+          จำนวน
+        </ThaiText>
+      </View>
+      <View style={{ width: 30 }}>
+        <Text style={{ textAlign: "center" }}>
+          {props.amountOfTrash.toString()}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const AdjustAmountOfTrash = props => {
   return (
     <View
@@ -68,29 +91,6 @@ const AdjustAmountOfTrash = props => {
       >
         <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
-    </View>
-  );
-};
-
-const AmountOfTrash = props => {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignSelf: "flex-end",
-        alignItems: "center"
-      }}
-    >
-      <View style={{ marginRight: 5 }}>
-        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
-          จำนวน
-        </ThaiText>
-      </View>
-      <View style={{ width: 30 }}>
-        <Text style={{ textAlign: "center" }}>
-          {props.amountOfTrash.toString()}
-        </Text>
-      </View>
     </View>
   );
 };
