@@ -113,10 +113,6 @@ const addTrashHandler = items => {
 };
 
 export default {
-  
-};
-
-export default {
   getSellerItems,
   getUsers,
   getWasteTypeDetail,
