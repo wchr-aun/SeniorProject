@@ -23,7 +23,8 @@ exports.createAccount = functions.https.onCall((data, context) => {
     uid: data.username,
     email: data.email,
     phoneNumber: data.phoneNo,
-    password: data.password
+    password: data.password,
+    displayName: 'disabled'
   }).then(userRecord => {
     usersDB.doc(userRecord.uid).set({
       name,
@@ -220,9 +221,6 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     })
   }
   else return {err: "The request is denied because of authetication"}
-})
-
-exports.enableUser = functions.https.onCall((data, context) => {
 })
 
 exports.getTransactionsForSellers = functions.https.onCall((data, context) => {
