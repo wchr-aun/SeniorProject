@@ -138,7 +138,7 @@ const UserAuthenNavigator = createStackNavigator(
 const MainNavigator = createSwitchNavigator({
   StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
-  SellerNavigator: SellerNavigator //bottom nav
+  SellerNavigator: SellerNavigator //Seller Homepage
 });
 
 export default createAppContainer(MainNavigator);

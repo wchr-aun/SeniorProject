@@ -13,8 +13,6 @@ import {
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import firebaseFunctions from "../../utils/firebaseFunctions";
-import { loadSellerItems } from "../../store/actions/sellerItemsAction";
-import { useDispatch } from "react-redux";
 
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
@@ -76,7 +74,6 @@ export default ShowAllUserTrashScreen = props => {
   // trash user snapshot
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const dispatch = useDispatch();
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
@@ -114,8 +111,14 @@ export default ShowAllUserTrashScreen = props => {
     //     setIsRefreshing(false);
     //   });
     // });
-    await dispatch(loadSellerItems());
-    setIsRefreshing(false);
+    firebaseFunctions.getSellerListAndWasteType().then(itemsReturned => {
+      console.log(itemsReturned);
+      dispatchAmountTrashsState({
+        type: SET_TRASH,
+        items: [...itemsReturned]
+      });
+      setIsRefreshing(false);
+    });
   };
 
   // Load trash data for initial
