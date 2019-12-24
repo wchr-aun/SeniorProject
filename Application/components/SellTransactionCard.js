@@ -14,7 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiText from "./ThaiText";
-import formatDate from "../utils/libary";
+import libary from "../utils/libary";
 
 export default SellTransactionCard = props => {
   // Set-up the touchable view
@@ -52,7 +52,7 @@ export default SellTransactionCard = props => {
             </View>
             <View>
               <ThaiText style={{ fontSize: 14 }}>
-                {formatDate(props.meetTime)}
+                {libary.formatDate(props.meetTime)}
               </ThaiText>
             </View>
           </View>

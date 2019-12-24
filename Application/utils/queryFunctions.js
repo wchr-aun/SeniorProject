@@ -14,13 +14,11 @@ const getSellerItems = async () => {
     .get()
     .then(function(doc) {
       if (doc.exists) {
-        // console.log(doc.data().items[0].amount);
-        // console.log(doc.data().items[0].wasteType.id);
         return doc.data().items;
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
-        return;
+        // console.log("No such document!");
+        return [];
       }
     })
     .catch(function(error) {
@@ -114,7 +112,7 @@ const searchBuyers = async () => {
 export default {
   getSellerList: getSellerItems,
   getUserProfile: getUsers,
-  getWasteTypeDetail
+  getWasteTypeDetail,
   getTransactions,
   searchBuyers
 }
