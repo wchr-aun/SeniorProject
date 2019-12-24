@@ -1,5 +1,7 @@
-export default function formatDate(date) {
-  var monthNames = [
+import {getTransactions} from './queryFunctions'
+
+const formatDate = date => {
+  let monthNames = [
     "มกราคม",
     "กุมภาพันธ์",
     "มีนาคม",
@@ -13,10 +15,24 @@ export default function formatDate(date) {
     "พฤศจิกายน",
     "ธันวาคม"
   ];
-
-  var day = date.getDate();
-  var monthIndex = date.getMonth();
-  var year = date.getFullYear();
-
-  return day + " " + monthNames[monthIndex] + " " + (year + 543);
+  return date.getDate() + " " + monthNames[date.getMonth()] + " " + (date.getFullYear() + 543);
 }
+
+const getTransactionList = async (role) => {
+  let allTx = []
+  for (let i = 0; i < 6; i++) {
+    await getTransactions(role, i).then(eachTxStatus => {
+      allTx.push(eachTxStatus)
+    }).catch(error => {
+      throw new error("Error getting document:", error)
+    })
+  }
+  return allTx
+}
+
+export default {
+  formatDate,
+  getTransactionList
+}
+
+

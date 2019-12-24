@@ -44,8 +44,8 @@ exports.createAccount = functions.https.onCall((data, context) => {
 exports.addWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
     let items = []
-    data.items.forEach(item => { items.push({wasteType: firestore.doc(item.wasteType), amount: Number(item.amount)}) })
-    return sellerDB.doc(context.auth.uid).set({ items: items }, {merge: true}).then(() => {
+    data.items.forEach(item => { items.push({wasteType: item.wasteType, amount: Number(item.amount)}) })
+    return sellerDB.doc(context.auth.uid).set({ items }, {merge: true}).then(() => {
       return true
     }).catch(err => {
       return {err}
@@ -82,7 +82,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               addr,
               createTimestamp: new Date(),
               assignedTime: new Date(data.assignedTime),
-              txStatus: "Waiting"
+              txStatus: 0
             }).then(() => {
               return true
             }).catch(err => {
@@ -132,15 +132,14 @@ exports.toggleEnableSearch = functions.https.onCall((data, context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
-exports.respondRequest = functions.https.onCall((data, context) => {
-  if (context.auth != null){
+exports.changeTxStatus = functions.https.onCall((data, context) => {
+  if (context.auth == null){
     return txDB.doc(data.txID).get().then(doc => {
-      if (doc.data().txStatus == "Waiting" || doc.data().txStatus == "Conditional Waiting") {
-        if (doc.data().txType == "Choose Buyer Selling") {
-          if (data.respond == "Completed" || data.respond == "Canceled") {
+      if (doc.data().txStatus < data.status && doc.data().txStatus != 4) {
+        if (doc.data().txType == 0) {
+          if (data.status != 4 && data.status != 5) {
             return txDB.doc(data.txID).update({
-              txStatus: data.respond,
-              completedTime: new Date()
+              txStatus: data.status
             }).then(() => {
               return true
             }).catch(err => {
@@ -149,7 +148,8 @@ exports.respondRequest = functions.https.onCall((data, context) => {
           }
           else {
             return txDB.doc(data.txID).update({
-              txStatus: data.respond
+              txStatus: data.status,
+              completedTime: new Date()
             }).then(() => {
               return true
             }).catch(err => {
@@ -157,17 +157,28 @@ exports.respondRequest = functions.https.onCall((data, context) => {
             })
           }
         }
-        else if (doc.data().txType == "Quick Selling") {
-          return txDB.doc(data.txID).set({
-            txStatus: data.respond,
-            buyer: context.auth.uid,
-            items: data.items,
-            completedTime: new Date()
-          }, { merge: true }).then(() => {
-            return true
-          }).catch(err => {
-            return {err}
-          })
+        else if (doc.data().txType == 1) {
+          if (doc.data().txStatus == 0) {
+            return txDB.doc(data.txID).set({
+              txStatus: data.status,
+              buyer: context.auth.uid,
+              items: data.items
+            }, { merge: true }).then(() => {
+              return true
+            }).catch(err => {
+              return {err}
+            })
+          }
+          else if (doc.data().txStatus == 4 || doc.data().txStatus == 5) {
+            return txDB.doc(data.txID).set({
+              txStatus: data.status,
+              completedTime: new Date()
+            }, { merge: true }).then(() => {
+              return true
+            }).catch(err => {
+              return {err}
+            })
+          }
         }
         else return {err: "The transaction format is incorrect"}
       }
@@ -209,6 +220,22 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     })
   }
   else return {err: "The request is denied because of authetication"}
+})
+
+exports.enableUser = functions.https.onCall((data, context) => {
+  if ()
+})
+
+exports.getTransactionsForSellers = functions.https.onCall((data, context) => {
+  for (let i = 0; i < 6; i++) {
+    return txDB.where("seller", "==", "anaunz").where("txStatus", "==", i).orderBy("createTimestamp", "desc").get().then(querySnapshot => {
+      let temp = []
+      querySnapshot.forEach(function(doc) {
+        temp.push(doc.data().createTimestamp)
+      })
+      return temp
+    })
+  }
 })
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
