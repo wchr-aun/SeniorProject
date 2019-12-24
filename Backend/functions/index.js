@@ -223,7 +223,6 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
 })
 
 exports.enableUser = functions.https.onCall((data, context) => {
-  if ()
 })
 
 exports.getTransactionsForSellers = functions.https.onCall((data, context) => {
