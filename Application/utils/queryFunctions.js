@@ -14,13 +14,11 @@ const getSellerItems = async () => {
     .get()
     .then(function(doc) {
       if (doc.exists) {
-        // console.log(doc.data().items[0].amount);
-        // console.log(doc.data().items[0].wasteType.id);
         return doc.data().items;
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
-        return;
+        // console.log("No such document!");
+        return [];
       }
     })
     .catch(function(error) {
@@ -89,32 +87,30 @@ const getWasteTypeDetail = async wasteTypeId => {
 
 const getTransactions = async (role, status) => {
   return firebaseUtil
-  .firestore()
-  .collection("transactions")
-  .where(role, "==", firebaseUtil.auth().currentUser.uid)
-  .where("txStatus", "==", status)
-  .orderBy("createTimestamp", "desc")
-  .get()
-  .then(querySnapshot => {
-    let tx = []
-    querySnapshot.forEach(function(doc) {
-      tx.push(doc.data())
+    .firestore()
+    .collection("transactions")
+    .where(role, "==", firebaseUtil.auth().currentUser.uid)
+    .where("txStatus", "==", status)
+    .orderBy("createTimestamp", "desc")
+    .get()
+    .then(querySnapshot => {
+      let tx = [];
+      querySnapshot.forEach(function(doc) {
+        tx.push(doc.data());
+      });
+      return tx;
     })
-    return tx
-  })
-  .catch(function(error) {
-    throw new error("Error getting document:", error)
-  })
-}
+    .catch(function(error) {
+      throw new error("Error getting document:", error);
+    });
+};
 
-const searchBuyers = async () => {
-  
-}
+const searchBuyers = async () => {};
 
 export default {
   getSellerList: getSellerItems,
   getUserProfile: getUsers,
-  getWasteTypeDetail
+  getWasteTypeDetail,
   getTransactions,
   searchBuyers
-}
+};
