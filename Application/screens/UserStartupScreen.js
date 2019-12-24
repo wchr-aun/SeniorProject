@@ -17,11 +17,6 @@ export default UserStartupScreen = props => {
         // get user profile from redux
         await dispatch(authAction.signin());
 
-        console.log(
-          "firebaseUtil.auth().currentUser from startup" +
-            firebaseUtil.auth().currentUser
-        );
-
         // auto login
         props.navigation.navigate("SellerNavigator");
       } else {

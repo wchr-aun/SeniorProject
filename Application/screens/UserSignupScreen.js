@@ -109,9 +109,14 @@ export default UserSignupScreen = props => {
       setIsLoading(false);
       console.log(result);
       if (result.data === true) {
-        props.navigation.navigate({
-          routeName: "UserSigninScreen",
-          params: { signupBeforeSignin: true }
+        firebaseUtil.auth().signInWithEmailAndPassword(formState.inputValues.email, sha256(formState.inputValues.password)).then(() => {
+          setIsLoading(false);
+          props.navigation.navigate("UserAuthenNavigator");
+        })
+        .catch(err => {
+          // throw new Error(err.message);
+          setIsLoading(false);
+          // setError(err.message);
         });
         return;
       } else {

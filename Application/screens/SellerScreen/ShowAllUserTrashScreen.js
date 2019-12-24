@@ -88,7 +88,7 @@ export default ShowAllUserTrashScreen = props => {
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    firebaseFunctions.getSellerList().then(itemsReturned => {
+    firebaseFunctions.getSellerItems().then(itemsReturned => {
       new Promise((resolve, reject) => {
         itemsReturned.forEach((item, index) => {
           firebaseFunctions
