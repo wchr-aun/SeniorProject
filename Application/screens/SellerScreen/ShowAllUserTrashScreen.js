@@ -13,6 +13,8 @@ import {
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import firebaseFunctions from "../../utils/firebaseFunctions";
+import { loadSellerItems } from "../../store/actions/sellerItemsAction";
+import { useDispatch } from "react-redux";
 
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
@@ -74,6 +76,7 @@ export default ShowAllUserTrashScreen = props => {
   // trash user snapshot
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const dispatch = useDispatch();
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
@@ -88,29 +91,30 @@ export default ShowAllUserTrashScreen = props => {
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    firebaseFunctions.getSellerItems().then(itemsReturned => {
-      new Promise((resolve, reject) => {
-        itemsReturned.forEach((item, index) => {
-          firebaseFunctions
-            .getWasteTypeDetail(item.wasteType)
-            .then(wasteTypeDetail => {
-              itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-              itemsReturned[index].wasteDescription =
-                wasteTypeDetail.description;
-              if (index === itemsReturned.length - 1) {
-                resolve();
-              }
-            });
-        });
-      }).then(() => {
-        console.log(itemsReturned);
-        dispatchAmountTrashsState({
-          type: SET_TRASH,
-          items: [...itemsReturned]
-        });
-        setIsRefreshing(false);
-      });
-    });
+    // firebaseFunctions.getSellerItems().then(itemsReturned => {
+    //   new Promise((resolve, reject) => {
+    //     itemsReturned.forEach((item, index) => {
+    //       firebaseFunctions
+    //         .getWasteTypeDetail(item.wasteType)
+    //         .then(wasteTypeDetail => {
+    //           itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
+    //           itemsReturned[index].wasteDescription =
+    //             wasteTypeDetail.description;
+    //           if (index === itemsReturned.length - 1) {
+    //             resolve();
+    //           }
+    //         });
+    //     });
+    //   }).then(() => {
+    //     console.log(itemsReturned);
+    //     dispatchAmountTrashsState({
+    //       type: SET_TRASH,
+    //       items: [...itemsReturned]
+    //     });
+    //     setIsRefreshing(false);
+    //   });
+    // });
+    dispatch(loadSellerItems());
   };
 
   // Load trash data for initial
@@ -207,7 +211,9 @@ export default ShowAllUserTrashScreen = props => {
                 color={Colors.primary}
                 onPress={() => {
                   setEditingMode(false);
-                  firebaseFunctions.addTrashHandler({ items: trashsState.items });
+                  firebaseFunctions.addTrashHandler({
+                    items: trashsState.items
+                  });
                   dispatchAmountTrashsState({
                     type: SET_TRASH,
                     items: trashsState.items
@@ -243,7 +249,6 @@ export default ShowAllUserTrashScreen = props => {
         )}
       </View>
     </KeyboardAvoidingView>
-
   );
 };
 

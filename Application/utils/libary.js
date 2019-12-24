@@ -1,4 +1,4 @@
-import firebaseFunctions from './firebaseFunctions'
+import firebaseFunctions from "./firebaseFunctions";
 
 const formatDate = date => {
   let monthNames = [
@@ -15,11 +15,17 @@ const formatDate = date => {
     "พฤศจิกายน",
     "ธันวาคม"
   ];
-  return date.getDate() + " " + monthNames[date.getMonth()] + " " + (date.getFullYear() + 543);
-}
+  return (
+    date.getDate() +
+    " " +
+    monthNames[date.getMonth()] +
+    " " +
+    (date.getFullYear() + 543)
+  );
+};
 
-const getTransactionList = async (role) => {
-  let allTx = []
+const getTransactionList = async role => {
+  let allTx = [];
   for (let i = 0; i < 6; i++) {
     await firebaseFunctions.getTransactions(role, i).then(eachTxStatus => {
       allTx.push(eachTxStatus)
@@ -27,10 +33,10 @@ const getTransactionList = async (role) => {
       throw new error("Error getting document:", error)
     })
   }
-  return allTx
-}
+  return allTx;
+};
 
 export default {
   formatDate,
   getTransactionList
-}
+};
