@@ -87,25 +87,27 @@ const getWasteTypeDetail = async wasteTypeId => {
 
 const getTransactions = async (role, status) => {
   return firebaseUtil
-    .firestore()
-    .collection("transactions")
-    .where(role, "==", firebaseUtil.auth().currentUser.uid)
-    .where("txStatus", "==", status)
-    .orderBy("createTimestamp", "desc")
-    .get()
-    .then(querySnapshot => {
-      let tx = [];
-      querySnapshot.forEach(function(doc) {
-        tx.push(doc.data());
-      });
-      return tx;
+  .firestore()
+  .collection("transactions")
+  .where(role, "==", firebaseUtil.auth().currentUser.uid)
+  .where("txStatus", "==", status)
+  .orderBy("createTimestamp", "desc")
+  .get()
+  .then(querySnapshot => {
+    let tx = []
+    querySnapshot.forEach(function(doc) {
+      tx.push(doc.data())
     })
-    .catch(function(error) {
-      throw new error("Error getting document:", error);
-    });
-};
+    return tx
+  })
+  .catch(function(error) {
+    throw new error("Error getting document:", error)
+  })
+}
 
-const searchBuyers = async () => {};
+const searchBuyers = async () => {
+  
+}
 
 export default {
   getSellerList: getSellerItems,
@@ -113,4 +115,4 @@ export default {
   getWasteTypeDetail,
   getTransactions,
   searchBuyers
-};
+}
