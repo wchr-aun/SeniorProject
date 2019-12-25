@@ -44,6 +44,7 @@ const formReducer = (state, action) => {
 export default ConfigAccountScreen = props => {
   console.log('config')
   const [switchOn1, setSwitchOn1] = useState(false);
+  const [switchOn2, setSwitchOn2] = useState(false);
 
   return (
     <KeyboardAvoidingView
@@ -54,18 +55,41 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <SwitchToggle
-              switchOn={switchOn1}
-              onPress={() => setSwitchOn1(!switchOn1)}
-            />
-            <Button
-              title="Seller"
-              color={Colors.primary}
-            />
-            <Button
-              title="Buyer"
-              color={Colors.primary}
-            />
+            <View style={{flexDirection:"row", alignItems:"center"}}>
+              <Text>Enable Search </Text>
+              <SwitchToggle
+                switchOn={switchOn1}
+                onPress={() => setSwitchOn1(!switchOn1)}
+                duration={150}
+                backgroundColorOn="#5fdba7"
+                backgroundColorOff="#808080"
+                circleColorOff="#ffffff"
+                circleColorOn="#ffffff"
+              />
+            </View>
+            <View style={{flexDirection:"row", alignItems:"center"}}>
+              <Text>Show Address </Text>
+              <SwitchToggle
+                switchOn={switchOn2}
+                onPress={() => setSwitchOn2(!switchOn2)}
+                uration={150}
+                backgroundColorOn="#5fdba7"
+                backgroundColorOff="#808080"
+                circleColorOff="#ffffff"
+                circleColorOn="#ffffff"
+              />
+            </View>
+            <View style={{flexDirection:"row", alignContent:"center"}}>
+              <Button
+                title="Seller"
+                color={Colors.primary}
+              />
+              <Button
+                title="Buyer"
+                color={Colors.primary}
+              />
+            </View>
+            
           </ScrollView>
         </Card>
       </LinearGradient>
