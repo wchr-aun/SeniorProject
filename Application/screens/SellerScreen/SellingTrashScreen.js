@@ -12,6 +12,8 @@ import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import { useSelector, useDispatch } from "react-redux";
 
+import { chooseBuyerSell } from "../../store/actions/sellerItemsAction";
+
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
@@ -21,8 +23,6 @@ const SET_TRASH = "SET_TRASH";
 const trashSellingReducer = (state, action) => {
   let founded = false;
   let updatedItems = [...state.items];
-  console.log("trashSellingReducer action coming... " + action);
-  console.log(action);
 
   switch (action.type) {
     case SET_TRASH:
@@ -174,13 +174,22 @@ export default SellingTrashScreen = props => {
           />
           <View>
             <Button
-              title={"check dispatch"}
+              title={"Sell"}
               onPress={() => {
-                dispatch({
-                  type: "SELLING_TRASH",
-                  addr: userProfile.addr,
-                  assignedTime: new Date()
-                });
+                // dispatch({
+                //   type: "SELLING_TRASH",
+                //   addr: userProfile.addr,
+                //   buyer: "nonara",
+                //   assignedTime: new Date()
+                // });
+                dispatch(
+                  chooseBuyerSell(
+                    userProfile.addr,
+                    trashsState.items,
+                    "nora-buyer",
+                    0.5
+                  )
+                );
               }}
             ></Button>
           </View>

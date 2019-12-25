@@ -13,7 +13,7 @@ import {
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import firebaseFunctions from "../../utils/firebaseFunctions";
-import { setUserTrash } from "../../store/actions/sellerItemsAction";
+import { setUserWaste } from "../../store/actions/sellerItemsAction";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -92,14 +92,14 @@ export default ShowAllUserTrashScreen = props => {
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    let itemsReturned = await firebaseFunctions.getSellerListAndWasteType();
+    let sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
     // Set user trash in local reducer
     dispatchAmountTrashsState({
       type: SET_TRASH,
-      items: [...itemsReturned]
+      items: [...sellerItemsAndWasteType]
     });
     // store to redux
-    dispatch(setUserTrash(itemsReturned));
+    dispatch(setUserWaste(sellerItemsAndWasteType));
     setIsRefreshing(false);
   };
 
@@ -197,9 +197,13 @@ export default ShowAllUserTrashScreen = props => {
                 color={Colors.primary}
                 onPress={() => {
                   setEditingMode(false);
-                  firebaseFunctions.addTrashHandler({
+                  // update new wastesData on firebase
+                  firebaseFunctions.addWaste({
                     items: trashsState.items
                   });
+                  // update new wasteData on redux
+                  dispatch(setUserWaste(trashsState.items));
+                  // update new wasteData on local redux
                   dispatchAmountTrashsState({
                     type: SET_TRASH,
                     items: trashsState.items

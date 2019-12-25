@@ -1,4 +1,4 @@
-import { SET_USERTRASH } from "../actions/sellerItemsAction";
+import { CHOOSEBUYER_SELL, SET_WASTE } from "../actions/sellerItemsAction";
 
 const initialState = {
   items: []
@@ -6,13 +6,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case SET_USERTRASH:
+    case SET_WASTE:
       return {
         ...state,
         items: action.items
       };
-    case "SELLING_TRASH":
-      console.log(action);
+    case CHOOSEBUYER_SELL:
       return {
         ...state
       };

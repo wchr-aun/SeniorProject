@@ -110,14 +110,35 @@ const getTransactions = async (role, status) => {
 
 const searchBuyers = async () => {};
 
-const addTrashHandler = items => {
+const addWaste = items => {
   let addWaste = firebaseUtil.functions().httpsCallable("addWaste");
   console.log(items);
   // Call firebase cloud function
   return addWaste(items)
     .then(function(result) {
       // Read result of the Cloud Function.
-      console.log("From EditTrashForSeller: addWaste added");
+      console.log("From firebaseFunctions addWaste: addWaste added");
+      console.log(result);
+    })
+    .catch(function(error) {
+      // Getting the Error details.
+      console.log("From EditTrashForSeller: error code :" + error.code);
+      console.log("From EditTrashForSeller: error message :" + error.message);
+      console.log("From EditTrashForSeller: error details :" + error.details);
+    });
+};
+
+const sellWaste = transaction => {
+  let sellWaste = firebaseUtil.functions().httpsCallable("sellWaste");
+  console.log(
+    "transaction before sending to firebase sellWaste cloud function"
+  );
+  console.log(transaction);
+  // Call firebase cloud function
+  return sellWaste(transaction)
+    .then(function(result) {
+      // Read result of the Cloud Function.
+      console.log("From firebaseSellWaste: sellWaste");
       console.log(result);
     })
     .catch(function(error) {
@@ -149,6 +170,7 @@ export default {
   getSellerListAndWasteType,
   getTransactions,
   searchBuyers,
-  addTrashHandler,
+  addWaste,
+  sellWaste,
   configAccount
 };

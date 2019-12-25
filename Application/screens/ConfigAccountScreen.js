@@ -10,6 +10,7 @@ import {
   Text
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
@@ -41,7 +42,7 @@ const formReducer = (state, action) => {
 };
 
 export default ConfigAccountScreen = props => {
-  console.log('config')
+  console.log("config");
   const [switchOn1, setSwitchOn1] = useState(false);
   const [switchOn2, setSwitchOn2] = useState(false);
 
@@ -54,7 +55,7 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <View style={{flexDirection:"row", alignItems:"center"}}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text>Enable Search </Text>
               <SwitchToggle
                 switchOn={switchOn1}
@@ -66,7 +67,7 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View style={{flexDirection:"row", alignItems:"center"}}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text>Show Address </Text>
               <SwitchToggle
                 switchOn={switchOn2}
@@ -78,17 +79,16 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View style={{flexDirection:"row", alignContent:"center"}}>
+            <View style={{ flexDirection: "row", alignContent: "center" }}>
               <Button
                 title="Seller"
                 color={Colors.primary}
+                onPress={() => {
+                  props.navigation.navigate("SellerNavigator");
+                }}
               />
-              <Button
-                title="Buyer"
-                color={Colors.primary}
-              />
+              <Button title="Buyer" color={Colors.primary} />
             </View>
-            
           </ScrollView>
         </Card>
       </LinearGradient>
