@@ -17,7 +17,7 @@ import UserSignupScreen from "../screens/UserSignupScreen";
 import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
 import StartupScreen from "../screens/UserStartupScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
-import ConfigAccountScreen from "../screens/ConfigAccountScreen"
+import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
@@ -132,12 +132,12 @@ const UserAuthenNavigator = createStackNavigator(
   {
     UserSigninScreen: UserSigninScreen,
     UserSignupScreen: UserSignupScreen,
-    ConfigAccountScreen
+    ConfigAccountScreen: ConfigAccountScreen
   },
   { headerMode: "none" }
 );
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createSwitchNavigator({
   StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
   SellerNavigator: SellerNavigator //Seller Homepage

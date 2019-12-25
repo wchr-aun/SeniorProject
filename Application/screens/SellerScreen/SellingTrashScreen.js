@@ -10,31 +10,77 @@ import {
 
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
-
-import {} from "redux";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const SELECT_ITEM = "SELECT_ITEM";
+const ADD_TRASH = "ADD_TRASH";
+const MINUS_TRASH = "MINUS_TRASH";
+const EDIT_TRASH = "EDIT_TRASH";
+const SET_TRASH = "SET_TRASH";
+
 const trashSellingReducer = (state, action) => {
+  let founded = false;
   let updatedItems = [...state.items];
+  console.log("trashSellingReducer action coming... " + action);
+  console.log(action);
 
   switch (action.type) {
+    case SET_TRASH:
+      return {
+        items: [...action.items]
+      };
     case SELECT_ITEM:
-      console.log(action.items);
+      updatedItems.forEach((item, index) => {
+        if (item.wasteType === action.wasteType)
+          updatedItems[index].amount = action.amount;
+      });
+      return {
+        items: updatedItems
+      };
+    case ADD_TRASH:
+      // change or add
+      updatedItems.forEach((item, index) => {
+        if (item.wasteType === action.wasteType) {
+          founded = true;
+          updatedItems[index].amount = updatedItems[index].amount + 1;
+        }
+      });
+      if (!founded) {
+        updatedItems.push({
+          wasteType: action.wasteType,
+          amount: 1
+        });
+      }
+      return {
+        items: updatedItems
+      };
+    case MINUS_TRASH:
+      // change or add
+      updatedItems.forEach((item, index) => {
+        if (item.wasteType === action.wasteType) {
+          founded = true;
+          updatedItems[index].amount = updatedItems[index].amount - 1;
+          if (updatedItems[index].amount === 0) updatedItems.splice(index, 1);
+        }
+      });
+      return {
+        items: updatedItems
+      };
+    case EDIT_TRASH:
+      // edit from text-input
+      updatedItems.forEach((item, index) => {
+        if (item.wasteType === action.wasteType) {
+          updatedItems[index].amount = action.value;
+        }
+      });
+      return {
+        items: updatedItems
+      };
+      return state;
   }
 };
 
 export default SellingTrashScreen = props => {
-  const [items, setItems] = useState(props.navigation.getParam("items"));
-
-  const [] = useReducer(trashSellingReducer, {
-    txType: "",
-    buyer: "buyer temp",
-    items: [],
-    addr: "",
-    assignedTime: new Date()
-  });
-
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -45,6 +91,32 @@ export default SellingTrashScreen = props => {
       BackHandler.removeEventListener();
     };
   });
+
+  // Get data from redux
+  // Get User
+  const userProfile = useSelector(state => {
+    return state.userProfile.user;
+  });
+  // Get User trash
+  const userTrashsFromRedux = useSelector(reducers => {
+    return reducers.sellerItems.items;
+  });
+
+  const [trashsState, dispatchAmountTrashsState] = useReducer(
+    trashSellingReducer,
+    {
+      txType: "",
+      buyer: "buyer temp",
+      items: []
+    }
+  );
+
+  // initially, store data from redux to local redux
+  useEffect(() => {
+    dispatchAmountTrashsState({ type: SET_TRASH, items: userTrashsFromRedux });
+  }, [userTrashsFromRedux, dispatchAmountTrashsState]);
+
+  const dispatch = useDispatch();
 
   return (
     <View
@@ -64,15 +136,14 @@ export default SellingTrashScreen = props => {
         }}
       >
         <View style={{ width: "100%", height: "100%" }}>
-
           <FlatList
             style={{
               borderColor: "black",
               borderWidth: 1,
               flex: 1
             }}
+            data={trashsState.items}
             keyExtractor={item => item.wasteType}
-            data={items}
             renderItem={itemData => (
               <TrashCard
                 imgUrl={
@@ -88,12 +159,31 @@ export default SellingTrashScreen = props => {
                     ? itemData.item.adjustedPrice
                     : "0.7-0.9"
                 }
-                style={styles.eachTrashCard}
-                editingMode={editingMode}
                 dispatchAmountTrashsState={dispatchAmountTrashsState}
+                style={styles.eachTrashCard}
+                sellingMode={true}
+                selectedHandler={() => {
+                  return {
+                    type: SELECT_ITEM,
+                    amount: itemData.item.amount,
+                    wasteType: itemData.item.wasteType.replace("wasteType/", "")
+                  };
+                }}
               />
             )}
           />
+          <View>
+            <Button
+              title={"check dispatch"}
+              onPress={() => {
+                dispatch({
+                  type: "SELLING_TRASH",
+                  addr: userProfile.addr,
+                  assignedTime: new Date()
+                });
+              }}
+            ></Button>
+          </View>
         </View>
       </View>
     </View>
@@ -105,7 +195,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.screen
   },
   allTrashContainer: {
-
     backgroundColor: Colors.primary,
     borderRadius: 10
   },

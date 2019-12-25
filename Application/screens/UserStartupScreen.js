@@ -18,7 +18,6 @@ export default UserStartupScreen = props => {
         dispatch(authAction.signin());
 
         // auto login
-        console.log('kuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuykuy')
         props.navigation.navigate("SellerNavigator");
       } else {
         // No user no exist in firebase firestore

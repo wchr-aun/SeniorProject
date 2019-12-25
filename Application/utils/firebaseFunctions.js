@@ -72,7 +72,7 @@ const getWasteTypeDetail = async wasteTypeId => {
 
 const getSellerListAndWasteType = async () => {
   return getSellerItems().then(itemsReturned => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       itemsReturned.forEach((item, index) => {
         getWasteTypeDetail(item.wasteType).then(wasteTypeDetail => {
           itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;

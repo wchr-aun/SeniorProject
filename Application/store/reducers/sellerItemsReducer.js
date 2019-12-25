@@ -1,5 +1,4 @@
-import { SET_USERTRASH, LOAD_SELLER_ITEMS } from "../actions/sellerItemsAction";
-import firebaseFunctions from "../../utils/firebaseFunctions";
+import { SET_USERTRASH } from "../actions/sellerItemsAction";
 
 const initialState = {
   items: []
@@ -7,10 +6,15 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case LOAD_SELLER_ITEMS:
-      console.log(action.items);
+    case SET_USERTRASH:
       return {
+        ...state,
         items: action.items
+      };
+    case "SELLING_TRASH":
+      console.log(action);
+      return {
+        ...state
       };
   }
   return state;

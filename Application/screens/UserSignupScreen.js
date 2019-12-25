@@ -109,16 +109,22 @@ export default UserSignupScreen = props => {
       setIsLoading(false);
       console.log(result);
       if (result.data === true) {
-        firebaseUtil.auth().signInWithEmailAndPassword(formState.inputValues.email, sha256(formState.inputValues.password)).then(() => {
-          setIsLoading(false);
-          console.log('gogogogogogogogogogogogo')
-          props.navigation.navigate("UserSigninScreen");
-        })
-        .catch(err => {
-          // throw new Error(err.message);
-          setIsLoading(false);
-          // setError(err.message);
-        });
+        firebaseUtil
+          .auth()
+          .signInWithEmailAndPassword(
+            formState.inputValues.email,
+            sha256(formState.inputValues.password)
+          )
+          .then(() => {
+            setIsLoading(false);
+            console.log("gogogogogogogogogogogogo");
+            props.navigation.navigate("ConfigAccountScreen");
+          })
+          .catch(err => {
+            // throw new Error(err.message);
+            setIsLoading(false);
+            // setError(err.message);
+          });
         return;
       } else {
         console.log(result);

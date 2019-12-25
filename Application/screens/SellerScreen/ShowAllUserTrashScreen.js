@@ -13,6 +13,9 @@ import {
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import firebaseFunctions from "../../utils/firebaseFunctions";
+import { setUserTrash } from "../../store/actions/sellerItemsAction";
+
+import { useSelector, useDispatch } from "react-redux";
 
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
@@ -74,6 +77,7 @@ export default ShowAllUserTrashScreen = props => {
   // trash user snapshot
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const dispatch = useDispatch();
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
@@ -88,37 +92,15 @@ export default ShowAllUserTrashScreen = props => {
   // load data from firebase
   const loadUserTrash = async () => {
     setIsRefreshing(true);
-    // firebaseFunctions.getSellerItems().then(itemsReturned => {
-    //   new Promise((resolve, reject) => {
-    //     itemsReturned.forEach((item, index) => {
-    //       firebaseFunctions
-    //         .getWasteTypeDetail(item.wasteType)
-    //         .then(wasteTypeDetail => {
-    //           itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-    //           itemsReturned[index].wasteDescription =
-    //             wasteTypeDetail.description;
-    //           if (index === itemsReturned.length - 1) {
-    //             resolve();
-    //           }
-    //         });
-    //     });
-    //   }).then(() => {
-    //     console.log(itemsReturned);
-    //     dispatchAmountTrashsState({
-    //       type: SET_TRASH,
-    //       items: [...itemsReturned]
-    //     });
-    //     setIsRefreshing(false);
-    //   });
-    // });
-    firebaseFunctions.getSellerListAndWasteType().then(itemsReturned => {
-      console.log(itemsReturned);
-      dispatchAmountTrashsState({
-        type: SET_TRASH,
-        items: [...itemsReturned]
-      });
-      setIsRefreshing(false);
+    let itemsReturned = await firebaseFunctions.getSellerListAndWasteType();
+    // Set user trash in local reducer
+    dispatchAmountTrashsState({
+      type: SET_TRASH,
+      items: [...itemsReturned]
     });
+    // store to redux
+    dispatch(setUserTrash(itemsReturned));
+    setIsRefreshing(false);
   };
 
   // Load trash data for initial

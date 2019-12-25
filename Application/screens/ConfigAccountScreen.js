@@ -13,7 +13,6 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
-import SwitchToggle from '@dooboo-ui/native-switch-toggle';
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -42,7 +41,9 @@ const formReducer = (state, action) => {
 };
 
 export default ConfigAccountScreen = props => {
-  console.log('comecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecome')
+  console.log(
+    "comecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecomecome"
+  );
   const [switchOn1, setSwitchOn1] = useState(false);
 
   return (
@@ -58,14 +59,8 @@ export default ConfigAccountScreen = props => {
               switchOn={switchOn1}
               onPress={() => setSwitchOn1(!switchOn1)}
             />
-            <Button
-              title="Seller"
-              color={Colors.primary}
-            />
-            <Button
-              title="Buyer"
-              color={Colors.primary}
-            />
+            <Button title="Seller" color={Colors.primary} />
+            <Button title="Buyer" color={Colors.primary} />
           </ScrollView>
         </Card>
       </LinearGradient>

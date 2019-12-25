@@ -9,14 +9,17 @@ import {
   Text
 } from "react-native";
 
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
+import { useDispatch } from "react-redux";
 
+const SELECT_ITEM = "SELECT_ITEM";
 const ADD_TRASH = "ADD_TRASH";
 const MINUS_TRASH = "MINUS_TRASH";
 const EDIT_TRASH = "EDIT_TRASH";
+const SET_TRASH = "SET_TRASH";
 
 const AmountOfTrash = props => {
   return (
@@ -56,8 +59,9 @@ const AdjustAmountOfTrash = props => {
         </ThaiText>
       </View>
       <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircel}
+        style={styles.plusAndMinusCircle}
         onPress={() => {
+          console.log("minus");
           props.dispatchAmountTrashsState({
             type: MINUS_TRASH,
             wasteType: props.wasteType
@@ -81,7 +85,7 @@ const AdjustAmountOfTrash = props => {
         ></TextInput>
       </View>
       <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircel}
+        style={styles.plusAndMinusCircle}
         onPress={() => {
           props.dispatchAmountTrashsState({
             type: ADD_TRASH,
@@ -113,6 +117,10 @@ export default TrashCard = props => {
       Dimensions.removeEventListener("change", updateScreen);
     };
   });
+
+  // Selected Trasition
+  const [isSelected, setIsSelected] = useState(false);
+
   return (
     <View
       style={{
@@ -151,18 +159,48 @@ export default TrashCard = props => {
       <View
         style={{
           ...styles.descriptionContainer,
-          // width: availableDeviceWidth * 0.55, // width --> 0.8(all) - 0.55(this) = 0.55 (img container)
-          // height: "100%",
           flex: 1,
           padding: 10,
           borderWidth: 1,
           borderColor: "yellow"
         }}
       >
-        <View style={{ ...styles.descriptionRow, flexWrap: "wrap" }}>
-          <ThaiTitleText style={styles.trashName}>
-            {props.wasteType}
-          </ThaiTitleText>
+        <View
+          style={{
+            ...styles.descriptionRow,
+            flexWrap: "wrap",
+            backgroundColor: "skyblue"
+          }}
+        >
+          {/* Trash Name */}
+          <View style={{ width: "70%", height: "100%" }}>
+            <ThaiTitleText style={styles.trashName}>
+              {props.wasteType}
+            </ThaiTitleText>
+          </View>
+          {/* Check - UnCheck */}
+          {!props.sellingMode ? null : (
+            <TouchableWithoutFeedback
+              style={{
+                width: "30%",
+                height: "100%",
+                alignSelf: "flex-end",
+                backgroundColor: "green"
+              }}
+              onPress={() => {
+                console.log("setIsSelected clicked");
+                setIsSelected(previousState => !previousState);
+                // put the amouth of this trash into state
+                props.dispatchAmountTrashsState(props.selectedHandler());
+              }}
+            >
+              <MaterialIcons
+                name={isSelected ? "check-box" : "check-box-outline-blank"}
+                size={20}
+                color={Colors.primary}
+              />
+            </TouchableWithoutFeedback>
+          )}
         </View>
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
@@ -175,7 +213,7 @@ export default TrashCard = props => {
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
         </View>
-        {!props.editingMode ? (
+        {!props.editingMode && !isSelected ? (
           <View
             style={{
               ...styles.descriptionRow,
@@ -218,7 +256,8 @@ const styles = StyleSheet.create({
   descriptionContainer: {},
   descriptionRow: {
     flexDirection: "row",
-    padding: 5
+    padding: 5,
+    alignItems: "center"
   },
   trashName: {
     fontSize: 16
@@ -232,7 +271,7 @@ const styles = StyleSheet.create({
   trashDisposal: {
     fontSize: 12
   },
-  plusAndMinusCircel: {
+  plusAndMinusCircle: {
     marginHorizontal: 5
   }
 });
