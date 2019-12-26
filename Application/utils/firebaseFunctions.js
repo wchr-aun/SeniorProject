@@ -111,36 +111,24 @@ const getTransactions = async (role, status) => {
 const searchBuyers = async () => {};
 
 const addTrashHandler = items => {
-  let addWaste = firebaseUtil.functions().httpsCallable("addWaste");
-  console.log(items);
-  // Call firebase cloud function
-  return addWaste(items)
-    .then(function(result) {
-      // Read result of the Cloud Function.
-      console.log("From EditTrashForSeller: addWaste added");
-      console.log(result);
-    })
-    .catch(function(error) {
-      // Getting the Error details.
-      console.log("From EditTrashForSeller: error code :" + error.code);
-      console.log("From EditTrashForSeller: error message :" + error.message);
-      console.log("From EditTrashForSeller: error details :" + error.details);
-    });
+  return firebaseUtil.functions().httpsCallable("addWaste")(items)
+  .then(result => {
+    if (result.data.err) return true
+    else return result
+  })
 };
 
-const configAccount = () => {
-  firebaseUtil
-    .auth()
-    .currentUser.updateProfile({
-      displayName: "enable"
-    })
-    .then(() => {
-      return true;
-    })
-    .catch(error => {
-      throw new error("Error getting document:", error);
-    });
-};
+const toggleSwitches = (toggleSearch, toggleAddr) => {
+  console.log('hello toggle')
+  return firebaseUtil.functions().httpsCallable("toggleConfig")({toggleSearch, toggleAddr})
+  .then(result => {
+    if (result.data.err == null) {
+      console.log(result.data)
+      return true
+    }
+    else return result
+  })
+}
 
 export default {
   getUsers,
@@ -150,5 +138,5 @@ export default {
   getTransactions,
   searchBuyers,
   addTrashHandler,
-  configAccount
+  toggleSwitches
 };

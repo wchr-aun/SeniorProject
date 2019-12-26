@@ -23,8 +23,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
     uid: data.username,
     email: data.email,
     phoneNumber: data.phoneNo,
-    password: data.password,
-    displayName: 'disabled'
+    password: data.password
   }).then(userRecord => {
     usersDB.doc(userRecord.uid).set({
       name,
@@ -58,23 +57,24 @@ exports.addWaste = functions.https.onCall((data, context) => {
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
     let items = data.items
-    let buyer = data.buyer || "TBA"
+    let buyer = data.buyer
     let addr = data.addr
     let txType = data.txType
-    if (txType == "Choose Buyer Selling" || txType == "Quick Selling") {
+    if (txType == 0 || txType == 1) {
       return sellerDB.doc(context.auth.uid).get().then(doc => {
         if (doc.exists) {
-          let newAmount = doc.data().items
+          let newItems = []
           for(let i = 0; i < doc.data().items.length; i++) {
             for(let j = 0; j < items.length; j++) {
               if (items[j].wasteType == doc.data().items[i].wasteType) {
-                if (items[j].amount <= doc.data().items[i].amount)
-                  newAmount[j].amount = doc.data().items[i].amount - items[j].amount
+                if (items[j].amount < doc.data().items[i].amount)
+                  newItems.push({wasteType: items[j].wasteType, amount: doc.data().items[i].amount - items[j].amount})
+                else if (items[j].amount == doc.data().items[i].amount) continue
                 else return {err: "Item's amount doesn't match"}
               }
             }
           }
-          return sellerDB.doc(context.auth.uid).set({items: newAmount}, {merge: true}).then(() => {
+          return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
             return txDB.add({
               txType,
               buyer,
@@ -82,7 +82,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               items,
               addr,
               createTimestamp: new Date(),
-              assignedTime: new Date(data.assignedTime),
+              assignedTime: new Date(data.assignedTime) || "TBA",
               txStatus: 0
             }).then(() => {
               return true
@@ -103,29 +103,10 @@ exports.sellWaste = functions.https.onCall((data, context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
-exports.toggleEnableAddr = functions.https.onCall((data, context) => {
-  if (context.auth != null){
-    return usersDB.doc(context.auth.uid).get(doc => {
-      return usersDB.doc(context.auth.uid).update({enableAddr: !doc.data().enableAddr}).then(() => {
-        return true
-      }).catch(err => {
-        return {err}
-      })
-    }).catch(err => {
-      return {err}
-    })
-  }
-  else return {err: "The request is denied because of authetication"}
-})
-
-exports.toggleEnableSearch = functions.https.onCall((data, context) => {
-  if (context.auth != null){
-    return usersDB.doc(context.auth.uid).get(doc => {
-      return usersDB.doc(context.auth.uid).update({enableSearch: !doc.data().enableAddr}).then(() => {
-        return true
-      }).catch(err => {
-        return {err}
-      })
+exports.toggleConfig = functions.https.onCall((data, context) => {
+  if (context.auth != null) {
+    return usersDB.doc(context.auth.uid).update({enableAddr: data.toggleAddr, enableSearch: data.toggleSearch}).then(() => {
+      return true
     }).catch(err => {
       return {err}
     })
@@ -134,7 +115,7 @@ exports.toggleEnableSearch = functions.https.onCall((data, context) => {
 })
 
 exports.changeTxStatus = functions.https.onCall((data, context) => {
-  if (context.auth == null){
+  if (context.auth != null){
     return txDB.doc(data.txID).get().then(doc => {
       if (doc.data().txStatus < data.status && doc.data().txStatus != 4) {
         if (doc.data().txType == 0) {
