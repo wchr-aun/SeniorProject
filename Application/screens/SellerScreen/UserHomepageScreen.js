@@ -17,7 +17,7 @@ import { SELLINGTRANSACTION } from "../../data/dummy-data";
 export default UserHomepageScreen = props => {
   useEffect(() => {
     console.log("homepage");
-  }, [])
+  }, []);
   // Resolve change vertical and horizontal affect to width
   const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
     Dimensions.get("window").width
@@ -60,7 +60,8 @@ export default UserHomepageScreen = props => {
       style={{
         ...styles.screen,
         width: availableDeviceWidth,
-        height: availableDeviceHeight
+        height: availableDeviceHeight,
+        backgroundColor: "red"
       }}
     >
       {isLoading ? (
@@ -81,7 +82,9 @@ export default UserHomepageScreen = props => {
           <UserInfoCard
             style={{
               ...styles.userInfoCard,
-              paddingTop: availableDeviceHeight * 0.05
+              paddingTop: availableDeviceHeight * 0.05,
+              width: "100%",
+              height: "25%"
             }}
             imgUrl={
               userProfile.imgUrl
@@ -92,7 +95,15 @@ export default UserHomepageScreen = props => {
             meetTime={"18 มกรา 15.00 น."}
             address={userProfile.addr}
           />
-          <View style={styles.recentSellTransactionContainer}>
+          <View
+            style={{
+              ...styles.recentSellTransactionContainer,
+              width: "100%",
+              height: "60%",
+              alignSelf: "center",
+              alignItems: "center"
+            }}
+          >
             <View
               style={{
                 alignSelf: "flex-start",
@@ -131,22 +142,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  userInfoCard: {
-    width: "100%",
-    height: "30%"
-  },
-  userInfoCardLoading: {
-    width: "100%",
-    height: "30%",
-    backgroundColor: Colors.on_primary,
-    alignSelf: "center"
-  },
   recentSellTransactionContainer: {
-    width: "100%",
-    height: "60%",
-    paddingVertical: 10,
-    alignSelf: "center",
-    alignItems: "center",
     backgroundColor: Colors.primary_variant
   },
   sellTransactionCard: {
