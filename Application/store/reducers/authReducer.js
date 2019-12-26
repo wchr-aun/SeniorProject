@@ -21,7 +21,6 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
-      console.log("result from authReducer: " + action.userProfile);
       return {
         user: {
           uid: action.userProfile.uid,

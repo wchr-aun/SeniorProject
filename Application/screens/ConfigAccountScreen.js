@@ -79,7 +79,13 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View style={{ flexDirection: "row", alignContent: "center" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignContent: "center"
+              }}
+            >
               <Button
                 title="Seller"
                 color={Colors.primary}

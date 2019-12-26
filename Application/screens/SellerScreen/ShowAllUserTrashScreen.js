@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -13,25 +13,27 @@ import {
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import firebaseFunctions from "../../utils/firebaseFunctions";
-import { setUserWaste } from "../../store/actions/sellerItemsAction";
+import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 
 import { useSelector, useDispatch } from "react-redux";
 
-const ADD_TRASH = "ADD_TRASH";
-const MINUS_TRASH = "MINUS_TRASH";
-const SET_TRASH = "SET_TRASH";
-const EDIT_TRASH = "EDIT_TRASH";
+const ADD_WASTE = "ADD_WASTE";
+const MINUS_WASTE = "MINUS_WASTE";
+const SET_WASTE = "SET_WASTE";
+const EDIT_WASTE = "EDIT_WASTE";
 
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
   let updatedItems = [...state.items];
 
   switch (action.type) {
-    case SET_TRASH:
+    case SET_WASTE:
+      console.log("SET WASTE local Reducer Run");
       return {
         items: [...action.items]
       };
-    case ADD_TRASH:
+    case ADD_WASTE:
+      console.log("ADD_WASTE local Reducer Run");
       // change or add
       updatedItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
@@ -48,7 +50,8 @@ const trashsModifyingReducer = (state, action) => {
       return {
         items: updatedItems
       };
-    case MINUS_TRASH:
+    case MINUS_WASTE:
+      console.log("MINUS_TRASH local Reducer Run");
       // change or add
       updatedItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
@@ -60,8 +63,9 @@ const trashsModifyingReducer = (state, action) => {
       return {
         items: updatedItems
       };
-    case EDIT_TRASH:
+    case EDIT_WASTE:
       // edit from text-input
+      console.log("EDIT_TRASH local Reducer Run");
       updatedItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           updatedItems[index].amount = action.value;
@@ -74,44 +78,6 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 export default ShowAllUserTrashScreen = props => {
-  // trash user snapshot
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const dispatch = useDispatch();
-
-  const [trashsState, dispatchAmountTrashsState] = useReducer(
-    trashsModifyingReducer,
-    {
-      items: []
-    }
-  );
-
-  // Mode setting
-  const [editingMode, setEditingMode] = useState(false);
-
-  // load data from firebase
-  const loadUserTrash = async () => {
-    setIsRefreshing(true);
-    let sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
-    // Set user trash in local reducer
-    dispatchAmountTrashsState({
-      type: SET_TRASH,
-      items: [...sellerItemsAndWasteType]
-    });
-    // store to redux
-    dispatch(setUserWaste(sellerItemsAndWasteType));
-    setIsRefreshing(false);
-  };
-
-  // Load trash data for initial
-  useEffect(() => {
-    setIsLoading(true);
-    loadUserTrash().then(setIsLoading(false));
-    return () => {
-      setItems(null);
-    };
-  }, []);
-
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -124,6 +90,69 @@ export default ShowAllUserTrashScreen = props => {
       BackHandler.removeEventListener();
     };
   });
+
+  // provide for editing button when change to editing mode
+  const [editingMode, setEditingMode] = useState(false);
+
+  // trash user snapshot
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const dispatch = useDispatch();
+  // Get User trash
+  const userTrashsFromRedux = useSelector(reducers => {
+    return reducers.sellerItems.items;
+  });
+
+  const [
+    trashsState,
+    dispatchAmountTrashsState
+  ] = useReducer(trashsModifyingReducer, { items: [] });
+
+  // Get sellerItems from redux
+  const sellerItemsRedux = useSelector(state => {
+    return state.sellerItems.items;
+  });
+
+  // Callback fn
+  const loadSellerItems = useCallback(async () => {
+    setIsRefreshing(true);
+    await dispatch(sellerItemsAction.getSellerItems());
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing]);
+
+  // Load sellerItems from firebase and store it to redux "initially"
+  useEffect(() => {
+    setIsLoading(true);
+    loadSellerItems().then(() => {
+      setIsLoading(false);
+    });
+  }, [loadSellerItems]);
+
+  // When redux updated, this local redux also be updated
+  useEffect(() => {
+    dispatchAmountTrashsState({
+      type: SET_WASTE,
+      items: [...sellerItemsRedux]
+    });
+  }, [sellerItemsRedux]);
+
+  // For 'addWaste' handler
+  const confirmHandler = async () => {
+    setEditingMode(false);
+    setIsRefreshing(true);
+    // // update new wastesData on firebase
+    // await firebaseFunctions.addWaste({
+    //   items: trashsState.items
+    // });
+    // update new wasteData on redux
+    dispatch(sellerItemsAction.setUserWaste(trashsState.items));
+    // update new wasteData on local redux
+    dispatchAmountTrashsState({
+      type: SET_WASTE,
+      items: trashsState.items
+    });
+    setIsRefreshing(false);
+  };
 
   //add spinner loading
   if (isLoading) {
@@ -159,7 +188,7 @@ export default ShowAllUserTrashScreen = props => {
           <View style={{ width: "100%", height: "100%" }}>
             <FlatList
               refreshing={isRefreshing}
-              onRefresh={loadUserTrash}
+              onRefresh={loadSellerItems}
               style={{
                 flex: 1
               }}
@@ -195,20 +224,7 @@ export default ShowAllUserTrashScreen = props => {
               <Button
                 title="Confirm Amount"
                 color={Colors.primary}
-                onPress={() => {
-                  setEditingMode(false);
-                  // update new wastesData on firebase
-                  firebaseFunctions.addWaste({
-                    items: trashsState.items
-                  });
-                  // update new wasteData on redux
-                  dispatch(setUserWaste(trashsState.items));
-                  // update new wasteData on local redux
-                  dispatchAmountTrashsState({
-                    type: SET_TRASH,
-                    items: trashsState.items
-                  });
-                }}
+                onPress={confirmHandler}
               />
             </View>
           </View>

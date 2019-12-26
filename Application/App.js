@@ -1,5 +1,5 @@
 import { YellowBox } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppNavigator from "./navigation/AppNavigator";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";

@@ -1,10 +1,34 @@
 import firebaseFunctions from "../../utils/firebaseFunctions";
 
+export const GET_SELLER_ITEMS = "GET_SELLER_ITEMS";
 export const SET_WASTE = "SET_WASTE";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
 
+export const getSellerItems = () => {
+  return async dispatch => {
+    // get data from firebase
+    console.log("getSellerItems action!");
+    let sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
+
+    if (sellerItemsAndWasteType.length !== 0) {
+      console.log("sellerItemsAndWasteType != 0");
+      dispatch({
+        type: SET_WASTE,
+        items: [...sellerItemsAndWasteType]
+      });
+    } else {
+      console.log("sellerItemsAndWasteType == 0");
+      dispatch({ type: SET_WASTE, items: [] });
+    }
+  };
+};
+
 export const setUserWaste = items => {
-  return dispatch => {
+  return async dispatch => {
+    // update new wastesData on firebase
+    await firebaseFunctions.addWaste({
+      items
+    });
     // set new wastesData
     dispatch({
       type: SET_WASTE,
@@ -16,8 +40,6 @@ export const setUserWaste = items => {
 export const chooseBuyerSell = (addr, items, buyer, price) => {
   return async dispatch => {
     // get only the true format
-    console.log("items");
-    console.log(items);
 
     let updatedItems = [];
     items.forEach((item, index) => {
@@ -28,16 +50,15 @@ export const chooseBuyerSell = (addr, items, buyer, price) => {
       });
     });
 
-    console.log("updatedItems from chooseBuyer");
-    console.log(updatedItems);
     // do async task
     let transaction = {
       items: updatedItems,
       addr,
       buyer,
-      txType: "Choose Buyer Selling",
+      txType: 0,
       assignedTime: new Date().getTime()
     };
+
     await firebaseFunctions.sellWaste(transaction);
 
     dispatch({

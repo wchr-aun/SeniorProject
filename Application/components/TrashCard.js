@@ -16,10 +16,10 @@ import Colors from "../constants/Colors";
 import { useDispatch } from "react-redux";
 
 const SELECT_ITEM = "SELECT_ITEM";
-const ADD_TRASH = "ADD_TRASH";
-const MINUS_TRASH = "MINUS_TRASH";
-const EDIT_TRASH = "EDIT_TRASH";
-const SET_TRASH = "SET_TRASH";
+const ADD_WASTE = "ADD_WASTE";
+const MINUS_WASTE = "MINUS_WASTE";
+const EDIT_WASTE = "EDIT_WASTE";
+const SET_WASTE = "SET_WASTE";
 
 const AmountOfTrash = props => {
   return (
@@ -61,9 +61,8 @@ const AdjustAmountOfTrash = props => {
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
         onPress={() => {
-          console.log("minus");
           props.dispatchAmountTrashsState({
-            type: MINUS_TRASH,
+            type: MINUS_WASTE,
             wasteType: props.wasteType
           });
         }}
@@ -75,9 +74,9 @@ const AdjustAmountOfTrash = props => {
           keyboardType="numeric"
           onChangeText={text => {
             props.dispatchAmountTrashsState({
-              type: EDIT_TRASH,
+              type: EDIT_WASTE,
               wasteType: props.wasteType,
-              value: parseInt(text, 10)
+              value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
             });
           }}
           value={props.amountOfTrash.toString()}
@@ -88,7 +87,7 @@ const AdjustAmountOfTrash = props => {
         style={styles.plusAndMinusCircle}
         onPress={() => {
           props.dispatchAmountTrashsState({
-            type: ADD_TRASH,
+            type: ADD_WASTE,
             wasteType: props.wasteType
           });
         }}
@@ -139,8 +138,6 @@ export default TrashCard = props => {
           borderRadius: (availableDeviceWidth * 0.25) / 2, // divide 2 to make circle
           overflow: "hidden",
           alignSelf: "center",
-          borderWidth: 1,
-          borderColor: "red",
           marginHorizontal: 10
         }}
       >
@@ -160,9 +157,7 @@ export default TrashCard = props => {
         style={{
           ...styles.descriptionContainer,
           flex: 1,
-          padding: 10,
-          borderWidth: 1,
-          borderColor: "yellow"
+          padding: 10
         }}
       >
         <View
@@ -188,7 +183,6 @@ export default TrashCard = props => {
                 backgroundColor: "green"
               }}
               onPress={() => {
-                console.log("setIsSelected clicked");
                 setIsSelected(previousState => !previousState);
                 // put the amouth of this trash into state
                 props.dispatchAmountTrashsState(props.selectedHandler());
