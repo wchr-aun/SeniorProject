@@ -113,7 +113,7 @@ const getTransactions = async (role, status) => {
 
 const searchBuyers = async () => {};
 
-const addTrashHandler = items => {
+const addTrashHandler = async (items) => {
   return firebaseUtil.functions().httpsCallable("addWaste")(items)
   .then(result => {
     if (result.data.err == null) return true
@@ -121,7 +121,7 @@ const addTrashHandler = items => {
   })
 };
 
-const sellWaste = transaction => {
+const sellWaste = async (transaction) => {
   return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
   .then(function(result) {
     // Read result of the Cloud Function.
@@ -130,7 +130,7 @@ const sellWaste = transaction => {
   })
 }
 
-const toggleSwitches = (toggleSearch, toggleAddr) => {
+const toggleSwitches = async (toggleSearch, toggleAddr) => {
   console.log('hello toggle')
   return firebaseUtil.functions().httpsCallable("toggleConfig")({toggleSearch, toggleAddr})
   .then(result => {
