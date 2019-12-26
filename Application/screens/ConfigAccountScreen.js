@@ -7,44 +7,33 @@ import {
   Button,
   ActivityIndicator,
   Alert,
-  Text
+  Text,
+  AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import firebaseFunctions from "../utils/firebaseFunctions"
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
 
-const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
-// for updaing value of variable form
-const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.inputIdentifier]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.inputIdentifier]: action.isValid
-    };
-    let updatedAllFormIsValid = true;
-    for (const key in updatedValidities) {
-      updatedAllFormIsValid = updatedAllFormIsValid && updatedValidities[key];
-    }
-    return {
-      ...state,
-      inputValues: updatedValues,
-      inputValidities: updatedValidities,
-      allFormIsValid: updatedAllFormIsValid
-    };
-  }
-  return state;
-};
-
 export default ConfigAccountScreen = props => {
-  console.log("config");
-  const [switchOn1, setSwitchOn1] = useState(false);
-  const [switchOn2, setSwitchOn2] = useState(false);
+  console.log('config')
+  const [switchSearch, setSwitchSearch] = useState(false);
+  const [switchAddr, setSwitchAddr] = useState(false);
+
+  const configHandler = (role) => {
+    firebaseFunctions.toggleSwitches(switchSearch, switchAddr).then(() => {
+      AsyncStorage.setItem('CONFIG_ROLE', role).then(() => {
+        props.navigation.navigate("SellerNavigator")
+        return
+      }).catch(err => {
+        console.log(err)
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <KeyboardAvoidingView
@@ -55,11 +44,11 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>Enable Search </Text>
+            <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
+              <Text>Enable Search</Text>
               <SwitchToggle
-                switchOn={switchOn1}
-                onPress={() => setSwitchOn1(!switchOn1)}
+                switchOn={switchSearch}
+                onPress={() => setSwitchSearch(!switchSearch)}
                 duration={150}
                 backgroundColorOn="#5fdba7"
                 backgroundColorOff="#808080"
@@ -67,11 +56,11 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>Show Address </Text>
+            <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
+              <Text>Enable Address</Text>
               <SwitchToggle
-                switchOn={switchOn2}
-                onPress={() => setSwitchOn2(!switchOn2)}
+                switchOn={switchAddr}
+                onPress={() => setSwitchAddr(!switchAddr)}
                 uration={150}
                 backgroundColorOn="#5fdba7"
                 backgroundColorOff="#808080"
@@ -79,21 +68,17 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignContent: "center"
-              }}
-            >
+            <View style={{flexDirection:"row", alignContent:"center", justifyContent:"space-around"}}>
               <Button
                 title="Seller"
                 color={Colors.primary}
-                onPress={() => {
-                  props.navigation.navigate("SellerNavigator");
-                }}
+                onPress={() => configHandler("seller")}
               />
-              <Button title="Buyer" color={Colors.primary} />
+              <Button
+                title="Buyer"
+                color={Colors.primary}
+                onPress={() => configHandler("buyer")}
+              />
             </View>
           </ScrollView>
         </Card>
