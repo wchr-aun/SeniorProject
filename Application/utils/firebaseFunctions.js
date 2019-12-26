@@ -116,10 +116,19 @@ const searchBuyers = async () => {};
 const addTrashHandler = items => {
   return firebaseUtil.functions().httpsCallable("addWaste")(items)
   .then(result => {
-    if (result.data.err) return true
+    if (result.data.err == null) return true
     else return result
   })
 };
+
+const sellWaste = transaction => {
+  return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
+  .then(function(result) {
+    // Read result of the Cloud Function.
+    if (result.data.err == null) return true
+    else return result
+  })
+}
 
 const toggleSwitches = (toggleSearch, toggleAddr) => {
   console.log('hello toggle')
@@ -141,5 +150,6 @@ export default {
   getTransactions,
   searchBuyers,
   addTrashHandler,
-  toggleSwitches
+  toggleSwitches,
+  sellWaste
 };
