@@ -12,10 +12,10 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import firebaseFunctions from "../utils/firebaseFunctions"
+import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
-import SwitchToggle from '@dooboo-ui/native-switch-toggle';
 
 export default ConfigAccountScreen = props => {
   console.log('config')
@@ -80,7 +80,6 @@ export default ConfigAccountScreen = props => {
                 onPress={() => configHandler("buyer")}
               />
             </View>
-            
           </ScrollView>
         </Card>
       </LinearGradient>

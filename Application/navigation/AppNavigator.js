@@ -17,7 +17,7 @@ import UserSignupScreen from "../screens/UserSignupScreen";
 import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
 import StartupScreen from "../screens/UserStartupScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
-import ConfigAccountScreen from "../screens/ConfigAccountScreen"
+import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(

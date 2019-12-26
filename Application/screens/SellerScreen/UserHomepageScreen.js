@@ -38,7 +38,7 @@ export default UserHomepageScreen = props => {
 
   // Get user profile
   const [isLoading, setIsLoading] = useState(true);
-  const userProfile = useSelector(reducers => reducers.authReducer.user);
+  const userProfile = useSelector(state => state.userProfile.user);
   useEffect(() => {
     console.log(userProfile);
     setIsLoading(true);

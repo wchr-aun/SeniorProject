@@ -1,5 +1,5 @@
 import { YellowBox } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppNavigator from "./navigation/AppNavigator";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
@@ -22,8 +22,8 @@ const fetchFonts = () => {
 
 // --- Redux Settup --- //
 const rootReducer = combineReducers({
-  authReducer: authReducer,
-  sellerItemsReducer: sellerItemsReducer
+  userProfile: authReducer,
+  sellerItems: sellerItemsReducer
 });
 const store = createStore(
   rootReducer,

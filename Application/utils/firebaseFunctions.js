@@ -72,16 +72,19 @@ const getWasteTypeDetail = async wasteTypeId => {
 
 const getSellerListAndWasteType = async () => {
   return getSellerItems().then(itemsReturned => {
-    new Promise((resolve, reject) => {
-      itemsReturned.forEach((item, index) => {
-        getWasteTypeDetail(item.wasteType).then(wasteTypeDetail => {
-          itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-          itemsReturned[index].wasteDescription = wasteTypeDetail.description;
-          if (index === itemsReturned.length - 1) {
-            resolve();
-          }
+    return new Promise((resolve, reject) => {
+      if (itemsReturned.length > 0) {
+        // there are items
+        itemsReturned.forEach((item, index) => {
+          getWasteTypeDetail(item.wasteType).then(wasteTypeDetail => {
+            itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
+            itemsReturned[index].wasteDescription = wasteTypeDetail.description;
+            if (index === itemsReturned.length - 1) {
+              resolve();
+            }
+          });
         });
-      });
+      } else resolve(); // no items
     }).then(() => {
       return itemsReturned;
     });
