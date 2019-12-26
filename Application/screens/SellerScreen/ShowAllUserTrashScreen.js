@@ -7,15 +7,21 @@ import {
   FlatList,
   ActivityIndicator,
   BackHandler,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Modal,
+  Text,
+  TextInput
 } from "react-native";
 
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
-import firebaseFunctions from "../../utils/firebaseFunctions";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import { AntDesign } from "@expo/vector-icons";
 
 import { useSelector, useDispatch } from "react-redux";
+import ThaiText from "../../components/ThaiText";
+import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
 
 const ADD_WASTE = "ADD_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
@@ -41,15 +47,19 @@ const trashsModifyingReducer = (state, action) => {
           updatedItems[index].amount = updatedItems[index].amount + 1;
         }
       });
-      if (!founded) {
-        updatedItems.push({
-          wasteType: action.wasteType,
-          amount: 1
-        });
-      }
+      // if (!founded) {
+      //   updatedItems.push({
+      //     wasteType: action.wasteType,
+      //     amount: 1
+      //   });
+      // }
       return {
         items: updatedItems
       };
+    case ADD_NEW_WASTE:
+      console.log("ADD_NEW_WASTE local Reducer Run");
+      console.log(action);
+      return state;
     case MINUS_WASTE:
       console.log("MINUS_TRASH local Reducer Run");
       // change or add
@@ -98,10 +108,7 @@ export default ShowAllUserTrashScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const dispatch = useDispatch();
-  // Get User trash
-  const userTrashsFromRedux = useSelector(reducers => {
-    return reducers.sellerItems.items;
-  });
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [
     trashsState,
@@ -140,10 +147,6 @@ export default ShowAllUserTrashScreen = props => {
   const confirmHandler = async () => {
     setEditingMode(false);
     setIsRefreshing(true);
-    // // update new wastesData on firebase
-    // await firebaseFunctions.addWaste({
-    //   items: trashsState.items
-    // });
     // update new wasteData on redux
     dispatch(sellerItemsAction.setUserWaste(trashsState.items));
     // update new wasteData on local redux
@@ -160,6 +163,22 @@ export default ShowAllUserTrashScreen = props => {
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
+    );
+  }
+
+  if (modalVisible) {
+    return (
+      <ModalShowSellerItemsScreen
+        setModalVisible={setModalVisible}
+        data={[]}
+        modalVisible={modalVisible}
+        addNewWasteHandler={(wasteType, amount) => {
+          dispatchAmountTrashsState({
+            type: ADD_NEW_WASTE,
+            data: { wasteType, amount }
+          });
+        }}
+      />
     );
   }
 
@@ -185,7 +204,7 @@ export default ShowAllUserTrashScreen = props => {
             alignItems: "center"
           }}
         >
-          <View style={{ width: "100%", height: "100%" }}>
+          <View style={{ width: "100%", height: "80%" }}>
             <FlatList
               refreshing={isRefreshing}
               onRefresh={loadSellerItems}
@@ -216,6 +235,31 @@ export default ShowAllUserTrashScreen = props => {
               )}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              backgroundColor: Colors.on_primary,
+              width: "100%",
+              height: "20%",
+              borderRadius: 10,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <View style={{ margin: 5 }}>
+              <ThaiText style={{ fontSize: 18, color: Colors.primary_variant }}>
+                Add new waste
+              </ThaiText>
+            </View>
+            <View style={{ margin: 5 }}>
+              <AntDesign
+                name="plussquareo"
+                size={25}
+                color={Colors.primary_variant}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {editingMode ? (
