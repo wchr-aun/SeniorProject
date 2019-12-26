@@ -13,11 +13,12 @@ import {
   Text,
   TextInput
 } from "react-native";
+import { AppLoading } from "expo";
 
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
-import { AntDesign } from "@expo/vector-icons";
+// import { AntDesign } from "@expo/vector-icons";
 
 import { useSelector, useDispatch } from "react-redux";
 import ThaiText from "../../components/ThaiText";
@@ -27,6 +28,10 @@ const ADD_WASTE = "ADD_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
+
+function cacheFonts(fonts) {
+  return fonts.map(font => Font.loadAsync(font));
+}
 
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
@@ -88,6 +93,23 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 export default ShowAllUserTrashScreen = props => {
+  // // pre-loading
+  // const [assetReady, setAssetReady] = useState(false);
+  // const fetchAsset = useCallback(async () => {
+  //   const fontAssets = cacheFonts([AntDesign.font]);
+
+  //   await Promise.all([...fontAssets]);
+  // }, []);
+
+  // if (!assetReady) {
+  //   return (
+  //     <AppLoading
+  //       startAsync={fetchAsset}
+  //       onFinish={() => setAssetReady(true)}
+  //       onError={console.warn}
+  //     />
+  //   );
+  // }
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -236,7 +258,9 @@ export default ShowAllUserTrashScreen = props => {
             />
           </View>
           <TouchableOpacity
-            onPress={() => setModalVisible(true)}
+            onPress={() => {
+              console.log("null");
+            }}
             style={{
               backgroundColor: Colors.on_primary,
               width: "100%",
@@ -253,11 +277,11 @@ export default ShowAllUserTrashScreen = props => {
               </ThaiText>
             </View>
             <View style={{ margin: 5 }}>
-              <AntDesign
+              {/* <AntDesign
                 name="plussquareo"
                 size={25}
                 color={Colors.primary_variant}
-              />
+              /> */}
             </View>
           </TouchableOpacity>
         </View>
