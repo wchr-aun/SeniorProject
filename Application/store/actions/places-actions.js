@@ -50,6 +50,9 @@ export const getPrediction = image => {
       },
       body: JSON.stringify({ photo: image.base64 })
     })
+      .then(res => {
+        return res.json();
+      })
       .then(res => console.log(res))
       .catch(error => console.log(error));
   };

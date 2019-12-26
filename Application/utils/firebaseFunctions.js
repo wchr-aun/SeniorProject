@@ -113,34 +113,39 @@ const getTransactions = async (role, status) => {
 
 const searchBuyers = async () => {};
 
-const addTrashHandler = items => {
-  return firebaseUtil.functions().httpsCallable("addWaste")(items)
-  .then(result => {
-    if (result.data.err == null) return true
-    else return result
-  })
+const addWaste = items => {
+  return firebaseUtil
+    .functions()
+    .httpsCallable("addWaste")(items)
+    .then(result => {
+      if (result.data.err == null) return true;
+      else return result;
+    });
 };
 
 const sellWaste = transaction => {
-  return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
-  .then(function(result) {
-    // Read result of the Cloud Function.
-    if (result.data.err == null) return true
-    else return result
-  })
-}
+  return firebaseUtil
+    .functions()
+    .httpsCallable("sellWaste")(transaction)
+    .then(function(result) {
+      // Read result of the Cloud Function.
+      if (result.data.err == null) return true;
+      else return result;
+    });
+};
 
 const toggleSwitches = (toggleSearch, toggleAddr) => {
-  console.log('hello toggle')
-  return firebaseUtil.functions().httpsCallable("toggleConfig")({toggleSearch, toggleAddr})
-  .then(result => {
-    if (result.data.err == null) {
-      console.log(result.data)
-      return true
-    }
-    else return result
-  })
-}
+  console.log("hello toggle");
+  return firebaseUtil
+    .functions()
+    .httpsCallable("toggleConfig")({ toggleSearch, toggleAddr })
+    .then(result => {
+      if (result.data.err == null) {
+        console.log(result.data);
+        return true;
+      } else return result;
+    });
+};
 
 export default {
   getUsers,
@@ -149,7 +154,7 @@ export default {
   getSellerListAndWasteType,
   getTransactions,
   searchBuyers,
-  addTrashHandler,
+  addWaste,
   toggleSwitches,
   sellWaste
 };

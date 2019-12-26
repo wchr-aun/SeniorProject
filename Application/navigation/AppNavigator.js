@@ -108,9 +108,10 @@ const SellerBottomTabConfig = {
 const SellerNavigator =
   Platform.OS === "android"
     ? createMaterialBottomTabNavigator(SellerBottomTabConfig, {
-        activeColor: Colors.on_primary,
+        activeColor: Colors.primary_variant,
         shifting: true,
         labeled: true,
+        inactiveColor: Colors.on_primary,
         barStyle: {
           height: Dimensions.get("window").height * 0.1,
           backgroundColor: Colors.on_secondary
