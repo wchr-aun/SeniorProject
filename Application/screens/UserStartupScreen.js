@@ -17,7 +17,7 @@ export default UserStartupScreen = props => {
       if (user != null) {
         const config_role = await AsyncStorage.getItem('CONFIG_ROLE');
         // get user profile from redux
-        dispatch(authAction.signin());
+        await dispatch(authAction.signin());
 
         if (config_role == null) 
           props.navigation.navigate("ConfigAccountScreen")
