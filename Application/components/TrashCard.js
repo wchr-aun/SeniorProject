@@ -13,7 +13,6 @@ import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
-import { useDispatch } from "react-redux";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_WASTE = "ADD_WASTE";
@@ -163,8 +162,7 @@ export default TrashCard = props => {
         <View
           style={{
             ...styles.descriptionRow,
-            flexWrap: "wrap",
-            backgroundColor: "skyblue"
+            flexWrap: "wrap"
           }}
         >
           {/* Trash Name */}
@@ -179,8 +177,7 @@ export default TrashCard = props => {
               style={{
                 width: "30%",
                 height: "100%",
-                alignSelf: "flex-end",
-                backgroundColor: "green"
+                alignSelf: "flex-end"
               }}
               onPress={() => {
                 setIsSelected(previousState => !previousState);
@@ -243,9 +240,6 @@ const styles = StyleSheet.create({
   trashCard: {
     flexDirection: "row",
     borderRadius: 10
-  },
-  imgContainer: {
-    backgroundColor: "blue"
   },
   descriptionContainer: {},
   descriptionRow: {
