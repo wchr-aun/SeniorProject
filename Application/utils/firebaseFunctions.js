@@ -121,7 +121,7 @@ const addWaste = items => {
   })
 };
 
-const sellWaste = transaction => {
+const sellWaste = async (transaction) => {
   return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
   .then(function(result) {
     // Read result of the Cloud Function.
@@ -130,7 +130,7 @@ const sellWaste = transaction => {
   })
 };
 
-const toggleSwitches = (toggleSearch, toggleAddr) => {
+const toggleSwitches = async (toggleSearch, toggleAddr) => {
   console.log("hello toggle");
   return firebaseUtil
     .functions()
@@ -143,6 +143,21 @@ const toggleSwitches = (toggleSearch, toggleAddr) => {
     });
 };
 
+const createAccount = async (user) => {
+  return firebaseUtil.functions().httpsCallable("createAccount")(user)
+  .then(result => {
+    if(result.data.err == null) {
+      return firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password)
+      .catch(err => {
+        throw new Error(result.data.err)
+      })
+    }
+    else throw new Error(result.data.err)
+  }).catch(err => {
+    throw new Error(result.data.err)
+  })
+}
+
 export default {
   getUsers,
   getSellerItems,
@@ -152,5 +167,6 @@ export default {
   searchBuyers,
   addWaste,
   toggleSwitches,
-  sellWaste
+  sellWaste,
+  createAccount
 };

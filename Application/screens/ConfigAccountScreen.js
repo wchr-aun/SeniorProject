@@ -25,8 +25,7 @@ export default ConfigAccountScreen = props => {
   const configHandler = (role) => {
     firebaseFunctions.toggleSwitches(switchSearch, switchAddr).then(() => {
       AsyncStorage.setItem('CONFIG_ROLE', role).then(() => {
-        props.navigation.navigate("SellerNavigator")
-        return
+        props.navigation.navigate("StartupScreen")
       }).catch(err => {
         console.log(err)
       })

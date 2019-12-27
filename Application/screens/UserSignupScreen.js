@@ -14,7 +14,7 @@ import { sha256 } from "js-sha256"
 import Card from "../components/UI/Card"
 import Input from "../components/UI/Input"
 import Colors from "../constants/Colors"
-import firebaseUtil from "../firebase"
+import firebaseFunctions from "../utils/firebaseFunctions"
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE"
 // for updaing value of variable form
@@ -29,9 +29,9 @@ const formReducer = (state, action) => {
       [action.inputIdentifier]: action.isValid
     }
     let updatedAllFormIsValid = true
-    for (const key in updatedValidities) {
-      updatedAllFormIsValid = updatedAllFormIsValid && updatedValidities[key]
-    }
+    for (const key in updatedValidities) 
+      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key])
+    
     return {
       ...state,
       inputValues: updatedValues,
@@ -43,10 +43,6 @@ const formReducer = (state, action) => {
 }
 
 export default UserSignupScreen = props => {
-  useEffect(() => {
-    console.log("signup")
-  }, [])
-
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
   // 'formState (state snapshot) will be updated when state changed
@@ -75,27 +71,30 @@ export default UserSignupScreen = props => {
     allFormIsValid: false
   })
 
-  // For alerting user an signin-signup action
   useEffect(() => {
-    if (error) {
-      Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }])
-    }
-  }, [error])
+    console.log("signup")
+  }, [])
 
   // firebase call cloud function
   const signupHandler = async () => {
     setError(null)
     setIsLoading(true)
 
-    // Check password
-    if (
-      formState.inputValues.password !== formState.inputValues.confirmpassword
-    ) {
-      setError("Your password and confirmation password must match")
+    if (!formState.allFormIsValid) {
+      setIsLoading(false)
+      Alert.alert("An error has occurred!", "Please fill all the inputs", [{ text: "OK" }])
       return
     }
 
-    let newUser = {
+    if (
+      formState.inputValues.password !== formState.inputValues.confirmpassword
+    ) {
+      setIsLoading(false)
+      Alert.alert("An error has occurred!", "The password and the confirm password don't match", [{ text: "OK" }])
+      return
+    }
+
+    let user = {
       username: formState.inputValues.username,
       email: formState.inputValues.email,
       password: sha256(formState.inputValues.password),
@@ -105,27 +104,12 @@ export default UserSignupScreen = props => {
       phoneNo: "+66" + formState.inputValues.phoneNo.toString()
     }
 
-    let createAccount = firebaseUtil.functions().httpsCallable("createAccount")
-    // Call firebase cloud functio
-    return createAccount(newUser).then(result => {
-      // Read result of the Cloud Function.
-      setIsLoading(true)
-      if (result.data === true) {
-          firebaseUtil.auth().signInWithEmailAndPassword(formState.inputValues.email, sha256(formState.inputValues.password))
-          .then(() => {
-            setIsLoading(false)
-            props.navigation.navigate("StartupScreen")
-            return
-          })
-          .catch(error => {
-            console.log(error)
-            return
-          })
-      } else {
-        setIsLoading(false)
-        setError(result.err)
-        return
-      }
+    firebaseFunctions.createAccount(user).then(() => {
+      setIsLoading(false)
+      props.navigation.navigate("ConfigAccountScreen")
+    }).catch(err => {
+      setIsLoading(false)
+      Alert.alert("An error has occurred!", err, [{ text: "OK" }])
     })
   }
 

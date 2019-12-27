@@ -15,7 +15,7 @@ export default UserStartupScreen = props => {
   const trySignin = async () => {
     firebaseUtil.auth().onAuthStateChanged(async user => {
       if (user != null) {
-        const config_role = await AsyncStorage.getItem('CONFIG_ROLE');
+        let config_role = await AsyncStorage.getItem('CONFIG_ROLE');
         // get user profile from redux
         await dispatch(authAction.signin());
 

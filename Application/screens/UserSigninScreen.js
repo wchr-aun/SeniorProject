@@ -55,9 +55,8 @@ export default UserAuthenScreen = props => {
 
   // For alerting user an signin-signup action
   useEffect(() => {
-    if (error) {
-      Alert.alert("An Error on firebase occurred!", error, [{ text: "Okay" }]);
-    }
+    if (error)
+      Alert.alert("An Error has occurred!", error, [{ text: "OK" }])
   }, [error]);
 
   // 'formState (state snapshot) will be updated when state changed
@@ -86,14 +85,13 @@ export default UserAuthenScreen = props => {
     firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(result => {
+      .then(() => {
         setIsLoading(false);
         props.navigation.navigate("StartupScreen");
       })
       .catch(err => {
-        // throw new Error(err.message);
         setIsLoading(false);
-        // setError(err.message);
+        setError(err.message);
       });
   }, [formState]);
 
