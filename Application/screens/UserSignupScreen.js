@@ -150,7 +150,6 @@ export default UserSignupScreen = props => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={50}
       style={{ ...styles.screen, flex: 1 }}
     >
       <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
@@ -173,16 +172,17 @@ export default UserSignupScreen = props => {
             {/* {error ? <Text style={{ color: "red" }}>{error}</Text> : null} */}
             <Input
               id="username"
-              label="Username"
+              label="ชื่อผู้ใช้"
               required
               autoCapitalize="none"
               errorText="Please enter a valid username"
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="account"
             />
             <Input
               id="email"
-              label="Email"
+              label="อีเมล"
               keyboardType="email-address"
               required
               email
@@ -190,10 +190,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid email address."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="email"
             />
             <Input
               id="password"
-              label="Password"
+              label="รหัสผ่าน"
               keyboardType="default"
               secureTextEntry
               required
@@ -202,10 +203,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="key-variant"
             />
             <Input
               id="confirmpassword"
-              label="Confirm Password"
+              label="ยืนยันรหัสผ่าน"
               keyboardType="default"
               secureTextEntry
               required
@@ -214,10 +216,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="key-variant"
             />
             <Input
               id="name"
-              label="First Name"
+              label="ชื่อจริง"
               keyboardType="default"
               required
               minLength={5}
@@ -225,10 +228,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid name."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="account"
             />
             <Input
               id="surname"
-              label="Surname"
+              label="นามสกุล"
               keyboardType="default"
               required
               minLength={5}
@@ -236,10 +240,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid surname."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="account-multiple"
             />
             <Input
               id="addr"
-              label="Address"
+              label="ที่อยู่"
               keyboardType="default"
               required
               minLength={5}
@@ -247,10 +252,11 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="account-card-details"
             />
             <Input
               id="phoneNo"
-              label="Phone Number"
+              label="เบอร์โทรศัพท์"
               keyboardType="numeric"
               required
               minLength={5}
@@ -258,6 +264,7 @@ export default UserSignupScreen = props => {
               errorText="Please enter a phoneNo."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="cellphone-android"
             />
             <View style={styles.buttonContainer}>
               {isLoading ? (

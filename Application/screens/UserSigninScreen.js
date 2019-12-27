@@ -117,7 +117,6 @@ export default UserAuthenScreen = props => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={50}
       style={{
         ...styles.screen,
         flex: 1
@@ -133,7 +132,7 @@ export default UserAuthenScreen = props => {
           style={{
             ...styles.authContainer,
             width: wp("90%"),
-            height: hp("55%"),
+            height: hp("53%"),
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%")
           }}
@@ -171,7 +170,7 @@ export default UserAuthenScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
-              iconName="key"
+              iconName="key-variant"
             />
             <View
               style={{
