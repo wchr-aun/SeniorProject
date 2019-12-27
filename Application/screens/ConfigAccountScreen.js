@@ -18,10 +18,9 @@ import Colors from "../constants/Colors";
 export default ConfigAccountScreen = props => {
   console.log('config')
   const [switchSearch, setSwitchSearch] = useState(false);
-  const [switchAddr, setSwitchAddr] = useState(false);
 
   const configHandler = (role) => {
-    firebaseFunctions.toggleSwitches(switchSearch, switchAddr).then(() => {
+    firebaseFunctions.toggleSwitches(switchSearch).then(() => {
       AsyncStorage.setItem('CONFIG_ROLE', role).then(() => {
         props.navigation.navigate("StartupScreen")
       }).catch(err => {
@@ -41,18 +40,6 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
-              <Text>Enable Search</Text>
-              <SwitchToggle
-                switchOn={switchSearch}
-                onPress={() => setSwitchSearch(!switchSearch)}
-                duration={150}
-                backgroundColorOn="#5fdba7"
-                backgroundColorOff="#808080"
-                circleColorOff="#ffffff"
-                circleColorOn="#ffffff"
-              />
-            </View>
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
               <Text>Enable Address</Text>
               <SwitchToggle

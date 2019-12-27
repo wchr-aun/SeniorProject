@@ -103,9 +103,9 @@ exports.sellWaste = functions.https.onCall((data, context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
-exports.toggleConfig = functions.https.onCall((data, context) => {
+exports.toggleSearch = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    return usersDB.doc(context.auth.uid).update({enableAddr: data.toggleAddr, enableSearch: data.toggleSearch}).then(() => {
+    return usersDB.doc(context.auth.uid).update({enableSearch: data.toggleSearch}).then(() => {
       return true
     }).catch(err => {
       return {err}

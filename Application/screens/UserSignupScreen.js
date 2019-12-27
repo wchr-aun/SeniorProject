@@ -6,8 +6,7 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Alert,
-  AsyncStorage
+  Alert
 } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { sha256 } from "js-sha256"
@@ -80,7 +79,7 @@ export default UserSignupScreen = props => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An error has occurred!(From useEffect error)", error, [
+      Alert.alert("An error has occurred!", error, [
         { text: "OK" }
       ]);
       setError("");
@@ -101,11 +100,7 @@ export default UserSignupScreen = props => {
       formState.inputValues.password !== formState.inputValues.confirmpassword
     ) {
       setIsLoading(false);
-      Alert.alert(
-        "An error has occurred!",
-        "The password and the confirm password don't match",
-        [{ text: "OK" }]
-      );
+      setError("The password and the confirm password don't match");
       return;
     }
 
@@ -127,7 +122,7 @@ export default UserSignupScreen = props => {
       })
       .catch(err => {
         setIsLoading(false);
-        Alert.alert("An error has occurred!", err, [{ text: "OK" }]);
+        setError(err);
       });
   };
 

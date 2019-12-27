@@ -1,9 +1,11 @@
 import firebaseUtil from "../firebase";
 
+const firestore = firebaseUtil.firestore()
+const functions = firebaseUtil.functions()
+
 // Get firebase document (trashOfUser)
 const getSellerItems = async () => {
-  return firebaseUtil
-    .firestore()
+  return firestore
     .collection("sellerItems")
     .doc(firebaseUtil.auth().currentUser.uid)
     .get()
@@ -19,8 +21,7 @@ const getSellerItems = async () => {
 
 // Get firebase UserProfile
 const getUsers = async () => {
-  return firebaseUtil
-    .firestore()
+  return firestore
     .collection("users")
     .doc(firebaseUtil.auth().currentUser.uid)
     .get()
@@ -48,8 +49,7 @@ const getUsers = async () => {
 
 // Get firebase UserProfile
 const getWasteTypeDetail = async wasteTypeId => {
-  return firebaseUtil
-    .firestore()
+  return firestore
     .collection("wasteType")
     .doc(wasteTypeId)
     .get()
@@ -92,8 +92,7 @@ const getSellerListAndWasteType = async () => {
 };
 
 const getTransactions = async (role, status) => {
-  return firebaseUtil
-    .firestore()
+  return firestore
     .collection("transactions")
     .where(role, "==", firebaseUtil.auth().currentUser.uid)
     .where("txStatus", "==", status)
@@ -111,10 +110,21 @@ const getTransactions = async (role, status) => {
     });
 };
 
-const searchBuyers = async () => {};
+const searchBuyers = async (wasteType) => {
+  return firestore.collection("buyerList").orderBy("purchaseList." + wasteType, "desc")
+  .then(querySnapshot => {
+    let buyers = []
+    querySnapshot.forEach(doc => {
+      buyers.push(doc.data())
+    })
+    return buyers
+  }).catch(function(error) {
+    throw new error("Error getting document:", error)
+  });
+};
 
 const addWaste = async (items) => {
-  return firebaseUtil.functions().httpsCallable("addWaste")(items)
+  return functions.httpsCallable("addWaste")(items)
   .then(result => {
     if (result.data.err == null) return true
     else return result
@@ -122,7 +132,7 @@ const addWaste = async (items) => {
 };
 
 const sellWaste = async (transaction) => {
-  return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
+  return functions.httpsCallable("sellWaste")(transaction)
   .then(function(result) {
     // Read result of the Cloud Function.
     if (result.data.err == null) return true
@@ -130,21 +140,19 @@ const sellWaste = async (transaction) => {
   })
 };
 
-const toggleSwitches = async (toggleSearch, toggleAddr) => {
-  console.log("hello toggle");
-  return firebaseUtil
-    .functions()
-    .httpsCallable("toggleConfig")({ toggleSearch, toggleAddr })
+const toggleSwitches = async (toggleAddr) => {
+  return functions
+    .httpsCallable("toggleSearch")( toggleAddr)
     .then(result => {
       if (result.data.err == null) {
         console.log(result.data);
         return true;
-      } else return result;
+      } else throw new Error(result.data.err)
     });
 };
 
 const createAccount = async (user) => {
-  return firebaseUtil.functions().httpsCallable("createAccount")(user)
+  return functions.httpsCallable("createAccount")(user)
   .then(result => {
     if(result.data.err == null) {
       return firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password)
