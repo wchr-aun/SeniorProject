@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   errorText: {
-    color: Colors.secondary_variant,
+    color: Colors.error,
     fontSize: 13
   }
 });

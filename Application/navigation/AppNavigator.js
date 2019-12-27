@@ -9,7 +9,7 @@ import Colors from "../constants/Colors";
 import ShowAllUserTrashScreen from "../screens/SellerScreen/ShowAllUserTrashScreen";
 import OptionTrashCheckScreen from "../screens/SellerScreen/OptionTrashCheck";
 import SellingTransactionScreen from "../screens/SellerScreen/SellingTransactionScreen";
-import UserHomepageScreen from "../screens/SellerScreen/UserHomepageScreen";
+import SellerHomepageScreen from "../screens/SellerScreen/SellerHomepageScreen";
 import UserSigninScreen from "../screens/UserSigninScreen";
 import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
@@ -24,9 +24,9 @@ import AppVariableSetting from "../constants/AppVariableSetting";
 import UIScreenTemplate from "../screens/UIScreenTemplate";
 
 // for UserHomepageScreen
-const UserhomepageNavigator = createStackNavigator(
+const SellerhomepageNavigator = createStackNavigator(
   {
-    UserHomepageScreen: UserHomepageScreen,
+    SellerHomepageScreen: SellerHomepageScreen,
     UIScreenTemplate: UIScreenTemplate,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen
   },
@@ -34,7 +34,7 @@ const UserhomepageNavigator = createStackNavigator(
 );
 
 // Hiding bottom tabbar for childe of UserhomepageNavigator
-UserhomepageNavigator.navigationOptions = ({ navigation }) => {
+SellerhomepageNavigator.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -75,7 +75,7 @@ ShowAllUserTrashNavigator.navigationOptions = ({ navigation }) => {
 // Trash Main
 const SellerBottomTabConfig = {
   Home: {
-    screen: UserhomepageNavigator,
+    screen: SellerhomepageNavigator,
     navigationOptions: {
       tabBarLabel: "หน้าหลัก",
       tabBarIcon: tabInfo => {

@@ -20,7 +20,7 @@ import {
   TouchableWithoutFeedback
 } from "react-native-gesture-handler";
 
-export default UserHomepageScreen = props => {
+export default SellerHomepageScreen = props => {
   // --------------------------- For UI Testing, not relate to this project ---------------------
   const [goToUITestingScreen, setGoToUITestingScreen] = useState(0);
   useEffect(() => {

@@ -44,7 +44,7 @@ export default UserAuthenScreen = props => {
           paddingTop: getStatusBarHeight(),
           width: wp("100%"),
           height: hp("100%") + getStatusBarHeight(),
-          backgroundColor: "white",
+          backgroundColor: Colors.secondary,
           borderRadius: 10
         }}
       >
