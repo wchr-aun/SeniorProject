@@ -6,16 +6,21 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Alert,
-  AsyncStorage
-} from "react-native"
-import { LinearGradient } from "expo-linear-gradient"
-import { sha256 } from "js-sha256"
+  Alert
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from "@expo/vector-icons";
+import { sha256 } from "js-sha256";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseFunctions from "../utils/firebaseFunctions";
+import ThaiTitleText from "../components/ThaiTitleText";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -146,10 +151,24 @@ export default UserSignupScreen = props => {
     <KeyboardAvoidingView
       behavior="padding"
       keyboardVerticalOffset={50}
-      style={styles.screen}
+      style={{ ...styles.screen, flex: 1 }}
     >
-      <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
-        <Card style={styles.authContainer} titleVar="title">
+      <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
+        <View style={{ marginVertical: wp("5%") }}>
+          <ThaiTitleText style={{ color: Colors.on_primary }}>
+            สร้างบัญชีผู้ใช้
+          </ThaiTitleText>
+        </View>
+        <Card
+          style={{
+            ...styles.authContainer,
+            width: wp("90%"),
+            height: hp("70%"),
+            paddingHorizontal: wp("5%"),
+            paddingVertical: wp("8%")
+          }}
+          titleVar="title"
+        >
           <ScrollView keyboardShouldPersistTaps={"handled"}>
             {/* {error ? <Text style={{ color: "red" }}>{error}</Text> : null} */}
             <Input
@@ -244,45 +263,63 @@ export default UserSignupScreen = props => {
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
-                <Button
-                  title="ลงทะเบียน"
-                  color={Colors.primary}
+                <CustomButton
+                  style={{
+                    width: wp("40%"),
+                    height: hp("6%"),
+                    borderRadius: 10,
+                    margin: wp("1.25%"),
+                    alignSelf: "center"
+                  }}
                   onPress={() => {
                     signupHandler();
                   }}
-                />
+                  btnColor={Colors.primary}
+                  btnTitleColor={Colors.on_primary}
+                  btnTitleFontSize={14}
+                >
+                  ยืนยันลงทะเบียน
+                </CustomButton>
               )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="ย้อนกลับ"
-                color={Colors.secondary}
-                onPress={() => {
-                  props.navigation.navigate("UserSigninScreen");
-                }}
-              />
             </View>
           </ScrollView>
         </Card>
+        <View style={{ width: wp("90%") }}>
+          <CustomButton
+            style={{
+              width: wp("40%"),
+              height: hp("6%"),
+              borderRadius: 10,
+              marginVertical: hp("1.25%"),
+              alignSelf: "flex-start",
+              borderWidth: 1,
+              borderColor: Colors.on_secondary
+            }}
+            onPress={() => {
+              props.navigation.navigate("UserSigninScreen");
+            }}
+            btnColor={Colors.on_primary}
+            btnTitleColor={Colors.primary}
+            btnTitleFontSize={14}
+          >
+            <MaterialIcons
+              name="chevron-left"
+              size={12}
+              color={Colors.primary}
+            />{" "}
+            ย้อนกลับ
+          </CustomButton>
+        </View>
       </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1
-  },
   gradient: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  authContainer: {
-    width: "80%",
-    maxWidth: 400,
-    maxHeight: 400,
-    padding: 20
   },
   buttonContainer: {
     marginTop: 10

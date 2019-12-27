@@ -12,11 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { sha256 } from "js-sha256";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-  listenOrientationChange,
-  removeOrientationListener
+  heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { Entypo } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
@@ -24,6 +22,7 @@ import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
 import ThaiText from "../components/ThaiText";
 import CustomButton from "../components/UI/CustomButton";
+import ThaiTitleText from "../components/ThaiTitleText";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -57,14 +56,6 @@ export default UserAuthenScreen = props => {
   }, []);
   // Use for Showing an text when user signup before signin
   const signupBeforeSignin = props.navigation.getParam("signupBeforeSignin");
-
-  // For responsive orientation listen
-  useEffect(() => {
-    listenOrientationChange();
-    return () => {
-      removeOrientationListener();
-    };
-  });
 
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -134,15 +125,15 @@ export default UserAuthenScreen = props => {
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
         <View style={{ marginVertical: wp("5%") }}>
-          <ThaiText style={{ color: Colors.on_primary }}>
+          <ThaiTitleText style={{ color: Colors.on_primary }}>
             ลงชื่อเข้าใช้
-          </ThaiText>
+          </ThaiTitleText>
         </View>
         <Card
           style={{
             ...styles.authContainer,
             width: wp("90%"),
-            height: hp("50%"),
+            height: hp("55%"),
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%")
           }}
@@ -167,6 +158,7 @@ export default UserAuthenScreen = props => {
               errorText="Please enter a valid email address."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="email"
             />
             <Input
               id="password"
@@ -179,6 +171,7 @@ export default UserAuthenScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="key"
             />
             <View
               style={{
@@ -224,17 +217,23 @@ export default UserAuthenScreen = props => {
                   width: wp("40%"),
                   height: hp("6%"),
                   borderRadius: 10,
-                  margin: wp("1.25%")
+                  margin: wp("1.25%"),
+                  borderWidth: 1,
+                  borderColor: Colors.primary
                 }}
                 onPress={() => {
                   props.navigation.navigate("UserSignupScreen");
                 }}
-                btnColor={Colors.lineSeparate}
+                btnColor={Colors.screen}
                 btnTitleColor={Colors.primary}
                 btnTitleFontSize={14}
               >
                 ลงทะเบียน{" "}
-                <Entypo name="squared-plus" size={14} color={Colors.primary} />
+                <MaterialCommunityIcons
+                  name="account-plus"
+                  size={14}
+                  color={Colors.primary}
+                />
               </CustomButton>
             </View>
           </ScrollView>

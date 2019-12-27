@@ -25,7 +25,8 @@ export default CustomButton = props => {
           style={{
             color: props.btnTitleColor,
             fontSize: props.btnTitleFontSize,
-            padding: wp("1.75%")
+            padding: wp("1.75%"),
+            alignSelf: "center"
           }}
         >
           {props.children}
