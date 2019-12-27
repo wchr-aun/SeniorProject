@@ -10,8 +10,8 @@ export const signin = () => {
   return async dispatch => {
     // do async task
     return firebaseFunctions.getUsers().then(result => {
-      dispatch({ type: SIGNIN, userProfile: result })
-      return
+      dispatch({ type: SIGNIN, userProfile: result });
+      return;
     });
   };
 };

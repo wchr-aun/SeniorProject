@@ -13,22 +13,30 @@ import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
+import AppVariableSetting from "../../constants/AppVariableSetting";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default UserHomepageScreen = props => {
   useEffect(() => {
     console.log("homepage");
+    console.log(Dimensions.get("screen").height * 1);
+    console.log(Dimensions.get("window").height * 1);
   }, []);
   // Resolve change vertical and horizontal affect to width
-  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+  const [availableWidth, setAvailableWidth] = useState(
     Dimensions.get("window").width
   );
-  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
-    Dimensions.get("window").height
+  const [availableHeight, setAvailableHeight] = useState(
+    // Delete status bar height
+    Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
   );
   useEffect(() => {
     const updateScreen = () => {
-      setAvailableDeviceWidth(Dimensions.get("window").width);
-      setAvailableDeviceHeight(Dimensions.get("window").height);
+      setAvailableWidth(Dimensions.get("window").width);
+      setAvailableHeight(
+        // Real Content Height
+        Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
+      );
     };
     Dimensions.addEventListener("change", updateScreen);
     return () => {
@@ -59,9 +67,9 @@ export default UserHomepageScreen = props => {
     <View
       style={{
         ...styles.screen,
-        width: availableDeviceWidth,
-        height: availableDeviceHeight,
-        backgroundColor: "red"
+        width: availableWidth,
+        height: availableHeight,
+        paddingTop: getStatusBarHeight()
       }}
     >
       {isLoading ? (
@@ -82,9 +90,9 @@ export default UserHomepageScreen = props => {
           <UserInfoCard
             style={{
               ...styles.userInfoCard,
-              paddingTop: availableDeviceHeight * 0.05,
-              width: "100%",
-              height: "25%"
+              // paddingTop: availableDeviceHeight * 0.05,
+              height: availableHeight * 0.3,
+              width: "100%"
             }}
             imgUrl={
               userProfile.imgUrl
@@ -99,7 +107,7 @@ export default UserHomepageScreen = props => {
             style={{
               ...styles.recentSellTransactionContainer,
               width: "100%",
-              height: "60%",
+              height: availableHeight * 0.7,
               alignSelf: "center",
               alignItems: "center"
             }}

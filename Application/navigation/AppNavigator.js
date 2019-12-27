@@ -19,6 +19,9 @@ import StartupScreen from "../screens/UserStartupScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
 import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 
+// Constant setting
+import AppVariableSetting from "../constants/AppVariableSetting";
+
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
   {
@@ -113,8 +116,8 @@ const SellerNavigator =
         labeled: true,
         inactiveColor: Colors.on_primary,
         barStyle: {
-          height: Dimensions.get("window").height * 0.1,
-          backgroundColor: Colors.on_secondary
+          height: AppVariableSetting.bottomBarHeight,
+          backgroundColor: Colors.primary
         }
       })
     : createBottomTabNavigator(SellerBottomTabConfig, {
@@ -123,7 +126,7 @@ const SellerNavigator =
           activeTintColor: Colors.on_primary,
           style: {
             backgroundColor: Colors.primary,
-            height: Dimensions.get("window").height * 0.1
+            height: AppVariableSetting.bottomBarHeight
           }
         }
       });

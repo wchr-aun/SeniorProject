@@ -13,6 +13,7 @@ import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
+import ImageCircle from "./UI/ImageCircle";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_WASTE = "ADD_WASTE";
@@ -129,29 +130,11 @@ export default TrashCard = props => {
         alignSelf: "center"
       }}
     >
-      <View // image need to config exactly number
-        style={{
-          ...styles.imgContainer,
-          width: availableDeviceWidth * 0.25, // width --> 0.8(all) - 0.25(this) = 0.55 (description container)
-          height: availableDeviceWidth * 0.25,
-          borderRadius: (availableDeviceWidth * 0.25) / 2, // divide 2 to make circle
-          overflow: "hidden",
-          alignSelf: "center",
-          marginHorizontal: 10
-        }}
-      >
-        <Image
-          source={{
-            uri: props.imgUrl
-          }}
-          style={{
-            ...styles.trashImg,
-            width: availableDeviceWidth * 0.25,
-            height: availableDeviceWidth * 0.25
-          }}
-          resizeMode="contain"
-        />
-      </View>
+      <ImageCircle
+        avariableWidth={availableDeviceWidth}
+        imgUrl={props.imgUrl}
+      />
+
       <View
         style={{
           ...styles.descriptionContainer,
