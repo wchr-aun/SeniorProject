@@ -26,10 +26,7 @@ export default UserStartupScreen = props => {
         }
         else props.navigation.navigate("ConfigAccountScreen")
       }
-      else {
-        await AsyncStorage.clear();
-        props.navigation.navigate("UserAuthenNavigator")
-      }
+      else props.navigation.navigate("UserAuthenNavigator")
     });
   };
 

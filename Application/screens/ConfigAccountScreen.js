@@ -16,7 +16,6 @@ import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
 
 export default ConfigAccountScreen = props => {
-  console.log('config')
   const [switchSearch, setSwitchSearch] = useState(false);
 
   const configHandler = (role) => {
@@ -43,8 +42,8 @@ export default ConfigAccountScreen = props => {
             <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
               <Text>Enable Address</Text>
               <SwitchToggle
-                switchOn={switchAddr}
-                onPress={() => setSwitchAddr(!switchAddr)}
+                switchOn={switchSearch}
+                onPress={() => setSwitchSearch(!switchSearch)}
                 duration={150}
                 backgroundColorOn="#5fdba7"
                 backgroundColorOff="#808080"

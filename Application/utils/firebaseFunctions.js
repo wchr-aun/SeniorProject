@@ -144,9 +144,10 @@ const sellWaste = async (transaction) => {
     })
 };
 
-const toggleSwitches = async (toggleAddr) => {
+const toggleSwitches = async (toggleSearch) => {
+  console.log("hello")
   return functions
-    .httpsCallable("toggleSearch")( toggleAddr)
+    .httpsCallable("toggleSearch")({toggleSearch})
     .then(result => {
       if (result.data.err == null) {
         console.log(result.data);
