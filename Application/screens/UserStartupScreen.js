@@ -19,9 +19,12 @@ export default UserStartupScreen = props => {
         // get user profile from redux
         await dispatch(authAction.signin());
 
-        if (config_role == null) 
-          props.navigation.navigate("ConfigAccountScreen")
-        else props.navigation.navigate("SellerNavigator")
+        if (config_role == "seller")
+          props.navigation.navigate("SellerNavigator")
+        else if (config_role == "buyer") {
+          props.navigation.navigate("SellerNavigator") // wait for buyer screen
+        }
+        else props.navigation.navigate("ConfigAccountScreen")
       }
       else props.navigation.navigate("UserAuthenNavigator")
     });

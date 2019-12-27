@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Alert
+  Alert,
+  AsyncStorage
 } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { sha256 } from "js-sha256"
@@ -44,7 +45,6 @@ const formReducer = (state, action) => {
 
 export default UserSignupScreen = props => {
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(false)
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
@@ -77,7 +77,6 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
-    setError(null)
     setIsLoading(true)
 
     if (!formState.allFormIsValid) {
@@ -106,7 +105,12 @@ export default UserSignupScreen = props => {
 
     firebaseFunctions.createAccount(user).then(() => {
       setIsLoading(false)
-      props.navigation.navigate("ConfigAccountScreen")
+      AsyncStorage.clear(() => {
+        props.navigation.navigate("ConfigAccountScreen")
+      }).catch(err => {
+        setIsLoading(false)
+        Alert.alert("An error has occurred!", err, [{ text: "OK" }])
+      })
     }).catch(err => {
       setIsLoading(false)
       Alert.alert("An error has occurred!", err, [{ text: "OK" }])

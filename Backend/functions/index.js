@@ -191,7 +191,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     let name = data.name
     let surname = data.surname
     let addr = data.addr
-    return buyerDB.doc(context.auth.id).update({
+    return userDB.doc(context.auth.id).update({
       name,
       surname,
       addr
