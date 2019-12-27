@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Alert,
   Text,
-  FlatList
+  FlatList,
+  TouchableOpacity
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -16,6 +17,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
+import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 
 export default UserAuthenScreen = props => {
   useEffect(() => {
@@ -25,6 +27,36 @@ export default UserAuthenScreen = props => {
   const sellerItemsForSell = useSelector(
     state => state.sellerItems.itemsForSell
   );
+
+  const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
+
+  // trash user snapshot
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const dispatch = useDispatch();
+
+  // Callback fn
+  const loadBuyer = useCallback(async () => {
+    setIsRefreshing(true);
+    await dispatch(sellerItemsAction.getBuyerList());
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing]);
+
+  // Load sellerItems from firebase and store it to redux "initially"
+  useEffect(() => {
+    setIsLoading(true);
+    loadBuyer().then(() => {
+      setIsLoading(false);
+    });
+  }, [loadBuyer]);
+
+  const chooseBuyerHandler = (sellerItemsForSell, buyerName, price, Addr) => {
+    console.log("chooseBuyerHandler click");
+    console.log(sellerItemsForSell);
+    console.log(buyerName);
+    console.log(price);
+    console.log(Addr);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -43,31 +75,37 @@ export default UserAuthenScreen = props => {
           borderRadius: 10
         }}
       >
-        <View
-          style={{
-            alignSelf: "center",
-            justifyContent: "center",
-            height: hp("30%")
-          }}
-        >
-          <Text>Content Here</Text>
+        <View style={{ width: "100%", height: wp("60%s") }}>
+          <FlatList
+            data={buyerListRedux}
+            keyExtractor={item => item.id}
+            renderItem={itemData => (
+              <TouchableOpacity
+                style={{
+                  width: wp("90%"),
+                  height: hp("15%"),
+                  backgroundColor: Colors.screen,
+                  alignSelf: "center",
+                  borderRadius: 10,
+                  margin: wp("3.75%"),
+                  justifyContent: "center"
+                }}
+                onPress={() =>
+                  chooseBuyerHandler(
+                    sellerItemsForSell,
+                    itemData.item.id,
+                    0.5,
+                    "Baang Bua"
+                  )
+                }
+              >
+                <View style={{ alignSelf: "center" }}>
+                  <Text>{itemData.item.id}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
         </View>
-        <FlatList
-          data={SELLINGTRANSACTION}
-          keyExtractor={item => item.transactionId}
-          renderItem={itemData => (
-            <SellTransactionCard
-              amountOfType={itemData.item.amountOfType}
-              imgUrl={itemData.item.imgUrl}
-              userName={itemData.item.buyerName}
-              meetTime={itemData.item.meetTime}
-              style={styles.sellTransactionCard}
-              onPress={() => {
-                selectedHandler(itemData.item);
-              }}
-            />
-          )}
-        />
       </View>
     </KeyboardAvoidingView>
   );

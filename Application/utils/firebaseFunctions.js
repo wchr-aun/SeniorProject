@@ -36,7 +36,7 @@ const getUsers = async () => {
           enableSearch: doc.data().enableSearch
         };
         return userProfile;
-      } else throw new Error(result.data.err)
+      } else throw new Error(result.data.err);
     })
     .catch(function(error) {
       throw new Error(error);
@@ -55,7 +55,7 @@ const getWasteTypeDetail = async wasteTypeId => {
           description: doc.data().description,
           disposal: doc.data().disposal
         };
-      } else throw new Error(result.data.err)
+      } else throw new Error(result.data.err);
     })
     .catch(function(error) {
       throw new Error(error);
@@ -106,22 +106,24 @@ const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(firebaseUtil.auth().currentUser.uid)
-    .then(doc => {
-    })
-}
+    .then(doc => {});
+};
 
 const searchBuyers = async (condition, orderBy) => {
   return firestore
     .collection("buyerList")
     .orderBy(condition || "purchaseList", orderBy)
+    .get()
     .then(querySnapshot => {
       let buyers = [];
       querySnapshot.forEach(doc => {
-        buyers.push(doc.data())
-      })
-      return buyers
-    }).catch(function(error) {
-      throw new error(error)
+        buyers.push({ id: doc.id, info: doc.data() });
+      });
+      console.log(buyers);
+      return buyers;
+    })
+    .catch(function(error) {
+      throw new error(error);
     });
 };
 
@@ -129,9 +131,9 @@ const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
-      if (result.data.err == null) return true
-      else throw new Error(result.data.err)
-    })
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err);
+    });
 };
 
 const sellWaste = async transaction => {
@@ -139,15 +141,15 @@ const sellWaste = async transaction => {
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
       // Read result of the Cloud Function.
-      if (result.data.err == null) return true
-      else throw new Error(result.data.err)
-    })
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err);
+    });
 };
 
-const toggleSwitches = async (toggleSearch) => {
-  console.log("hello")
+const toggleSwitches = async toggleSearch => {
+  console.log("hello");
   return functions
-    .httpsCallable("toggleSearch")({toggleSearch})
+    .httpsCallable("toggleSearch")({ toggleSearch })
     .then(result => {
       if (result.data.err == null) {
         console.log(result.data);
