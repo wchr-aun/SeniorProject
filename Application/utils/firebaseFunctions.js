@@ -36,7 +36,7 @@ const getUsers = async () => {
           enableSearch: doc.data().enableSearch
         };
         return userProfile;
-      } else throw new Error(result.data.err);
+      } else throw new Error("The document doesn't exist")
     })
     .catch(function(error) {
       throw new Error(error);
@@ -55,7 +55,7 @@ const getWasteTypeDetail = async wasteTypeId => {
           description: doc.data().description,
           disposal: doc.data().disposal
         };
-      } else throw new Error(result.data.err);
+      } else throw new Error("The document doesn't exist")
     })
     .catch(function(error) {
       throw new Error(error);
@@ -97,8 +97,8 @@ const getTransactions = async (role, status) => {
       });
       return tx;
     })
-    .catch(function(error) {
-      throw new error(error);
+    .catch(err => {
+      throw new error(err);
     });
 };
 
@@ -106,8 +106,22 @@ const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(firebaseUtil.auth().currentUser.uid)
-    .then(doc => {});
-};
+    .then(doc => {
+      if (doc.data().favBuyers != null) return doc.data().favBuyers
+      else return false
+    }).then(favBuyers => {
+      let buyersInfo = []
+      favBuyers.forEach(async buyer => {
+        await firestore.collection("buyerList").doc(buyer).get().then(doc => {
+          if (doc.exists) buyersInfo.push(doc.data())
+          else throw new Error("The document doesn't exist")
+        })
+      })
+      return buyersInfo
+    }).catch(err => {
+      throw new error(err)
+    })
+}
 
 const searchBuyers = async (condition, orderBy) => {
   return firestore
@@ -186,5 +200,6 @@ export default {
   addWaste,
   toggleSwitches,
   sellWaste,
-  createAccount
+  createAccount,
+  getFavBuyers
 };
