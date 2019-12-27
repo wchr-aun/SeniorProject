@@ -81,11 +81,6 @@ const trashSellingReducer = (state, action) => {
       return {
         items: updatedItems
       };
-    // case SELL_WASTE:
-    //   console.log("Selling local redux");
-    //   updatedItems.forEach((item, index) => {
-    //     if(action)
-    //   });
   }
   return state;
 };
@@ -136,22 +131,22 @@ export default SellingTrashScreen = props => {
 
   const dispatch = useDispatch();
 
-  const sellHandler = async () => {
-    // sellWaste()
-    setIsRefreshing(true);
-    await dispatch(
-      sellerItemsAction.chooseBuyerSell(
-        userProfile.addr,
-        trashsState.items,
-        "nora-buyer",
-        0.5
-      )
-    );
+  // const sellHandler = async () => {
+  //   // sellWaste()
+  //   setIsRefreshing(true);
+  //   await dispatch(
+  //     sellerItemsAction.chooseBuyerSell(
+  //       userProfile.addr,
+  //       trashsState.items,
+  //       "nora-buyer",
+  //       0.5
+  //     )
+  //   );
 
-    // re-load for redux updating
-    await loadSellerItems();
-    setIsRefreshing(false);
-  };
+  //   // re-load for redux updating
+  //   await loadSellerItems();
+  //   setIsRefreshing(false);
+  // };
 
   // When redux updated, this local redux also be updated
   useEffect(() => {
@@ -219,7 +214,11 @@ export default SellingTrashScreen = props => {
             <Button
               title={"Sell"}
               onPress={() => {
-                sellHandler();
+                // sellHandler();
+                dispatch(
+                  sellerItemsAction.setSellerItemsForSell(trashsState.items)
+                );
+                props.navigation.navigate("chooseBuyerForSellScreen");
               }}
             ></Button>
           </View>

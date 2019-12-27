@@ -1,5 +1,7 @@
 import firebaseFunctions from "../../utils/firebaseFunctions";
 import firebaseUtil from "../../firebase";
+import { LOCATION, askAsync } from "expo-permissions";
+import { getCurrentPositionAsync, reverseGeocodeAsync } from "expo-location";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGIN = "LOGIN";
@@ -7,11 +9,51 @@ export const CREATEACCOUNT = "CREATEACCOUNT";
 export const LOGOUT = "LOGOUT";
 export const SIGNIN = "SIGNIN";
 
+// use for get user location
+const verifyPermissions = async () => {
+  const result = await askAsync(LOCATION);
+  if (result.status !== "granted") {
+    console.log(
+      "Insufficient permissions!",
+      "You need to grant location permissions to use this app."
+    );
+    return false;
+  }
+  return true;
+};
+const getLocationHandler = async () => {
+  const hasPermission = await verifyPermissions();
+  if (!hasPermission) {
+    return;
+  }
+
+  // Step-1
+  try {
+    const location = await getCurrentPositionAsync({
+      timeout: 5000
+    });
+    // Step-2
+    try {
+      const locationAddr = await reverseGeocodeAsync(location);
+      return locationAddr;
+    } catch (err) {
+      console.log("Could not reverseGeocodeAsync");
+    }
+  } catch (err) {
+    console.log("Could not getCurrentPositionAsync");
+  }
+};
+
 export const signin = () => {
   return async dispatch => {
-    // do async task
+    // do async task-1
+    let userAddr = await getLocationHandler();
+    console.log("userAddr");
+    console.log(userAddr);
+
+    // do async task-2
     return firebaseFunctions.getUsers().then(result => {
-      dispatch({ type: SIGNIN, userProfile: result });
+      dispatch({ type: SIGNIN, userProfile: { ...result, addr: userAddr } });
       return;
     });
   };

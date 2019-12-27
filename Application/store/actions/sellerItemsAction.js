@@ -3,6 +3,7 @@ import firebaseFunctions from "../../utils/firebaseFunctions";
 export const GET_SELLER_ITEMS = "GET_SELLER_ITEMS";
 export const SET_WASTE = "SET_WASTE";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
+export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 
 export const getSellerItems = () => {
   return async dispatch => {
@@ -34,6 +35,13 @@ export const setUserWaste = items => {
       type: SET_WASTE,
       items: [...items]
     });
+  };
+};
+
+export const setSellerItemsForSell = items => {
+  return {
+    type: SET_WASTE_FOR_SELL,
+    itemsForSell: [...items]
   };
 };
 

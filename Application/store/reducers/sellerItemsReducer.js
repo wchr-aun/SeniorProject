@@ -1,7 +1,12 @@
-import { CHOOSEBUYER_SELL, SET_WASTE } from "../actions/sellerItemsAction";
+import {
+  CHOOSEBUYER_SELL,
+  SET_WASTE,
+  SET_WASTE_FOR_SELL
+} from "../actions/sellerItemsAction";
 
 const initialState = {
-  items: []
+  items: [],
+  itemsForSell: []
 };
 
 export default function(state = initialState, action) {
@@ -11,6 +16,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         items: action.items
+      };
+    case SET_WASTE_FOR_SELL:
+      console.log("SET_WASTE_FOR_SELL Reducer Run");
+      console.log(action.itemsForSell);
+      return {
+        ...state,
+        itemsForSell: [...action.itemsForSell]
       };
     case CHOOSEBUYER_SELL:
       console.log("CHOOSEBUYER_SELL Reducer Run");

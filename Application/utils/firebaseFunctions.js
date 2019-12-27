@@ -1,7 +1,7 @@
 import firebaseUtil from "../firebase";
 
-const firestore = firebaseUtil.firestore()
-const functions = firebaseUtil.functions()
+const firestore = firebaseUtil.firestore();
+const functions = firebaseUtil.functions();
 
 // Get firebase document (trashOfUser)
 const getSellerItems = async () => {
@@ -128,7 +128,7 @@ const searchBuyers = async (condition, orderBy) => {
     .collection("buyerList")
     .orderBy(condition || "purchaseList", orderBy)
     .then(querySnapshot => {
-      let buyers = []
+      let buyers = [];
       querySnapshot.forEach(doc => {
         buyers.push(doc.data())
       })
@@ -138,7 +138,7 @@ const searchBuyers = async (condition, orderBy) => {
     });
 };
 
-const addWaste = async (items) => {
+const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
@@ -147,7 +147,7 @@ const addWaste = async (items) => {
     })
 };
 
-const sellWaste = async (transaction) => {
+const sellWaste = async transaction => {
   return functions
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
@@ -165,7 +165,7 @@ const toggleSwitches = async (toggleSearch) => {
       if (result.data.err == null) {
         console.log(result.data);
         return true;
-      } else throw new Error(result.data.err)
+      } else throw new Error(result.data.err);
     });
 };
 
