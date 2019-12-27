@@ -9,6 +9,11 @@ import {
   Text
 } from "react-native";
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
@@ -99,24 +104,6 @@ const AdjustAmountOfTrash = props => {
 };
 
 export default TrashCard = props => {
-  // Resolve change vertical and horizontal affect to width
-  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
-    Dimensions.get("window").width
-  );
-  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
-    Dimensions.get("window").height
-  );
-  useEffect(() => {
-    const updateScreen = () => {
-      setAvailableDeviceWidth(Dimensions.get("window").width);
-      setAvailableDeviceHeight(Dimensions.get("window").height);
-    };
-    Dimensions.addEventListener("change", updateScreen);
-    return () => {
-      Dimensions.removeEventListener("change", updateScreen);
-    };
-  });
-
   // Selected Trasition
   const [isSelected, setIsSelected] = useState(false);
 
@@ -125,15 +112,12 @@ export default TrashCard = props => {
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: availableDeviceWidth * 0.9,
-        height: availableDeviceHeight * 0.28,
+        width: wp("90%"),
+        height: hp("28%"),
         alignSelf: "center"
       }}
     >
-      <ImageCircle
-        avariableWidth={availableDeviceWidth}
-        imgUrl={props.imgUrl}
-      />
+      <ImageCircle avariableWidth={wp("20%")} imgUrl={props.imgUrl} />
 
       <View
         style={{

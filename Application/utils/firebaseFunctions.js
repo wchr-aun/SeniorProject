@@ -1,7 +1,7 @@
 import firebaseUtil from "../firebase";
 
-const firestore = firebaseUtil.firestore()
-const functions = firebaseUtil.functions()
+const firestore = firebaseUtil.firestore();
+const functions = firebaseUtil.functions();
 
 // Get firebase document (trashOfUser)
 const getSellerItems = async () => {
@@ -110,48 +110,49 @@ const getTransactions = async (role, status) => {
     });
 };
 
-const searchBuyers = async (wasteType) => {
+const searchBuyers = async wasteType => {
   return firestore
     .collection("buyerList")
     .orderBy("purchaseList." + wasteType, "desc")
     .then(querySnapshot => {
-      let buyers = []
+      let buyers = [];
       querySnapshot.forEach(doc => {
-        buyers.push(doc.data())
-      })
-      return buyers
-    }).catch(function(error) {
-      throw new error("Error getting document:", error)
+        buyers.push(doc.data());
+      });
+      return buyers;
+    })
+    .catch(function(error) {
+      throw new error("Error getting document:", error);
     });
 };
 
-const addWaste = async (items) => {
+const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
-      if (result.data.err == null) return true
-      else return result
-    })
+      if (result.data.err == null) return true;
+      else return result;
+    });
 };
 
-const sellWaste = async (transaction) => {
+const sellWaste = async transaction => {
   return functions
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
       // Read result of the Cloud Function.
-      if (result.data.err == null) return true
-      else return result
-    })
+      if (result.data.err == null) return true;
+      else return result;
+    });
 };
 
-const toggleSwitches = async (toggleAddr) => {
+const toggleSwitches = async toggleSearch => {
   return functions
-    .httpsCallable("toggleSearch")( toggleAddr)
+    .httpsCallable("toggleSearch")({ toggleSearch })
     .then(result => {
       if (result.data.err == null) {
         console.log(result.data);
         return true;
-      } else throw new Error(result.data.err)
+      } else throw new Error(result.data.err);
     });
 };
 

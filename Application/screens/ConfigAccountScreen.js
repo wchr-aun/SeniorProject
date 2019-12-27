@@ -9,27 +9,32 @@ import {
   AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import firebaseFunctions from "../utils/firebaseFunctions"
+import firebaseFunctions from "../utils/firebaseFunctions";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
 
 export default ConfigAccountScreen = props => {
-  console.log('config')
+  console.log("config");
   const [switchSearch, setSwitchSearch] = useState(false);
 
-  const configHandler = (role) => {
-    firebaseFunctions.toggleSwitches(switchSearch).then(() => {
-      AsyncStorage.setItem('CONFIG_ROLE', role).then(() => {
-        props.navigation.navigate("StartupScreen")
-      }).catch(err => {
-        console.log(err)
+  const configHandler = role => {
+    firebaseFunctions
+      .toggleSwitches(switchSearch)
+      .then(() => {
+        AsyncStorage.setItem("CONFIG_ROLE", role)
+          .then(() => {
+            props.navigation.navigate("StartupScreen");
+          })
+          .catch(err => {
+            console.log(err);
+          });
       })
-    }).catch(err => {
-      console.log(err)
-    })
-  }
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -40,11 +45,17 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-around"}}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around"
+              }}
+            >
               <Text>Enable Address</Text>
               <SwitchToggle
-                switchOn={switchAddr}
-                onPress={() => setSwitchAddr(!switchAddr)}
+                switchOn={switchSearch}
+                onPress={() => setSwitchSearch(!switchSearch)}
                 duration={150}
                 backgroundColorOn="#5fdba7"
                 backgroundColorOff="#808080"
@@ -52,7 +63,13 @@ export default ConfigAccountScreen = props => {
                 circleColorOn="#ffffff"
               />
             </View>
-            <View style={{flexDirection:"row", alignContent:"center", justifyContent:"space-around"}}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignContent: "center",
+                justifyContent: "space-around"
+              }}
+            >
               <Button
                 title="Seller"
                 color={Colors.primary}

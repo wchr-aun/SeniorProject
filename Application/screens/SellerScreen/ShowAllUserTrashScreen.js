@@ -15,6 +15,11 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
@@ -25,6 +30,7 @@ import ThaiText from "../../components/ThaiText";
 import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
 
 const ADD_WASTE = "ADD_WASTE";
+const ADD_NEW_WASTE = "ADD_NEW_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
@@ -52,12 +58,6 @@ const trashsModifyingReducer = (state, action) => {
           updatedItems[index].amount = updatedItems[index].amount + 1;
         }
       });
-      // if (!founded) {
-      //   updatedItems.push({
-      //     wasteType: action.wasteType,
-      //     amount: 1
-      //   });
-      // }
       return {
         items: updatedItems
       };
@@ -205,11 +205,7 @@ export default ShowAllUserTrashScreen = props => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={50}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <View
         style={{
           ...styles.screen,
@@ -243,7 +239,7 @@ export default ShowAllUserTrashScreen = props => {
                   wasteType={itemData.item.wasteType.replace("wasteType/", "")}
                   wasteDisposal={itemData.item.wasteDisposal}
                   wasteDescription={itemData.item.wasteDescription}
-                  trashDisposal={null} //pro
+                  trashDisposal={null}
                   amountOfTrash={itemData.item.amount}
                   trashAdjustPrice={
                     itemData.item.adjustedPrice
