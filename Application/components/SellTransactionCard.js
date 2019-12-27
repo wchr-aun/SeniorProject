@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -15,8 +15,31 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiText from "./ThaiText";
 import libary from "../utils/libary";
+import ImageCircle from "./UI/ImageCircle";
+import AppVariableSetting from "../constants/AppVariableSetting";
 
 export default SellTransactionCard = props => {
+  // Resolve change vertical and horizontal affect to width
+  const [availableWidth, setAvailableWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableHeight, setAvailableHeight] = useState(
+    // Delete status bar height
+    Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
+  );
+  useEffect(() => {
+    const updateScreen = () => {
+      setAvailableWidth(Dimensions.get("window").width);
+      setAvailableHeight(
+        // Real Content Height
+        Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
+      );
+    };
+    Dimensions.addEventListener("change", updateScreen);
+    return () => {
+      Dimensions.removeEventListener("change", updateScreen);
+    };
+  });
   // Set-up the touchable view
   let TouchableComponent = TouchableOpacity;
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -25,32 +48,46 @@ export default SellTransactionCard = props => {
 
   return (
     <TouchableComponent onPress={props.onPress}>
-      <View style={{ ...styles.container, ...props.style }}>
-        <View style={{ ...styles.imgContainer }}>
-          <Image
-            source={{
-              uri: props.imgUrl
-            }}
-            style={styles.userImg}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.infoContainer}>
-          {/* Row 1 */}
-          <View style={{ ...styles.BuyerName, fontSize: 18 }}>
-            <ThaiText>{props.userName}</ThaiText>
+      <View
+        style={{
+          ...styles.container,
+          ...props.style,
+          width: availableWidth * 0.95,
+          borderRadius: 10,
+          flexDirection: "row"
+        }}
+      >
+        <ImageCircle
+          imgUrl={props.imgUrl}
+          avariableWidth={availableWidth * 0.2}
+          // style={{marginHorizontal: 10}}
+        />
+        <View
+          style={{
+            width: availableWidth * 0.7,
+            // padding: 10,
+            backgroundColor: "yellow"
+          }}
+        >
+          <View style={{ ...styles.BuyerName }}>
+            <ThaiText style={{ fontSize: 14 }}>{props.userName}</ThaiText>
           </View>
-          {/* Line Separate */}
           <View style={styles.lineSeparate} />
-          {/* Row 2 */}
-          <View style={styles.description}>
-            <View style={styles.amountOfType}>
+          <View
+            style={{
+              ...styles.description,
+              borderColor: "red",
+              borderWidth: 1,
+              width: "100%"
+            }}
+          >
+            <View style={{ ...styles.amountOfType, width: "50%" }}>
               <Ionicons name="md-trash" size={24} color={Colors.primary} />
               <ThaiText style={{ fontSize: 14 }}>
                 {props.amountOfType} ประเภท
               </ThaiText>
             </View>
-            <View>
+            <View style={{ width: "50%" }}>
               <ThaiText style={{ fontSize: 14 }}>
                 {libary.formatDate(props.meetTime)}
               </ThaiText>
@@ -63,27 +100,9 @@ export default SellTransactionCard = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 10,
-    width: "100%",
-    height: "100%",
-    flexDirection: "row"
-  },
-  imgContainer: {
-    width: "20%",
-    height: "80%",
-    padding: 5
-    // borderRadius: 500,
-    // overflow: "hidden",
-    // backgroundColor: "red"
-  },
   userImg: {
     width: "100%",
     height: "100%"
-  },
-  infoContainer: {
-    width: "80%",
-    padding: 10
   },
   description: {
     flexDirection: "row",

@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useState, useEffect } from "react"
+import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -7,44 +7,46 @@ import {
   Button,
   ActivityIndicator,
   Alert
-} from "react-native"
-import { LinearGradient } from "expo-linear-gradient"
-import { sha256 } from "js-sha256"
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { sha256 } from "js-sha256";
 
-import Card from "../components/UI/Card"
-import Input from "../components/UI/Input"
-import Colors from "../constants/Colors"
-import firebaseFunctions from "../utils/firebaseFunctions"
+import Card from "../components/UI/Card";
+import Input from "../components/UI/Input";
+import Colors from "../constants/Colors";
+import firebaseFunctions from "../utils/firebaseFunctions";
 
-const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE"
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
       [action.inputIdentifier]: action.value
-    }
+    };
     const updatedValidities = {
       ...state.inputValidities,
       [action.inputIdentifier]: action.isValid
-    }
-    let updatedAllFormIsValid = true
-    for (const key in updatedValidities) 
-      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key])
-    
+    };
+    let updatedAllFormIsValid = true;
+    for (const key in updatedValidities)
+      updatedAllFormIsValid = Boolean(
+        updatedAllFormIsValid && updatedValidities[key]
+      );
+
     return {
       ...state,
       inputValues: updatedValues,
       inputValidities: updatedValidities,
       allFormIsValid: updatedAllFormIsValid
-    }
+    };
   }
-  return state
-}
+  return state;
+};
 
 export default UserSignupScreen = props => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
@@ -69,29 +71,44 @@ export default UserSignupScreen = props => {
       phoneNo: false
     },
     allFormIsValid: false
-  })
+  });
 
   useEffect(() => {
-    console.log("signup")
-  }, [])
+    console.log("signup");
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error has occurred!(From useEffect error)", error, [
+        { text: "OK" }
+      ]);
+      setError("");
+    }
+  }, [error]);
 
   // firebase call cloud function
   const signupHandler = async () => {
-    setError(null)
-    setIsLoading(true)
+    setIsLoading(true);
 
     if (!formState.allFormIsValid) {
-      setIsLoading(false)
-      Alert.alert("An error has occurred!", "Please fill all the inputs", [{ text: "OK" }])
-      return
+      setError("Please fill all the inputs");
+      // Alert.alert("An error has occurred!", "Please fill all the inputs", [
+      //   { text: "OK" }
+      // ]);
+      setIsLoading(false);
+      return;
     }
 
     if (
       formState.inputValues.password !== formState.inputValues.confirmpassword
     ) {
-      setIsLoading(false)
-      Alert.alert("An error has occurred!", "The password and the confirm password don't match", [{ text: "OK" }])
-      return
+      setIsLoading(false);
+      Alert.alert(
+        "An error has occurred!",
+        "The password and the confirm password don't match",
+        [{ text: "OK" }]
+      );
+      return;
     }
 
     let user = {
@@ -102,16 +119,19 @@ export default UserSignupScreen = props => {
       surname: formState.inputValues.surname,
       addr: formState.inputValues.addr,
       phoneNo: "+66" + formState.inputValues.phoneNo.toString()
-    }
+    };
 
-    firebaseFunctions.createAccount(user).then(() => {
-      setIsLoading(false)
-      props.navigation.navigate("ConfigAccountScreen")
-    }).catch(err => {
-      setIsLoading(false)
-      Alert.alert("An error has occurred!", err, [{ text: "OK" }])
-    })
-  }
+    firebaseFunctions
+      .createAccount(user)
+      .then(() => {
+        setIsLoading(false);
+        props.navigation.navigate("ConfigAccountScreen");
+      })
+      .catch(err => {
+        setIsLoading(false);
+        Alert.alert("An error has occurred!", err, [{ text: "OK" }]);
+      });
+  };
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -120,9 +140,9 @@ export default UserSignupScreen = props => {
         value: inputValue,
         isValid: inputValidity,
         inputIdentifier: inputIdentifier
-      })
+      });
     }
-  )
+  );
 
   return (
     <KeyboardAvoidingView
@@ -230,7 +250,7 @@ export default UserSignupScreen = props => {
                   title="ลงทะเบียน"
                   color={Colors.primary}
                   onPress={() => {
-                    signupHandler()
+                    signupHandler();
                   }}
                 />
               )}
@@ -240,7 +260,7 @@ export default UserSignupScreen = props => {
                 title="ย้อนกลับ"
                 color={Colors.secondary}
                 onPress={() => {
-                  props.navigation.navigate("UserSigninScreen")
+                  props.navigation.navigate("UserSigninScreen");
                 }}
               />
             </View>
@@ -248,8 +268,8 @@ export default UserSignupScreen = props => {
         </Card>
       </LinearGradient>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   screen: {
@@ -269,4 +289,4 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 10
   }
-})
+});

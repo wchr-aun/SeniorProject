@@ -46,7 +46,7 @@ const formReducer = (state, action) => {
 export default UserAuthenScreen = props => {
   useEffect(() => {
     console.log("login");
-  }, [])
+  }, []);
   const signupBeforeSignin = props.navigation.getParam("signupBeforeSignin");
 
   // isClick = false;
@@ -55,8 +55,7 @@ export default UserAuthenScreen = props => {
 
   // For alerting user an signin-signup action
   useEffect(() => {
-    if (error)
-      Alert.alert("An Error has occurred!", error, [{ text: "OK" }])
+    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
   }, [error]);
 
   // 'formState (state snapshot) will be updated when state changed
@@ -113,7 +112,7 @@ export default UserAuthenScreen = props => {
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
+      <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
             {signupBeforeSignin ? (
@@ -152,8 +151,8 @@ export default UserAuthenScreen = props => {
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
                 <Button
-                  title="ลงชื่อเข้าใช้"
-                  color={Colors.primary}
+                  title="Signin"
+                  color={Colors.primary_variant}
                   onPress={() => {
                     authHandler();
                   }}
@@ -162,8 +161,8 @@ export default UserAuthenScreen = props => {
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                title="ลงทะเบียน"
-                color={Colors.accent}
+                title="Register"
+                color={Colors.primary_variant}
                 onPress={() => {
                   props.navigation.navigate("UserSignupScreen");
                 }}
