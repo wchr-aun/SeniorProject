@@ -1,5 +1,10 @@
 import React, { useReducer, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 import Colors from "../../constants/Colors";
 
@@ -66,15 +71,36 @@ export default Input = props => {
   };
 
   return (
-    <View style={styles.formControl}>
+    <View style={{ ...styles.formControl, ...props.style }}>
       <Text style={styles.label}>{props.label}</Text>
-      <TextInput
-        {...props}
-        style={styles.input}
-        value={inputState.value}
-        onChangeText={textChangeHandler}
-        onBlur={lostFocusHandler}
-      ></TextInput>
+      <View
+        style={{
+          flexDirection: "row",
+          width: wp("80%"),
+          borderRadius: 5,
+          borderWidth: 1,
+          borderColor: "#ebebeb",
+          alignItems: "center"
+        }}
+      >
+        <View style={{ marginHorizontal: "1.5%" }}>
+          <MaterialCommunityIcons
+            size={wp("7%")}
+            color="#ebebeb"
+            name={props.iconName}
+          />
+        </View>
+        <TextInput
+          {...props}
+          style={{
+            ...styles.input,
+            width: wp("70%")
+          }}
+          value={inputState.value}
+          onChangeText={textChangeHandler}
+          onBlur={lostFocusHandler}
+        ></TextInput>
+      </View>
       {!inputState.isValid && inputState.touched && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{props.errorText}</Text>
@@ -93,15 +119,13 @@ const styles = StyleSheet.create({
   },
   input: {
     paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1
+    paddingVertical: 5
   },
   errorContainer: {
     marginVertical: 5
   },
   errorText: {
-    color: Colors.secondary_variant,
+    color: Colors.error,
     fontSize: 13
   }
 });

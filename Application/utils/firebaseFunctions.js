@@ -111,33 +111,37 @@ const getTransactions = async (role, status) => {
 };
 
 const searchBuyers = async (wasteType) => {
-  return firestore.collection("buyerList").orderBy("purchaseList." + wasteType, "desc")
-  .then(querySnapshot => {
-    let buyers = []
-    querySnapshot.forEach(doc => {
-      buyers.push(doc.data())
-    })
-    return buyers
-  }).catch(function(error) {
-    throw new error("Error getting document:", error)
-  });
+  return firestore
+    .collection("buyerList")
+    .orderBy("purchaseList." + wasteType, "desc")
+    .then(querySnapshot => {
+      let buyers = []
+      querySnapshot.forEach(doc => {
+        buyers.push(doc.data())
+      })
+      return buyers
+    }).catch(function(error) {
+      throw new error("Error getting document:", error)
+    });
 };
 
 const addWaste = async (items) => {
-  return functions.httpsCallable("addWaste")(items)
-  .then(result => {
-    if (result.data.err == null) return true
-    else return result
-  })
+  return functions
+    .httpsCallable("addWaste")(items)
+    .then(result => {
+      if (result.data.err == null) return true
+      else return result
+    })
 };
 
 const sellWaste = async (transaction) => {
-  return functions.httpsCallable("sellWaste")(transaction)
-  .then(function(result) {
-    // Read result of the Cloud Function.
-    if (result.data.err == null) return true
-    else return result
-  })
+  return functions
+    .httpsCallable("sellWaste")(transaction)
+    .then(function(result) {
+      // Read result of the Cloud Function.
+      if (result.data.err == null) return true
+      else return result
+    })
 };
 
 const toggleSwitches = async (toggleAddr) => {
@@ -151,20 +155,23 @@ const toggleSwitches = async (toggleAddr) => {
     });
 };
 
-const createAccount = async (user) => {
-  return functions.httpsCallable("createAccount")(user)
-  .then(result => {
-    if(result.data.err == null) {
-      return firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password)
-      .catch(err => {
-        throw new Error(result.data.err)
-      })
-    }
-    else throw new Error(result.data.err)
-  }).catch(err => {
-    throw new Error(result.data.err)
-  })
-}
+const createAccount = async user => {
+  return functions
+    .httpsCallable("createAccount")(user)
+    .then(result => {
+      if (result.data.err == null) {
+        return firebaseUtil
+          .auth()
+          .signInWithEmailAndPassword(user.email, user.password)
+          .catch(err => {
+            throw new Error(result.data.err);
+          });
+      } else throw new Error(result.data.err);
+    })
+    .catch(err => {
+      throw new Error(result.data.err);
+    });
+};
 
 export default {
   getUsers,

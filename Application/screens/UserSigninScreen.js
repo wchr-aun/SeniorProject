@@ -4,18 +4,25 @@ import {
   View,
   KeyboardAvoidingView,
   StyleSheet,
-  Button,
   ActivityIndicator,
   Alert,
   Text
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { sha256 } from "js-sha256";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
+import ThaiText from "../components/ThaiText";
+import CustomButton from "../components/UI/CustomButton";
+import ThaiTitleText from "../components/ThaiTitleText";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -47,16 +54,8 @@ export default UserAuthenScreen = props => {
   useEffect(() => {
     console.log("login");
   }, []);
+  // Use for Showing an text when user signup before signin
   const signupBeforeSignin = props.navigation.getParam("signupBeforeSignin");
-
-  // isClick = false;
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  // For alerting user an signin-signup action
-  useEffect(() => {
-    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
-  }, [error]);
 
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -71,6 +70,15 @@ export default UserAuthenScreen = props => {
     },
     allFormIsValid: false
   });
+
+  // isClick = false;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  // For alerting user an signin-signup action
+  useEffect(() => {
+    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
+  }, [error]);
 
   const authHandler = useCallback(async () => {
     setError(null);
@@ -109,11 +117,27 @@ export default UserAuthenScreen = props => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={50}
-      style={styles.screen}
+      style={{
+        ...styles.screen,
+        flex: 1
+      }}
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
-        <Card style={styles.authContainer} titleVar="title">
+        <View style={{ marginVertical: wp("5%") }}>
+          <ThaiTitleText style={{ color: Colors.on_primary }}>
+            ลงชื่อเข้าใช้
+          </ThaiTitleText>
+        </View>
+        <Card
+          style={{
+            ...styles.authContainer,
+            width: wp("90%"),
+            height: hp("53%"),
+            paddingHorizontal: wp("5%"),
+            paddingVertical: wp("8%")
+          }}
+          titleVar="title"
+        >
           <ScrollView keyboardShouldPersistTaps="handled">
             {signupBeforeSignin ? (
               <View>
@@ -125,7 +149,7 @@ export default UserAuthenScreen = props => {
 
             <Input
               id="email"
-              label="Email"
+              label="อีเมล"
               keyboardType="email-address"
               required
               email
@@ -133,10 +157,11 @@ export default UserAuthenScreen = props => {
               errorText="Please enter a valid email address."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="email"
             />
             <Input
               id="password"
-              label="Password"
+              label="รหัสผ่าน"
               keyboardType="default"
               secureTextEntry
               required
@@ -145,28 +170,70 @@ export default UserAuthenScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
+              iconName="key-variant"
             />
-            <View style={styles.buttonContainer}>
+            <View
+              style={{
+                ...styles.buttonContainer,
+                marginTop: wp("5%"),
+                alignItems: "center"
+              }}
+            >
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
-                <Button
-                  title="Signin"
-                  color={Colors.primary_variant}
+                <CustomButton
+                  style={{
+                    width: wp("40%"),
+                    height: hp("6%"),
+                    borderRadius: 10,
+                    margin: wp("1.25%")
+                  }}
                   onPress={() => {
                     authHandler();
                   }}
-                />
+                  btnColor={Colors.primary}
+                  btnTitleColor={Colors.on_primary}
+                  btnTitleFontSize={14}
+                >
+                  ลงชื่อเข้าใช้
+                </CustomButton>
               )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Register"
-                color={Colors.primary_variant}
+
+              <View style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}>
+                <ThaiText
+                  style={{
+                    color: Colors.primary,
+                    fontSize: 10
+                  }}
+                >
+                  หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
+                </ThaiText>
+              </View>
+
+              <CustomButton
+                style={{
+                  width: wp("40%"),
+                  height: hp("6%"),
+                  borderRadius: 10,
+                  margin: wp("1.25%"),
+                  borderWidth: 1,
+                  borderColor: Colors.primary
+                }}
                 onPress={() => {
                   props.navigation.navigate("UserSignupScreen");
                 }}
-              />
+                btnColor={Colors.screen}
+                btnTitleColor={Colors.primary}
+                btnTitleFontSize={14}
+              >
+                ลงทะเบียน{" "}
+                <MaterialCommunityIcons
+                  name="account-plus"
+                  size={14}
+                  color={Colors.primary}
+                />
+              </CustomButton>
             </View>
           </ScrollView>
         </Card>
@@ -187,14 +254,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  authContainer: {
-    width: "80%",
-    maxWidth: 400,
-    maxHeight: 400,
-    padding: 20
-  },
-  buttonContainer: {
-    marginTop: 10
   }
 });

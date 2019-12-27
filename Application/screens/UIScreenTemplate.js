@@ -1,94 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
-  StyleSheet,
-  FlatList,
+  ScrollView,
   View,
-  Dimensions,
+  KeyboardAvoidingView,
+  StyleSheet,
   ActivityIndicator,
+  Alert,
   Text
 } from "react-native";
-
-import { getStatusBarHeight } from "react-native-status-bar-height";
+import { LinearGradient } from "expo-linear-gradient";
+import { sha256 } from "js-sha256";
 import {
-  widthPercentageToDP,
-  heightPercentageToDP
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import Colors from "../constants/Colors";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default UIScreenTemplate = props => {
+import Card from "../components/UI/Card";
+import Input from "../components/UI/Input";
+import Colors from "../constants/Colors";
+import firebaseUtil from "../firebase";
+import ThaiText from "../components/ThaiText";
+import CustomButton from "../components/UI/CustomButton";
+import ThaiTitleText from "../components/ThaiTitleText";
+
+export default UserAuthenScreen = props => {
+  useEffect(() => {
+    console.log("Template");
+  }, []);
+
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={50}
       style={{
-        width: widthPercentageToDP("100%"),
-        height: heightPercentageToDP("100%") + getStatusBarHeight(),
-        backgroundColor: Colors.primary,
-        paddingTop: getStatusBarHeight()
+        ...styles.screen,
+        flex: 1
       }}
     >
-      <View style={{ padding: widthPercentageToDP("5%") }}>
-        <Text
-          style={{ color: "white", fontSize: widthPercentageToDP("3.75%") }}
-        >
-          {getStatusBarHeight()}
-        </Text>
-      </View>
       <View
         style={{
-          backgroundColor: Colors.on_primary,
-          borderRadius: 10,
-          width: widthPercentageToDP("90%"),
-          height: heightPercentageToDP("25%"),
-          alignSelf: "center",
-          flexDirection: "row"
+          paddingTop: getStatusBarHeight(),
+          width: wp("100%"),
+          height: hp("100%") + getStatusBarHeight(),
+          backgroundColor: Colors.secondary,
+          borderRadius: 10
         }}
       >
-        <View
-          style={{
-            width: widthPercentageToDP("25%"),
-            height: "100%",
-            borderWidth: 1,
-            borderColor: "yellow"
-          }}
-        ></View>
-        <View
-          style={{
-            width: widthPercentageToDP("65%"),
-            height: "100%",
-            borderWidth: 1,
-            borderColor: "red"
-          }}
-        ></View>
+        <View style={{ alignSelf: "center", justifyContent: "center" }}>
+          <Text>Content Here</Text>
+        </View>
       </View>
-
-      <View
-        style={{
-          backgroundColor: Colors.on_primary,
-          borderRadius: 10,
-          width: widthPercentageToDP("90%"),
-          height: heightPercentageToDP("25%"),
-          alignSelf: "center",
-          flexDirection: "row"
-        }}
-      >
-        <View
-          style={{
-            width: widthPercentageToDP("25%"),
-            height: "100%",
-            borderWidth: 1,
-            borderColor: "yellow"
-          }}
-        ></View>
-        <View
-          style={{
-            width: widthPercentageToDP("65%"),
-            height: "100%",
-            borderWidth: 1,
-            borderColor: "red"
-          }}
-        ></View>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
-const styles = StyleSheet.create({});
+UserAuthenScreen.navigationOptions = {
+  headerTitle: "UserAuthenScreen"
+};
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1
+  }
+});
