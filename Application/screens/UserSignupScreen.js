@@ -4,7 +4,7 @@ import {
   View,
   KeyboardAvoidingView,
   StyleSheet,
-  Button,
+  AsyncStorage,
   ActivityIndicator,
   Alert
 } from "react-native";
@@ -123,8 +123,13 @@ export default UserSignupScreen = props => {
     firebaseFunctions
       .createAccount(user)
       .then(() => {
-        setIsLoading(false);
-        props.navigation.navigate("ConfigAccountScreen");
+        AsyncStorage.clear().then(() => {
+          setIsLoading(false);
+          props.navigation.navigate("ConfigAccountScreen");
+        }).catch(err => {
+          setIsLoading(false);
+          setError(err);
+        });
       })
       .catch(err => {
         setIsLoading(false);

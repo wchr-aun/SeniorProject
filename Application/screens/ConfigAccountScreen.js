@@ -16,7 +16,6 @@ import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
 
 export default ConfigAccountScreen = props => {
-  console.log("config");
   const [switchSearch, setSwitchSearch] = useState(false);
 
   const configHandler = role => {
