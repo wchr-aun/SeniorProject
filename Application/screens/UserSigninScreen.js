@@ -66,15 +66,6 @@ export default UserAuthenScreen = props => {
     };
   });
 
-  // isClick = false;
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  // For alerting user an signin-signup action
-  useEffect(() => {
-    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
-  }, [error]);
-
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
@@ -88,6 +79,15 @@ export default UserAuthenScreen = props => {
     },
     allFormIsValid: false
   });
+
+  // isClick = false;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  // For alerting user an signin-signup action
+  useEffect(() => {
+    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
+  }, [error]);
 
   const authHandler = useCallback(async () => {
     setError(null);
@@ -208,14 +208,14 @@ export default UserAuthenScreen = props => {
                 </CustomButton>
               )}
 
-              <View>
+              <View style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}>
                 <ThaiText
                   style={{
                     color: Colors.primary,
-                    fontSize: 14
+                    fontSize: 10
                   }}
                 >
-                  หรือ
+                  หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
                 </ThaiText>
               </View>
 
