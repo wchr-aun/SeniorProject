@@ -6,7 +6,8 @@ import {
   Text,
   Image,
   Platform,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -38,7 +39,9 @@ export default UserInfoCard = props => {
             <Text>{props.address}</Text>
           </View>
           <View style={{ width: "10%" }}>
-            <Ionicons name="ios-settings" size={30} color={Colors.primary} />
+            <TouchableOpacity onPress={props.onSignout}>
+              <Ionicons name="ios-settings" size={30} color={Colors.primary} />
+            </TouchableOpacity>
           </View>
         </View>
         {/* Line Separate */}

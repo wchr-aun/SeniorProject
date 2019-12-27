@@ -7,7 +7,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import Colors from "../../constants/Colors";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native-gesture-handler";
+import * as authAction from "../../store/actions/authAction";
 
 export default SellerHomepageScreen = props => {
   // --------------------------- For UI Testing, not relate to this project ---------------------
@@ -71,6 +72,23 @@ export default SellerHomepageScreen = props => {
     });
   };
 
+  // do [signout,
+  const dispatch = useDispatch();
+  const [isSignin, setIsSignin] = useState(true);
+  const signOutHandler = async () => {
+    setIsLoading(true);
+    let result = await dispatch(authAction.signout());
+    setIsLoading(false);
+    setIsSignin(result);
+  };
+
+  useEffect(() => {
+    // If not do navigate in useEffect, 'Warning: Can't perform a React state update on an unmounted component.' occur
+    if (!isSignin) {
+      props.navigation.navigate("StartupScreen");
+    }
+  }, [isSignin]);
+
   return (
     <View
       style={{
@@ -110,6 +128,7 @@ export default SellerHomepageScreen = props => {
             userName={userProfile.name + " " + userProfile.surname}
             meetTime={"18 มกรา 15.00 น."}
             address={userProfile.addr}
+            onSignout={() => signOutHandler()}
           />
           <View
             style={{

@@ -113,21 +113,25 @@ const getTransactions = async (role, status) => {
 
 const searchBuyers = async () => {};
 
-const addWaste = async (items) => {
-  return firebaseUtil.functions().httpsCallable("addWaste")(items)
-  .then(result => {
-    if (result.data.err == null) return true
-    else return result
-  })
+const addWaste = async items => {
+  return firebaseUtil
+    .functions()
+    .httpsCallable("addWaste")(items)
+    .then(result => {
+      if (result.data.err == null) return true;
+      else return result;
+    });
 };
 
-const sellWaste = async (transaction) => {
-  return firebaseUtil.functions().httpsCallable("sellWaste")(transaction)
-  .then(function(result) {
-    // Read result of the Cloud Function.
-    if (result.data.err == null) return true
-    else return result
-  })
+const sellWaste = async transaction => {
+  return firebaseUtil
+    .functions()
+    .httpsCallable("sellWaste")(transaction)
+    .then(function(result) {
+      // Read result of the Cloud Function.
+      if (result.data.err == null) return true;
+      else return result;
+    });
 };
 
 const toggleSwitches = async (toggleSearch, toggleAddr) => {
@@ -143,20 +147,24 @@ const toggleSwitches = async (toggleSearch, toggleAddr) => {
     });
 };
 
-const createAccount = async (user) => {
-  return firebaseUtil.functions().httpsCallable("createAccount")(user)
-  .then(result => {
-    if(result.data.err == null) {
-      return firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password)
-      .catch(err => {
-        throw new Error(result.data.err)
-      })
-    }
-    else throw new Error(result.data.err)
-  }).catch(err => {
-    throw new Error(result.data.err)
-  })
-}
+const createAccount = async user => {
+  return firebaseUtil
+    .functions()
+    .httpsCallable("createAccount")(user)
+    .then(result => {
+      if (result.data.err == null) {
+        return firebaseUtil
+          .auth()
+          .signInWithEmailAndPassword(user.email, user.password)
+          .catch(err => {
+            throw new Error(result.data.err);
+          });
+      } else throw new Error(result.data.err);
+    })
+    .catch(err => {
+      throw new Error(result.data.err);
+    });
+};
 
 export default {
   getUsers,
