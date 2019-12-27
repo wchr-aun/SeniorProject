@@ -204,18 +204,6 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
-exports.getTransactionsForSellers = functions.https.onCall((data, context) => {
-  for (let i = 0; i < 6; i++) {
-    return txDB.where("seller", "==", "anaunz").where("txStatus", "==", i).orderBy("createTimestamp", "desc").get().then(querySnapshot => {
-      let temp = []
-      querySnapshot.forEach(function(doc) {
-        temp.push(doc.data().createTimestamp)
-      })
-      return temp
-    })
-  }
-})
-
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {
 

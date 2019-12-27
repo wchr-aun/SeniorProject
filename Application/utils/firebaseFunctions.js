@@ -15,7 +15,7 @@ const getSellerItems = async () => {
       } else return [];
     })
     .catch(function(error) {
-      console.log("Error getting document:", error);
+      throw new Error(error);
     });
 };
 
@@ -36,14 +36,10 @@ const getUsers = async () => {
           enableSearch: doc.data().enableSearch
         };
         return userProfile;
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        return;
-      }
+      } else throw new Error(result.data.err)
     })
     .catch(function(error) {
-      console.log("Error getting document:", error);
+      throw new Error(error);
     });
 };
 
@@ -59,14 +55,10 @@ const getWasteTypeDetail = async wasteTypeId => {
           description: doc.data().description,
           disposal: doc.data().disposal
         };
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        return;
-      }
+      } else throw new Error(result.data.err)
     })
     .catch(function(error) {
-      console.log("Error getting document:", error);
+      throw new Error(error);
     });
 };
 
@@ -106,23 +98,30 @@ const getTransactions = async (role, status) => {
       return tx;
     })
     .catch(function(error) {
-      throw new error("Error getting document:", error);
+      throw new error(error);
     });
 };
 
-const searchBuyers = async wasteType => {
+const getFavBuyers = async () => {
+  return firestore
+    .collection("users")
+    .doc(firebaseUtil.auth().currentUser.uid)
+    .then(doc => {
+    })
+}
+
+const searchBuyers = async (condition, orderBy) => {
   return firestore
     .collection("buyerList")
-    .orderBy("purchaseList." + wasteType, "desc")
+    .orderBy(condition || "purchaseList", orderBy)
     .then(querySnapshot => {
       let buyers = [];
       querySnapshot.forEach(doc => {
-        buyers.push(doc.data());
-      });
-      return buyers;
-    })
-    .catch(function(error) {
-      throw new error("Error getting document:", error);
+        buyers.push(doc.data())
+      })
+      return buyers
+    }).catch(function(error) {
+      throw new error(error)
     });
 };
 
@@ -130,9 +129,9 @@ const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
-      if (result.data.err == null) return true;
-      else return result;
-    });
+      if (result.data.err == null) return true
+      else throw new Error(result.data.err)
+    })
 };
 
 const sellWaste = async transaction => {
@@ -140,9 +139,9 @@ const sellWaste = async transaction => {
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
       // Read result of the Cloud Function.
-      if (result.data.err == null) return true;
-      else return result;
-    });
+      if (result.data.err == null) return true
+      else throw new Error(result.data.err)
+    })
 };
 
 const toggleSwitches = async (toggleSearch) => {
@@ -166,12 +165,12 @@ const createAccount = async user => {
           .auth()
           .signInWithEmailAndPassword(user.email, user.password)
           .catch(err => {
-            throw new Error(result.data.err);
+            throw new Error(err);
           });
       } else throw new Error(result.data.err);
     })
     .catch(err => {
-      throw new Error(result.data.err);
+      throw new Error(err);
     });
 };
 
