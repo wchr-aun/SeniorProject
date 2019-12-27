@@ -14,10 +14,10 @@ import UserSigninScreen from "../screens/UserSigninScreen";
 import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
 import UserSignupScreen from "../screens/UserSignupScreen";
-import EditTrashForSellerScreen from "../screens/SellerScreen/EditTrashForSellerScreen";
 import StartupScreen from "../screens/UserStartupScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
 import ConfigAccountScreen from "../screens/ConfigAccountScreen";
+import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
@@ -56,7 +56,8 @@ const ShowAllUserTrashNavigator = createStackNavigator(
     SellingTrashScreen: {
       screen: SellingTrashScreen,
       navigationOptions: { headerTitle: "ขายขยะ" }
-    }
+    },
+    chooseBuyerForSellScreen: ChooseBuyerScreen
   },
   { headerMode: Platform.OS === "android" ? "screen" : "float" }
 );
