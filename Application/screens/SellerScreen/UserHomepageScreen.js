@@ -15,13 +15,21 @@ import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from "react-native-gesture-handler";
 
 export default UserHomepageScreen = props => {
+  // --------------------------- For UI Testing, not relate to this project ---------------------
+  const [goToUITestingScreen, setGoToUITestingScreen] = useState(0);
   useEffect(() => {
-    console.log("homepage");
-    console.log(Dimensions.get("screen").height * 1);
-    console.log(Dimensions.get("window").height * 1);
-  }, []);
+    if (goToUITestingScreen === 10) {
+      console.log("Go to UI template");
+      props.navigation.navigate("UIScreenTemplate");
+    } else console.log("homepage");
+  }, [goToUITestingScreen]);
+
   // Resolve change vertical and horizontal affect to width
   const [availableWidth, setAvailableWidth] = useState(
     Dimensions.get("window").width
@@ -105,11 +113,12 @@ export default UserHomepageScreen = props => {
           />
           <View
             style={{
-              ...styles.recentSellTransactionContainer,
               width: "100%",
               height: availableHeight * 0.7,
               alignSelf: "center",
-              alignItems: "center"
+              alignItems: "center",
+              paddingVertical: 15,
+              backgroundColor: Colors.primary_variant
             }}
           >
             <View
@@ -118,9 +127,17 @@ export default UserHomepageScreen = props => {
                 paddingLeft: Dimensions.get("window").width * 0.03
               }}
             >
-              <ThaiTitleText style={{ color: Colors.on_primary, fontSize: 18 }}>
-                การรับซื้อขยะล่าสุด
-              </ThaiTitleText>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  setGoToUITestingScreen(preState => preState + 1);
+                }}
+              >
+                <ThaiTitleText
+                  style={{ color: Colors.on_primary, fontSize: 18 }}
+                >
+                  การรับซื้อขยะล่าสุด
+                </ThaiTitleText>
+              </TouchableWithoutFeedback>
             </View>
 
             <FlatList
@@ -150,12 +167,8 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  recentSellTransactionContainer: {
-    backgroundColor: Colors.primary_variant
-  },
   sellTransactionCard: {
     backgroundColor: Colors.on_primary,
-    width: "95%",
     height: 100,
     alignSelf: "center",
     marginVertical: 5

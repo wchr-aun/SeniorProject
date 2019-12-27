@@ -21,15 +21,28 @@ import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
+import UIScreenTemplate from "../screens/UIScreenTemplate";
 
 // for UserHomepageScreen
 const UserhomepageNavigator = createStackNavigator(
   {
     UserHomepageScreen: UserHomepageScreen,
+    UIScreenTemplate: UIScreenTemplate,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen
   },
   { headerMode: "none" }
 );
+
+// Hiding bottom tabbar for childe of UserhomepageNavigator
+UserhomepageNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
 
 const ShowAllUserTrashNavigator = createStackNavigator(
   {

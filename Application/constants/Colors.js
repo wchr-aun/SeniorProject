@@ -5,5 +5,6 @@ export default {
   screen: "#effffb",
   secondary: "#4f98ca",
   on_secondary: "#effffb",
-  lineSeparate: "#cccccc"
+  lineSeparate: "#cccccc",
+  linearGradient: ["#4c8566", "#4f98ca"]
 };
