@@ -113,7 +113,7 @@ const getTransactions = async (role, status) => {
 
 const searchBuyers = async () => {};
 
-const addWaste = items => {
+const addWaste = async (items) => {
   return firebaseUtil.functions().httpsCallable("addWaste")(items)
   .then(result => {
     if (result.data.err == null) return true

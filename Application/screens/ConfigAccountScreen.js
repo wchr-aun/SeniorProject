@@ -5,8 +5,6 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Button,
-  ActivityIndicator,
-  Alert,
   Text,
   AsyncStorage
 } from "react-native";
@@ -60,7 +58,7 @@ export default ConfigAccountScreen = props => {
               <SwitchToggle
                 switchOn={switchAddr}
                 onPress={() => setSwitchAddr(!switchAddr)}
-                uration={150}
+                duration={150}
                 backgroundColorOn="#5fdba7"
                 backgroundColorOff="#808080"
                 circleColorOff="#ffffff"

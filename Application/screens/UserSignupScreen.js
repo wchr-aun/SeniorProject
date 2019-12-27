@@ -6,10 +6,11 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Alert
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { sha256 } from "js-sha256";
+  Alert,
+  AsyncStorage
+} from "react-native"
+import { LinearGradient } from "expo-linear-gradient"
+import { sha256 } from "js-sha256"
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
@@ -92,9 +93,6 @@ export default UserSignupScreen = props => {
 
     if (!formState.allFormIsValid) {
       setError("Please fill all the inputs");
-      // Alert.alert("An error has occurred!", "Please fill all the inputs", [
-      //   { text: "OK" }
-      // ]);
       setIsLoading(false);
       return;
     }
