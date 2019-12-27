@@ -4,18 +4,26 @@ import {
   View,
   KeyboardAvoidingView,
   StyleSheet,
-  Button,
   ActivityIndicator,
   Alert,
   Text
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { sha256 } from "js-sha256";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  listenOrientationChange,
+  removeOrientationListener
+} from "react-native-responsive-screen";
+import { Entypo } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
+import ThaiText from "../components/ThaiText";
+import CustomButton from "../components/UI/CustomButton";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -47,7 +55,16 @@ export default UserAuthenScreen = props => {
   useEffect(() => {
     console.log("login");
   }, []);
+  // Use for Showing an text when user signup before signin
   const signupBeforeSignin = props.navigation.getParam("signupBeforeSignin");
+
+  // For responsive orientation listen
+  useEffect(() => {
+    listenOrientationChange();
+    return () => {
+      removeOrientationListener();
+    };
+  });
 
   // isClick = false;
   const [isLoading, setIsLoading] = useState(false);
@@ -110,10 +127,27 @@ export default UserAuthenScreen = props => {
     <KeyboardAvoidingView
       behavior="padding"
       keyboardVerticalOffset={50}
-      style={styles.screen}
+      style={{
+        ...styles.screen,
+        flex: 1
+      }}
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
-        <Card style={styles.authContainer} titleVar="title">
+        <View style={{ marginVertical: wp("5%") }}>
+          <ThaiText style={{ color: Colors.on_primary }}>
+            ลงชื่อเข้าใช้
+          </ThaiText>
+        </View>
+        <Card
+          style={{
+            ...styles.authContainer,
+            width: wp("90%"),
+            height: hp("50%"),
+            paddingHorizontal: wp("5%"),
+            paddingVertical: wp("8%")
+          }}
+          titleVar="title"
+        >
           <ScrollView keyboardShouldPersistTaps="handled">
             {signupBeforeSignin ? (
               <View>
@@ -125,7 +159,7 @@ export default UserAuthenScreen = props => {
 
             <Input
               id="email"
-              label="Email"
+              label="อีเมล"
               keyboardType="email-address"
               required
               email
@@ -136,7 +170,7 @@ export default UserAuthenScreen = props => {
             />
             <Input
               id="password"
-              label="Password"
+              label="รหัสผ่าน"
               keyboardType="default"
               secureTextEntry
               required
@@ -146,27 +180,62 @@ export default UserAuthenScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue=""
             />
-            <View style={styles.buttonContainer}>
+            <View
+              style={{
+                ...styles.buttonContainer,
+                marginTop: wp("5%"),
+                alignItems: "center"
+              }}
+            >
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
-                <Button
-                  title="Signin"
-                  color={Colors.primary_variant}
+                <CustomButton
+                  style={{
+                    width: wp("40%"),
+                    height: hp("6%"),
+                    borderRadius: 10,
+                    margin: wp("1.25%")
+                  }}
                   onPress={() => {
                     authHandler();
                   }}
-                />
+                  btnColor={Colors.primary}
+                  btnTitleColor={Colors.on_primary}
+                  btnTitleFontSize={14}
+                >
+                  ลงชื่อเข้าใช้
+                </CustomButton>
               )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Register"
-                color={Colors.primary_variant}
+
+              <View>
+                <ThaiText
+                  style={{
+                    color: Colors.primary,
+                    fontSize: 14
+                  }}
+                >
+                  หรือ
+                </ThaiText>
+              </View>
+
+              <CustomButton
+                style={{
+                  width: wp("40%"),
+                  height: hp("6%"),
+                  borderRadius: 10,
+                  margin: wp("1.25%")
+                }}
                 onPress={() => {
                   props.navigation.navigate("UserSignupScreen");
                 }}
-              />
+                btnColor={Colors.lineSeparate}
+                btnTitleColor={Colors.primary}
+                btnTitleFontSize={14}
+              >
+                ลงทะเบียน{" "}
+                <Entypo name="squared-plus" size={14} color={Colors.primary} />
+              </CustomButton>
             </View>
           </ScrollView>
         </Card>
@@ -187,14 +256,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  authContainer: {
-    width: "80%",
-    maxWidth: 400,
-    maxHeight: 400,
-    padding: 20
-  },
-  buttonContainer: {
-    marginTop: 10
   }
 });
