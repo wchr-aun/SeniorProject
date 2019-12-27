@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 export default UserAuthenScreen = props => {
   useEffect(() => {
@@ -58,6 +59,33 @@ export default UserAuthenScreen = props => {
     console.log(Addr);
   };
 
+  const [datepickerShow, setDatapickerShow] = useState(false);
+  showDateTimePicker = () => {
+    // this.setState({ isDateTimePickerVisible: true });
+    setDatapickerShow(true);
+  };
+
+  hideDateTimePicker = () => {
+    // this.setState({ isDateTimePickerVisible: false });
+    setDatapickerShow(false);
+  };
+
+  //   handleDatePicked = date => {
+  //     console.log("A date has been picked: ", date.getTime());
+  //     hideDateTimePicker();
+
+  //       //   // sellWaste()
+  //     //   setIsRefreshing(true);
+  //       await dispatch(
+  //         sellerItemsAction.chooseBuyerSell(
+  //           userProfile.addr,
+  //           sellerItemsForSell,
+  //         //   ,
+  //           0.5
+  //         )
+  //       );
+  //   };
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -75,7 +103,7 @@ export default UserAuthenScreen = props => {
           borderRadius: 10
         }}
       >
-        <View style={{ width: "100%", height: wp("60%s") }}>
+        <View style={{ width: "100%", height: hp("60%s") }}>
           <FlatList
             data={buyerListRedux}
             keyExtractor={item => item.id}
@@ -90,14 +118,15 @@ export default UserAuthenScreen = props => {
                   margin: wp("3.75%"),
                   justifyContent: "center"
                 }}
-                onPress={() =>
+                onPress={() => {
                   chooseBuyerHandler(
                     sellerItemsForSell,
                     itemData.item.id,
                     0.5,
                     "Baang Bua"
-                  )
-                }
+                  );
+                  setDatapickerShow(true);
+                }}
               >
                 <View style={{ alignSelf: "center" }}>
                   <Text>{itemData.item.id}</Text>
@@ -105,6 +134,15 @@ export default UserAuthenScreen = props => {
               </TouchableOpacity>
             )}
           />
+        </View>
+        <View style={{ width: wp("90%"), height: hp("30") }}>
+          {datepickerShow ? (
+            <DateTimePicker
+              isVisible={datepickerShow}
+              onConfirm={handleDatePicked}
+              onCancel={hideDateTimePicker}
+            />
+          ) : null}
         </View>
       </View>
     </KeyboardAvoidingView>
