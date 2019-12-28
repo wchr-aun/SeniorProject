@@ -7,18 +7,13 @@ export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 
 export const getSellerItems = () => {
   return async dispatch => {
-    // get data from firebase
-    console.log("getSellerItems action!");
     let sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
-
     if (sellerItemsAndWasteType.length !== 0) {
-      console.log("sellerItemsAndWasteType != 0");
       dispatch({
         type: SET_WASTE,
         items: [...sellerItemsAndWasteType]
       });
     } else {
-      console.log("sellerItemsAndWasteType == 0");
       dispatch({ type: SET_WASTE, items: [] });
     }
   };
