@@ -14,8 +14,8 @@ const getSellerItems = async () => {
         return doc.data().items;
       } else return [];
     })
-    .catch(function(error) {
-      throw new Error(error);
+    .catch(err => {
+      throw new Error(err);
     });
 };
 
@@ -38,8 +38,8 @@ const getUsers = async () => {
         return userProfile;
       } else throw new Error("The document doesn't exist");
     })
-    .catch(function(error) {
-      throw new Error(error);
+    .catch(err => {
+      throw new Error(err);
     });
 };
 
@@ -50,35 +50,28 @@ const getWasteTypeDetail = async wasteTypeId => {
     .doc(wasteTypeId)
     .get()
     .then(function(doc) {
-      if (doc.exists) {
-        return {
-          description: doc.data().description,
-          disposal: doc.data().disposal
-        };
-      } else throw new Error("The document doesn't exist");
+      if (doc.exists) return doc.data()
+      else throw new Error("The document doesn't exist")
     })
-    .catch(function(error) {
-      throw new Error(error);
+    .catch(err => {
+      throw new Error(err);
     });
 };
 
 const getSellerListAndWasteType = async () => {
   return getSellerItems().then(itemsReturned => {
     return new Promise((resolve, reject) => {
-      if (itemsReturned.length > 0) {
-        // there are items
-        itemsReturned.forEach((item, index) => {
-          getWasteTypeDetail(item.wasteType).then(wasteTypeDetail => {
-            itemsReturned[index].wasteDisposal = wasteTypeDetail.disposal;
-            itemsReturned[index].wasteDescription = wasteTypeDetail.description;
-            if (index === itemsReturned.length - 1) {
-              resolve();
-            }
-          });
+      for (let i = 0; i < itemsReturned.length; i++) {
+        getWasteTypeDetail(itemsReturned[i].wasteType).then(wasteTypeDetail => {
+          itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
+          itemsReturned[i].wasteDescription = wasteTypeDetail.description;
+          if (i === itemsReturned.length - 1) resolve();
         });
-      } else resolve(); // no items
+      }
     }).then(() => {
       return itemsReturned;
+    }).catch(err => {
+      throw new Error(err);
     });
   });
 };
