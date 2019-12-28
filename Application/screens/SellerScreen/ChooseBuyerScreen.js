@@ -25,9 +25,13 @@ export default UserAuthenScreen = props => {
     console.log("Choose Buyer Screen");
   }, []);
 
+  // required data for sending an transaction
   const sellerItemsForSell = useSelector(
     state => state.sellerItems.itemsForSell
   );
+  const [buyer, setBuyer] = useState("");
+  const sellerAddr = useSelector(state => state.userProfile.user.addr);
+  // const price = 0.5
 
   const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
 
@@ -51,17 +55,17 @@ export default UserAuthenScreen = props => {
     });
   }, [loadBuyer]);
 
-  const chooseBuyerHandler = (sellerItemsForSell, buyerName, price, Addr) => {
-    console.log("chooseBuyerHandler click");
-    console.log(sellerItemsForSell);
-    console.log(buyerName);
-    console.log(price);
-    console.log(Addr);
-  };
-
   const [datepickerShow, setDatapickerShow] = useState(false);
   showDateTimePicker = () => {
     // this.setState({ isDateTimePickerVisible: true });
+    setDatapickerShow(true);
+  };
+
+  buyerSelectHandler = (buyerId, buyerPriceInfo) => {
+    // Map waste price from buyer to transaction
+    buyerPriceInfo.wastePriceInfo.setBuyer(buyerId);
+    console.log("buyerPriceInfo");
+    console.log(buyerPriceInfo);
     setDatapickerShow(true);
   };
 
@@ -70,21 +74,12 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(false);
   };
 
-  //   handleDatePicked = date => {
-  //     console.log("A date has been picked: ", date.getTime());
-  //     hideDateTimePicker();
+  handleDatePicked = date => {
+    console.log("A date has been picked: ", date.getTime());
+    hideDateTimePicker();
 
-  //       //   // sellWaste()
-  //     //   setIsRefreshing(true);
-  //       await dispatch(
-  //         sellerItemsAction.chooseBuyerSell(
-  //           userProfile.addr,
-  //           sellerItemsForSell,
-  //         //   ,
-  //           0.5
-  //         )
-  //       );
-  //   };
+    // Map
+  };
 
   return (
     <KeyboardAvoidingView
@@ -118,15 +113,12 @@ export default UserAuthenScreen = props => {
                   margin: wp("3.75%"),
                   justifyContent: "center"
                 }}
-                onPress={() => {
-                  chooseBuyerHandler(
-                    sellerItemsForSell,
+                onPress={() =>
+                  buyerSelectHandler(
                     itemData.item.id,
-                    0.5,
-                    "Baang Bua"
-                  );
-                  setDatapickerShow(true);
-                }}
+                    itemData.item.wastePriceInfo.purchaseList
+                  )
+                }
               >
                 <View style={{ alignSelf: "center" }}>
                   <Text>{itemData.item.id}</Text>

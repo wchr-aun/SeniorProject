@@ -34,10 +34,11 @@ const getLocationHandler = async () => {
     });
     // Step-2
     try {
-      const locationAddr = await reverseGeocodeAsync(location);
+      const locationAddr = await reverseGeocodeAsync(location.coords);
       return locationAddr;
     } catch (err) {
       console.log("Could not reverseGeocodeAsync");
+      console.log(err);
     }
   } catch (err) {
     console.log("Could not getCurrentPositionAsync");
@@ -53,7 +54,13 @@ export const signin = () => {
 
     // do async task-2
     return firebaseFunctions.getUsers().then(result => {
-      dispatch({ type: SIGNIN, userProfile: { ...result, addr: userAddr } });
+      dispatch({
+        type: SIGNIN,
+        userProfile: {
+          ...result,
+          addr: `${userAddr[0].street} จังหวัด${userAddr[0].region} ${userAddr[0].postalCode}`
+        }
+      });
       return;
     });
   };
