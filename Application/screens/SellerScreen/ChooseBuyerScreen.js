@@ -29,7 +29,6 @@ export default UserAuthenScreen = props => {
   const sellerItemsForSell = useSelector(
     state => state.sellerItems.itemsForSell
   );
-  const [buyer, setBuyer] = useState("");
   const sellerAddr = useSelector(state => state.userProfile.user.addr);
   // const price = 0.5
 
@@ -62,15 +61,30 @@ export default UserAuthenScreen = props => {
   };
 
   buyerSelectHandler = (buyerId, buyerPriceInfo) => {
+    console.log("sellerAddr");
+    console.log(sellerAddr);
+
+    console.log("buyerId");
+    console.log(buyerId);
+
+    console.log("sellerItemsForSell");
+    console.log(sellerItemsForSell);
     // Map waste price from buyer to transaction
-    buyerPriceInfo.wastePriceInfo.setBuyer(buyerId);
     console.log("buyerPriceInfo");
     console.log(buyerPriceInfo);
+
+    //   await dispatch(
+    //     sellerItemsAction.chooseBuyerSell(
+    //       userProfile.addr, <3
+    //       trashsState.items, <3
+    //       "nora-buyer", <3
+    //       0.5
+    //     )
+    //   );
     setDatapickerShow(true);
   };
 
   hideDateTimePicker = () => {
-    // this.setState({ isDateTimePickerVisible: false });
     setDatapickerShow(false);
   };
 
