@@ -56,26 +56,33 @@ export const getBuyerList = () => {
   };
 };
 
-export const chooseBuyerSell = (addr, items, buyer, price) => {
+export const chooseBuyerSell = (
+  sellAddr,
+  items,
+  buyerName,
+  buyerPriceInfo,
+  assignedTime
+) => {
   return async dispatch => {
-    // get only the true format
-
+    // Map buyer price into an transaction
     let updatedItems = [];
     items.forEach((item, index) => {
       updatedItems.push({
         amount: item.amount,
         wasteType: item.wasteType,
-        price: price
+        price: buyerPriceInfo["PP"]
       });
     });
 
+    // console.log("updatedItems");
+    // console.log(updatedItems);
     // do async task
     let transaction = {
       items: updatedItems,
-      addr,
-      buyer,
+      addr: sellAddr,
+      buyer: buyerName,
       txType: 0,
-      assignedTime: new Date().getTime()
+      assignedTime: assignedTime
     };
 
     await firebaseFunctions.sellWaste(transaction);

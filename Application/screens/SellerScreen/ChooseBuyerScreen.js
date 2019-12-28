@@ -60,27 +60,11 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(true);
   };
 
-  buyerSelectHandler = (buyerId, buyerPriceInfo) => {
-    console.log("sellerAddr");
-    console.log(sellerAddr);
-
-    console.log("buyerId");
-    console.log(buyerId);
-
-    console.log("sellerItemsForSell");
-    console.log(sellerItemsForSell);
-    // Map waste price from buyer to transaction
-    console.log("buyerPriceInfo");
-    console.log(buyerPriceInfo);
-
-    //   await dispatch(
-    //     sellerItemsAction.chooseBuyerSell(
-    //       userProfile.addr, <3
-    //       trashsState.items, <3
-    //       "nora-buyer", <3
-    //       0.5
-    //     )
-    //   );
+  const [buyerName, setBuyerName] = useState("");
+  const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
+  buyerSelectHandler = (buyerName, buyerPriceInfo) => {
+    setBuyerName(buyerName);
+    setBuyerPriceInfo(buyerPriceInfo);
     setDatapickerShow(true);
   };
 
@@ -88,11 +72,21 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(false);
   };
 
-  handleDatePicked = date => {
+  handleDatePicked = async date => {
     console.log("A date has been picked: ", date.getTime());
     hideDateTimePicker();
 
-    // Map
+    console.log("dispatch for chooseBuyerSell");
+    await dispatch(
+      sellerItemsAction.chooseBuyerSell(
+        sellerAddr,
+        sellerItemsForSell,
+        buyerName,
+        buyerPriceInfo,
+        date.getTime()
+      )
+    );
+    console.log("after dispatch  for chooseBuyerSell");
   };
 
   return (
