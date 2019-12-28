@@ -124,11 +124,13 @@ const searchBuyers = async (condition, orderBy) => {
     .then(querySnapshot => {
       let buyers = [];
       querySnapshot.forEach(doc => {
-        buyers.push(doc.data())
-      })
-      return buyers
-    }).catch(function(error) {
-      throw new error(error)
+        buyers.push({ id: doc.id, info: doc.data() });
+      });
+      console.log(buyers);
+      return buyers;
+    })
+    .catch(function(error) {
+      throw new error(error);
     });
 };
 
@@ -136,9 +138,9 @@ const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
-      if (result.data.err == null) return true
-      else throw new Error(result.data.err)
-    })
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err);
+    });
 };
 
 const sellWaste = async transaction => {
@@ -146,15 +148,15 @@ const sellWaste = async transaction => {
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
       // Read result of the Cloud Function.
-      if (result.data.err == null) return true
-      else throw new Error(result.data.err)
-    })
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err);
+    });
 };
 
-const toggleSwitches = async (toggleSearch) => {
-  console.log("hello")
+const toggleSwitches = async toggleSearch => {
+  console.log("hello");
   return functions
-    .httpsCallable("toggleSearch")({toggleSearch})
+    .httpsCallable("toggleSearch")({ toggleSearch })
     .then(result => {
       if (result.data.err == null) {
         console.log(result.data);

@@ -2,6 +2,7 @@ import firebaseFunctions from "../../utils/firebaseFunctions";
 
 export const GET_SELLER_ITEMS = "GET_SELLER_ITEMS";
 export const SET_WASTE = "SET_WASTE";
+export const GET_BUYER_LIST = "GET_BUYER_LIST";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
 export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 
@@ -37,6 +38,21 @@ export const setSellerItemsForSell = items => {
   return {
     type: SET_WASTE_FOR_SELL,
     itemsForSell: [...items]
+  };
+};
+
+export const getBuyerList = () => {
+  return async dispatch => {
+    // search buyer
+    console.log("before get buyer");
+    let buyerList = await firebaseFunctions.searchBuyers("", "desc");
+    console.log("after get buyer");
+
+    // dispatch
+    dispatch({
+      type: GET_BUYER_LIST,
+      buyerList: buyerList
+    });
   };
 };
 

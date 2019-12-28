@@ -1,12 +1,14 @@
 import {
   CHOOSEBUYER_SELL,
   SET_WASTE,
-  SET_WASTE_FOR_SELL
+  SET_WASTE_FOR_SELL,
+  GET_BUYER_LIST
 } from "../actions/sellerItemsAction";
 
 const initialState = {
   items: [],
-  itemsForSell: []
+  itemsForSell: [],
+  buyerList: []
 };
 
 export default function(state = initialState, action) {
@@ -30,6 +32,13 @@ export default function(state = initialState, action) {
 
       return {
         ...state
+      };
+    case GET_BUYER_LIST:
+      console.log("GET_BUYER_LIST Reducer Run");
+      console.log(action.buyerList);
+      return {
+        ...state,
+        buyerList: [...action.buyerList]
       };
   }
   return state;
