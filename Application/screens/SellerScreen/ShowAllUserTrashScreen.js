@@ -145,7 +145,7 @@ export default ShowAllUserTrashScreen = props => {
   // Callback fn
   const loadSellerItems = useCallback(async () => {
     setIsRefreshing(true);
-    await dispatch(sellerItemsAction.getSellerItems());
+    await dispatch(sellerItemsAction.fetchSellerItems());
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 

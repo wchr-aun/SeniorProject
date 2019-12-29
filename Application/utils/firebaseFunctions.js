@@ -88,7 +88,7 @@ const getTransactions = async (role, status) => {
     .then(querySnapshot => {
       let tx = [];
       querySnapshot.forEach(function(doc) {
-        tx.push(doc.data());
+        tx.push({ txId: doc.id, detail: doc.data() });
       });
       return tx;
     })

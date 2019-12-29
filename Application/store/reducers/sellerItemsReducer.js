@@ -2,7 +2,8 @@ import {
   CHOOSEBUYER_SELL,
   SET_WASTE,
   SET_WASTE_FOR_SELL,
-  GET_BUYER_LIST
+  GET_BUYER_LIST,
+  FETCH_SELLER_ITEMS
 } from "../actions/sellerItemsAction";
 
 const initialState = {

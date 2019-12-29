@@ -8,18 +8,19 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { SELLINGTRANSACTION } from "../../data/dummy-data";
-import AppVariableSetting from "../../constants/AppVariableSetting";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback
-} from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import * as authAction from "../../store/actions/authAction";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 export default SellerHomepageScreen = props => {
   // --------------------------- For UI Testing, not relate to this project ---------------------
@@ -31,30 +32,10 @@ export default SellerHomepageScreen = props => {
     } else console.log("homepage");
   }, [goToUITestingScreen]);
 
-  // Resolve change vertical and horizontal affect to width
-  const [availableWidth, setAvailableWidth] = useState(
-    Dimensions.get("window").width
-  );
-  const [availableHeight, setAvailableHeight] = useState(
-    // Delete status bar height
-    Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
-  );
-  useEffect(() => {
-    const updateScreen = () => {
-      setAvailableWidth(Dimensions.get("window").width);
-      setAvailableHeight(
-        // Real Content Height
-        Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
-      );
-    };
-    Dimensions.addEventListener("change", updateScreen);
-    return () => {
-      Dimensions.removeEventListener("change", updateScreen);
-    };
-  });
+  // Loading effect
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get user profile
-  const [isLoading, setIsLoading] = useState(true);
   const userProfile = useSelector(state => state.userProfile.user);
   useEffect(() => {
     console.log(userProfile);
@@ -62,7 +43,13 @@ export default SellerHomepageScreen = props => {
     if (userProfile.uid) setIsLoading(false);
   }, [userProfile]);
 
-  // For look into selling transaction detail
+  // Get transactions for initially
+  const transactions = useSelector(state => state.transactions.transactions);
+  useEffect(() => {
+    dispatch(transactionAction.fetchTransaction());
+  }, []);
+
+  // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
@@ -72,7 +59,7 @@ export default SellerHomepageScreen = props => {
     });
   };
 
-  // do [signout,
+  // For User signout
   const dispatch = useDispatch();
   const [isSignin, setIsSignin] = useState(true);
   const signOutHandler = async () => {
@@ -81,7 +68,6 @@ export default SellerHomepageScreen = props => {
     setIsLoading(false);
     setIsSignin(result);
   };
-
   useEffect(() => {
     // If not do navigate in useEffect, 'Warning: Can't perform a React state update on an unmounted component.' occur
     if (!isSignin) {
@@ -93,8 +79,8 @@ export default SellerHomepageScreen = props => {
     <View
       style={{
         ...styles.screen,
-        width: availableWidth,
-        height: availableHeight,
+        width: wp("100%"),
+        height: hp("100%"),
         paddingTop: getStatusBarHeight()
       }}
     >
@@ -116,8 +102,7 @@ export default SellerHomepageScreen = props => {
           <UserInfoCard
             style={{
               ...styles.userInfoCard,
-              // paddingTop: availableDeviceHeight * 0.05,
-              height: availableHeight * 0.3,
+              height: hp("100%") * 0.3,
               width: "100%"
             }}
             imgUrl={
@@ -133,7 +118,7 @@ export default SellerHomepageScreen = props => {
           <View
             style={{
               width: "100%",
-              height: availableHeight * 0.7,
+              height: hp("100%") * 0.7,
               alignSelf: "center",
               alignItems: "center",
               paddingVertical: 15,
@@ -160,14 +145,17 @@ export default SellerHomepageScreen = props => {
             </View>
 
             <FlatList
-              data={SELLINGTRANSACTION}
-              keyExtractor={item => item.transactionId}
+              // data={SELLINGTRANSACTION}
+              data={transactions}
+              keyExtractor={item => item.txId}
               renderItem={itemData => (
                 <SellTransactionCard
-                  amountOfType={itemData.item.amountOfType}
-                  imgUrl={itemData.item.imgUrl}
-                  userName={itemData.item.buyerName}
-                  meetTime={itemData.item.meetTime}
+                  amountOfType={itemData.item.detail.amountOfType}
+                  imgUrl={
+                    "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
+                  }
+                  userName={itemData.item.detail.buyer}
+                  meetTime={itemData.item.detail.assignedTimeFormat}
                   style={styles.sellTransactionCard}
                   onPress={() => {
                     selectedHandler(itemData.item);

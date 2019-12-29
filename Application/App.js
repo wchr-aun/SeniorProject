@@ -9,6 +9,7 @@ import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 import authReducer from "./store/reducers/authReducer";
 import sellerItemsReducer from "./store/reducers/sellerItemsReducer";
+import transactionReducer from "./store/reducers/transactionReducer";
 
 import ImportedFonts from "./constants/ImportedFonts.js";
 // Ignore warning timer
@@ -23,7 +24,8 @@ const fetchFonts = () => {
 // --- Redux Settup --- //
 const rootReducer = combineReducers({
   userProfile: authReducer,
-  sellerItems: sellerItemsReducer
+  sellerItems: sellerItemsReducer,
+  transactions: transactionReducer
 });
 const store = createStore(
   rootReducer,

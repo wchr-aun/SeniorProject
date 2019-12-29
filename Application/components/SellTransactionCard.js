@@ -88,9 +88,7 @@ export default SellTransactionCard = props => {
               </ThaiText>
             </View>
             <View style={{ width: "50%" }}>
-              <ThaiText style={{ fontSize: 14 }}>
-                {libary.formatDate(props.meetTime)}
-              </ThaiText>
+              <ThaiText style={{ fontSize: 14 }}>{props.meetTime}</ThaiText>
             </View>
           </View>
         </View>

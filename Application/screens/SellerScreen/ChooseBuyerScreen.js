@@ -88,8 +88,6 @@ export default UserAuthenScreen = props => {
         )
       );
     } catch (err) {
-      console.log("From chooseBuyerScreen before alert");
-      console.log(err.message);
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
     }
     console.log("after dispatch  for chooseBuyerSell");
