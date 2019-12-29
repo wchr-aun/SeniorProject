@@ -43,6 +43,20 @@ const getUsers = async () => {
     });
 };
 
+// Get firebase firestore wasteType
+const getWasteType = async () => {
+  let wasteTypes = [];
+  return firestore
+    .collection("wasteType")
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        wasteTypes.push({ wasteTypeId: doc.id, info: doc.data() });
+      });
+      return wasteTypes;
+    });
+};
+
 // Get firebase UserProfile
 const getWasteTypeDetail = async wasteTypeId => {
   return firestore

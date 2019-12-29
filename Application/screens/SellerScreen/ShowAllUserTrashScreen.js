@@ -23,7 +23,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
-// import { AntDesign } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import { useSelector, useDispatch } from "react-redux";
 import ThaiText from "../../components/ThaiText";
@@ -253,37 +253,45 @@ export default ShowAllUserTrashScreen = props => {
               )}
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              console.log("null");
-            }}
-            style={{
-              backgroundColor: Colors.on_primary,
-              width: "100%",
-              height: "20%",
-              borderRadius: 10,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View style={{ margin: 5 }}>
-              <ThaiText style={{ fontSize: 18, color: Colors.primary_variant }}>
-                Add new waste
-              </ThaiText>
-            </View>
-            <View style={{ margin: 5 }}>
-              {/* <AntDesign
-                name="plussquareo"
-                size={25}
-                color={Colors.primary_variant}
-              /> */}
-            </View>
-          </TouchableOpacity>
         </View>
 
         {editingMode ? (
-          <View style={{ ...styles.btnContainer, width: "90%", height: "10%" }}>
+          <View
+            style={{
+              ...styles.btnContainer,
+              width: wp("100%"),
+              height: hp("10%")
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                console.log("null");
+              }}
+              style={{
+                ...styles.navigateBtn,
+                backgroundColor: Colors.on_primary,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                borderColor: Colors.primary_variant,
+                borderWidth: 1
+              }}
+            >
+              <View style={{ margin: 5 }}>
+                <ThaiText
+                  style={{ fontSize: 18, color: Colors.primary_variant }}
+                >
+                  Add new waste
+                </ThaiText>
+              </View>
+              <View style={{ margin: 5 }}>
+                <AntDesign
+                  name="plussquareo"
+                  size={25}
+                  color={Colors.primary_variant}
+                />
+              </View>
+            </TouchableOpacity>
             <View style={styles.navigateBtn}>
               <Button
                 title="Confirm Amount"
@@ -294,7 +302,7 @@ export default ShowAllUserTrashScreen = props => {
           </View>
         ) : (
           <View style={styles.btnContainer}>
-            <View style={styles.navigateBtn}>
+            <View style={{ ...styles.navigateBtn }}>
               <Button
                 title="Edit Trash infomation"
                 color={Colors.primary}
@@ -340,9 +348,9 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   navigateBtn: {
-    width: "50%",
-    height: "100%",
-    padding: 5,
+    width: wp("40%"),
+    height: hp("8%"),
+    padding: wp("5%"),
     borderRadius: 5
   }
 });

@@ -132,7 +132,7 @@ export default UserAuthenScreen = props => {
           style={{
             ...styles.authContainer,
             width: wp("90%"),
-            height: hp("60%"),
+            height: hp("70%"),
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%")
           }}

@@ -21,6 +21,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import * as authAction from "../../store/actions/authAction";
 import * as transactionAction from "../../store/actions/transactionAction";
+import AppVariableSetting from "../../constants/AppVariableSetting";
 
 export default SellerHomepageScreen = props => {
   // --------------------------- For UI Testing, not relate to this project ---------------------
@@ -80,7 +81,10 @@ export default SellerHomepageScreen = props => {
       style={{
         ...styles.screen,
         width: wp("100%"),
-        height: hp("100%"),
+        height:
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight +
+          getStatusBarHeight(),
         paddingTop: getStatusBarHeight()
       }}
     >
@@ -102,7 +106,7 @@ export default SellerHomepageScreen = props => {
           <UserInfoCard
             style={{
               ...styles.userInfoCard,
-              height: hp("100%") * 0.3,
+              height: "30%",
               width: "100%"
             }}
             imgUrl={
@@ -118,10 +122,10 @@ export default SellerHomepageScreen = props => {
           <View
             style={{
               width: "100%",
-              height: hp("100%") * 0.7,
+              height: "70%",
               alignSelf: "center",
               alignItems: "center",
-              paddingVertical: 15,
+              paddingVertical: 10,
               backgroundColor: Colors.primary_variant
             }}
           >
