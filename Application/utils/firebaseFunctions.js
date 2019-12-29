@@ -207,6 +207,7 @@ const createAccount = async user => {
 export default {
   getUsers,
   getSellerItems,
+  getWasteType,
   getWasteTypeDetail,
   getSellerListAndWasteType,
   getTransactions,

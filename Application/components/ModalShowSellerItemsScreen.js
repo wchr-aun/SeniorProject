@@ -32,17 +32,20 @@ export default ModalShowSellersItemsScreen = props => {
     >
       <View
         style={{
-          marginTop: 22,
-          height: "50%",
-          width: "50%",
-          alignSelf: "center",
+          flex: 1,
           alignItems: "center",
           justifyContent: "center"
         }}
       >
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "50%", height: "50%" }}>
           <Text>Waste Adding</Text>
-          <View style={{ width: "50%", height: "10%" }}>
+          <View
+            style={{
+              width: "100%",
+              height: "15%",
+              alignSelf: "center"
+            }}
+          >
             <Dropdown
               label="Waste Type"
               data={

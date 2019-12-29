@@ -23,6 +23,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import * as wasteTypeAction from "../../store/actions/wasteTypeAction";
 import { AntDesign } from "@expo/vector-icons";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -137,9 +138,12 @@ export default ShowAllUserTrashScreen = props => {
     dispatchAmountTrashsState
   ] = useReducer(trashsModifyingReducer, { items: [] });
 
-  // Get sellerItems from redux
+  // Get sellerItems and wasteTyp from redux
   const sellerItemsRedux = useSelector(state => {
     return state.sellerItems.items;
+  });
+  const wasteTypesRedux = useSelector(state => {
+    return state.wasteTypes.wasteTypes;
   });
 
   // Callback fn
@@ -149,11 +153,17 @@ export default ShowAllUserTrashScreen = props => {
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
-  // Load sellerItems from firebase and store it to redux "initially"
+  // Load sellerItems and wasteType from firebase and store it to redux "initially"
   useEffect(() => {
+    // define fn in this useEffect because useEffect can't use async,
+    const loadWasteType = async () => {
+      dispatch(wasteTypeAction.fetchWasteType());
+    };
     setIsLoading(true);
     loadSellerItems().then(() => {
-      setIsLoading(false);
+      loadWasteType().then(() => {
+        setIsLoading(false);
+      });
     });
   }, [loadSellerItems]);
 
@@ -265,7 +275,7 @@ export default ShowAllUserTrashScreen = props => {
           >
             <TouchableOpacity
               onPress={() => {
-                console.log("null");
+                setModalVisible(true);
               }}
               style={{
                 ...styles.navigateBtn,
