@@ -70,12 +70,10 @@ export const chooseBuyerSell = (
       updatedItems.push({
         amount: item.amount,
         wasteType: item.wasteType,
-        price: buyerPriceInfo["PP"]
+        price: buyerPriceInfo[item.wasteType]
       });
     });
 
-    // console.log("updatedItems");
-    // console.log(updatedItems);
     // do async task
     let transaction = {
       items: updatedItems,
@@ -84,12 +82,15 @@ export const chooseBuyerSell = (
       txType: 0,
       assignedTime: assignedTime
     };
-
-    await firebaseFunctions.sellWaste(transaction);
-
-    dispatch({
-      type: CHOOSEBUYER_SELL,
-      transaction
-    });
+    try {
+      await firebaseFunctions.sellWaste(transaction);
+      // update redux store
+      dispatch({
+        type: CHOOSEBUYER_SELL,
+        transaction
+      });
+    } catch (err) {
+      throw new Error(err.message);
+    }
   };
 };

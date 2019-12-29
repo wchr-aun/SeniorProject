@@ -45,20 +45,24 @@ const getLocationHandler = async () => {
   }
 };
 
+// for use in future
+export const getCurrentLocation = async () => {
+  // do async task-1
+  let userAddr = await getLocationHandler();
+  console.log("userAddr");
+  console.log(userAddr);
+  let addr = `${userAddr[0].street} จังหวัด${userAddr[0].region} ${userAddr[0].postalCode}`;
+  return addr;
+};
+
 export const signin = () => {
   return async dispatch => {
-    // do async task-1
-    let userAddr = await getLocationHandler();
-    console.log("userAddr");
-    console.log(userAddr);
-
     // do async task-2
     return firebaseFunctions.getUsers().then(result => {
       dispatch({
         type: SIGNIN,
         userProfile: {
-          ...result,
-          addr: `${userAddr[0].street} จังหวัด${userAddr[0].region} ${userAddr[0].postalCode}`
+          ...result
         }
       });
       return;

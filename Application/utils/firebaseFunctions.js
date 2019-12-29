@@ -50,8 +50,8 @@ const getWasteTypeDetail = async wasteTypeId => {
     .doc(wasteTypeId)
     .get()
     .then(function(doc) {
-      if (doc.exists) return doc.data()
-      else throw new Error("The document doesn't exist")
+      if (doc.exists) return doc.data();
+      else throw new Error("The document doesn't exist");
     })
     .catch(err => {
       throw new Error(err);
@@ -68,11 +68,13 @@ const getSellerListAndWasteType = async () => {
           if (i === itemsReturned.length - 1) resolve();
         });
       }
-    }).then(() => {
-      return itemsReturned;
-    }).catch(err => {
-      throw new Error(err);
-    });
+    })
+      .then(() => {
+        return itemsReturned;
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
   });
 };
 

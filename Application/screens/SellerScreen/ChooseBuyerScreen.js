@@ -77,15 +77,21 @@ export default UserAuthenScreen = props => {
     hideDateTimePicker();
 
     console.log("dispatch for chooseBuyerSell");
-    await dispatch(
-      sellerItemsAction.chooseBuyerSell(
-        sellerAddr,
-        sellerItemsForSell,
-        buyerName,
-        buyerPriceInfo,
-        date.getTime()
-      )
-    );
+    try {
+      await dispatch(
+        sellerItemsAction.chooseBuyerSell(
+          sellerAddr,
+          sellerItemsForSell,
+          buyerName,
+          buyerPriceInfo,
+          date.getTime()
+        )
+      );
+    } catch (err) {
+      console.log("From chooseBuyerScreen before alert");
+      console.log(err.message);
+      Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
+    }
     console.log("after dispatch  for chooseBuyerSell");
   };
 
