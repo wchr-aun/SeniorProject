@@ -8,14 +8,17 @@ export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
 
 export const fetchSellerItems = () => {
   return async dispatch => {
-    let sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
-    if (sellerItemsAndWasteType.length !== 0) {
+    let sellerItemsAndWasteType = [];
+    try {
+      console.log("sellerItemsActiin: befores getSellerListAndWasteType");
+      sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
+      console.log("sellerItemsActiin: after getSellerListAndWasteType");
       dispatch({
         type: SET_WASTE,
         items: [...sellerItemsAndWasteType]
       });
-    } else {
-      dispatch({ type: SET_WASTE, items: [] });
+    } catch (err) {
+      throw new Error(err.message);
     }
   };
 };

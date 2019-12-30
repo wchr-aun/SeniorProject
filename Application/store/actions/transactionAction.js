@@ -7,6 +7,7 @@ export const fetchTransaction = () => {
   return async dispatch => {
     let transactions = await firebaseFunctions.getTransactions("seller", 0);
 
+    console.log(transactions);
     // Get 'amountOfType' and 'assignTime' in the right format
     transactions.forEach((item, index) => {
       transactions[index].detail.amountOfType = item.detail.items.length;

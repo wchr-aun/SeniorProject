@@ -1,5 +1,7 @@
-import { ADD_PLACE, SET_PLACES } from './places-actions';
-import Place from '../models/place';
+import { ADD_PLACE, SET_PLACES } from "./places-actions";
+import Place from "../models/place";
+
+import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
   places: []
@@ -22,6 +24,8 @@ export default (state = initialState, action) => {
       return {
         places: state.places.concat(newPlace)
       };
+    case LOGOUT:
+      return initialState;
     default:
       return state;
   }

@@ -5,6 +5,7 @@ import {
   GET_BUYER_LIST,
   FETCH_SELLER_ITEMS
 } from "../actions/sellerItemsAction";
+import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
   items: [],
@@ -41,6 +42,8 @@ export default function(state = initialState, action) {
         ...state,
         buyerList: [...action.buyerList]
       };
+    case LOGOUT:
+      return initialState;
   }
   return state;
 }

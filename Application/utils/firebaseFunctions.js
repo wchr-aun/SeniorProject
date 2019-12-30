@@ -75,19 +75,23 @@ const getWasteTypeDetail = async wasteTypeId => {
 const getSellerListAndWasteType = async () => {
   return getSellerItems().then(itemsReturned => {
     return new Promise((resolve, reject) => {
-      for (let i = 0; i < itemsReturned.length; i++) {
-        getWasteTypeDetail(itemsReturned[i].wasteType).then(wasteTypeDetail => {
-          itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
-          itemsReturned[i].wasteDescription = wasteTypeDetail.description;
-          if (i === itemsReturned.length - 1) resolve();
-        });
-      }
+      if (itemsReturned.length > 0) {
+        for (let i = 0; i < itemsReturned.length; i++) {
+          getWasteTypeDetail(itemsReturned[i].wasteType).then(
+            wasteTypeDetail => {
+              itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
+              itemsReturned[i].wasteDescription = wasteTypeDetail.description;
+              if (i === itemsReturned.length - 1) resolve();
+            }
+          );
+        }
+      } else resolve();
     })
       .then(() => {
         return itemsReturned;
       })
       .catch(err => {
-        throw new Error(err);
+        return [];
       });
   });
 };

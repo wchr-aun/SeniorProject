@@ -149,7 +149,9 @@ export default ShowAllUserTrashScreen = props => {
   // Callback fn
   const loadSellerItems = useCallback(async () => {
     setIsRefreshing(true);
+    console.log("before refreshing");
     await dispatch(sellerItemsAction.fetchSellerItems());
+    console.log("after refreshing");
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
@@ -160,12 +162,26 @@ export default ShowAllUserTrashScreen = props => {
       dispatch(wasteTypeAction.fetchWasteType());
     };
     setIsLoading(true);
-    loadSellerItems().then(() => {
-      loadWasteType().then(() => {
+    loadSellerItems()
+      .then(() => {
+        loadWasteType().then(() => {
+          setIsLoading(false);
+        });
+      })
+      .catch(err => {
         setIsLoading(false);
+        setError(err.message);
       });
-    });
   }, [loadSellerItems]);
+
+  // error alert handling
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
+      setError("");
+    }
+  }, [error]);
 
   // When redux updated, this local redux also be updated
   useEffect(() => {
