@@ -70,7 +70,8 @@ const AdjustAmountOfTrash = props => {
             ? () => {
                 props.dispatchAmountTrashsState({
                   type: MINUS_WASTE,
-                  wasteType: props.wasteType
+                  wasteType: props.wasteType,
+                  amount: 1
                 });
               }
             : null
@@ -97,7 +98,8 @@ const AdjustAmountOfTrash = props => {
         onPress={() => {
           props.dispatchAmountTrashsState({
             type: ADD_WASTE,
-            wasteType: props.wasteType
+            wasteType: props.wasteType,
+            amount: 1
           });
         }}
       >

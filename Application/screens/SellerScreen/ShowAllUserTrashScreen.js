@@ -18,6 +18,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import TrashCard from "../../components/TrashCard";
@@ -64,16 +66,19 @@ const trashsModifyingReducer = (state, action) => {
       };
     case ADD_WASTE:
       console.log("ADD_WASTE local Reducer Run");
+      console.log(updatedSellerItems);
+      console.log(action);
       // change or add
-      updatedSellerItems.forEach((item, index) => {
+      updatedSellerItems.some((item, index) => {
         if (item.wasteType === action.wasteType) {
-          founded = true;
           updatedSellerItems[index].amount =
-            updatedSellerItems[index].amount + 1;
+            updatedSellerItems[index].amount + action.amount;
           updatedSellerItems[index].UI_diff =
             updatedSellerItems[index].amount -
             state.sellerItemsOld[index].amount;
           updatedSellerItems[index].UI_disabledMinus = false;
+          founded = true;
+          return true;
         }
       });
       if (!founded) {
@@ -94,12 +99,11 @@ const trashsModifyingReducer = (state, action) => {
         if (item.wasteType === action.wasteType) {
           founded = true;
           updatedSellerItems[index].amount =
-            updatedSellerItems[index].amount - 1;
+            updatedSellerItems[index].amount - action.amount;
           updatedSellerItems[index].UI_diff =
             updatedSellerItems[index].amount -
             state.sellerItemsOld[index].amount;
           if (updatedSellerItems[index].amount === 0)
-            // updatedSellerItems.splice(index, 1);
             updatedSellerItems[index].UI_disabledMinus = true;
         }
       });
@@ -258,7 +262,8 @@ export default ShowAllUserTrashScreen = props => {
         addNewWasteHandler={(wasteType, amount) => {
           dispatchAmountTrashsState({
             type: ADD_WASTE,
-            newSellerItem: { wasteType, amount }
+            wasteType,
+            amount
           });
           setModalVisible(false);
         }}
@@ -393,6 +398,24 @@ export default ShowAllUserTrashScreen = props => {
     </KeyboardAvoidingView>
   );
 };
+
+// ShowAllUserTrashScreen.navigationOptions = navData => {
+//   let editingMode = navData.navigation.getParam('editingMode');
+
+//   return {
+//     headerRight: (
+//       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+//         <Item
+//           title="Cart"
+//           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+//           onPress={() => {
+//             navData.navigation.navigate("CartScreen");
+//           }}
+//         />
+//       </HeaderButtons>
+//     )
+//   };
+// };
 
 const styles = StyleSheet.create({
   screen: {

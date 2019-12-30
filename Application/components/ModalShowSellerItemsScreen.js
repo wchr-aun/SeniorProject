@@ -97,7 +97,9 @@ export default ModalShowSellersItemsScreen = props => {
             <Button
               title={"Add it"}
               color={Colors.primary}
-              onPress={() => props.addNewWasteHandler(wasteType, amount)}
+              onPress={() =>
+                props.addNewWasteHandler(wasteType, parseInt(amount, 10))
+              }
             />
           </View>
           <View>
