@@ -2,40 +2,39 @@ import React, { useEffect, useState, useReducer, useCallback } from "react";
 import {
   StyleSheet,
   View,
-  Dimensions,
   Button,
   FlatList,
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Text,
-  TextInput
+  Platform
 } from "react-native";
 import { AppLoading } from "expo";
-
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { Header } from "react-navigation-stack";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import Colors from "../../constants/Colors";
-import TrashCard from "../../components/TrashCard";
+import { AntDesign } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as wasteTypeAction from "../../store/actions/wasteTypeAction";
-import { AntDesign } from "@expo/vector-icons";
-
-import { useSelector, useDispatch } from "react-redux";
-import ThaiText from "../../components/ThaiText";
 import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
+import ThaiText from "../../components/ThaiText";
+import AppVariableSetting from "../../constants/AppVariableSetting";
+import TrashCard from "../../components/TrashCard";
+import Colors from "../../constants/Colors";
+import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 
 const ADD_WASTE = "ADD_WASTE";
-const ADD_NEW_WASTE = "ADD_NEW_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
+const CANCEL = "CANCEL";
 
 // function cacheFonts(fonts) {
 //   return fonts.map(font => Font.loadAsync(font));
@@ -123,10 +122,15 @@ const trashsModifyingReducer = (state, action) => {
         ...state,
         sellerItemsNew: updatedSellerItems
       };
+    case CANCEL:
+      return {
+        ...state,
+        sellerItemsNew: []
+      };
   }
 };
 
-export default ShowAllUserTrashScreen = props => {
+const ShowAllUserTrashScreen = props => {
   // // pre-loading
   // const [assetReady, setAssetReady] = useState(false);
   // const fetchAsset = useCallback(async () => {
@@ -159,6 +163,9 @@ export default ShowAllUserTrashScreen = props => {
 
   // provide for editing button when change to editing mode
   const [editingMode, setEditingMode] = useState(false);
+  useEffect(() => {
+    props.navigation.setParams({ setEditingMode });
+  }, [setEditingMode]);
 
   // trash user snapshot
   const [isLoading, setIsLoading] = useState(false);
@@ -276,164 +283,169 @@ export default ShowAllUserTrashScreen = props => {
       <View
         style={{
           ...styles.screen,
-          flex: 1,
+          width: wp("100%"),
+          height:
+            hp("100%") -
+            Header.HEIGHT -
+            getStatusBarHeight() -
+            AppVariableSetting.bottomBarHeight,
+          borderWidth: 2,
+          borderColor: "red",
           alignItems: "center"
         }}
       >
         <View
           style={{
-            ...styles.allTrashContainer,
             width: "100%",
-            height: "80%",
+            height: "88%",
             padding: 10,
-            alignItems: "center"
+            borderColor: "yellow",
+            borderWidth: 3,
+            alignItems: "center",
+            backgroundColor: Colors.primary_variant
           }}
         >
-          <View style={{ width: "100%", height: "80%" }}>
-            <FlatList
-              refreshing={isRefreshing}
-              onRefresh={loadSellerItems}
-              style={{
-                flex: 1
-              }}
-              keyExtractor={item => item.wasteType}
-              data={trashsState.sellerItemsNew}
-              renderItem={itemData => (
-                <TrashCard
-                  imgUrl={
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8jHyAAAAAbFxhYVVXV1dUYExXa2tpraWlcWVkgHB3x8fEvLCwNBAegn58FAAAVDxFvbW3i4eG3traJiIimpaW9vLx6eHmcm5vp6eljYWFCP0Dz8/Ovra4qJidOTEyGhYXIyMhST1A3MzRJRkd1c3PEw8SAf3+TGW0NAAAEd0lEQVR4nO2df1uyMBSGgykqSpBp+as0s/r+3/CN94qNUhiDeTwbz/2vwLWbPZwxQXd3BwAAAAAAAHCcx3stq/WtG9mJTZjoCIe3bmQnxlGgI4Uhb2AIQ/70yDA7GyVivwyzxfIv29grwwvD+kTA0AlgCEP+wBCG/JEj/uHv1N63Ed//u7YaYMgcGMKQPz0y9H60wBzfXWAIQ/7AEIb8gSEM+TMQnhs+hoHWMNrcoGG22GVxtWHRvUH4coOmWWKc/UjEyfTsw+ek+DB19p0hmdEgfDz/dCeKDo4G9G2zwvS1UMguXmpP6gQ4mtMPmdHscgwf5AaxkznVd9FO08nMUXW0+jJzO6fajObUFlvmfDbqHtXRzuVUXWL1tyzu5lQN59m8dkNVTwOn6umb6ppl/ZZTOe5nY5q2WWEXy4weddvW3/hwpXFGczYyp6Ez9fQtld1yr996GruX0/diXiT2TTZ3L6cyo0HYrDyOHbs/LdXRBhnNca2eqoyemu5SyunTNZtmh4Oso8mo8U6qnka7K7bNCiqj6ar5XmtVTx+u1zY7tMhozoszOV2ooVA/1pfZFA/841fW4/6wVUZzpqkb9XTbLqM5buR0oeqo+Vf1qp6+sq2npYwuzPdeRzKnH/bbZgdVR7dtduef01Idbfc4aaLqKcucjqRgm4zmrGUn8hz3T90ymlPK6afNptlhpcpM+0eeE1VP2Y37KqNJy4zmzOU8Knm21zY7yLE+DrocZsk2pyqjHf9A4CjrqWBVT0fyfdjk0O1I65TnuC/PvHjveuZ55vReteqt88EGMqczNjmdS8Hky8LRIn71tDR7tXG4Uk6bf9NzXdSbMd0zmnMqzhibP3YpDDMLGc2ZJ1wNrYWq5n2/2wBDY2BIDgyNgSE5MDQGhuTA0BgYkgNDY2BIDgyNgSE5MDQGhuT0yNDsRa9qHrgaiuOkir2+ewdq61nM1DAQlTRoaxrJrWt+W3sbpGE1DdqatdqLhv70of/Xof+1tAfjIQybAkNyYGgMDMmBoTEwJKdHht7fl4r9ZKDQvQL2NaiC79zi1/ww0f010iCpnE2ynR/+QugMJ1a+GaDhYh9mPvah/9eh/7W0B+MhDJsCQ3JgaAwMyYGhMTAkp0eG3t+X+v/80P9nwDXgOf43qRNz/Mpp+0l/HR7V1myvQ/9raQ/GQxg2BYbkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0Bobk+G/4UTTI1pIbR9svWXVl9fNP/5GtdVOKV/dCLkt4yIVSLa2XVqw8z2dxsmlhGEdWFrgoVlaK+Kz1KH/wGqeLzmsWz4/Fu7SpZl12Qj7luilBFnZGnq6I0QrPcl0/m2RsFtL5ZhTG+habwmas+I9ad9qeYMNVvalY2e7FZHNrpb+8pPrfJBgQ8hkpJMOZvW4UoaWFlSyznKWZEHFHhEiSLZdb7jOGh81p1pHTZsFlMbIKdtNOcLkVBQAAADzjH4W+XbnKuWNsAAAAAElFTkSuQmCC"
-                  }
-                  wasteType={itemData.item.wasteType.replace("wasteType/", "")}
-                  wasteDisposal={itemData.item.wasteDisposal}
-                  wasteDescription={itemData.item.wasteDescription}
-                  trashDisposal={null}
-                  amountOfTrash={itemData.item.amount}
-                  trashAdjustPrice={
-                    itemData.item.adjustedPrice
-                      ? itemData.item.adjustedPrice
-                      : "0.7-0.9"
-                  }
-                  style={styles.eachTrashCard}
-                  editingMode={editingMode}
-                  dispatchAmountTrashsState={dispatchAmountTrashsState}
-                  UI_diff={itemData.item.UI_diff}
-                  UI_disabledMinus={itemData.item.UI_disabledMinus}
-                />
-              )}
-            />
-          </View>
-        </View>
-
-        {editingMode ? (
-          <View
+          <FlatList
+            refreshing={isRefreshing}
+            onRefresh={loadSellerItems}
             style={{
-              ...styles.btnContainer,
-              width: wp("100%"),
-              height: hp("10%")
+              flex: 1
             }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setModalVisible(true);
-              }}
-              style={{
-                ...styles.navigateBtn,
-                backgroundColor: Colors.on_primary,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                borderColor: Colors.primary_variant,
-                borderWidth: 1
-              }}
-            >
-              <View style={{ margin: 5 }}>
-                <ThaiText
-                  style={{ fontSize: 18, color: Colors.primary_variant }}
-                >
-                  Add new waste
-                </ThaiText>
-              </View>
-              <View style={{ margin: 5 }}>
-                <AntDesign
-                  name="plussquareo"
-                  size={25}
-                  color={Colors.primary_variant}
+            keyExtractor={item => item.wasteType}
+            data={trashsState.sellerItemsNew}
+            renderItem={itemData => (
+              <TrashCard
+                imgUrl={
+                  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8jHyAAAAAbFxhYVVXV1dUYExXa2tpraWlcWVkgHB3x8fEvLCwNBAegn58FAAAVDxFvbW3i4eG3traJiIimpaW9vLx6eHmcm5vp6eljYWFCP0Dz8/Ovra4qJidOTEyGhYXIyMhST1A3MzRJRkd1c3PEw8SAf3+TGW0NAAAEd0lEQVR4nO2df1uyMBSGgykqSpBp+as0s/r+3/CN94qNUhiDeTwbz/2vwLWbPZwxQXd3BwAAAAAAAHCcx3stq/WtG9mJTZjoCIe3bmQnxlGgI4Uhb2AIQ/70yDA7GyVivwyzxfIv29grwwvD+kTA0AlgCEP+wBCG/JEj/uHv1N63Ed//u7YaYMgcGMKQPz0y9H60wBzfXWAIQ/7AEIb8gSEM+TMQnhs+hoHWMNrcoGG22GVxtWHRvUH4coOmWWKc/UjEyfTsw+ek+DB19p0hmdEgfDz/dCeKDo4G9G2zwvS1UMguXmpP6gQ4mtMPmdHscgwf5AaxkznVd9FO08nMUXW0+jJzO6fajObUFlvmfDbqHtXRzuVUXWL1tyzu5lQN59m8dkNVTwOn6umb6ppl/ZZTOe5nY5q2WWEXy4weddvW3/hwpXFGczYyp6Ez9fQtld1yr996GruX0/diXiT2TTZ3L6cyo0HYrDyOHbs/LdXRBhnNca2eqoyemu5SyunTNZtmh4Oso8mo8U6qnka7K7bNCiqj6ar5XmtVTx+u1zY7tMhozoszOV2ooVA/1pfZFA/841fW4/6wVUZzpqkb9XTbLqM5buR0oeqo+Vf1qp6+sq2npYwuzPdeRzKnH/bbZgdVR7dtduef01Idbfc4aaLqKcucjqRgm4zmrGUn8hz3T90ymlPK6afNptlhpcpM+0eeE1VP2Y37KqNJy4zmzOU8Knm21zY7yLE+DrocZsk2pyqjHf9A4CjrqWBVT0fyfdjk0O1I65TnuC/PvHjveuZ55vReteqt88EGMqczNjmdS8Hky8LRIn71tDR7tXG4Uk6bf9NzXdSbMd0zmnMqzhibP3YpDDMLGc2ZJ1wNrYWq5n2/2wBDY2BIDgyNgSE5MDQGhuTA0BgYkgNDY2BIDgyNgSE5MDQGhuT0yNDsRa9qHrgaiuOkir2+ewdq61nM1DAQlTRoaxrJrWt+W3sbpGE1DdqatdqLhv70of/Xof+1tAfjIQybAkNyYGgMDMmBoTEwJKdHht7fl4r9ZKDQvQL2NaiC79zi1/ww0f010iCpnE2ynR/+QugMJ1a+GaDhYh9mPvah/9eh/7W0B+MhDJsCQ3JgaAwMyYGhMTAkp0eG3t+X+v/80P9nwDXgOf43qRNz/Mpp+0l/HR7V1myvQ/9raQ/GQxg2BYbkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0Bobk+G/4UTTI1pIbR9svWXVl9fNP/5GtdVOKV/dCLkt4yIVSLa2XVqw8z2dxsmlhGEdWFrgoVlaK+Kz1KH/wGqeLzmsWz4/Fu7SpZl12Qj7luilBFnZGnq6I0QrPcl0/m2RsFtL5ZhTG+habwmas+I9ad9qeYMNVvalY2e7FZHNrpb+8pPrfJBgQ8hkpJMOZvW4UoaWFlSyznKWZEHFHhEiSLZdb7jOGh81p1pHTZsFlMbIKdtNOcLkVBQAAADzjH4W+XbnKuWNsAAAAAElFTkSuQmCC"
+                }
+                wasteType={itemData.item.wasteType.replace("wasteType/", "")}
+                wasteDisposal={itemData.item.wasteDisposal}
+                wasteDescription={itemData.item.wasteDescription}
+                trashDisposal={null}
+                amountOfTrash={itemData.item.amount}
+                trashAdjustPrice={
+                  itemData.item.adjustedPrice
+                    ? itemData.item.adjustedPrice
+                    : "0.7-0.9"
+                }
+                style={styles.eachTrashCard}
+                editingMode={editingMode}
+                dispatchAmountTrashsState={dispatchAmountTrashsState}
+                UI_diff={itemData.item.UI_diff}
+                UI_disabledMinus={itemData.item.UI_disabledMinus}
+              />
+            )}
+          />
+        </View>
+        <View
+          style={{
+            marginVertical: 5,
+            flexDirection: "row",
+            justifyContent: "center",
+            width: "100%",
+            height: "12%"
+          }}
+        >
+          {editingMode ? (
+            <>
+              <View style={{ ...styles.navigateBtn }}>
+                <Button
+                  title="Cancel"
+                  color={Colors.primary}
+                  onPress={() => {
+                    setEditingMode(false);
+                    dispatchAmountTrashsState({ type: "CANCEL" });
+                  }}
                 />
               </View>
-            </TouchableOpacity>
-            <View style={styles.navigateBtn}>
-              <Button
-                title="Confirm Amount"
-                color={Colors.primary}
-                onPress={confirmHandler}
-              />
-            </View>
-          </View>
-        ) : (
-          <View style={styles.btnContainer}>
-            <View style={{ ...styles.navigateBtn }}>
-              <Button
-                title="Edit Trash infomation"
-                color={Colors.primary}
+              <TouchableOpacity
                 onPress={() => {
-                  setEditingMode(true);
+                  setModalVisible(true);
                 }}
-              />
-            </View>
-            <View style={styles.navigateBtn}>
-              <Button
-                title="Selling Trash infomation"
-                color={Colors.secondary}
-                onPress={() => {
-                  props.navigation.navigate({
-                    routeName: "SellingTrashScreen",
-                    params: { sellerItemsNew: trashsState.sellerItemsNew }
-                  });
+                style={{
+                  ...styles.navigateBtn,
+                  backgroundColor: Colors.on_primary,
+                  borderColor: Colors.primary_variant,
+                  borderWidth: 1,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
                 }}
-              />
-            </View>
-          </View>
-        )}
+              >
+                <View style={{ margin: 5 }}>
+                  <ThaiText
+                    style={{ fontSize: 18, color: Colors.primary_variant }}
+                  >
+                    Add new waste
+                  </ThaiText>
+                </View>
+                <View style={{ margin: 5 }}>
+                  <AntDesign
+                    name="plussquareo"
+                    size={25}
+                    color={Colors.primary_variant}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              {/* <View style={styles.navigateBtn}>
+                <Button
+                  title="Confirm Amount"
+                  color={Colors.primary}
+                  onPress={confirmHandler}
+                />
+              </View> */}
+            </>
+          ) : (
+            <>
+              <View style={styles.navigateBtn}>
+                <Button
+                  title="Selling Trash infomation"
+                  color={Colors.secondary}
+                  onPress={() => {
+                    props.navigation.navigate({
+                      routeName: "SellingTrashScreen",
+                      params: { sellerItemsNew: trashsState.sellerItemsNew }
+                    });
+                  }}
+                />
+              </View>
+            </>
+          )}
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-// ShowAllUserTrashScreen.navigationOptions = navData => {
-//   let editingMode = navData.navigation.getParam('editingMode');
+ShowAllUserTrashScreen.navigationOptions = navData => {
+  let setEditingMode = navData.navigation.getParam("setEditingMode");
 
-//   return {
-//     headerRight: (
-//       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-//         <Item
-//           title="Cart"
-//           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-//           onPress={() => {
-//             navData.navigation.navigate("CartScreen");
-//           }}
-//         />
-//       </HeaderButtons>
-//     )
-//   };
-// };
+  return {
+    headerTitle: "ขยะที่สะสมไว้",
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Cart"
+          iconName={"square-edit-outline"}
+          onPress={() => {
+            setEditingMode(true);
+          }}
+        />
+      </HeaderButtons>
+    )
+  };
+};
 
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
-  },
-  allTrashContainer: {
-    backgroundColor: Colors.primary_variant
   },
   eachTrashCard: {
     marginBottom: 5,
     backgroundColor: Colors.on_primary
   },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  btnContainer: {
-    marginVertical: 5,
-    flexDirection: "row",
-    justifyContent: "center"
-  },
   navigateBtn: {
     width: wp("40%"),
     height: hp("8%"),
@@ -441,3 +453,5 @@ const styles = StyleSheet.create({
     borderRadius: 5
   }
 });
+
+export default ShowAllUserTrashScreen;

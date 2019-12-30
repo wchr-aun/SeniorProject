@@ -47,10 +47,7 @@ SellerhomepageNavigator.navigationOptions = ({ navigation }) => {
 const ShowAllUserTrashNavigator = createStackNavigator(
   {
     ShowAllUserTrashScreen: {
-      screen: ShowAllUserTrashScreen,
-      navigationOptions: {
-        headerTitle: "ขยะที่สะสมไว้"
-      }
+      screen: ShowAllUserTrashScreen
     },
     // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
     SellingTrashScreen: {

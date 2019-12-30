@@ -86,6 +86,7 @@ export default ModalShowSellersItemsScreen = props => {
               }}
             >
               <TextInput
+                keyboardType="number-pad"
                 onChangeText={thisValue => {
                   console.log(thisValue);
                   setAmount(thisValue);
@@ -97,9 +98,10 @@ export default ModalShowSellersItemsScreen = props => {
             <Button
               title={"Add it"}
               color={Colors.primary}
-              onPress={() =>
-                props.addNewWasteHandler(wasteType, parseInt(amount, 10))
-              }
+              onPress={() => {
+                props.addNewWasteHandler(wasteType, parseInt(amount, 10));
+                props.setModalVisible(false);
+              }}
             />
           </View>
           <View>
