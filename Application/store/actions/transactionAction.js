@@ -5,7 +5,11 @@ export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
 
 export const fetchTransaction = () => {
   return async dispatch => {
-    let transactions = await firebaseFunctions.getTransactions("seller", 0);
+    let transactions = await firebaseFunctions.getTransactions("seller");
+    
+    /***************************CHANGE THIS********************************/
+    transactions = transactions[0] // Change this to whatever you need to
+    /**********************************************************************/
 
     // Get 'amountOfType' and 'assignTime' in the right format
     transactions.forEach((item, index) => {
