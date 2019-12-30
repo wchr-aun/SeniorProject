@@ -10,12 +10,10 @@ export const fetchSellerItems = () => {
   return async dispatch => {
     let sellerItemsAndWasteType = [];
     try {
-      console.log("sellerItemsActiin: befores getSellerListAndWasteType");
       sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
-      console.log("sellerItemsActiin: after getSellerListAndWasteType");
       dispatch({
         type: SET_WASTE,
-        items: [...sellerItemsAndWasteType]
+        sellerItems: [...sellerItemsAndWasteType]
       });
     } catch (err) {
       throw new Error(err.message);
@@ -23,43 +21,51 @@ export const fetchSellerItems = () => {
   };
 };
 
-export const setUserWaste = items => {
+export const setUserWaste = sellerItems => {
   return async dispatch => {
     // update new wastesData on firebase
-    await firebaseFunctions.addWaste({
-      items
-    });
-    // set new wastesData
-    dispatch({
-      type: SET_WASTE,
-      items: [...items]
-    });
+    try {
+      await firebaseFunctions.addWaste({
+        items: sellerItems
+      });
+      // set new wastesData
+      dispatch({
+        type: SET_WASTE,
+        sellerItems: [...sellerItems]
+      });
+    } catch (err) {
+      throw new Error(err.message);
+    }
   };
 };
 
-export const setSellerItemsForSell = items => {
+export const setSellerItemsForSell = sellerItems => {
   return {
     type: SET_WASTE_FOR_SELL,
-    itemsForSell: [...items]
+    itemsForSell: [...sellerItems]
   };
 };
 
 export const getBuyerList = () => {
   return async dispatch => {
-    // search buyer
-    let buyerList = await firebaseFunctions.searchBuyers("", "desc");
+    try {
+      // search buyer
+      let buyerList = await firebaseFunctions.searchBuyers("", "desc");
 
-    // dispatch
-    dispatch({
-      type: GET_BUYER_LIST,
-      buyerList: buyerList
-    });
+      // dispatch
+      dispatch({
+        type: GET_BUYER_LIST,
+        buyerList: buyerList
+      });
+    } catch (err) {
+      throw new Error(err.message);
+    }
   };
 };
 
 export const chooseBuyerSell = (
   sellAddr,
-  items,
+  sellerItems,
   buyerName,
   buyerPriceInfo,
   assignedTime
@@ -67,7 +73,7 @@ export const chooseBuyerSell = (
   return async dispatch => {
     // Map buyer price into an transaction
     let updatedItems = [];
-    items.forEach((item, index) => {
+    sellerItems.forEach((item, index) => {
       updatedItems.push({
         amount: item.amount,
         wasteType: item.wasteType,
@@ -77,7 +83,7 @@ export const chooseBuyerSell = (
 
     // do async task
     let transaction = {
-      items: updatedItems,
+      sellerItems: updatedItems,
       addr: sellAddr,
       buyer: buyerName,
       txType: 0,

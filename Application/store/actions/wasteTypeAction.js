@@ -4,8 +4,14 @@ export const FETCH_WASTETYPE = "FETCH_WASTETYPE";
 
 export const fetchWasteType = () => {
   return async dispatch => {
-    let wasteType = [];
-    wasteType = await firebaseFunctions.getWasteType();
-    dispatch({ type: FETCH_WASTETYPE, wasteType });
+    let wasteTypes = [];
+    wasteTypes = await firebaseFunctions.getWasteType();
+    // Get only wasteType name
+    wasteTypes.forEach((item, index) => {
+      // wasteTypes.push(...item, { value: item.wasteTypeId });
+      wasteTypes[index] = { ...item, value: item.wasteTypeId };
+    });
+
+    dispatch({ type: FETCH_WASTETYPE, wasteTypes });
   };
 };

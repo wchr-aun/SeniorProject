@@ -9,7 +9,6 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Modal,
   Text,
   TextInput
 } from "react-native";
@@ -36,59 +35,89 @@ const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
 
-function cacheFonts(fonts) {
-  return fonts.map(font => Font.loadAsync(font));
-}
+// function cacheFonts(fonts) {
+//   return fonts.map(font => Font.loadAsync(font));
+// }
 
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
-  let updatedItems = [...state.items];
+  let updatedSellerItems = [...state.sellerItemsNew];
+  console.log("state.sellerItemsOld");
+  console.log(state);
 
   switch (action.type) {
     case SET_WASTE:
       console.log("SET WASTE local Reducer Run");
+      let sellerItemsOld = [];
+      [...action.sellerItemsNew].forEach((item, index) => {
+        sellerItemsOld.push({
+          amount: item.amount,
+          wasteDescription: item.wasteDescription,
+          wasteDisposal: item.wasteDisposal,
+          wasteType: item.wasteType
+        });
+      });
       return {
-        items: [...action.items]
+        ...state,
+        sellerItemsNew: [...action.sellerItemsNew],
+        sellerItemsOld
       };
     case ADD_WASTE:
       console.log("ADD_WASTE local Reducer Run");
       // change or add
-      updatedItems.forEach((item, index) => {
+      updatedSellerItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           founded = true;
-          updatedItems[index].amount = updatedItems[index].amount + 1;
+          updatedSellerItems[index].amount =
+            updatedSellerItems[index].amount + 1;
+          updatedSellerItems[index].UI_diff =
+            updatedSellerItems[index].amount -
+            state.sellerItemsOld[index].amount;
+          updatedSellerItems[index].UI_disabledMinus = false;
         }
       });
+      if (!founded) {
+        console.log("ADD_WASTE_NEW_TYPE");
+        updatedSellerItems.push({
+          ...action.newSellerItem,
+          UI_diff: action.newSellerItem.amount
+        });
+      }
       return {
-        items: updatedItems
+        ...state,
+        sellerItemsNew: updatedSellerItems
       };
-    case ADD_NEW_WASTE:
-      console.log("ADD_NEW_WASTE local Reducer Run");
-      console.log(action);
-      return state;
     case MINUS_WASTE:
       console.log("MINUS_TRASH local Reducer Run");
       // change or add
-      updatedItems.forEach((item, index) => {
+      updatedSellerItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           founded = true;
-          updatedItems[index].amount = updatedItems[index].amount - 1;
-          if (updatedItems[index].amount === 0) updatedItems.splice(index, 1);
+          updatedSellerItems[index].amount =
+            updatedSellerItems[index].amount - 1;
+          updatedSellerItems[index].UI_diff =
+            updatedSellerItems[index].amount -
+            state.sellerItemsOld[index].amount;
+          if (updatedSellerItems[index].amount === 0)
+            // updatedSellerItems.splice(index, 1);
+            updatedSellerItems[index].UI_disabledMinus = true;
         }
       });
       return {
-        items: updatedItems
+        ...state,
+        sellerItemsNew: updatedSellerItems
       };
     case EDIT_WASTE:
       // edit from text-input
       console.log("EDIT_TRASH local Reducer Run");
-      updatedItems.forEach((item, index) => {
+      updatedSellerItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
-          updatedItems[index].amount = action.value;
+          updatedSellerItems[index].amount = action.value;
         }
       });
       return {
-        items: updatedItems
+        ...state,
+        sellerItemsNew: updatedSellerItems
       };
   }
 };
@@ -133,25 +162,26 @@ export default ShowAllUserTrashScreen = props => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [
-    trashsState,
-    dispatchAmountTrashsState
-  ] = useReducer(trashsModifyingReducer, { items: [] });
-
   // Get sellerItems and wasteTyp from redux
-  const sellerItemsRedux = useSelector(state => {
-    return state.sellerItems.items;
+  const sellerItemsOld = useSelector(state => {
+    return state.sellerItems.sellerItems;
   });
   const wasteTypesRedux = useSelector(state => {
     return state.wasteTypes.wasteTypes;
   });
 
+  const [trashsState, dispatchAmountTrashsState] = useReducer(
+    trashsModifyingReducer,
+    {
+      sellerItemsNew: [],
+      sellerItemsOld: sellerItemsOld
+    }
+  );
+
   // Callback fn
   const loadSellerItems = useCallback(async () => {
     setIsRefreshing(true);
-    console.log("before refreshing");
     await dispatch(sellerItemsAction.fetchSellerItems());
-    console.log("after refreshing");
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
@@ -164,9 +194,14 @@ export default ShowAllUserTrashScreen = props => {
     setIsLoading(true);
     loadSellerItems()
       .then(() => {
-        loadWasteType().then(() => {
-          setIsLoading(false);
-        });
+        loadWasteType()
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(err => {
+            setIsLoading(false);
+            setError(err.message);
+          });
       })
       .catch(err => {
         setIsLoading(false);
@@ -187,20 +222,20 @@ export default ShowAllUserTrashScreen = props => {
   useEffect(() => {
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      items: [...sellerItemsRedux]
+      sellerItemsNew: [...sellerItemsOld]
     });
-  }, [sellerItemsRedux]);
+  }, [sellerItemsOld]);
 
   // For 'addWaste' handler
   const confirmHandler = async () => {
     setEditingMode(false);
     setIsRefreshing(true);
     // update new wasteData on redux
-    dispatch(sellerItemsAction.setUserWaste(trashsState.items));
+    dispatch(sellerItemsAction.setUserWaste(trashsState.sellerItemsNew));
     // update new wasteData on local redux
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      items: trashsState.items
+      sellerItemsNew: trashsState.sellerItemsNew
     });
     setIsRefreshing(false);
   };
@@ -218,13 +253,14 @@ export default ShowAllUserTrashScreen = props => {
     return (
       <ModalShowSellerItemsScreen
         setModalVisible={setModalVisible}
-        data={[]}
+        data={wasteTypesRedux}
         modalVisible={modalVisible}
         addNewWasteHandler={(wasteType, amount) => {
           dispatchAmountTrashsState({
-            type: ADD_NEW_WASTE,
-            data: { wasteType, amount }
+            type: ADD_WASTE,
+            newSellerItem: { wasteType, amount }
           });
+          setModalVisible(false);
         }}
       />
     );
@@ -256,7 +292,7 @@ export default ShowAllUserTrashScreen = props => {
                 flex: 1
               }}
               keyExtractor={item => item.wasteType}
-              data={trashsState.items}
+              data={trashsState.sellerItemsNew}
               renderItem={itemData => (
                 <TrashCard
                   imgUrl={
@@ -275,6 +311,8 @@ export default ShowAllUserTrashScreen = props => {
                   style={styles.eachTrashCard}
                   editingMode={editingMode}
                   dispatchAmountTrashsState={dispatchAmountTrashsState}
+                  UI_diff={itemData.item.UI_diff}
+                  UI_disabledMinus={itemData.item.UI_disabledMinus}
                 />
               )}
             />
@@ -344,7 +382,7 @@ export default ShowAllUserTrashScreen = props => {
                 onPress={() => {
                   props.navigation.navigate({
                     routeName: "SellingTrashScreen",
-                    params: { items: trashsState.items }
+                    params: { sellerItemsNew: trashsState.sellerItemsNew }
                   });
                 }}
               />

@@ -22,13 +22,13 @@ const SET_WASTE = "SET_WASTE";
 
 const trashSellingReducer = (state, action) => {
   let founded = false;
-  let updatedItems = [...state.items];
+  let updatedItems = [...state.sellerItems];
 
   switch (action.type) {
     case SET_WASTE:
       console.log("SET WASTE local Reducer Run");
       return {
-        items: [...action.items]
+        sellerItems: [...action.sellerItems]
       };
     case SELECT_ITEM:
       console.log("SELECT_ITEM local Reducer Run");
@@ -37,7 +37,7 @@ const trashSellingReducer = (state, action) => {
           updatedItems[index].amount = action.amount;
       });
       return {
-        items: updatedItems
+        sellerItems: updatedItems
       };
     case ADD_WASTE:
       console.log("ADD_WASTE local Reducer Run");
@@ -55,7 +55,7 @@ const trashSellingReducer = (state, action) => {
         });
       }
       return {
-        items: updatedItems
+        sellerItems: updatedItems
       };
     case MINUS_WASTE:
       console.log("MINUS_WASTE local Reducer Run");
@@ -68,7 +68,7 @@ const trashSellingReducer = (state, action) => {
         }
       });
       return {
-        items: updatedItems
+        sellerItems: updatedItems
       };
     case EDIT_WASTE:
       // edit from text-input
@@ -79,7 +79,7 @@ const trashSellingReducer = (state, action) => {
         }
       });
       return {
-        items: updatedItems
+        sellerItems: updatedItems
       };
   }
   return state;
@@ -104,7 +104,7 @@ export default SellingTrashScreen = props => {
   });
   // Get User trash
   const userTrashsFromRedux = useSelector(reducers => {
-    return reducers.sellerItems.items;
+    return reducers.sellerItems.sellerItems;
   });
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
@@ -112,13 +112,16 @@ export default SellingTrashScreen = props => {
     {
       txType: "",
       buyer: "buyer temp",
-      items: []
+      sellerItems: []
     }
   );
 
   // initially, get data from redux and store it to local redux
   useEffect(() => {
-    dispatchAmountTrashsState({ type: SET_WASTE, items: userTrashsFromRedux });
+    dispatchAmountTrashsState({
+      type: SET_WASTE,
+      sellerItems: userTrashsFromRedux
+    });
   }, [userTrashsFromRedux, dispatchAmountTrashsState]);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -137,7 +140,7 @@ export default SellingTrashScreen = props => {
   //   await dispatch(
   //     sellerItemsAction.chooseBuyerSell(
   //       userProfile.addr,
-  //       trashsState.items,
+  //       trashsState.sellerItems,
   //       "nora-buyer",
   //       0.5
   //     )
@@ -152,7 +155,7 @@ export default SellingTrashScreen = props => {
   useEffect(() => {
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      items: [...userTrashsFromRedux]
+      sellerItems: [...userTrashsFromRedux]
     });
   }, [userTrashsFromRedux]);
 
@@ -180,7 +183,7 @@ export default SellingTrashScreen = props => {
             }}
             refreshing={isRefreshing}
             onRefresh={loadSellerItems}
-            data={trashsState.items}
+            data={trashsState.sellerItems}
             keyExtractor={item => item.wasteType}
             renderItem={itemData => (
               <TrashCard
@@ -216,7 +219,9 @@ export default SellingTrashScreen = props => {
               onPress={() => {
                 // sellHandler();
                 dispatch(
-                  sellerItemsAction.setSellerItemsForSell(trashsState.items)
+                  sellerItemsAction.setSellerItemsForSell(
+                    trashsState.sellerItems
+                  )
                 );
                 props.navigation.navigate("chooseBuyerForSellScreen");
               }}

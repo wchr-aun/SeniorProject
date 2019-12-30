@@ -8,7 +8,7 @@ import {
 import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
-  items: [],
+  sellerItems: [],
   itemsForSell: [],
   buyerList: []
 };
@@ -19,7 +19,7 @@ export default function(state = initialState, action) {
       console.log("SET WASTE Reducer Run");
       return {
         ...state,
-        items: action.items
+        sellerItems: action.sellerItems
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
@@ -30,7 +30,7 @@ export default function(state = initialState, action) {
       };
     case CHOOSEBUYER_SELL:
       console.log("CHOOSEBUYER_SELL Reducer Run");
-      console.log(action.transaction.items);
+      console.log(action.transaction.sellerItems);
 
       return {
         ...state

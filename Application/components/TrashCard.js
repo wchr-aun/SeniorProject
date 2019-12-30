@@ -65,12 +65,16 @@ const AdjustAmountOfTrash = props => {
       </View>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
-        onPress={() => {
-          props.dispatchAmountTrashsState({
-            type: MINUS_WASTE,
-            wasteType: props.wasteType
-          });
-        }}
+        onPress={
+          !props.UI_disabledMinus
+            ? () => {
+                props.dispatchAmountTrashsState({
+                  type: MINUS_WASTE,
+                  wasteType: props.wasteType
+                });
+              }
+            : null
+        }
       >
         <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
@@ -139,7 +143,27 @@ export default TrashCard = props => {
             </ThaiTitleText>
           </View>
           {/* Check - UnCheck */}
-          {!props.sellingMode ? null : (
+          {props.editingMode ? (
+            <View
+              style={{
+                width: "30%",
+                height: "100%",
+                alignSelf: "flex-end"
+              }}
+            >
+              <Text
+                style={{
+                  color: isNaN(props.UI_diff)
+                    ? null
+                    : props.UI_diff > 0
+                    ? "green"
+                    : "red"
+                }}
+              >
+                {props.UI_diff ? props.UI_diff : null}
+              </Text>
+            </View>
+          ) : !props.sellingMode ? null : (
             <TouchableWithoutFeedback
               style={{
                 width: "30%",
@@ -195,6 +219,7 @@ export default TrashCard = props => {
               wasteType={props.wasteType}
               amountOfTrash={props.amountOfTrash}
               dispatchAmountTrashsState={props.dispatchAmountTrashsState}
+              UI_disabledMinus={props.UI_disabledMinus}
             />
           </View>
         )}

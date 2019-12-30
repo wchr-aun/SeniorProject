@@ -15,6 +15,11 @@ import {
 } from "react-native";
 import Colors from "../constants/Colors";
 import { Dropdown } from "react-native-material-dropdown";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import ThaiText from "./ThaiText";
 
 export default ModalShowSellersItemsScreen = props => {
   const [wasteType, setWasteType] = useState();
@@ -37,15 +42,11 @@ export default ModalShowSellersItemsScreen = props => {
           justifyContent: "center"
         }}
       >
-        <View style={{ width: "50%", height: "50%" }}>
+        <View
+          style={{ width: wp("80%"), height: hp("70%"), alignItems: "center" }}
+        >
           <Text>Waste Adding</Text>
-          <View
-            style={{
-              width: "100%",
-              height: "15%",
-              alignSelf: "center"
-            }}
-          >
+          <View style={{ width: "100%", height: "25%" }}>
             <Dropdown
               label="Waste Type"
               data={
@@ -63,13 +64,34 @@ export default ModalShowSellersItemsScreen = props => {
               }}
             />
           </View>
-          <View>
-            <TextInput
-              onChangeText={thisValue => {
-                console.log(thisValue);
-                setAmount(thisValue);
+          <View
+            style={{
+              width: "100%",
+              height: "10%",
+              alignSelf: "center",
+              marginVertical: wp("3%"),
+              flexDirection: "row"
+            }}
+          >
+            <View style={{ width: "30%", height: "100%" }}>
+              <ThaiText>จำนวน</ThaiText>
+            </View>
+            <View
+              style={{
+                width: "70%",
+                height: "100%",
+                borderWidth: 1,
+                borderColor: Colors.lineSeparate,
+                borderRadius: 5
               }}
-            ></TextInput>
+            >
+              <TextInput
+                onChangeText={thisValue => {
+                  console.log(thisValue);
+                  setAmount(thisValue);
+                }}
+              ></TextInput>
+            </View>
           </View>
           <View>
             <Button
