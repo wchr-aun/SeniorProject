@@ -96,23 +96,28 @@ const getSellerListAndWasteType = async () => {
   });
 };
 
-const getTransactions = async (role, status) => {
-  return firestore
-    .collection("transactions")
-    .where(role, "==", firebaseUtil.auth().currentUser.uid)
-    .where("txStatus", "==", status)
-    .orderBy("createTimestamp", "desc")
-    .get()
-    .then(querySnapshot => {
-      let tx = [];
-      querySnapshot.forEach(function(doc) {
-        tx.push({ txId: doc.id, detail: doc.data() });
-      });
-      return tx;
-    })
-    .catch(err => {
-      throw new error(err);
-    });
+const getTransactions = async (role) => {
+  let allTx = []
+  let promises = []
+  for (let status = 0; status < 5; status++) {
+    promises.push(firestore
+      .collection("transactions")
+      .where(role, "==", firebaseUtil.auth().currentUser.uid)
+      .where("txStatus", "==", status)
+      .orderBy("createTimestamp", "desc")
+      .get()
+      .then(querySnapshot => {
+        let tx = [];
+        querySnapshot.forEach(function(doc) {
+          tx.push({ txId: doc.id, detail: doc.data() });
+        });
+        allTx[status] = tx;
+      })
+      .catch(err => {
+        throw new error(err);
+      }))
+  }
+  return Promise.all(promises).then(() => {return allTx})
 };
 
 const getFavBuyers = async () => {
