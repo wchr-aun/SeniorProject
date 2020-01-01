@@ -39,12 +39,15 @@ const CONFIRM_SELLERITEMS = "CONFIRM_SELLERITEMS";
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
   let updatedSellerItems = [...state.sellerItemsNew];
+  console.log("----------------> action " + action.type);
   console.log("--------------- Current state ----------------");
   console.log(state);
+  console.log("--------------- Current Action ----------------");
+  console.log(action);
 
   switch (action.type) {
     case SET_WASTE:
-      console.log("SET WASTE local Reducer Run"); //updating
+      console.log("!!!!!!!!!!!!!!!! SET WASTE local Reducer Run"); //updating
       let sellerItemsOld = [];
       [...action.sellerItemsNew].forEach((item, index) => {
         sellerItemsOld.push({
@@ -61,12 +64,15 @@ const trashsModifyingReducer = (state, action) => {
       };
     case CONFIRM_SELLERITEMS:
       // new sellerItemsNew to sellerItemsOld
+      console.log("!!!!!!!!!!!!!!!!! CONFIRM_SELLERITEMS Reducer Run");
+      console.log("state.sellerItemsNew");
+      console.log(state.sellerItemsNew);
       return {
         ...state,
         sellerItemsOld: JSON.parse(JSON.stringify(state.sellerItemsNew))
       };
     case ADD_WASTE:
-      console.log("ADD_WASTE local Reducer Run");
+      console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
       // change or add ---> no problem
       updatedSellerItems.some((item, index) => {
         if (item.wasteType === action.wasteType) {
@@ -88,7 +94,7 @@ const trashsModifyingReducer = (state, action) => {
       });
       // this this problem
       if (!founded) {
-        console.log("ADD_WASTE_NEW_TYPE");
+        console.log(" !!!!!!!!!!!!!!!! ADD_WASTE_NEW_TYPE");
         updatedSellerItems.push({
           amount: action.amount,
           wasteDescription: action.wasteDescription
@@ -105,7 +111,7 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsNew: [...updatedSellerItems]
       };
     case MINUS_WASTE:
-      console.log("MINUS_TRASH local Reducer Run");
+      console.log("!!!!!!!!!!!!!!!! MINUS_TRASH local Reducer Run");
       // change or add
       updatedSellerItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
@@ -132,7 +138,7 @@ const trashsModifyingReducer = (state, action) => {
       };
     case EDIT_WASTE:
       // edit from text-input
-      console.log("EDIT_TRASH local Reducer Run");
+      console.log("!!!!!!!!!!!!!!!! EDIT_TRASH local Reducer Run");
       updatedSellerItems.forEach((item, index) => {
         if (item.wasteType === action.wasteType) {
           updatedSellerItems[index].amount = action.value;
@@ -171,7 +177,7 @@ const ShowAllUserTrashScreen = props => {
   const [modalVisible, setModalVisible] = useState(false);
 
   // Get sellerItems and wasteTyp from redux
-  const sellerItemsOld = useSelector(state => {
+  const sellerItemsRedux = useSelector(state => {
     return state.sellerItems.sellerItems;
   });
   const wasteTypesRedux = useSelector(state => {
@@ -185,14 +191,6 @@ const ShowAllUserTrashScreen = props => {
       sellerItemsOld: []
     }
   );
-
-  // provide for editing button when change to editing mode
-  const [editingMode, setEditingMode] = useState(false);
-  useEffect(() => {
-    props.navigation.setParams({ setEditingMode });
-    props.navigation.setParams({ editingMode });
-    props.navigation.setParams({ confirmHandler });
-  }, [editingMode, setEditingMode, trashsState]);
 
   // Callback fn
   const loadSellerItems = useCallback(async () => {
@@ -238,36 +236,39 @@ const ShowAllUserTrashScreen = props => {
   useEffect(() => {
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      sellerItemsNew: JSON.parse(JSON.stringify(sellerItemsOld)),
-      sellerItemsOld: JSON.parse(JSON.stringify(sellerItemsOld))
+      sellerItemsNew: JSON.parse(JSON.stringify(sellerItemsRedux))
     });
-  }, [sellerItemsOld]);
+  }, [sellerItemsRedux]);
 
-  const confirmSubHandler = () => {
-    console.log("trashsState");
+  const confirmHandlerTricker = useCallback(() => {
+    console.log("------------ From confirmHandlerTricker, show trashsState");
     console.log(trashsState);
-  };
+    confirmHandler();
+  }, [trashsState, dispatchAmountTrashsState]);
 
   // For 'addWaste' handler
   const confirmHandler = useCallback(async () => {
     setEditingMode(false);
-    confirmSubHandler();
-    // setIsRefreshing(true);
+    setIsRefreshing(true);
+    console.log("------------ From confirmHandler, show trashsState");
+    console.log(trashsState);
 
-    // // update new wasteData on redux
-    // dispatch(
-    //   sellerItemsAction.setUserWaste(
-    //     trashsState.sellerItemsNew.length !== 0
-    //       ? trashsState.sellerItemsNew
-    //       : trashsState.sellerItemsOld
-    //   )
-    // );
-    // // update new wasteData on local redux
-    // dispatchAmountTrashsState({
-    //   type: CONFIRM_SELLERITEMS
-    // });
-    // setIsRefreshing(false);
-  }, [trashsState, dispatchAmountTrashsState, setModalVisible, modalVisible]);
+    // update new wasteData on local redux
+    dispatchAmountTrashsState({
+      type: CONFIRM_SELLERITEMS
+    });
+    // update new wasteData on redux
+    await dispatch(sellerItemsAction.setUserWaste(trashsState.sellerItemsNew));
+    setIsRefreshing(false);
+  }, [trashsState, dispatchAmountTrashsState]);
+
+  // provide for editing button when change to editing mode
+  const [editingMode, setEditingMode] = useState(false);
+  useEffect(() => {
+    props.navigation.setParams({ editingMode });
+    props.navigation.setParams({ setEditingMode });
+    props.navigation.setParams({ confirmHandlerTricker });
+  }, [editingMode, setEditingMode]);
 
   //add spinner loading
   if (isLoading) {
@@ -284,15 +285,15 @@ const ShowAllUserTrashScreen = props => {
         setModalVisible={setModalVisible}
         data={wasteTypesRedux}
         modalVisible={modalVisible}
-        dispatchAmountTrashsState={dispatchAmountTrashsState}
-        // addNewWasteHandler={(wasteType, amount) => {
-        //   dispatchAmountTrashsState({
-        //     type: ADD_WASTE,
-        //     wasteType,
-        //     amount
-        //   });
-        //   setModalVisible(false);
-        // }}
+        // dispatchAmountTrashsState={dispatchAmountTrashsState}
+        addNewWasteHandler={(wasteType, amount) => {
+          dispatchAmountTrashsState({
+            type: ADD_WASTE,
+            wasteType,
+            amount
+          });
+          setModalVisible(false);
+        }}
       />
     );
   }
@@ -426,14 +427,20 @@ const ShowAllUserTrashScreen = props => {
 ShowAllUserTrashScreen.navigationOptions = navData => {
   let setEditingMode = navData.navigation.getParam("setEditingMode");
   let editingMode = navData.navigation.getParam("editingMode");
-  let confirmHandler = navData.navigation.getParam("confirmHandler");
+  let confirmHandlerTricker = navData.navigation.getParam(
+    "confirmHandlerTricker"
+  );
 
   return {
     headerTitle: "ขยะที่สะสมไว้",
     headerRight: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         {editingMode ? (
-          <Item title="Cart" iconName={"check"} onPress={confirmHandler} />
+          <Item
+            title="Cart"
+            iconName={"check"}
+            onPress={confirmHandlerTricker}
+          />
         ) : (
           <Item
             title="Cart"
