@@ -20,28 +20,23 @@ import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 
-const SELECT_ITEM = "SELECT_ITEM";
 const ADD_WASTE = "ADD_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
-const SET_WASTE = "SET_WASTE";
 
 const AmountOfTrash = props => {
   return (
     <View
       style={{
-        flexDirection: "row",
-        alignSelf: "flex-end",
+        ...props.style,
         alignItems: "center"
       }}
     >
-      <View style={{ marginRight: 5 }}>
-        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
-          จำนวน
-        </ThaiText>
+      <View>
+        <ThaiText style={{ fontSize: 8 }}>จำนวน</ThaiText>
       </View>
-      <View style={{ width: 30 }}>
-        <Text style={{ textAlign: "center" }}>
+      <View style={{ width: wp("20%") }}>
+        <Text style={{ textAlign: "center", fontSize: wp("7%") }}>
           {props.amountOfTrash.toString()}
         </Text>
       </View>
@@ -51,18 +46,7 @@ const AmountOfTrash = props => {
 
 const AdjustAmountOfTrash = props => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignSelf: "flex-end",
-        alignItems: "center"
-      }}
-    >
-      <View style={{ marginRight: 5 }}>
-        <ThaiText style={{ ...styles.amountOfTrash, marginRight: 5 }}>
-          จำนวน
-        </ThaiText>
-      </View>
+    <View style={{ ...props.style, flexDirection: "row" }}>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
         onPress={
@@ -89,7 +73,7 @@ const AdjustAmountOfTrash = props => {
               value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
             });
           }}
-          value={props.amountOfTrash.toString()}
+          value={(props.UI_diff ? props.UI_diff : 0).toString()}
           style={{ textAlign: "center" }}
         ></TextInput>
       </View>
@@ -118,74 +102,69 @@ export default TrashCard = props => {
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: wp("90%"),
-        height: hp("28%"),
-        alignSelf: "center"
+        width: wp("95%"),
+        height: hp("20%"),
+        alignSelf: "center",
+        borderWidth: 1,
+        borderColor: "red",
+        marginVertical: wp("1.25%")
       }}
     >
-      <ImageCircle avariableWidth={wp("20%")} imgUrl={props.imgUrl} />
+      <View
+        style={{
+          width: "30%",
+          height: "100%",
+          backgroundColor: Colors.on_primary,
+          padding: wp("2.5%"),
+          alignItems: "center",
+          justifyContent: "space-around"
+        }}
+      >
+        <ImageCircle
+          avariableWidth={wp("20%")}
+          imgUrl={props.imgUrl}
+          style={{ borderWidth: 1, borderColor: "black" }}
+        />
+        <AmountOfTrash amountOfTrash={props.amountOfTrash} />
+      </View>
 
       <View
         style={{
           ...styles.descriptionContainer,
-          flex: 1,
-          padding: 10
+          width: "70%",
+          height: "100%",
+          padding: wp("2.5%"),
+          borderWidth: 1,
+          borderColor: "yellow"
         }}
       >
-        <View
-          style={{
-            ...styles.descriptionRow,
-            flexWrap: "wrap"
-          }}
-        >
-          {/* Trash Name */}
-          <View style={{ width: "70%", height: "100%" }}>
-            <ThaiTitleText style={styles.trashName}>
-              {props.wasteType}
-            </ThaiTitleText>
-          </View>
-          {/* Check - UnCheck */}
-          {props.editingMode ? (
-            <View
-              style={{
-                width: "30%",
-                height: "100%",
-                alignSelf: "flex-end"
-              }}
-            >
-              <Text
-                style={{
-                  color: isNaN(props.UI_diff)
-                    ? null
-                    : props.UI_diff > 0
-                    ? "green"
-                    : "red"
-                }}
-              >
-                {props.UI_diff ? props.UI_diff : null}
-              </Text>
-            </View>
-          ) : !props.sellingMode ? null : (
-            <TouchableWithoutFeedback
-              style={{
-                width: "30%",
-                height: "100%",
-                alignSelf: "flex-end"
-              }}
-              onPress={() => {
-                setIsSelected(previousState => !previousState);
-                // put the amouth of this trash into state
-                props.dispatchAmountTrashsState(props.selectedHandler());
-              }}
-            >
-              <MaterialIcons
-                name={isSelected ? "check-box" : "check-box-outline-blank"}
-                size={20}
-                color={Colors.primary}
-              />
-            </TouchableWithoutFeedback>
-          )}
+        {/* Trash Name */}
+        <View style={{ width: "80%", height: "20%", backgroundColor: "red" }}>
+          <ThaiTitleText style={styles.trashName}>
+            {props.wasteType}
+          </ThaiTitleText>
         </View>
+        {/* Check - UnCheck */}
+        {!props.sellingMode ? null : (
+          <TouchableWithoutFeedback
+            style={{
+              width: "30%",
+              height: "100%",
+              alignSelf: "flex-end"
+            }}
+            onPress={() => {
+              setIsSelected(previousState => !previousState);
+              // put the amouth of this trash into state
+              props.dispatchAmountTrashsState(props.selectedHandler());
+            }}
+          >
+            <MaterialIcons
+              name={isSelected ? "check-box" : "check-box-outline-blank"}
+              size={20}
+              color={Colors.primary}
+            />
+          </TouchableWithoutFeedback>
+        )}
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
           <ThaiText style={styles.trashDisposal}>
@@ -197,33 +176,15 @@ export default TrashCard = props => {
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
         </View>
-        {!props.editingMode && !isSelected ? (
-          <View
-            style={{
-              ...styles.descriptionRow,
-              flexDirection: "row",
-              justifyContent: "center",
-              padding: 5
-            }}
-          >
-            <AmountOfTrash amountOfTrash={props.amountOfTrash} />
-          </View>
-        ) : (
-          <View
-            style={{
-              ...styles.descriptionRow,
-              flexDirection: "row",
-              justifyContent: "center",
-              padding: 5
-            }}
-          >
-            <AdjustAmountOfTrash
-              wasteType={props.wasteType}
-              amountOfTrash={props.amountOfTrash}
-              dispatchAmountTrashsState={props.dispatchAmountTrashsState}
-              UI_disabledMinus={props.UI_disabledMinus}
-            />
-          </View>
+        {!props.editingMode && !isSelected ? null : (
+          <AdjustAmountOfTrash
+            wasteType={props.wasteType}
+            amountOfTrash={props.amountOfTrash}
+            dispatchAmountTrashsState={props.dispatchAmountTrashsState}
+            UI_disabledMinus={props.UI_disabledMinus}
+            UI_diff={props.UI_diff}
+            style={{ alignSelf: "center", alignItems: "center" }}
+          />
         )}
       </View>
     </View>
@@ -235,7 +196,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 10
   },
-  descriptionContainer: {},
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
@@ -246,9 +206,6 @@ const styles = StyleSheet.create({
   },
   trashAdjustPrice: {
     fontSize: 12
-  },
-  amountOfTrash: {
-    fontSize: 14
   },
   trashDisposal: {
     fontSize: 12

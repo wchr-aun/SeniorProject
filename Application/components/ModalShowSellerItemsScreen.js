@@ -4,14 +4,10 @@ import {
   View,
   Dimensions,
   Button,
-  FlatList,
-  ActivityIndicator,
-  BackHandler,
-  KeyboardAvoidingView,
-  TouchableOpacity,
   Modal,
   Text,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import Colors from "../constants/Colors";
 import { Dropdown } from "react-native-material-dropdown";
@@ -20,6 +16,8 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import ThaiText from "./ThaiText";
+
+const ADD_WASTE = "ADD_WASTE";
 
 export default ModalShowSellersItemsScreen = props => {
   const [wasteType, setWasteType] = useState();
@@ -99,7 +97,12 @@ export default ModalShowSellersItemsScreen = props => {
               title={"Add it"}
               color={Colors.primary}
               onPress={() => {
-                props.addNewWasteHandler(wasteType, parseInt(amount, 10));
+                // props.addNewWasteHandler(wasteType, parseInt(amount, 10));
+                props.dispatchAmountTrashsState({
+                  type: ADD_WASTE,
+                  wasteType,
+                  amount: parseInt(amount, 10)
+                });
                 props.setModalVisible(false);
               }}
             />

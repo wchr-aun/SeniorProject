@@ -7,10 +7,9 @@ import {
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  Platform
+  TouchableOpacity
 } from "react-native";
-import { AppLoading } from "expo";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -35,20 +34,17 @@ const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
 const CANCEL = "CANCEL";
-
-// function cacheFonts(fonts) {
-//   return fonts.map(font => Font.loadAsync(font));
-// }
+const CONFIRM_SELLERITEMS = "CONFIRM_SELLERITEMS";
 
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
   let updatedSellerItems = [...state.sellerItemsNew];
-  console.log("state.sellerItemsOld");
+  console.log("--------------- Current state ----------------");
   console.log(state);
 
   switch (action.type) {
     case SET_WASTE:
-      console.log("SET WASTE local Reducer Run");
+      console.log("SET WASTE local Reducer Run"); //updating
       let sellerItemsOld = [];
       [...action.sellerItemsNew].forEach((item, index) => {
         sellerItemsOld.push({
@@ -63,33 +59,50 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsNew: [...action.sellerItemsNew],
         sellerItemsOld
       };
+    case CONFIRM_SELLERITEMS:
+      // new sellerItemsNew to sellerItemsOld
+      return {
+        ...state,
+        sellerItemsOld: JSON.parse(JSON.stringify(state.sellerItemsNew))
+      };
     case ADD_WASTE:
       console.log("ADD_WASTE local Reducer Run");
-      console.log(updatedSellerItems);
-      console.log(action);
-      // change or add
+      // change or add ---> no problem
       updatedSellerItems.some((item, index) => {
         if (item.wasteType === action.wasteType) {
           updatedSellerItems[index].amount =
             updatedSellerItems[index].amount + action.amount;
-          updatedSellerItems[index].UI_diff =
-            updatedSellerItems[index].amount -
-            state.sellerItemsOld[index].amount;
+
+          if (state.sellerItemsOld[index]) {
+            updatedSellerItems[index].UI_diff =
+              updatedSellerItems[index].amount -
+              state.sellerItemsOld[index].amount;
+          } else {
+            updatedSellerItems[index].UI_diff =
+              updatedSellerItems[index].amount;
+          }
           updatedSellerItems[index].UI_disabledMinus = false;
           founded = true;
           return true;
         }
       });
+      // this this problem
       if (!founded) {
         console.log("ADD_WASTE_NEW_TYPE");
         updatedSellerItems.push({
-          ...action.newSellerItem,
-          UI_diff: action.newSellerItem.amount
+          amount: action.amount,
+          wasteDescription: action.wasteDescription
+            ? action.wasteDescription
+            : "",
+          wasteDisposal: action.wasteDisposal ? action.wasteDisposal : "",
+          wasteType: action.wasteType,
+          UI_diff: action.amount,
+          updatedSellerItems: false
         });
       }
       return {
         ...state,
-        sellerItemsNew: updatedSellerItems
+        sellerItemsNew: [...updatedSellerItems]
       };
     case MINUS_WASTE:
       console.log("MINUS_TRASH local Reducer Run");
@@ -99,9 +112,16 @@ const trashsModifyingReducer = (state, action) => {
           founded = true;
           updatedSellerItems[index].amount =
             updatedSellerItems[index].amount - action.amount;
-          updatedSellerItems[index].UI_diff =
-            updatedSellerItems[index].amount -
-            state.sellerItemsOld[index].amount;
+
+          if (state.sellerItemsOld[index]) {
+            updatedSellerItems[index].UI_diff =
+              updatedSellerItems[index].amount -
+              state.sellerItemsOld[index].amount;
+          } else {
+            updatedSellerItems[index].UI_diff =
+              updatedSellerItems[index].amount;
+          }
+
           if (updatedSellerItems[index].amount === 0)
             updatedSellerItems[index].UI_disabledMinus = true;
         }
@@ -125,29 +145,12 @@ const trashsModifyingReducer = (state, action) => {
     case CANCEL:
       return {
         ...state,
-        sellerItemsNew: []
+        sellerItemsNew: JSON.parse(JSON.stringify(state.sellerItemsOld))
       };
   }
 };
 
 const ShowAllUserTrashScreen = props => {
-  // // pre-loading
-  // const [assetReady, setAssetReady] = useState(false);
-  // const fetchAsset = useCallback(async () => {
-  //   const fontAssets = cacheFonts([AntDesign.font]);
-
-  //   await Promise.all([...fontAssets]);
-  // }, []);
-
-  // if (!assetReady) {
-  //   return (
-  //     <AppLoading
-  //       startAsync={fetchAsset}
-  //       onFinish={() => setAssetReady(true)}
-  //       onError={console.warn}
-  //     />
-  //   );
-  // }
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -160,12 +163,6 @@ const ShowAllUserTrashScreen = props => {
       BackHandler.removeEventListener();
     };
   });
-
-  // provide for editing button when change to editing mode
-  const [editingMode, setEditingMode] = useState(false);
-  useEffect(() => {
-    props.navigation.setParams({ setEditingMode });
-  }, [setEditingMode]);
 
   // trash user snapshot
   const [isLoading, setIsLoading] = useState(false);
@@ -185,9 +182,17 @@ const ShowAllUserTrashScreen = props => {
     trashsModifyingReducer,
     {
       sellerItemsNew: [],
-      sellerItemsOld: sellerItemsOld
+      sellerItemsOld: []
     }
   );
+
+  // provide for editing button when change to editing mode
+  const [editingMode, setEditingMode] = useState(false);
+  useEffect(() => {
+    props.navigation.setParams({ setEditingMode });
+    props.navigation.setParams({ editingMode });
+    props.navigation.setParams({ confirmHandler });
+  }, [editingMode, setEditingMode, trashsState]);
 
   // Callback fn
   const loadSellerItems = useCallback(async () => {
@@ -233,23 +238,36 @@ const ShowAllUserTrashScreen = props => {
   useEffect(() => {
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      sellerItemsNew: [...sellerItemsOld]
+      sellerItemsNew: JSON.parse(JSON.stringify(sellerItemsOld)),
+      sellerItemsOld: JSON.parse(JSON.stringify(sellerItemsOld))
     });
   }, [sellerItemsOld]);
 
-  // For 'addWaste' handler
-  const confirmHandler = async () => {
-    setEditingMode(false);
-    setIsRefreshing(true);
-    // update new wasteData on redux
-    dispatch(sellerItemsAction.setUserWaste(trashsState.sellerItemsNew));
-    // update new wasteData on local redux
-    dispatchAmountTrashsState({
-      type: SET_WASTE,
-      sellerItemsNew: trashsState.sellerItemsNew
-    });
-    setIsRefreshing(false);
+  const confirmSubHandler = () => {
+    console.log("trashsState");
+    console.log(trashsState);
   };
+
+  // For 'addWaste' handler
+  const confirmHandler = useCallback(async () => {
+    setEditingMode(false);
+    confirmSubHandler();
+    // setIsRefreshing(true);
+
+    // // update new wasteData on redux
+    // dispatch(
+    //   sellerItemsAction.setUserWaste(
+    //     trashsState.sellerItemsNew.length !== 0
+    //       ? trashsState.sellerItemsNew
+    //       : trashsState.sellerItemsOld
+    //   )
+    // );
+    // // update new wasteData on local redux
+    // dispatchAmountTrashsState({
+    //   type: CONFIRM_SELLERITEMS
+    // });
+    // setIsRefreshing(false);
+  }, [trashsState, dispatchAmountTrashsState, setModalVisible, modalVisible]);
 
   //add spinner loading
   if (isLoading) {
@@ -266,21 +284,23 @@ const ShowAllUserTrashScreen = props => {
         setModalVisible={setModalVisible}
         data={wasteTypesRedux}
         modalVisible={modalVisible}
-        addNewWasteHandler={(wasteType, amount) => {
-          dispatchAmountTrashsState({
-            type: ADD_WASTE,
-            wasteType,
-            amount
-          });
-          setModalVisible(false);
-        }}
+        dispatchAmountTrashsState={dispatchAmountTrashsState}
+        // addNewWasteHandler={(wasteType, amount) => {
+        //   dispatchAmountTrashsState({
+        //     type: ADD_WASTE,
+        //     wasteType,
+        //     amount
+        //   });
+        //   setModalVisible(false);
+        // }}
       />
     );
   }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-      <View
+      <LinearGradient
+        colors={Colors.linearGradientB}
         style={{
           ...styles.screen,
           width: wp("100%"),
@@ -289,8 +309,6 @@ const ShowAllUserTrashScreen = props => {
             Header.HEIGHT -
             getStatusBarHeight() -
             AppVariableSetting.bottomBarHeight,
-          borderWidth: 2,
-          borderColor: "red",
           alignItems: "center"
         }}
       >
@@ -298,21 +316,18 @@ const ShowAllUserTrashScreen = props => {
           style={{
             width: "100%",
             height: "88%",
-            padding: 10,
-            borderColor: "yellow",
-            borderWidth: 3,
-            alignItems: "center",
-            backgroundColor: Colors.primary_variant
+            paddingHorizontal: 10,
+            alignItems: "center"
           }}
         >
           <FlatList
+            data={trashsState.sellerItemsNew}
             refreshing={isRefreshing}
             onRefresh={loadSellerItems}
             style={{
               flex: 1
             }}
             keyExtractor={item => item.wasteType}
-            data={trashsState.sellerItemsNew}
             renderItem={itemData => (
               <TrashCard
                 imgUrl={
@@ -323,6 +338,8 @@ const ShowAllUserTrashScreen = props => {
                 wasteDescription={itemData.item.wasteDescription}
                 trashDisposal={null}
                 amountOfTrash={itemData.item.amount}
+                UI_diff={itemData.item.UI_diff}
+                UI_disabledMinus={itemData.item.UI_disabledMinus}
                 trashAdjustPrice={
                   itemData.item.adjustedPrice
                     ? itemData.item.adjustedPrice
@@ -331,8 +348,6 @@ const ShowAllUserTrashScreen = props => {
                 style={styles.eachTrashCard}
                 editingMode={editingMode}
                 dispatchAmountTrashsState={dispatchAmountTrashsState}
-                UI_diff={itemData.item.UI_diff}
-                UI_disabledMinus={itemData.item.UI_disabledMinus}
               />
             )}
           />
@@ -365,8 +380,6 @@ const ShowAllUserTrashScreen = props => {
                 style={{
                   ...styles.navigateBtn,
                   backgroundColor: Colors.on_primary,
-                  borderColor: Colors.primary_variant,
-                  borderWidth: 1,
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center"
@@ -387,21 +400,13 @@ const ShowAllUserTrashScreen = props => {
                   />
                 </View>
               </TouchableOpacity>
-
-              {/* <View style={styles.navigateBtn}>
-                <Button
-                  title="Confirm Amount"
-                  color={Colors.primary}
-                  onPress={confirmHandler}
-                />
-              </View> */}
             </>
           ) : (
             <>
-              <View style={styles.navigateBtn}>
+              <View style={{ ...styles.navigateBtn }}>
                 <Button
-                  title="Selling Trash infomation"
-                  color={Colors.secondary}
+                  title="ขายขยะ"
+                  color={Colors.primary_variant}
                   onPress={() => {
                     props.navigation.navigate({
                       routeName: "SellingTrashScreen",
@@ -413,25 +418,31 @@ const ShowAllUserTrashScreen = props => {
             </>
           )}
         </View>
-      </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
 
 ShowAllUserTrashScreen.navigationOptions = navData => {
   let setEditingMode = navData.navigation.getParam("setEditingMode");
+  let editingMode = navData.navigation.getParam("editingMode");
+  let confirmHandler = navData.navigation.getParam("confirmHandler");
 
   return {
     headerTitle: "ขยะที่สะสมไว้",
     headerRight: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title="Cart"
-          iconName={"square-edit-outline"}
-          onPress={() => {
-            setEditingMode(true);
-          }}
-        />
+        {editingMode ? (
+          <Item title="Cart" iconName={"check"} onPress={confirmHandler} />
+        ) : (
+          <Item
+            title="Cart"
+            iconName={"square-edit-outline"}
+            onPress={() => {
+              setEditingMode(true);
+            }}
+          />
+        )}
       </HeaderButtons>
     )
   };
@@ -441,15 +452,10 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  eachTrashCard: {
-    marginBottom: 5,
-    backgroundColor: Colors.on_primary
-  },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   navigateBtn: {
-    width: wp("40%"),
-    height: hp("8%"),
-    padding: wp("5%"),
+    width: "40%",
+    height: "100%",
     borderRadius: 5
   }
 });

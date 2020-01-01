@@ -1,7 +1,8 @@
 export default {
   primary: "#272727",
-  primary_variant: "#4c8566",
+  primary_variant: "#18b87d",
   on_primary: "#fafafa",
+  on_semi_primary: "#fafafa",
   screen: "#fafafa",
   secondary: "#0084ff",
   on_secondary: "#effffb",
