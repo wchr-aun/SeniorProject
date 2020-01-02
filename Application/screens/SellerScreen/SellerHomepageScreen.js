@@ -62,19 +62,20 @@ export default SellerHomepageScreen = props => {
 
   // For User signout
   const dispatch = useDispatch();
-  const [isSignin, setIsSignin] = useState(true);
   const signOutHandler = async () => {
     setIsLoading(true);
     let result = await dispatch(authAction.signout());
-    setIsLoading(false);
-    setIsSignin(result);
+    
+    /* Maybe clear redux storing in the ram
+    Look at this thread, might be useful, probably:
+    https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store */
+
+    if (result) props.navigation.navigate("StartupScreen");
+    else {
+      setIsLoading(false);
+      /* Make an alert or something, I don't know. */
+    };
   };
-  useEffect(() => {
-    // If not do navigate in useEffect, 'Warning: Can't perform a React state update on an unmounted component.' occur
-    if (!isSignin) {
-      props.navigation.navigate("StartupScreen");
-    }
-  }, [isSignin]);
 
   return (
     <View
