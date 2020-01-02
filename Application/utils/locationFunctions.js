@@ -50,8 +50,6 @@ const getLocationHandler = async () => {
 export const getCurrentLocation = async () => {
   // do async task-1
   let userAddr = await getLocationHandler();
-  console.log("userAddr from locationFunction.js");
-  console.log(userAddr);
   return userAddr;
 };
 

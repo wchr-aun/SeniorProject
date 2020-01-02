@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -40,10 +40,15 @@ export default ModalShowInteractMap = props => {
       lat: event.nativeEvent.coordinate.latitude,
       lng: event.nativeEvent.coordinate.longitude
     });
-    console.log(event);
-    console.log("selectedLocation");
-    console.log(selectedLocation);
   };
+
+  //   // listen selectedLocation
+  //   useEffect(() => {
+  //     console.log("selectedLocation and setAddrUserObj...");
+  //     console.log(selectedLocation);
+  //     props.setAddrUserObj(selectedLocation);
+  //     console.log(selectedLocation);
+  //   }, [selectedLocation]);
 
   let markerCoordinates;
 
@@ -74,7 +79,7 @@ export default ModalShowInteractMap = props => {
         <View
           style={{
             width: "100%",
-            height: "90%",
+            height: "80%",
             alignSelf: "center",
             paddingTop: getStatusBarHeight()
           }}
@@ -89,13 +94,28 @@ export default ModalShowInteractMap = props => {
             )}
           </MapView>
         </View>
-        <View
-          style={{ width: "100%", height: "10%", paddingVertical: wp("3%") }}
-        >
-          <Button
-            title="Hide Modal"
-            onPress={() => props.setModalVisible(false)}
-          />
+        <View style={{ width: "100%", height: "10%", flexDirection: "row" }}>
+          <View
+            style={{ width: "40%", height: "100%", paddingVertical: wp("3%") }}
+          >
+            <Button
+              title="ยกเลิก"
+              onPress={() => props.setModalVisible(false)}
+              color={Colors.primary}
+            />
+          </View>
+          <View
+            style={{ width: "40%", height: "100%", paddingVertical: wp("3%") }}
+          >
+            <Button
+              title="ยืนยัน"
+              onPress={() => {
+                props.setModalVisible(false);
+                props.setAddrUserObj(selectedLocation);
+              }}
+              color={Colors.primary_variant}
+            />
+          </View>
         </View>
       </View>
 

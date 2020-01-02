@@ -132,7 +132,8 @@ export default UserSignupScreen = props => {
       password: sha256(formState.inputValues.password),
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
-      addr: formState.inputValues.addr,
+      // addr: formState.inputValues.addr,
+      addr: addrUserObj,
       phoneNo: "+66" + formState.inputValues.phoneNo.toString()
     };
 
@@ -167,10 +168,18 @@ export default UserSignupScreen = props => {
   );
 
   const [addrModalVisible, setAddrModalVisible] = useState(false);
+  const [addrUserObj, setAddrUserObj] = useState(""); // really used
   const [addrUserInput, setAddrUserInput] = useState("");
   const getCurrentLocationHandler = async () => {
-    let userAddr = await getCurrentLocation();
+    let userAddrObj = await getCurrentLocation();
+    setAddrUserObj(userAddrObj);
   };
+
+  // Check user addr
+  useEffect(() => {
+    console.log("This is an user address before sending signup form");
+    console.log(addrUserObj);
+  }, [addrUserObj]);
 
   // Search map from user input form
   const searchMapHandler = async () => {
@@ -197,6 +206,7 @@ export default UserSignupScreen = props => {
         modalVisible={addrModalVisible}
         latitude={addrUserInput.latitude}
         longitude={addrUserInput.longitude}
+        setAddrUserObj={setAddrUserObj}
       />
     );
   }
