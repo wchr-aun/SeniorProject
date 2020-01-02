@@ -35,8 +35,23 @@ const AmountOfTrash = props => {
       <View>
         <ThaiText style={{ fontSize: 8 }}>จำนวน</ThaiText>
       </View>
-      <View style={{ width: wp("20%") }}>
-        <Text style={{ textAlign: "center", fontSize: wp("7%") }}>
+      <View
+        style={{
+          width: wp("20%")
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: wp("7%"),
+            color:
+              isNaN(props.UI_diff) || props.UI_diff === 0
+                ? "black"
+                : props.UI_diff > 0
+                ? "green"
+                : Colors.error
+          }}
+        >
           {props.amountOfTrash.toString()}
         </Text>
       </View>
@@ -125,7 +140,10 @@ export default TrashCard = props => {
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
-        <AmountOfTrash amountOfTrash={props.amountOfTrash} />
+        <AmountOfTrash
+          amountOfTrash={props.amountOfTrash}
+          UI_diff={props.UI_diff}
+        />
       </View>
 
       <View

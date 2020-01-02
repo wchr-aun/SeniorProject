@@ -98,11 +98,6 @@ export default ModalShowSellersItemsScreen = props => {
               color={Colors.primary}
               onPress={() => {
                 props.addNewWasteHandler(wasteType, parseInt(amount, 10));
-                // props.dispatchAmountTrashsState({
-                //   type: ADD_WASTE,
-                //   wasteType,
-                //   amount: parseInt(amount, 10)
-                // });
                 props.setModalVisible(false);
               }}
             />

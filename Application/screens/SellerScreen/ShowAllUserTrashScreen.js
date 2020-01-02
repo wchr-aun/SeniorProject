@@ -39,11 +39,6 @@ const CONFIRM_SELLERITEMS = "CONFIRM_SELLERITEMS";
 const trashsModifyingReducer = (state, action) => {
   let founded = false;
   let updatedSellerItems = [...state.sellerItemsNew];
-  console.log("----------------> action " + action.type);
-  console.log("--------------- Current state ----------------");
-  console.log(state);
-  console.log("--------------- Current Action ----------------");
-  console.log(action);
 
   switch (action.type) {
     case SET_WASTE:
@@ -59,17 +54,9 @@ const trashsModifyingReducer = (state, action) => {
       });
       return {
         ...state,
-        sellerItemsNew: [...action.sellerItemsNew],
+        // sellerItemsNew: [...action.sellerItemsNew],
+        sellerItemsNew: JSON.parse(JSON.stringify(sellerItemsOld)),
         sellerItemsOld
-      };
-    case CONFIRM_SELLERITEMS:
-      // new sellerItemsNew to sellerItemsOld
-      console.log("!!!!!!!!!!!!!!!!! CONFIRM_SELLERITEMS Reducer Run");
-      console.log("state.sellerItemsNew");
-      console.log(state.sellerItemsNew);
-      return {
-        ...state,
-        sellerItemsOld: JSON.parse(JSON.stringify(state.sellerItemsNew))
       };
     case ADD_WASTE:
       console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
@@ -241,8 +228,6 @@ const ShowAllUserTrashScreen = props => {
   }, [sellerItemsRedux]);
 
   const confirmHandlerTricker = useCallback(() => {
-    console.log("------------ From confirmHandlerTricker, show trashsState");
-    console.log(trashsState);
     confirmHandler();
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -250,12 +235,12 @@ const ShowAllUserTrashScreen = props => {
   const confirmHandler = useCallback(async () => {
     setEditingMode(false);
     setIsRefreshing(true);
-    console.log("------------ From confirmHandler, show trashsState");
-    console.log(trashsState);
 
     // update new wasteData on local redux
     dispatchAmountTrashsState({
-      type: CONFIRM_SELLERITEMS
+      // type: CONFIRM_SELLERITEMS
+      type: SET_WASTE,
+      sellerItemsNew: [...trashsState.sellerItemsNew]
     });
     // update new wasteData on redux
     await dispatch(sellerItemsAction.setUserWaste(trashsState.sellerItemsNew));
@@ -268,7 +253,7 @@ const ShowAllUserTrashScreen = props => {
     props.navigation.setParams({ editingMode });
     props.navigation.setParams({ setEditingMode });
     props.navigation.setParams({ confirmHandlerTricker });
-  }, [editingMode, setEditingMode]);
+  }, [editingMode, setEditingMode, confirmHandlerTricker]);
 
   //add spinner loading
   if (isLoading) {
@@ -388,7 +373,7 @@ const ShowAllUserTrashScreen = props => {
               >
                 <View style={{ margin: 5 }}>
                   <ThaiText
-                    style={{ fontSize: 18, color: Colors.primary_variant }}
+                    style={{ fontSize: 12, color: Colors.primary_variant }}
                   >
                     Add new waste
                   </ThaiText>

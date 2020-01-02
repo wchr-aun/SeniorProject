@@ -6,7 +6,9 @@ import {
   StyleSheet,
   AsyncStorage,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity,
+  Button
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +23,12 @@ import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseFunctions from "../utils/firebaseFunctions";
 import ThaiTitleText from "../components/ThaiTitleText";
+import ThaiText from "../components/ThaiText";
+import {
+  getCurrentLocation,
+  getManualStringLocation
+} from "../utils/locationFunctions";
+import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -53,6 +61,8 @@ const formReducer = (state, action) => {
 export default UserSignupScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentAddr, setCurrentAddr] = useState(false);
+
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
@@ -63,7 +73,11 @@ export default UserSignupScreen = props => {
       confirmpassword: "",
       name: "",
       surname: "",
-      addr: "",
+      shallowAddr: "",
+      tumbon: "",
+      district: "",
+      province: "",
+      provinceNumber: "",
       phoneNo: ""
     },
     inputValidities: {
@@ -73,7 +87,11 @@ export default UserSignupScreen = props => {
       confirmpassword: false,
       name: false,
       surname: false,
-      addr: false,
+      shallowAddr: false,
+      tumbon: false,
+      district: false,
+      province: false,
+      provinceNumber: false,
       phoneNo: false
     },
     allFormIsValid: false
@@ -85,9 +103,7 @@ export default UserSignupScreen = props => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An error has occurred!", error, [
-        { text: "OK" }
-      ]);
+      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
       setError("");
     }
   }, [error]);
@@ -123,13 +139,15 @@ export default UserSignupScreen = props => {
     firebaseFunctions
       .createAccount(user)
       .then(() => {
-        AsyncStorage.clear().then(() => {
-          setIsLoading(false);
-          props.navigation.navigate("ConfigAccountScreen");
-        }).catch(err => {
-          setIsLoading(false);
-          setError(err);
-        });
+        AsyncStorage.clear()
+          .then(() => {
+            setIsLoading(false);
+            props.navigation.navigate("ConfigAccountScreen");
+          })
+          .catch(err => {
+            setIsLoading(false);
+            setError(err);
+          });
       })
       .catch(err => {
         setIsLoading(false);
@@ -147,6 +165,41 @@ export default UserSignupScreen = props => {
       });
     }
   );
+
+  const [addrModalVisible, setAddrModalVisible] = useState(false);
+  const [addrUserInput, setAddrUserInput] = useState("");
+  const getCurrentLocationHandler = async () => {
+    let userAddr = await getCurrentLocation();
+  };
+
+  // Search map from user input form
+  const searchMapHandler = async () => {
+    // do async task
+    let userAddrString =
+      formState.inputValues.shallowAddr +
+      " ตำบล " +
+      formState.inputValues.tumbon +
+      " อำเภอ " +
+      formState.inputValues.district +
+      " จังหวัด " +
+      formState.inputValues.province +
+      " " +
+      formState.inputValues.provinceNumber;
+    let result = await getManualStringLocation(userAddrString);
+    setAddrUserInput(result);
+    setAddrModalVisible(true);
+  };
+
+  if (addrModalVisible) {
+    return (
+      <ModalShowInteractMap
+        setModalVisible={setAddrModalVisible}
+        modalVisible={addrModalVisible}
+        latitude={addrUserInput.latitude}
+        longitude={addrUserInput.longitude}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -243,7 +296,7 @@ export default UserSignupScreen = props => {
               initialValue=""
               iconName="account-multiple"
             />
-            <Input
+            {/* <Input
               id="addr"
               label="ที่อยู่"
               keyboardType="default"
@@ -254,7 +307,78 @@ export default UserSignupScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue=""
               iconName="account-card-details"
+            /> */}
+            <View
+              style={{ width: "100%", marginVertical: 3, alignSelf: "center" }}
+            >
+              <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
+                ที่อยู่ในการจัดส่ง
+              </ThaiText>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setCurrentAddr(preState => !preState);
+                getCurrentLocationHandler();
+              }}
+              style={{ flexDirection: "row" }}
+            >
+              <MaterialIcons
+                name={currentAddr ? "check-box" : "check-box-outline-blank"}
+                size={15}
+                color={Colors.primary}
+              />
+              <View style={{ marginHorizontal: 4 }}>
+                <ThaiText style={{ fontSize: 10 }}>
+                  ใช้ที่อยู่ปัจจุบัน?
+                </ThaiText>
+              </View>
+            </TouchableOpacity>
+            <Input
+              id="shallowAddr"
+              label="ที่อยู่"
+              keyboardType="default"
+              errorText="Please enter a valid address."
+              onInputChange={inputChangeHandler}
+              initialValue=""
+              iconName="account-card-details"
             />
+            <Input
+              id="tumbon"
+              label="ตำบล"
+              keyboardType="default"
+              errorText="Please enter a valid address."
+              onInputChange={inputChangeHandler}
+              initialValue=""
+              iconName="account-card-details"
+            />
+            <Input
+              id="district"
+              label="อำเภอ"
+              keyboardType="default"
+              errorText="Please enter a valid address."
+              onInputChange={inputChangeHandler}
+              initialValue=""
+              iconName="account-card-details"
+            />
+            <Input
+              id="province"
+              label="จังหวัด"
+              keyboardType="default"
+              errorText="Please enter a valid address."
+              onInputChange={inputChangeHandler}
+              initialValue=""
+              iconName="account-card-details"
+            />
+            <Input
+              id="provinceNumber"
+              label="รหัสไปรษณีย์"
+              keyboardType="default"
+              errorText="Please enter a valid address."
+              onInputChange={inputChangeHandler}
+              initialValue=""
+              iconName="account-card-details"
+            />
+            <Button onPress={searchMapHandler} title="Search Map" />
             <Input
               id="phoneNo"
               label="เบอร์โทรศัพท์"
