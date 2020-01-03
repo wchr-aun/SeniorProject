@@ -35,3 +35,9 @@ export default CustomButton = props => {
     </TouchableOpacity>
   );
 };
+
+{
+  /* <CustomButton btnColor={} onPress={} btnTitleColor={} btnTitleFontSize={}>
+                  
+</CustomButton> */
+}

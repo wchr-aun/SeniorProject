@@ -4,8 +4,7 @@ import {
   FlatList,
   View,
   Dimensions,
-  ActivityIndicator,
-  Alert
+  ActivityIndicator
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,7 +24,7 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 
 export default SellerHomepageScreen = props => {
-  // ************************** For UI Testing, not relate to this project *************************
+  // --------------------------- For UI Testing, not relate to this project ---------------------
   const [goToUITestingScreen, setGoToUITestingScreen] = useState(0);
   useEffect(() => {
     if (goToUITestingScreen === 10) {
@@ -36,14 +35,6 @@ export default SellerHomepageScreen = props => {
 
   // Loading effect
   const [isLoading, setIsLoading] = useState(true);
-
-  // error handling
-  const [error, setError] = useState("");
-  useEffect(() => {
-    if (error) {
-      Alert.alert("การแจ้งเตือน", error, [{ text: "OK" }]);
-    }
-  }, [error]);
 
   // Get user profile
   const userProfile = useSelector(state => state.userProfile.user);
@@ -56,11 +47,7 @@ export default SellerHomepageScreen = props => {
   // Get transactions for initially
   const transactions = useSelector(state => state.transactions.transactions);
   useEffect(() => {
-    try {
-      dispatch(transactionAction.fetchTransaction("seller"));
-    } catch (err) {
-      setError(err.message);
-    }
+    dispatch(transactionAction.fetchTransaction());
   }, []);
 
   // For looking into transaction detail
@@ -78,7 +65,7 @@ export default SellerHomepageScreen = props => {
   const signOutHandler = async () => {
     setIsLoading(true);
     let result = await dispatch(authAction.signout());
-
+    
     /* Maybe clear redux storing in the ram
     Look at this thread, might be useful, probably:
     https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store */
@@ -87,7 +74,7 @@ export default SellerHomepageScreen = props => {
     else {
       setIsLoading(false);
       /* Make an alert or something, I don't know. */
-    }
+    };
   };
 
   return (
@@ -96,9 +83,9 @@ export default SellerHomepageScreen = props => {
         ...styles.screen,
         width: wp("100%"),
         height:
-          hp("100%") +
-          getStatusBarHeight() -
-          AppVariableSetting.bottomBarHeight,
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight +
+          getStatusBarHeight(),
         paddingTop: getStatusBarHeight()
       }}
     >

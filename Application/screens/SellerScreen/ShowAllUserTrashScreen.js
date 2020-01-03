@@ -27,7 +27,9 @@ import ThaiText from "../../components/ThaiText";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import TrashCard from "../../components/TrashCard";
 import Colors from "../../constants/Colors";
+
 import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
+import CustomButton from "../../components/UI/CustomButton";
 
 const ADD_WASTE = "ADD_WASTE";
 const MINUS_WASTE = "MINUS_WASTE";
@@ -291,10 +293,7 @@ const ShowAllUserTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height:
-            hp("100%") -
-            Header.HEIGHT -
-            getStatusBarHeight() -
-            AppVariableSetting.bottomBarHeight,
+            hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight,
           alignItems: "center"
         }}
       >
@@ -340,68 +339,74 @@ const ShowAllUserTrashScreen = props => {
         </View>
         <View
           style={{
-            marginVertical: 5,
-            flexDirection: "row",
+            paddingVertical: 5,
             justifyContent: "center",
+            alignItems: "center",
             width: "100%",
             height: "12%"
           }}
         >
           {editingMode ? (
-            <>
-              <View style={{ ...styles.navigateBtn }}>
-                <Button
-                  title="Cancel"
-                  color={Colors.primary}
-                  onPress={() => {
-                    setEditingMode(false);
-                    dispatchAmountTrashsState({ type: "CANCEL" });
-                  }}
-                />
-              </View>
-              <TouchableOpacity
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center"
+              }}
+            >
+              <CustomButton
+                btnColor={Colors.primary}
+                onPress={() => {
+                  setEditingMode(false);
+                  dispatchAmountTrashsState({ type: "CANCEL" });
+                }}
+                btnTitleColor={Colors.on_primary}
+                btnTitleFontSize={14}
+                style={{ ...styles.navigateBtn }}
+              >
+                ยกเลิก
+              </CustomButton>
+
+              <CustomButton
+                btnColor={Colors.on_primary}
                 onPress={() => {
                   setModalVisible(true);
                 }}
+                btnTitleColor={Colors.on_primary}
+                btnTitleFontSize={14}
                 style={{
-                  ...styles.navigateBtn,
-                  backgroundColor: Colors.on_primary,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center"
+                  ...styles.navigateBtn
                 }}
               >
-                <View style={{ margin: 5 }}>
-                  <ThaiText
-                    style={{ fontSize: 12, color: Colors.primary_variant }}
-                  >
-                    Add new waste
-                  </ThaiText>
-                </View>
-                <View style={{ margin: 5 }}>
-                  <AntDesign
-                    name="plussquareo"
-                    size={25}
-                    color={Colors.primary_variant}
-                  />
-                </View>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <View style={{ ...styles.navigateBtn }}>
-                <Button
-                  title="ขายขยะ"
+                <ThaiText
+                  style={{ fontSize: 12, color: Colors.primary_variant }}
+                >
+                  เพิ่มขยะ{"   "}
+                </ThaiText>
+                <AntDesign
+                  name="plussquareo"
+                  size={14}
                   color={Colors.primary_variant}
-                  onPress={() => {
-                    props.navigation.navigate({
-                      routeName: "SellingTrashScreen",
-                      params: { sellerItemsNew: trashsState.sellerItemsNew }
-                    });
-                  }}
                 />
-              </View>
-            </>
+              </CustomButton>
+            </View>
+          ) : (
+            <CustomButton
+              btnColor={Colors.primary_variant}
+              onPress={() => {
+                props.navigation.navigate({
+                  routeName: "SellingTrashScreen",
+                  params: { sellerItemsNew: trashsState.sellerItemsNew }
+                });
+              }}
+              btnTitleColor={Colors.on_primary}
+              btnTitleFontSize={14}
+              style={{ ...styles.navigateBtn }}
+            >
+              ขายขยะ
+            </CustomButton>
           )}
         </View>
       </LinearGradient>
@@ -447,8 +452,9 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   navigateBtn: {
     width: "40%",
-    height: "100%",
-    borderRadius: 5
+    height: "80%",
+    borderRadius: 5,
+    marginBottom: 10
   }
 });
 
