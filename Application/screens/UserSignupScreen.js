@@ -27,7 +27,7 @@ import ThaiText from "../components/ThaiText";
 import {
   getCurrentLocation,
   getManualStringLocation
-} from "../utils/library";
+} from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -44,15 +44,21 @@ const formReducer = (state, action) => {
     };
     let updatedAllFormIsValid = true;
     for (const key in updatedValidities)
-      updatedAllFormIsValid = Boolean(
-        updatedAllFormIsValid && updatedValidities[key]
-      );
+      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key]);
+    let updatedAddrFormIsValid = Boolean(
+          updatedValidities["shallowAddr"] &&
+          updatedValidities["subdistrict"] &&
+          updatedValidities["district"] &&
+          updatedValidities["province"] &&
+          updatedValidities["postalCode"]
+        );
 
     return {
       ...state,
       inputValues: updatedValues,
       inputValidities: updatedValidities,
-      allFormIsValid: updatedAllFormIsValid
+      allFormIsValid: updatedAllFormIsValid,
+      addrFormIsValide: updatedAddrFormIsValid
     };
   }
   return state;
@@ -94,7 +100,8 @@ export default UserSignupScreen = props => {
       postalCode: false,
       phoneNo: false
     },
-    allFormIsValid: false
+    allFormIsValid: false,
+    addrFormIsValide: false
   });
 
   useEffect(() => {
@@ -175,6 +182,10 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
+    if (!formState.addrFormIsValide) {
+      setError("Please fill all the addresses");
+      return;
+    }
     let userAddrString =
       formState.inputValues.shallowAddr +
       " ตำบล " +
