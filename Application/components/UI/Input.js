@@ -32,7 +32,7 @@ const inputReducer = (state, action) => {
 export default Input = props => {
   const [inputState, dispatchInputReducer] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : "",
-    isValid: props.initialValid,
+    isValid: props.initialValid ? props.initialValid : false,
     touched: false
   });
 

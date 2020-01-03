@@ -24,10 +24,7 @@ import Colors from "../constants/Colors";
 import firebaseFunctions from "../utils/firebaseFunctions";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
-import {
-  getCurrentLocation,
-  getManualStringLocation
-} from "../utils/libary";
+import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -44,14 +41,16 @@ const formReducer = (state, action) => {
     };
     let updatedAllFormIsValid = true;
     for (const key in updatedValidities)
-      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key]);
+      updatedAllFormIsValid = Boolean(
+        updatedAllFormIsValid && updatedValidities[key]
+      );
     let updatedAddrFormIsValid = Boolean(
-          updatedValidities["shallowAddr"] &&
-          updatedValidities["subdistrict"] &&
-          updatedValidities["district"] &&
-          updatedValidities["province"] &&
-          updatedValidities["postalCode"]
-        );
+      updatedValidities["shallowAddr"] &&
+        updatedValidities["subdistrict"] &&
+        updatedValidities["district"] &&
+        updatedValidities["province"] &&
+        updatedValidities["postalCode"]
+    );
 
     return {
       ...state,
@@ -172,7 +171,8 @@ export default UserSignupScreen = props => {
         isValid: inputValidity,
         inputIdentifier: inputIdentifier
       });
-    }
+    },
+    [formState.allFormIsValid, dispatchFormState]
   );
 
   const [addrModalVisible, setAddrModalVisible] = useState(false);
@@ -182,6 +182,13 @@ export default UserSignupScreen = props => {
     let userAddrObj = await getCurrentLocation();
     setAddrUserObj(userAddrObj);
   };
+
+  // Check formState validity
+  // Check user addr
+  useEffect(() => {
+    console.log("--------------- formState");
+    console.log(formState);
+  }, [formState.inputValidities]);
 
   // Check user addr
   useEffect(() => {
@@ -245,7 +252,6 @@ export default UserSignupScreen = props => {
           titleVar="title"
         >
           <ScrollView keyboardShouldPersistTaps={"handled"}>
-            {/* {error ? <Text style={{ color: "red" }}>{error}</Text> : null} */}
             <Input
               id="username"
               label="ชื่อผู้ใช้"
@@ -257,6 +263,11 @@ export default UserSignupScreen = props => {
                 formState.inputValues.username
                   ? formState.inputValues.username
                   : ""
+              }
+              initialValid={
+                formState.inputValidities.username
+                  ? formState.inputValidities.username
+                  : false
               }
               iconName="account"
             />
@@ -271,6 +282,11 @@ export default UserSignupScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue={
                 formState.inputValues.email ? formState.inputValues.email : ""
+              }
+              initialValid={
+                formState.inputValidities.email
+                  ? formState.inputValidities.email
+                  : false
               }
               iconName="email"
             />
@@ -289,6 +305,11 @@ export default UserSignupScreen = props => {
                   ? formState.inputValues.password
                   : ""
               }
+              initialValid={
+                formState.inputValidities.password
+                  ? formState.inputValidities.password
+                  : false
+              }
               iconName="key-variant"
             />
             <Input
@@ -306,6 +327,11 @@ export default UserSignupScreen = props => {
                   ? formState.inputValues.confirmpassword
                   : ""
               }
+              initialValid={
+                formState.inputValidities.confirmpassword
+                  ? formState.inputValidities.confirmpassword
+                  : false
+              }
               iconName="key-variant"
             />
             <Input
@@ -319,6 +345,11 @@ export default UserSignupScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue={
                 formState.inputValues.name ? formState.inputValues.name : ""
+              }
+              initialValid={
+                formState.inputValidities.name
+                  ? formState.inputValidities.name
+                  : false
               }
               iconName="account"
             />
@@ -335,6 +366,11 @@ export default UserSignupScreen = props => {
                 formState.inputValues.surname
                   ? formState.inputValues.surname
                   : ""
+              }
+              initialValid={
+                formState.inputValidities.surname
+                  ? formState.inputValidities.surname
+                  : false
               }
               iconName="account-multiple"
             />
@@ -374,6 +410,11 @@ export default UserSignupScreen = props => {
                   ? formState.inputValues.shallowAddr
                   : ""
               }
+              initialValid={
+                formState.inputValidities.shallowAddr
+                  ? formState.inputValidities.shallowAddr
+                  : false
+              }
               iconName="account-card-details"
             />
             <Input
@@ -383,7 +424,14 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
               initialValue={
-                formState.inputValues.tumbon ? formState.inputValues.tumbon : ""
+                formState.inputValues.subdistrict
+                  ? formState.inputValues.subdistrict
+                  : ""
+              }
+              initialValid={
+                formState.inputValidities.subdistrict
+                  ? formState.inputValidities.subdistrict
+                  : false
               }
               iconName="account-card-details"
             />
@@ -398,6 +446,11 @@ export default UserSignupScreen = props => {
                   ? formState.inputValues.district
                   : ""
               }
+              initialValid={
+                formState.inputValidities.district
+                  ? formState.inputValidities.district
+                  : false
+              }
               iconName="account-card-details"
             />
             <Input
@@ -411,6 +464,11 @@ export default UserSignupScreen = props => {
                   ? formState.inputValues.province
                   : ""
               }
+              initialValid={
+                formState.inputValidities.province
+                  ? formState.inputValidities.province
+                  : false
+              }
               iconName="account-card-details"
             />
             <Input
@@ -420,9 +478,14 @@ export default UserSignupScreen = props => {
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
               initialValue={
-                formState.inputValues.provinceNumber
-                  ? formState.inputValues.provinceNumber
+                formState.inputValues.postalCode
+                  ? formState.inputValues.postalCode
                   : ""
+              }
+              initialValid={
+                formState.inputValidities.postalCode
+                  ? formState.inputValidities.postalCode
+                  : false
               }
               iconName="account-card-details"
             />
@@ -440,6 +503,11 @@ export default UserSignupScreen = props => {
                 formState.inputValues.phoneNo
                   ? formState.inputValues.phoneNo
                   : ""
+              }
+              initialValid={
+                formState.inputValidities.phoneNo
+                  ? formState.inputValidities.phoneNo
+                  : false
               }
               iconName="cellphone-android"
             />
