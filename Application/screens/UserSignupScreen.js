@@ -112,6 +112,7 @@ export default UserSignupScreen = props => {
   const signupHandler = async () => {
     setIsLoading(true);
 
+    console.log(formState);
     if (!formState.allFormIsValid) {
       setError("Please fill all the inputs");
       setIsLoading(false);
@@ -241,7 +242,11 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid username"
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.username
+                  ? formState.inputValues.username
+                  : ""
+              }
               iconName="account"
             />
             <Input
@@ -253,7 +258,9 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid email address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.email ? formState.inputValues.email : ""
+              }
               iconName="email"
             />
             <Input
@@ -266,7 +273,11 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.password
+                  ? formState.inputValues.password
+                  : ""
+              }
               iconName="key-variant"
             />
             <Input
@@ -279,7 +290,11 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.confirmpassword
+                  ? formState.inputValues.confirmpassword
+                  : ""
+              }
               iconName="key-variant"
             />
             <Input
@@ -291,7 +306,9 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid name."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.name ? formState.inputValues.name : ""
+              }
               iconName="account"
             />
             <Input
@@ -303,21 +320,13 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a valid surname."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.surname
+                  ? formState.inputValues.surname
+                  : ""
+              }
               iconName="account-multiple"
             />
-            {/* <Input
-              id="addr"
-              label="ที่อยู่"
-              keyboardType="default"
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              iconName="account-card-details"
-            /> */}
             <View
               style={{ width: "100%", marginVertical: 3, alignSelf: "center" }}
             >
@@ -349,7 +358,11 @@ export default UserSignupScreen = props => {
               keyboardType="default"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.shallowAddr
+                  ? formState.inputValues.shallowAddr
+                  : ""
+              }
               iconName="account-card-details"
             />
             <Input
@@ -358,7 +371,9 @@ export default UserSignupScreen = props => {
               keyboardType="default"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.tumbon ? formState.inputValues.tumbon : ""
+              }
               iconName="account-card-details"
             />
             <Input
@@ -367,7 +382,11 @@ export default UserSignupScreen = props => {
               keyboardType="default"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.district
+                  ? formState.inputValues.district
+                  : ""
+              }
               iconName="account-card-details"
             />
             <Input
@@ -376,7 +395,11 @@ export default UserSignupScreen = props => {
               keyboardType="default"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.province
+                  ? formState.inputValues.province
+                  : ""
+              }
               iconName="account-card-details"
             />
             <Input
@@ -385,7 +408,11 @@ export default UserSignupScreen = props => {
               keyboardType="default"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.provinceNumber
+                  ? formState.inputValues.provinceNumber
+                  : ""
+              }
               iconName="account-card-details"
             />
             <Button onPress={searchMapHandler} title="Search Map" />
@@ -398,7 +425,11 @@ export default UserSignupScreen = props => {
               autoCapitalize="none"
               errorText="Please enter a phoneNo."
               onInputChange={inputChangeHandler}
-              initialValue=""
+              initialValue={
+                formState.inputValues.phoneNo
+                  ? formState.inputValues.phoneNo
+                  : ""
+              }
               iconName="cellphone-android"
             />
             <View style={styles.buttonContainer}>
