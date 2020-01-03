@@ -131,7 +131,10 @@ export default SellerHomepageScreen = props => {
             userName={userProfile.name + " " + userProfile.surname}
             meetTime={"18 มกรา 15.00 น."}
             address={userProfile.addr}
-            onSignout={() => signOutHandler()}
+            // onSignout={() => signOutHandler()}
+            onSignout={() => {
+              props.navigation.navigate("EditingUserprofileScreen");
+            }}
           />
           <View
             style={{

@@ -23,7 +23,7 @@ import * as authAction from "../../store/actions/authAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 
-export default SellerHomepageScreen = props => {
+export default BuyerHomepageScreen = props => {
   // --------------------------- For UI Testing, not relate to this project ---------------------
   const [goToUITestingScreen, setGoToUITestingScreen] = useState(0);
   useEffect(() => {
@@ -65,7 +65,7 @@ export default SellerHomepageScreen = props => {
   const signOutHandler = async () => {
     setIsLoading(true);
     let result = await dispatch(authAction.signout());
-    
+
     /* Maybe clear redux storing in the ram
     Look at this thread, might be useful, probably:
     https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store */
@@ -74,7 +74,7 @@ export default SellerHomepageScreen = props => {
     else {
       setIsLoading(false);
       /* Make an alert or something, I don't know. */
-    };
+    }
   };
 
   return (

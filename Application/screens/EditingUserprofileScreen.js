@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useState, useEffect } from "react";
+import React, { useEffect, useState, useReducer, useCallback } from "react";
 import {
   ScrollView,
   View,
@@ -14,22 +14,20 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { sha256 } from "js-sha256";
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Header } from "react-navigation-stack";
+import AppVariableSetting from "../constants/AppVariableSetting";
 
-import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
-import firebaseFunctions from "../utils/firebaseFunctions";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
-import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
-import ModalShowInteractMap from "../components/ModalShowInteractMap";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import * as Permissions from "expo-permissions";
-import { Notifications } from "expo";
+import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -67,7 +65,7 @@ const formReducer = (state, action) => {
   return state;
 };
 
-export default UserSignupScreen = props => {
+export default EditingUserprofileScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentAddr, setCurrentAddr] = useState(false);
@@ -250,37 +248,83 @@ export default UserSignupScreen = props => {
     );
   }
 
+  const [switchSearch, setSwitchSearch] = useState(false);
   return (
-    <View style={{ ...styles.screen, height: hp("100%"), width: wp("100%") }}>
+    <View
+      style={{
+        height: hp("100%") + getStatusBarHeight(),
+        width: wp("100%")
+      }}
+    >
       <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
         <View
           style={{
-            marginVertical: wp("3%"),
-            height: hp("10%"),
-            paddingTop: getStatusBarHeight()
+            padding: wp("3%"),
+            height: "10%",
+            paddingTop: getStatusBarHeight(),
+            backgroundColor: "red",
+            alignSelf: "center"
           }}
         >
           <ThaiTitleText style={{ color: Colors.on_primary }}>
-            สร้างบัญชีผู้ใช้
+            ตั้งค่าข้อมูลผู้ใช้งาน
           </ThaiTitleText>
         </View>
         <View
           style={{
             ...styles.authContainer,
-            width: wp("100%"),
-            height: hp("75%"),
-            backgroundColor: "white",
+            width: "100%",
+            height: "75%",
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%"),
-            borderRadius: 3
+            borderRadius: 3,
+            backgroundColor: "white"
           }}
         >
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior="padding"
-            keyboardVerticalOffset={Platform.OS === "android" ? 0 : 0}
+            keyboardVerticalOffset={Platform.OS === "android" ? -200 : 0}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-around"
+                }}
+              >
+                <ThaiText style={{ fontSize: 12 }}>
+                  ยอมให้สามารถค้นหาตำแหน่งที่อยู่ได้
+                </ThaiText>
+                <SwitchToggle
+                  switchOn={switchSearch}
+                  onPress={() => setSwitchSearch(!switchSearch)}
+                  duration={150}
+                  backgroundColorOn="#5fdba7"
+                  backgroundColorOff="#808080"
+                  circleColorOff="#ffffff"
+                  circleColorOn="#ffffff"
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignContent: "center",
+                  justifyContent: "space-around"
+                }}
+              >
+                <Button
+                  title="Seller"
+                  color={Colors.primary}
+                  onPress={() => configHandler("seller")}
+                />
+                <Button
+                  title="Buyer"
+                  color={Colors.primary}
+                  onPress={() => configHandler("buyer")}
+                />
+              </View>
               <Input
                 id="username"
                 label="ชื่อผู้ใช้"
@@ -703,7 +747,7 @@ export default UserSignupScreen = props => {
         <View
           style={{
             width: wp("90%"),
-            height: hp("15%"),
+            height: "15%",
             justifyContent: "center",
             paddingBottom: getStatusBarHeight()
           }}
@@ -719,7 +763,7 @@ export default UserSignupScreen = props => {
               borderColor: Colors.on_secondary
             }}
             onPress={() => {
-              props.navigation.navigate("UserSigninScreen");
+              props.navigation.navigate("EditingUserprofileScreen");
             }}
             btnColor={Colors.on_primary}
             btnTitleColor={Colors.primary}
@@ -738,10 +782,4 @@ export default UserSignupScreen = props => {
   );
 };
 
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
+const styles = StyleSheet.create({});

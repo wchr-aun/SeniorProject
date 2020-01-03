@@ -22,6 +22,7 @@ import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
 import UIScreenTemplate from "../screens/UIScreenTemplate";
+import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 
 // for UserHomepageScreen
 const SellerhomepageNavigator = createStackNavigator(
@@ -155,7 +156,9 @@ const MainNavigator = createSwitchNavigator({
   StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
   SellerNavigator: SellerNavigator, //Seller Homepage
+  EditingUserprofileScreen: EditingUserprofileScreen,
   ConfigAccountScreen: ConfigAccountScreen
 });
 
+EditingUserprofileScreen;
 export default createAppContainer(MainNavigator);
