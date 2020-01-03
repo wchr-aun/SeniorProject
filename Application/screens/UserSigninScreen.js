@@ -180,7 +180,7 @@ export default UserAuthenScreen = props => {
               <View
                 style={{
                   ...styles.buttonContainer,
-                  marginTop: hp("5%"),
+                  marginTop: hp("8%"),
                   alignItems: "center"
                 }}
               >

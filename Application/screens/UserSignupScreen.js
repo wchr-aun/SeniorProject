@@ -186,6 +186,7 @@ export default UserSignupScreen = props => {
   const [addrReadable, setAddrReadable] = useState("");
   const [addrCord, setAddrCord] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
+
   const getCurrentLocationHandler = async () => {
     let sellerAddrResult = await getCurrentLocation();
     setSellerAddr({ sellerAddrResult });
@@ -228,9 +229,9 @@ export default UserSignupScreen = props => {
         formState.inputValues.province +
         " " +
         formState.inputValues.postalCode;
-
+    setAddrReadable(userAddrString);
     let result = await getManualStringLocation(userAddrString);
-    setAddrUserInput(result);
+    setAddrCord(result);
     setAddrModalVisible(true);
   };
 
@@ -265,7 +266,7 @@ export default UserSignupScreen = props => {
           style={{
             ...styles.authContainer,
             width: wp("100%"),
-            height: hp("79%"),
+            height: hp("75%"),
             backgroundColor: "white",
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%"),
@@ -700,7 +701,7 @@ export default UserSignupScreen = props => {
         <View
           style={{
             width: wp("90%"),
-            height: hp("11%"),
+            height: hp("15%"),
             justifyContent: "center",
             paddingBottom: getStatusBarHeight()
           }}
@@ -708,7 +709,7 @@ export default UserSignupScreen = props => {
           <CustomButton
             style={{
               width: "40%",
-              height: "70%",
+              height: "60%",
               borderRadius: 10,
               margin: wp("1.25%"),
               alignSelf: "flex-start",
