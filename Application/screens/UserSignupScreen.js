@@ -81,7 +81,7 @@ export default UserSignupScreen = props => {
       shallowAddr: "",
       subdistrict: "",
       district: "",
-      province: "",
+      province: "กรุงเทพมหานคร",
       postalCode: "",
       phoneNo: ""
     },
@@ -95,7 +95,7 @@ export default UserSignupScreen = props => {
       shallowAddr: false,
       subdistrict: false,
       district: false,
-      province: false,
+      province: true,
       postalCode: false,
       phoneNo: false
     },

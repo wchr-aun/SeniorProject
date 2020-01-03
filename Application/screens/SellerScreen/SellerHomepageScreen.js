@@ -140,7 +140,8 @@ export default SellerHomepageScreen = props => {
               alignSelf: "center",
               alignItems: "center",
               paddingVertical: 10,
-              backgroundColor: Colors.primary_variant
+              backgroundColor: Colors.primary_variant,
+              paddingBottom: getStatusBarHeight()
             }}
           >
             <View

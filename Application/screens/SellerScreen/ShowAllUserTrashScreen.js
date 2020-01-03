@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -146,6 +147,28 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 const ShowAllUserTrashScreen = props => {
+  // Show height detail
+  useEffect(() => {
+    console.log("------------ Heigth hp100");
+    console.log(hp("100%"));
+    console.log("------------ Heigth dimension window 100");
+    console.log(Dimensions.get("window").height);
+    console.log("------------ Heigth dimension screen 100");
+    console.log(Dimensions.get("screen").height);
+    console.log("------------ get status bar height");
+    console.log(getStatusBarHeight());
+    console.log("------------ get Header.HEIGHTt");
+    console.log(Header.HEIGHT);
+    console.log("------------ get bottomBarHeight height");
+    console.log(AppVariableSetting.bottomBarHeight);
+    console.log(
+      '------------ get hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight --> 596'
+    );
+    console.log(
+      hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight
+    );
+  }, []);
+
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -300,7 +323,7 @@ const ShowAllUserTrashScreen = props => {
         <View
           style={{
             width: "100%",
-            height: "88%",
+            height: "85%",
             paddingHorizontal: 10,
             alignItems: "center"
           }}
@@ -343,7 +366,8 @@ const ShowAllUserTrashScreen = props => {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "12%"
+            height: "15%",
+            paddingBottom: getStatusBarHeight()
           }}
         >
           {editingMode ? (
