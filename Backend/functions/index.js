@@ -19,6 +19,8 @@ exports.createAccount = functions.https.onCall((data, context) => {
   let name = data.name
   let surname = data.surname
   let addr = data.addr
+  let addrLatLong = data.addrLatLong || ""
+  let notificationToken = data.notificationToken || false
   return auth.createUser({
     uid: data.username,
     email: data.email,
@@ -29,8 +31,9 @@ exports.createAccount = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      enableAddr: false,
-      enableSearch: false
+      addrLatLong,
+      enableSearch: false,
+      notificationToken
     }).catch(err => {
       return {err}
     })

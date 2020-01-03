@@ -108,7 +108,7 @@ const getTransactions = async (role) => {
       .get()
       .then(querySnapshot => {
         let tx = [];
-        querySnapshot.forEach(function(doc) {
+        querySnapshot.forEach(doc => {
           tx.push({ txId: doc.id, detail: doc.data() });
         });
         allTx[status] = tx;
@@ -126,7 +126,7 @@ const getFavBuyers = async () => {
     .doc(firebaseUtil.auth().currentUser.uid)
     .then(doc => {
       if (doc.data().favBuyers != null) return doc.data().favBuyers;
-      else return false;
+      else return [];
     })
     .then(favBuyers => {
       let buyersInfo = [];
@@ -136,8 +136,8 @@ const getFavBuyers = async () => {
           .doc(buyer)
           .get()
           .then(doc => {
-            if (doc.exists) buyersInfo.push(doc.data());
-            else throw new Error("The document doesn't exist");
+            if (doc.exists) buyersInfo.push({ txId: doc.id, detail: doc.data() });
+            else buyersInfo.push({ txId: doc.id, detail: "The document doesn't exist" });
           });
       });
       return buyersInfo;
