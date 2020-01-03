@@ -27,7 +27,7 @@ import ThaiText from "../components/ThaiText";
 import {
   getCurrentLocation,
   getManualStringLocation
-} from "../utils/locationFunctions";
+} from "../utils/library";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -74,10 +74,10 @@ export default UserSignupScreen = props => {
       name: "",
       surname: "",
       shallowAddr: "",
-      tumbon: "",
+      subdistrict: "",
       district: "",
       province: "",
-      provinceNumber: "",
+      postalCode: "",
       phoneNo: ""
     },
     inputValidities: {
@@ -88,10 +88,10 @@ export default UserSignupScreen = props => {
       name: false,
       surname: false,
       shallowAddr: false,
-      tumbon: false,
+      subdistrict: false,
       district: false,
       province: false,
-      provinceNumber: false,
+      postalCode: false,
       phoneNo: false
     },
     allFormIsValid: false
@@ -178,13 +178,13 @@ export default UserSignupScreen = props => {
     let userAddrString =
       formState.inputValues.shallowAddr +
       " ตำบล " +
-      formState.inputValues.tumbon +
+      formState.inputValues.subdistrict +
       " อำเภอ " +
       formState.inputValues.district +
       " จังหวัด " +
       formState.inputValues.province +
       " " +
-      formState.inputValues.provinceNumber;
+      formState.inputValues.postalCode;
     let result = await getManualStringLocation(userAddrString);
     setAddrUserInput(result);
     setAddrModalVisible(true);
@@ -343,7 +343,7 @@ export default UserSignupScreen = props => {
               iconName="account-card-details"
             />
             <Input
-              id="tumbon"
+              id="subdistrict"
               label="ตำบล"
               keyboardType="default"
               errorText="Please enter a valid address."
@@ -370,9 +370,9 @@ export default UserSignupScreen = props => {
               iconName="account-card-details"
             />
             <Input
-              id="provinceNumber"
+              id="postalCode"
               label="รหัสไปรษณีย์"
-              keyboardType="default"
+              keyboardType="numeric"
               errorText="Please enter a valid address."
               onInputChange={inputChangeHandler}
               initialValue=""
