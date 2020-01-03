@@ -27,10 +27,18 @@ export default ModalShowInteractMap = props => {
     longitudeDelta: LONGTITUDE_DELTA
   });
   const [selectedLocation, setSelectedLocation] = useState();
+  const [markerCoordinates, setMarkerCoordinates] = useState({
+    latitude: props.latitude,
+    longitude: props.longitude
+  });
 
   const mapRegion = {
-    latitude: props.latitude,
-    longitude: props.longitude,
+    latitude: markerCoordinates.latitude
+      ? markerCoordinates.latitude
+      : props.latitude,
+    longitude: markerCoordinates.longitude
+      ? markerCoordinates.longitude
+      : props.longitude,
     latitudeDelta: zoomCord.latitudeDelta,
     longitudeDelta: zoomCord.longitudeDelta
   };
@@ -40,24 +48,29 @@ export default ModalShowInteractMap = props => {
       lat: event.nativeEvent.coordinate.latitude,
       lng: event.nativeEvent.coordinate.longitude
     });
+    setMarkerCoordinates({
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude
+    });
   };
 
-  //   // listen selectedLocation
-  //   useEffect(() => {
-  //     console.log("selectedLocation and setAddrUserObj...");
-  //     console.log(selectedLocation);
-  //     props.setAddrUserObj(selectedLocation);
-  //     console.log(selectedLocation);
-  //   }, [selectedLocation]);
-
-  let markerCoordinates;
-
-  if (selectedLocation) {
-    markerCoordinates = {
+  const confirmLocationHandler = () => {
+    props.setSellerAddr({
       latitude: selectedLocation.lat,
-      longitude: selectedLocation.lng
-    };
-  }
+      longitude: selectedLocation.lng,
+      readable: props.addrReadable
+    });
+    props.setModalVisible(false);
+  };
+
+  // let markerCoordinates;
+
+  // if (selectedLocation) {
+  //   markerCoordinates = {
+  //     latitude: selectedLocation.lat,
+  //     longitude: selectedLocation.lng
+  //   };
+  // }
 
   return (
     <Modal
@@ -109,10 +122,7 @@ export default ModalShowInteractMap = props => {
           >
             <Button
               title="ยืนยัน"
-              onPress={() => {
-                props.setModalVisible(false);
-                props.setAddrUserObj(selectedLocation);
-              }}
+              onPress={confirmLocationHandler}
               color={Colors.primary_variant}
             />
           </View>

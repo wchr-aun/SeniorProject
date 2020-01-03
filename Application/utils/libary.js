@@ -33,11 +33,14 @@ const formatDate = date => {
 const getTransactionList = async role => {
   let allTx = [];
   for (let i = 0; i < 6; i++) {
-    await firebaseFunctions.getTransactions(role, i).then(eachTxStatus => {
-      allTx.push(eachTxStatus)
-    }).catch(error => {
-      throw new error("Error getting document:", error)
-    })
+    await firebaseFunctions
+      .getTransactions(role, i)
+      .then(eachTxStatus => {
+        allTx.push(eachTxStatus);
+      })
+      .catch(error => {
+        throw new error("Error getting document:", error);
+      });
   }
   return allTx;
 };
@@ -54,7 +57,7 @@ const verifyPermissions = async () => {
   return true;
 };
 
-const getLocationHandler = async () => {
+export const getCurrentLocation = async () => {
   const hasPermission = await verifyPermissions();
   if (!hasPermission) {
     return;
@@ -67,12 +70,22 @@ const getLocationHandler = async () => {
     });
     // Step-2
     try {
-      const locationAddr = await reverseGeocodeAsync(location.coords);
-      let addrReadable = `${locationAddr[0].street} จังหวัด${locationAddr[0].region} ${locationAddr[0].postalCode}`;
+      const locationInfo = await reverseGeocodeAsync(location.coords);
+      console.log("locationInfo");
+      console.log(locationInfo);
       return {
-        addrReadable,
-        addrString: locationAddr,
-        addrCord: location.coords
+        readable:
+          locationInfo[0].street +
+          " " +
+          locationInfo[0].city +
+          " " +
+          locationInfo[0].region +
+          " " +
+          locationInfo[0].country +
+          " " +
+          locationInfo[0].postalCode,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
       };
     } catch (err) {
       console.log("Could not reverseGeocodeAsync");
@@ -81,14 +94,6 @@ const getLocationHandler = async () => {
   } catch (err) {
     console.log("Could not getCurrentPositionAsync");
   }
-};
-
-export const getCurrentLocation = async () => {
-  // do async task-1
-  let userAddr = await getLocationHandler();
-  console.log("userAddr from locationFunction.js");
-  console.log(userAddr);
-  return userAddr;
 };
 
 export const getManualStringLocation = async address => {

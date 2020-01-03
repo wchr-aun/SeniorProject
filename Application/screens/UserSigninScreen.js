@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Text
+  Text,
+  Platform
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { sha256 } from "js-sha256";
@@ -115,8 +116,8 @@ export default UserAuthenScreen = props => {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
+    <View
+      enabled
       style={{
         ...styles.screen,
         flex: 1
@@ -137,107 +138,115 @@ export default UserAuthenScreen = props => {
             paddingVertical: wp("8%")
           }}
         >
-          <ScrollView keyboardShouldPersistTaps="handled">
-            {signupBeforeSignin ? (
-              <View>
-                <Text style={{ color: "green" }}>
-                  Great! Your account is already created.
-                </Text>
-              </View>
-            ) : null}
+          <KeyboardAvoidingView
+            behavior="padding"
+            keyboardVerticalOffset={Platform.OS === "android" ? -200 : 0}
+            style={{ flex: 1 }}
+          >
+            <ScrollView keyboardShouldPersistTaps="handled">
+              {signupBeforeSignin ? (
+                <View>
+                  <Text style={{ color: "green" }}>
+                    Great! Your account is already created.
+                  </Text>
+                </View>
+              ) : null}
 
-            <Input
-              id="email"
-              label="อีเมล"
-              keyboardType="email-address"
-              required
-              email
-              autoCapitalize="none"
-              errorText="Please enter a valid email address."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              iconName="email"
-            />
-            <Input
-              id="password"
-              label="รหัสผ่าน"
-              keyboardType="default"
-              secureTextEntry
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid password."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              iconName="key-variant"
-            />
-            <View
-              style={{
-                ...styles.buttonContainer,
-                marginTop: hp("10%"),
-                alignItems: "center"
-              }}
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
+              <Input
+                id="email"
+                label="อีเมล"
+                keyboardType="email-address"
+                required
+                email
+                autoCapitalize="none"
+                errorText="Please enter a valid email address."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                iconName="email"
+              />
+              <Input
+                id="password"
+                label="รหัสผ่าน"
+                keyboardType="default"
+                secureTextEntry
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid password."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                iconName="key-variant"
+              />
+              <View
+                style={{
+                  ...styles.buttonContainer,
+                  marginTop: hp("5%"),
+                  alignItems: "center"
+                }}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                  <CustomButton
+                    style={{
+                      width: wp("40%"),
+                      height: hp("6%"),
+                      borderRadius: 10,
+                      margin: wp("1.25%")
+                    }}
+                    onPress={() => {
+                      authHandler();
+                    }}
+                    btnColor={Colors.primary}
+                    btnTitleColor={Colors.on_primary}
+                    btnTitleFontSize={14}
+                  >
+                    ลงชื่อเข้าใช้
+                  </CustomButton>
+                )}
+
+                <View
+                  style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}
+                >
+                  <ThaiText
+                    style={{
+                      color: Colors.primary,
+                      fontSize: 10
+                    }}
+                  >
+                    หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
+                  </ThaiText>
+                </View>
+
                 <CustomButton
                   style={{
                     width: wp("40%"),
                     height: hp("6%"),
                     borderRadius: 10,
-                    margin: wp("1.25%")
+                    margin: wp("1.25%"),
+                    borderWidth: 1,
+                    borderColor: Colors.primary
                   }}
                   onPress={() => {
-                    authHandler();
+                    props.navigation.navigate("UserSignupScreen");
                   }}
-                  btnColor={Colors.primary}
-                  btnTitleColor={Colors.on_primary}
+                  btnColor={Colors.screen}
+                  btnTitleColor={Colors.primary}
                   btnTitleFontSize={14}
                 >
-                  ลงชื่อเข้าใช้
+                  ลงทะเบียน{" "}
+                  <MaterialCommunityIcons
+                    name="account-plus"
+                    size={14}
+                    color={Colors.primary}
+                  />
                 </CustomButton>
-              )}
-
-              <View style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}>
-                <ThaiText
-                  style={{
-                    color: Colors.primary,
-                    fontSize: 10
-                  }}
-                >
-                  หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
-                </ThaiText>
               </View>
-
-              <CustomButton
-                style={{
-                  width: wp("40%"),
-                  height: hp("6%"),
-                  borderRadius: 10,
-                  margin: wp("1.25%"),
-                  borderWidth: 1,
-                  borderColor: Colors.primary
-                }}
-                onPress={() => {
-                  props.navigation.navigate("UserSignupScreen");
-                }}
-                btnColor={Colors.screen}
-                btnTitleColor={Colors.primary}
-                btnTitleFontSize={14}
-              >
-                ลงทะเบียน{" "}
-                <MaterialCommunityIcons
-                  name="account-plus"
-                  size={14}
-                  color={Colors.primary}
-                />
-              </CustomButton>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </Card>
       </LinearGradient>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
