@@ -28,7 +28,6 @@ import ThaiText from "../components/ThaiText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -85,7 +84,7 @@ export default UserSignupScreen = props => {
       shallowAddr: "",
       subdistrict: "",
       district: "",
-      province: "กรุงเทพมหานคร",
+      province: "กรุงเทพมหานครฯ",
       postalCode: "",
       phoneNo: ""
     },

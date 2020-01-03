@@ -18,8 +18,7 @@ const txDB = firestore.collection('transactions')
 exports.createAccount = functions.https.onCall((data, context) => {
   let name = data.name
   let surname = data.surname
-  let addr = data.addr
-  let addrLatLong = data.addrLatLong || ""
+  let addr = data.addr.readable
   let notificationToken = data.notificationToken || false
   return auth.createUser({
     uid: data.username,
@@ -31,7 +30,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addrLatLong,
+      addr_geopoint: new firebase.firestore.GeoPoint(data.addr.latitude, data.addr.longtitude),
       enableSearch: false,
       notificationToken
     }).catch(err => {
@@ -217,6 +216,22 @@ exports.updateNotificationToken = functions.https.onCall((data,context) => {
     return {err}
   })
 })
+
+function sendNotification (token, title, body) {
+  let reponse = fetch("https://exp.host/--/api/v2/push/send", {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      to: token,
+      sound: "default",
+      title,
+      body
+    })
+  })
+}
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {
