@@ -136,7 +136,6 @@ export default UserAuthenScreen = props => {
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%")
           }}
-          titleVar="title"
         >
           <ScrollView keyboardShouldPersistTaps="handled">
             {signupBeforeSignin ? (
@@ -175,7 +174,7 @@ export default UserAuthenScreen = props => {
             <View
               style={{
                 ...styles.buttonContainer,
-                marginTop: wp("5%"),
+                marginTop: hp("10%"),
                 alignItems: "center"
               }}
             >

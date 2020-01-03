@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
 import ImagePicker from "../../components/ImagePicker";
-import * as imgActions from "../../store/actions/places-actions";
 import { useDispatch } from "react-redux";
+import * as imgActions from "../../store/actions/places-actions";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Header } from "react-navigation-stack";
+import AppVariableSetting from "../../constants/AppVariableSetting";
 
 export default OptionTrashCheck = props => {
   const [img, setImg] = useState();
@@ -13,7 +21,13 @@ export default OptionTrashCheck = props => {
   };
 
   return (
-    <View>
+    <View
+      style={{
+        width: wp("100%"),
+        height: hp("100%") - AppVariableSetting.bottomBarHeight - Header.HEIGHT,
+        paddingVertical: getStatusBarHeight()
+      }}
+    >
       <Text>OptionTrashCheck</Text>
       <ImagePicker
         onImageTaken={img => {

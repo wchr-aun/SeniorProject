@@ -71,12 +71,14 @@ export default Input = props => {
   };
 
   return (
-    <View style={{ ...styles.formControl, ...props.style }}>
+    <View
+      style={{ ...styles.formControl, ...props.style, alignSelf: "center" }}
+    >
       <Text style={styles.label}>{props.label}</Text>
       <View
         style={{
           flexDirection: "row",
-          width: wp("80%"),
+          width: "100%",
           borderRadius: 5,
           borderWidth: 1,
           borderColor: "#ebebeb",
