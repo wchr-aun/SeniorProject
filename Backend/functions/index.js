@@ -207,6 +207,17 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
+exports.updateNotificationToken = functions.https.onCall((data,context) => {
+  return usersDB
+  .doc(context.auth.uid)
+  .update({notificationToken: data.notificationToken})
+  .then(() => {
+    return true
+  }).catch(err => {
+    return {err}
+  })
+})
+
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {
 

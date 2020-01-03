@@ -27,6 +27,9 @@ import ThaiText from "../components/ThaiText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import * as Permissions from "expo-permissions"
+import { Notifications } from "expo"
+
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -47,10 +50,10 @@ const formReducer = (state, action) => {
       );
     let updatedAddrFormIsValid = Boolean(
       updatedValidities["shallowAddr"] &&
-        updatedValidities["subdistrict"] &&
-        updatedValidities["district"] &&
-        updatedValidities["province"] &&
-        updatedValidities["postalCode"]
+      updatedValidities["subdistrict"] &&
+      updatedValidities["district"] &&
+      updatedValidities["province"] &&
+      updatedValidities["postalCode"]
     );
 
     return {
@@ -134,6 +137,8 @@ export default UserSignupScreen = props => {
       return;
     }
 
+    let notificationToken = await Notifications.getExpoPushTokenAsync()
+
     let user = {
       username: formState.inputValues.username,
       email: formState.inputValues.email,
@@ -142,7 +147,8 @@ export default UserSignupScreen = props => {
       surname: formState.inputValues.surname,
       // addr: formState.inputValues.addr,
       addr: addrUserObj,
-      phoneNo: "+66" + formState.inputValues.phoneNo.toString()
+      phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
+      notificationToken
     };
 
     firebaseFunctions
@@ -204,16 +210,21 @@ export default UserSignupScreen = props => {
       setError("Please fill all the addresses");
       return;
     }
-    let userAddrString =
-      formState.inputValues.shallowAddr +
-      " ตำบล " +
-      formState.inputValues.subdistrict +
-      " อำเภอ " +
-      formState.inputValues.district +
-      " จังหวัด " +
-      formState.inputValues.province +
-      " " +
+
+    let userAddrString
+    if (formState.inputValues.province === "กรุงเทพมหานคร")
+      userAddrString = formState.inputValues.shallowAddr + " แขวง " +
+      formState.inputValues.subdistrict + " เขต " +
+      formState.inputValues.district + " " +
+      formState.inputValues.province + " " +
       formState.inputValues.postalCode;
+    else
+      userAddrString = formState.inputValues.shallowAddr + " ตำบล " +
+      formState.inputValues.subdistrict + " อำเภอ " +
+      formState.inputValues.district + " จังหวัด " +
+      formState.inputValues.province + " " +
+      formState.inputValues.postalCode;
+
     let result = await getManualStringLocation(userAddrString);
     setAddrUserInput(result);
     setAddrModalVisible(true);
@@ -389,11 +400,7 @@ export default UserSignupScreen = props => {
                 iconName="account-multiple"
               />
               <View
-                style={{
-                  width: "100%",
-                  marginVertical: 3,
-                  alignSelf: "center"
-                }}
+                style={{ width: "100%", marginVertical: 3, alignSelf: "center" }}
               >
                 <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
                   ที่อยู่ในการจัดส่ง
