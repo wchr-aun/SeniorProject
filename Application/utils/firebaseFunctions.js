@@ -16,7 +16,7 @@ export const getSellerItems = async () => {
       } else return [];
     })
     .catch(err => {
-      throw new Error(err);
+      throw new Error(err.message);
     });
 };
 
@@ -40,7 +40,7 @@ export const getUsers = async () => {
       } else throw new Error("The document doesn't exist");
     })
     .catch(err => {
-      throw new Error(err);
+      throw new Error(err.message);
     });
 };
 
@@ -69,7 +69,7 @@ export const getWasteTypeDetail = async wasteTypeId => {
       else throw new Error("The document doesn't exist");
     })
     .catch(err => {
-      throw new Error(err);
+      throw new Error(err.message);
     });
 };
 
@@ -116,7 +116,7 @@ export const getTransactions = async role => {
           allTx[status] = tx;
         })
         .catch(err => {
-          throw new error(err);
+          throw new error(err.message);
         })
     );
   }
@@ -153,7 +153,7 @@ export const getFavBuyers = async () => {
       return buyersInfo;
     })
     .catch(err => {
-      throw new error(err);
+      throw new error(err.message);
     });
 };
 
@@ -169,8 +169,8 @@ export const searchBuyers = async (condition, orderBy) => {
       });
       return buyers;
     })
-    .catch(function(error) {
-      throw new error(error);
+    .catch(err => {
+      throw new error(err.message);
     });
 };
 
@@ -179,7 +179,7 @@ export const addWaste = async items => {
     .httpsCallable("addWaste")(items)
     .then(result => {
       if (result.data.err == null) return true;
-      else throw new Error(result.data.err);
+      else throw new Error(result.data.err.errorInfo.message);
     });
 };
 
@@ -189,7 +189,7 @@ export const sellWaste = async transaction => {
     .then(function(result) {
       // Read result of the Cloud Function.
       if (result.data.err == null) return true;
-      else throw new Error(result.data.err);
+      else throw new Error(result.data.err.errorInfo.message);
     });
 };
 
@@ -201,7 +201,7 @@ export const toggleSwitches = async toggleSearch => {
       if (result.data.err == null) {
         console.log(result.data);
         return true;
-      } else throw new Error(result.data.err);
+      } else throw new Error(result.data.err.errorInfo.message);
     });
 };
 
@@ -219,24 +219,69 @@ export const createAccount = async user => {
       } else throw new Error(result.data.err.errorInfo.message);
     })
     .catch(err => {
-      throw new Error(err);
+      throw new Error(err.message);
     });
 };
 
-export const updateTxStatus = async () => {};
+/* 
+updatedTx = {
+  txID: "transaction identity",
 
-export const editUserInfo = async () => {};
+  ----only for quick selling----
+  items: {
+    wasteType: "waste type",
+    price: value
+  }
+  ----only for quick selling----
+
+  status: number from 0 to 5 as we have discussed
+} */
+
+export const updateTxStatus = async updatedTx => {
+  return functions
+    .httpsCallable("changeTxStatus")(updatedTx)
+    .then(result => {
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err.errorInfo.message);
+    })
+    .catch(err => {
+      throw new Error(err.message);
+    });
+};
+
+
+/* 
+newInfo = {
+  name: "asdfasdfasdfasdfasdf",
+  surname: "asdfasdfasdfasdf",
+  addr: {
+    "latitude": number,
+    "longitude": number,
+    "readable": "E",
+  }
+} */
+
+export const editUserInfo = async newInfo => {
+  return functions
+    .httpsCallable("editUserInfo")(newInfo)
+    .then(result => {
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err.errorInfo.message);
+    })
+    .catch(err => {
+      throw new Error(err.message);
+    });
+};
 
 export const updateNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
   return functions
     .httpsCallable("updateNotificationToken")({ notificationToken })
     .then(result => {
-      if (result.data.err == null) {
-        return true;
-      } else throw new Error(result.data.err);
+      if (result.data.err == null) return true;
+      else throw new Error(result.data.err.errorInfo.message);
     })
     .catch(err => {
-      throw new Error(err);
+      throw new Error(err.message);
     });
 };
