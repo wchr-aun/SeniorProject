@@ -106,7 +106,8 @@ export default UserAuthenScreen = props => {
             }
           })
           .catch(err => {
-            setError(err);
+            setIsLoading(false);
+            setError(err.message);
           });
       })
       .catch(err => {

@@ -178,8 +178,8 @@ export const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
-      if (result.data.err == null) return true;
-      else throw new Error(result.data.err.errorInfo.message);
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
     });
 };
 
@@ -188,8 +188,8 @@ export const sellWaste = async transaction => {
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
       // Read result of the Cloud Function.
-      if (result.data.err == null) return true;
-      else throw new Error(result.data.err.errorInfo.message);
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
     });
 };
 
@@ -198,10 +198,10 @@ export const toggleSwitches = async toggleSearch => {
   return functions
     .httpsCallable("toggleSearch")({ toggleSearch })
     .then(result => {
-      if (result.data.err == null) {
+      if (result.data.errorMessage == null) {
         console.log(result.data);
         return true;
-      } else throw new Error(result.data.err.errorInfo.message);
+      } else throw new Error(result.data.errorMessage);
     });
 };
 
@@ -209,14 +209,14 @@ export const createAccount = async user => {
   return functions
     .httpsCallable("createAccount")(user)
     .then(result => {
-      if (result.data.err == null) {
+      if (result.data.errorMessage == null) {
         return firebaseUtil
           .auth()
           .signInWithEmailAndPassword(user.email, user.password)
           .catch(err => {
             throw new Error(err);
           });
-      } else throw new Error(result.data.err.errorInfo.message);
+      } else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
       throw new Error(err.message);
@@ -241,8 +241,8 @@ export const updateTxStatus = async updatedTx => {
   return functions
     .httpsCallable("changeTxStatus")(updatedTx)
     .then(result => {
-      if (result.data.err == null) return true;
-      else throw new Error(result.data.err.errorInfo.message);
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
       throw new Error(err.message);
@@ -265,8 +265,8 @@ export const editUserInfo = async newInfo => {
   return functions
     .httpsCallable("editUserInfo")(newInfo)
     .then(result => {
-      if (result.data.err == null) return true;
-      else throw new Error(result.data.err.errorInfo.message);
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
       throw new Error(err.message);
@@ -278,8 +278,21 @@ export const updateNotificationToken = async () => {
   return functions
     .httpsCallable("updateNotificationToken")({ notificationToken })
     .then(result => {
-      if (result.data.err == null) return true;
-      else throw new Error(result.data.err.errorInfo.message);
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
+    })
+    .catch(err => {
+      throw new Error(err.message);
+    });
+};
+
+export const removeNotificationToken = async () => {
+  let notificationToken = await Notifications.getExpoPushTokenAsync();
+  return functions
+    .httpsCallable("removeNotificationToken")({ notificationToken })
+    .then(result => {
+      if (result.data.errorMessage == null) return true;
+      else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
       throw new Error(err.message);

@@ -169,7 +169,7 @@ export default UserSignupScreen = props => {
     console.log(user);
 
     createAccount(user)
-      .then(result => {
+      .then(() => {
         AsyncStorage.clear()
           .then(() => {
             setIsLoading(false);
