@@ -153,21 +153,21 @@ export default UserSignupScreen = props => {
     console.log(user);
 
     createAccount(user)
-    .then(() => {
-      AsyncStorage.clear()
-        .then(() => {
-          setIsLoading(false);
-          props.navigation.navigate("ConfigAccountScreen");
-        })
-        .catch(err => {
-          setIsLoading(false);
-          setError(err);
-        });
-    })
-    .catch(err => {
-      setIsLoading(false);
-      setError(err);
-    });
+      .then(() => {
+        AsyncStorage.clear()
+          .then(() => {
+            setIsLoading(false);
+            props.navigation.navigate("ConfigAccountScreen");
+          })
+          .catch(err => {
+            setIsLoading(false);
+            setError(err);
+          });
+      })
+      .catch(err => {
+        setIsLoading(false);
+        setError(err);
+      });
   };
 
   const inputChangeHandler = useCallback(

@@ -316,7 +316,9 @@ const ShowAllUserTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height:
-            hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight,
+            hp("100%") +
+            getStatusBarHeight() -
+            AppVariableSetting.bottomBarHeight,
           alignItems: "center"
         }}
       >

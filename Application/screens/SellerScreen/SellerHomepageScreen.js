@@ -93,13 +93,8 @@ export default SellerHomepageScreen = props => {
   return (
     <View
       style={{
-        ...styles.screen,
         width: wp("100%"),
-        height:
-          hp("100%") +
-          getStatusBarHeight() -
-          AppVariableSetting.bottomBarHeight,
-        paddingTop: getStatusBarHeight()
+        height: hp("100%") - AppVariableSetting.bottomBarHeight
       }}
     >
       {isLoading ? (
