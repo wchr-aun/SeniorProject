@@ -24,7 +24,7 @@ import firebaseUtil from "../firebase";
 import ThaiText from "../components/ThaiText";
 import CustomButton from "../components/UI/CustomButton";
 import ThaiTitleText from "../components/ThaiTitleText";
-import { updateNotificationToken } from "../utils/firebaseFunctions"
+import { updateNotificationToken } from "../utils/firebaseFunctions";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -40,7 +40,9 @@ const formReducer = (state, action) => {
     };
     let updatedAllFormIsValid = true;
     for (const key in updatedValidities) {
-      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key]);
+      updatedAllFormIsValid = Boolean(
+        updatedAllFormIsValid && updatedValidities[key]
+      );
     }
     return {
       ...state,
@@ -97,14 +99,16 @@ export default UserAuthenScreen = props => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        updateNotificationToken().then(result => {
-          if (result) {
-            console.log("transfering")
-            props.navigation.navigate("StartupScreen");
-          }
-        }).catch(err => {
-          setError(err)
-        })
+        updateNotificationToken()
+          .then(result => {
+            if (result) {
+              console.log("transfering");
+              props.navigation.navigate("StartupScreen");
+            }
+          })
+          .catch(err => {
+            setError(err);
+          });
       })
       .catch(err => {
         setIsLoading(false);
@@ -162,6 +166,7 @@ export default UserAuthenScreen = props => {
               ) : null}
 
               <Input
+                editable={true}
                 id="email"
                 label="อีเมล"
                 keyboardType="email-address"
@@ -174,6 +179,7 @@ export default UserAuthenScreen = props => {
                 iconName="email"
               />
               <Input
+                editable={true}
                 id="password"
                 label="รหัสผ่าน"
                 keyboardType="default"

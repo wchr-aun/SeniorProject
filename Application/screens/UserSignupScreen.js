@@ -30,38 +30,54 @@ import ModalShowInteractMap from "../components/ModalShowInteractMap";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Notifications } from "expo";
 
+// CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.inputIdentifier]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.inputIdentifier]: action.isValid
-    };
-    let updatedAllFormIsValid = true;
-    for (const key in updatedValidities)
-      updatedAllFormIsValid = Boolean(
-        updatedAllFormIsValid && updatedValidities[key]
+  switch (action.type) {
+    case FORM_INPUT_UPDATE:
+      console.log(state);
+      const updatedValues = {
+        ...state.inputValues,
+        [action.inputIdentifier]: action.value
+      };
+      const updatedValidities = {
+        ...state.inputValidities,
+        [action.inputIdentifier]: action.isValid
+      };
+      let updatedAllFormIsValid = true;
+      for (const key in updatedValidities)
+        updatedAllFormIsValid = Boolean(
+          updatedAllFormIsValid && updatedValidities[key]
+        );
+      let updatedAddrFormIsValid = Boolean(
+        updatedValidities["shallowAddr"] &&
+          updatedValidities["subdistrict"] &&
+          updatedValidities["district"] &&
+          updatedValidities["province"] &&
+          updatedValidities["postalCode"]
       );
-    let updatedAddrFormIsValid = Boolean(
-      updatedValidities["shallowAddr"] &&
-        updatedValidities["subdistrict"] &&
-        updatedValidities["district"] &&
-        updatedValidities["province"] &&
-        updatedValidities["postalCode"]
-    );
 
-    return {
-      ...state,
-      inputValues: updatedValues,
-      inputValidities: updatedValidities,
-      allFormIsValid: updatedAllFormIsValid,
-      addrFormIsValide: updatedAddrFormIsValid
-    };
+      return {
+        ...state,
+        inputValues: updatedValues,
+        inputValidities: updatedValidities,
+        allFormIsValid: updatedAllFormIsValid,
+        addrFormIsValide: updatedAddrFormIsValid
+      };
+    case "CHOOSE_CURRENT_TIME":
+      console.log(action);
+      return {
+        ...state,
+        inputValidities: {
+          ...state.inputValidities,
+          shallowAddr: !action.prestateIsCur,
+          subdistrict: !action.prestateIsCur,
+          district: !action.prestateIsCur,
+          province: !action.prestateIsCur,
+          postalCode: !action.prestateIsCur
+        }
+      };
   }
   return state;
 };
@@ -179,7 +195,8 @@ export default UserSignupScreen = props => {
         inputIdentifier: inputIdentifier
       });
     },
-    [formState.allFormIsValid, dispatchFormState]
+    // [formState.allFormIsValid, dispatchFormState]
+    [dispatchFormState]
   );
 
   const [addrModalVisible, setAddrModalVisible] = useState(false);
@@ -187,16 +204,27 @@ export default UserSignupScreen = props => {
   const [addrCord, setAddrCord] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
 
-  const getCurrentLocationHandler = async () => {
+  const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
+    // set all addr form valid
+    dispatchFormState({
+      type: "CHOOSE_CURRENT_TIME",
+      prestateIsCur: currentAddr
+    });
     setSellerAddr({ sellerAddrResult });
-  };
+  }, [currentAddr]);
+
+  // // Check user addr
+  // useEffect(() => {
+  //   console.log("This is an user address before sending signup form");
+  //   console.log(sellerAddr);
+  // }, [sellerAddr]);
 
   // Check user addr
   useEffect(() => {
-    console.log("This is an user address before sending signup form");
-    console.log(sellerAddr);
-  }, [sellerAddr]);
+    console.log("This is formState");
+    console.log(formState.inputValidities.shallowAddr);
+  }, [formState.inputValidities]);
 
   // Search map from user input form
   const searchMapHandler = async () => {
@@ -280,6 +308,7 @@ export default UserSignupScreen = props => {
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
               <Input
+                editable={true}
                 id="username"
                 label="ชื่อผู้ใช้"
                 required
@@ -299,6 +328,7 @@ export default UserSignupScreen = props => {
                 iconName="account"
               />
               <Input
+                editable={true}
                 id="email"
                 label="อีเมล"
                 keyboardType="email-address"
@@ -318,6 +348,7 @@ export default UserSignupScreen = props => {
                 iconName="email"
               />
               <Input
+                editable={true}
                 id="password"
                 label="รหัสผ่าน"
                 keyboardType="default"
@@ -340,6 +371,7 @@ export default UserSignupScreen = props => {
                 iconName="key-variant"
               />
               <Input
+                editable={true}
                 id="confirmpassword"
                 label="ยืนยันรหัสผ่าน"
                 keyboardType="default"
@@ -362,6 +394,7 @@ export default UserSignupScreen = props => {
                 iconName="key-variant"
               />
               <Input
+                editable={true}
                 id="name"
                 label="ชื่อจริง"
                 keyboardType="default"
@@ -381,6 +414,7 @@ export default UserSignupScreen = props => {
                 iconName="account"
               />
               <Input
+                editable={true}
                 id="surname"
                 label="นามสกุล"
                 keyboardType="default"
@@ -417,131 +451,27 @@ export default UserSignupScreen = props => {
                   setCurrentAddr(preState => !preState);
                   getCurrentLocationHandler();
                 }}
-                style={{ flexDirection: "row" }}
               >
-                <MaterialIcons
-                  name={currentAddr ? "check-box" : "check-box-outline-blank"}
-                  size={15}
-                  color={Colors.primary}
-                />
-                <Input
-                  id="email"
-                  label="อีเมล"
-                  keyboardType="email-address"
-                  required
-                  email
-                  autoCapitalize="none"
-                  errorText="Please enter a valid email address."
-                  onInputChange={inputChangeHandler}
-                  initialValue={
-                    formState.inputValues.email
-                      ? formState.inputValues.email
-                      : ""
-                  }
-                  initialValid={
-                    formState.inputValidities.email
-                      ? formState.inputValidities.email
-                      : false
-                  }
-                  iconName="email"
-                />
-                <Input
-                  id="password"
-                  label="รหัสผ่าน"
-                  keyboardType="default"
-                  secureTextEntry
-                  required
-                  minLength={5}
-                  autoCapitalize="none"
-                  errorText="Please enter a valid password."
-                  onInputChange={inputChangeHandler}
-                  initialValue={
-                    formState.inputValues.password
-                      ? formState.inputValues.password
-                      : ""
-                  }
-                  initialValid={
-                    formState.inputValidities.password
-                      ? formState.inputValidities.password
-                      : false
-                  }
-                  iconName="key-variant"
-                />
-                <Input
-                  id="confirmpassword"
-                  label="ยืนยันรหัสผ่าน"
-                  keyboardType="default"
-                  secureTextEntry
-                  required
-                  minLength={5}
-                  autoCapitalize="none"
-                  errorText="Please enter a valid password."
-                  onInputChange={inputChangeHandler}
-                  initialValue={
-                    formState.inputValues.confirmpassword
-                      ? formState.inputValues.confirmpassword
-                      : ""
-                  }
-                  initialValid={
-                    formState.inputValidities.confirmpassword
-                      ? formState.inputValidities.confirmpassword
-                      : false
-                  }
-                  iconName="key-variant"
-                />
-                <Input
-                  id="name"
-                  label="ชื่อจริง"
-                  keyboardType="default"
-                  required
-                  minLength={5}
-                  autoCapitalize="none"
-                  errorText="Please enter a valid name."
-                  onInputChange={inputChangeHandler}
-                  initialValue={
-                    formState.inputValues.name ? formState.inputValues.name : ""
-                  }
-                  initialValid={
-                    formState.inputValidities.name
-                      ? formState.inputValidities.name
-                      : false
-                  }
-                  iconName="account"
-                />
-                <Input
-                  id="surname"
-                  label="นามสกุล"
-                  keyboardType="default"
-                  required
-                  minLength={5}
-                  autoCapitalize="none"
-                  errorText="Please enter a valid surname."
-                  onInputChange={inputChangeHandler}
-                  initialValue={
-                    formState.inputValues.surname
-                      ? formState.inputValues.surname
-                      : ""
-                  }
-                  initialValid={
-                    formState.inputValidities.surname
-                      ? formState.inputValidities.surname
-                      : false
-                  }
-                  iconName="account-multiple"
-                />
                 <View
                   style={{
                     width: "100%",
                     marginVertical: 3,
-                    alignSelf: "center"
+                    alignSelf: "center",
+                    flexDirection: "row"
                   }}
                 >
-                  <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
-                    ที่อยู่ในการจัดส่ง
+                  <MaterialIcons
+                    name={currentAddr ? "check-box" : "check-box-outline-blank"}
+                    size={15}
+                    color={Colors.primary}
+                  />
+                  <ThaiText style={{ fontSize: 10, textAlign: "center" }}>
+                    ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
                   </ThaiText>
                 </View>
               </TouchableOpacity>
               <Input
+                editable={!currentAddr}
                 id="shallowAddr"
                 label="ที่อยู่"
                 keyboardType="default"
@@ -560,6 +490,7 @@ export default UserSignupScreen = props => {
                 iconName="account-card-details"
               />
               <Input
+                editable={!currentAddr}
                 id="subdistrict"
                 label="ตำบล"
                 keyboardType="default"
@@ -578,6 +509,7 @@ export default UserSignupScreen = props => {
                 iconName="account-card-details"
               />
               <Input
+                editable={!currentAddr}
                 id="district"
                 label="อำเภอ"
                 keyboardType="default"
@@ -596,6 +528,7 @@ export default UserSignupScreen = props => {
                 iconName="account-card-details"
               />
               <Input
+                editable={!currentAddr}
                 id="province"
                 label="จังหวัด"
                 keyboardType="default"
@@ -614,6 +547,7 @@ export default UserSignupScreen = props => {
                 iconName="account-card-details"
               />
               <Input
+                editable={!currentAddr}
                 id="postalCode"
                 label="รหัสไปรษณีย์"
                 keyboardType="numeric"
@@ -650,6 +584,7 @@ export default UserSignupScreen = props => {
                 ค้นหาสถานที่
               </CustomButton>
               <Input
+                editable={true}
                 id="phoneNo"
                 label="เบอร์โทรศัพท์"
                 keyboardType="numeric"
