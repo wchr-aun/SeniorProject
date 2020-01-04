@@ -12,7 +12,7 @@ export default CustomButton = props => {
         backgroundColor: props.btnColor,
         justifyContent: "center"
       }}
-      onPress={props.onPress}
+      onPress={props.disable === true ? null : props.onPress}
     >
       <View
         style={{

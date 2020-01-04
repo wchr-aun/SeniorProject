@@ -71,6 +71,22 @@ ShowAllUserTrashNavigator.navigationOptions = ({ navigation }) => {
   };
 };
 
+SellingTransactionNavigator = createStackNavigator(
+  {
+    SellingTransactionScreen: {
+      screen: SellingTransactionScreen,
+      navigationOptions: { headerTitle: "การขายขยะ" }
+    },
+    // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
+    SellingTransactionDetailScreen: {
+      screen: SellingTransactionDetailScreen,
+      navigationOptions: { headerTitle: "รายละเอียด" }
+    },
+    chooseBuyerForSellScreen: ChooseBuyerScreen
+  },
+  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+);
+
 // Trash Main
 const SellerBottomTabConfig = {
   Home: {
@@ -106,7 +122,7 @@ const SellerBottomTabConfig = {
     }
   },
   SellTransaction: {
-    screen: SellingTransactionScreen,
+    screen: SellingTransactionNavigator,
     navigationOptions: {
       tabBarLabel: "การขายขยะ",
       tabBarIcon: tabInfo => {

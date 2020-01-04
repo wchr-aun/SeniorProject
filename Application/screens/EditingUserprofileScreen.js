@@ -14,6 +14,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { sha256 } from "js-sha256";
+import { useDispatch } from "react-redux";
 
 import {
   widthPercentageToDP as wp,
@@ -22,6 +23,8 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../constants/AppVariableSetting";
+
+import * as authAction from "../store/actions/authAction";
 
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
@@ -247,6 +250,23 @@ export default EditingUserprofileScreen = props => {
       />
     );
   }
+
+  // For User signout
+  const dispatch = useDispatch();
+  const signOutHandler = async () => {
+    setIsLoading(true);
+    let result = await dispatch(authAction.signout());
+
+    /* Maybe clear redux storing in the ram
+    Look at this thread, might be useful, probably:
+    https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store */
+
+    if (result) props.navigation.navigate("StartupScreen");
+    else {
+      setIsLoading(false);
+      /* Make an alert or something, I don't know. */
+    }
+  };
 
   const [switchSearch, setSwitchSearch] = useState(false);
   return (
@@ -748,7 +768,7 @@ export default EditingUserprofileScreen = props => {
           style={{
             width: wp("90%"),
             height: "15%",
-            justifyContent: "center",
+            justifyContent: "space-around",
             paddingBottom: getStatusBarHeight()
           }}
         >
@@ -758,7 +778,6 @@ export default EditingUserprofileScreen = props => {
               height: "60%",
               borderRadius: 10,
               margin: wp("1.25%"),
-              alignSelf: "flex-start",
               borderWidth: 1,
               borderColor: Colors.on_secondary
             }}
@@ -775,6 +794,22 @@ export default EditingUserprofileScreen = props => {
               color={Colors.primary}
             />{" "}
             ย้อนกลับ
+          </CustomButton>
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "60%",
+              borderRadius: 10,
+              margin: wp("1.25%"),
+              borderWidth: 1,
+              borderColor: Colors.on_secondary
+            }}
+            onPress={signOutHandler}
+            btnColor={Colors.primary}
+            btnTitleColor={Colors.on_primary}
+            btnTitleFontSize={14}
+          >
+            ลงชื่อออก
           </CustomButton>
         </View>
       </LinearGradient>

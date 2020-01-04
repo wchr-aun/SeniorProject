@@ -34,7 +34,7 @@ export default ImageCircle = props => {
           width: props.avariableWidth,
           height: props.avariableWidth
         }}
-        resizeMode="contain"
+        resizeMode="cover"
       />
     </View>
   );

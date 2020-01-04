@@ -6,22 +6,11 @@ export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
 export const fetchTransaction = role => {
   return async dispatch => {
     try {
-      let transactions = await getTransactions(role);
+      let transactionMode = await getTransactions(role);
 
-      /***************************CHANGE THIS********************************/
-      transactions = transactions[0]; // Change this to whatever you need to
-      /**********************************************************************/
-
-      // Get 'amountOfType' and 'assignTime' in the right format
-      transactions.forEach((item, index) => {
-        transactions[index].detail.amountOfType = item.detail.items.length;
-        transactions[index].detail.assignedTimeFormat = libary.formatDate(
-          item.detail.assignedTime.toDate()
-        );
-      });
-
-      dispatch({ type: FETCH_TRANSACTION, transactions });
+      dispatch({ type: FETCH_TRANSACTION, transactionMode });
     } catch (err) {
+      console.log(err.message);
       dispatch({ type: FETCH_TRANSACTION, transactions: [] });
       throw new Error(err.message);
     }

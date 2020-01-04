@@ -11,6 +11,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
+import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 export default OptionTrashCheck = props => {
   const [img, setImg] = useState();
@@ -21,20 +22,23 @@ export default OptionTrashCheck = props => {
   };
 
   return (
-    <View
-      style={{
-        width: wp("100%"),
-        height: hp("100%") - AppVariableSetting.bottomBarHeight - Header.HEIGHT,
-        paddingVertical: getStatusBarHeight()
-      }}
-    >
-      <Text>OptionTrashCheck</Text>
-      <ImagePicker
-        onImageTaken={img => {
-          setImg(img);
-          imageTakenHandler();
+    <View>
+      <CustomStatusBar />
+      <View
+        style={{
+          width: wp("100%"),
+          height:
+            hp("100%") - AppVariableSetting.bottomBarHeight - Header.HEIGHT
         }}
-      />
+      >
+        <Text>OptionTrashCheck</Text>
+        <ImagePicker
+          onImageTaken={img => {
+            setImg(img);
+            imageTakenHandler();
+          }}
+        />
+      </View>
     </View>
   );
 };

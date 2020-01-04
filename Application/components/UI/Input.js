@@ -74,7 +74,14 @@ export default Input = props => {
     <View
       style={{ ...styles.formControl, ...props.style, alignSelf: "center" }}
     >
-      <Text style={styles.label}>{props.label}</Text>
+      <Text
+        style={{
+          ...styles.label,
+          color: props.editable === true ? Colors.primary : Colors.lineSeparate
+        }}
+      >
+        {props.label}
+      </Text>
       <View
         style={{
           flexDirection: "row",
@@ -96,7 +103,9 @@ export default Input = props => {
           {...props}
           style={{
             ...styles.input,
-            width: wp("70%")
+            width: wp("70%"),
+            color:
+              props.editable === true ? Colors.primary : Colors.lineSeparate
           }}
           value={inputState.value}
           onChangeText={textChangeHandler}
