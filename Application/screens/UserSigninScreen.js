@@ -24,6 +24,7 @@ import firebaseUtil from "../firebase";
 import ThaiText from "../components/ThaiText";
 import CustomButton from "../components/UI/CustomButton";
 import ThaiTitleText from "../components/ThaiTitleText";
+import { updateNotificationToken } from "../utils/firebaseFunctions"
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
@@ -39,7 +40,7 @@ const formReducer = (state, action) => {
     };
     let updatedAllFormIsValid = true;
     for (const key in updatedValidities) {
-      updatedAllFormIsValid = updatedAllFormIsValid && updatedValidities[key];
+      updatedAllFormIsValid = Boolean(updatedAllFormIsValid && updatedValidities[key]);
     }
     return {
       ...state,
@@ -78,11 +79,13 @@ export default UserAuthenScreen = props => {
 
   // For alerting user an signin-signup action
   useEffect(() => {
-    if (error) Alert.alert("An Error has occurred!", error, [{ text: "OK" }]);
+    if (error) {
+      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
+      setError("");
+    }
   }, [error]);
 
-  const authHandler = useCallback(async () => {
-    setError(null);
+  const authHandler = async () => {
     setIsLoading(true);
     let email = formState.inputValues.email;
     let password = formState.inputValues.password
@@ -94,14 +97,20 @@ export default UserAuthenScreen = props => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        setIsLoading(false);
-        props.navigation.navigate("StartupScreen");
+        updateNotificationToken().then(result => {
+          if (result) {
+            console.log("transfering")
+            props.navigation.navigate("StartupScreen");
+          }
+        }).catch(err => {
+          setError(err)
+        })
       })
       .catch(err => {
         setIsLoading(false);
         setError(err.message);
       });
-  }, [formState]);
+  };
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -147,7 +156,7 @@ export default UserAuthenScreen = props => {
               {signupBeforeSignin ? (
                 <View>
                   <Text style={{ color: "green" }}>
-                    Great! Your account is already created.
+                    Great! Your account has been created.
                   </Text>
                 </View>
               ) : null}

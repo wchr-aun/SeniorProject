@@ -207,14 +207,17 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
 })
 
 exports.updateNotificationToken = functions.https.onCall((data,context) => {
-  return usersDB
-  .doc(context.auth.uid)
-  .update({notificationToken: data.notificationToken})
-  .then(() => {
-    return true
-  }).catch(err => {
-    return {err}
-  })
+  if (context.auth.uid != null) {
+    return usersDB
+    .doc(context.auth.uid)
+    .update({notificationToken: data.notificationToken})
+    .then(() => {
+      return true
+    }).catch(err => {
+      return {err}
+    })
+  }
+  else return {err: "The request is denied because of authetication"}
 })
 
 function sendNotification (token, title, body) {

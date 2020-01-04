@@ -1,4 +1,4 @@
-import firebaseFunctions from "../../utils/firebaseFunctions";
+import { getUsers } from "../../utils/firebaseFunctions";
 import firebaseUtil from "../../firebase";
 
 export const AUTHENTICATE = "AUTHENTICATE";
@@ -10,7 +10,7 @@ export const SIGNIN = "SIGNIN";
 export const signin = () => {
   return async dispatch => {
     // do async task-2
-    return firebaseFunctions.getUsers().then(result => {
+    return getUsers().then(result => {
       dispatch({
         type: SIGNIN,
         userProfile: {

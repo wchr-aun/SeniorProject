@@ -1,10 +1,11 @@
 import firebaseUtil from "../firebase";
+import { Notifications } from "expo";
 
 const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
 
 // Get firebase document (trashOfUser)
-const getSellerItems = async () => {
+export const getSellerItems = async () => {
   return firestore
     .collection("sellerItems")
     .doc(firebaseUtil.auth().currentUser.uid)
@@ -20,7 +21,7 @@ const getSellerItems = async () => {
 };
 
 // Get firebase UserProfile
-const getUsers = async () => {
+export const getUsers = async () => {
   return firestore
     .collection("users")
     .doc(firebaseUtil.auth().currentUser.uid)
@@ -44,7 +45,7 @@ const getUsers = async () => {
 };
 
 // Get firebase firestore wasteType
-const getWasteType = async () => {
+export const getWasteType = async () => {
   let wasteTypes = [];
   return firestore
     .collection("wasteType")
@@ -58,7 +59,7 @@ const getWasteType = async () => {
 };
 
 // Get firebase UserProfile
-const getWasteTypeDetail = async wasteTypeId => {
+export const getWasteTypeDetail = async wasteTypeId => {
   return firestore
     .collection("wasteType")
     .doc(wasteTypeId)
@@ -72,7 +73,7 @@ const getWasteTypeDetail = async wasteTypeId => {
     });
 };
 
-const getSellerListAndWasteType = async () => {
+export const getSellerListAndWasteType = async () => {
   return getSellerItems().then(itemsReturned => {
     return new Promise((resolve, reject) => {
       if (itemsReturned.length > 0) {
@@ -96,7 +97,7 @@ const getSellerListAndWasteType = async () => {
   });
 };
 
-const getTransactions = async (role) => {
+export const getTransactions = async (role) => {
   let allTx = []
   let promises = []
   for (let status = 0; status < 5; status++) {
@@ -120,7 +121,7 @@ const getTransactions = async (role) => {
   return Promise.all(promises).then(() => {return allTx})
 };
 
-const getFavBuyers = async () => {
+export const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(firebaseUtil.auth().currentUser.uid)
@@ -147,7 +148,7 @@ const getFavBuyers = async () => {
     });
 };
 
-const searchBuyers = async (condition, orderBy) => {
+export const searchBuyers = async (condition, orderBy) => {
   return firestore
     .collection("buyerList")
     .orderBy(condition || "purchaseList", orderBy)
@@ -164,7 +165,7 @@ const searchBuyers = async (condition, orderBy) => {
     });
 };
 
-const addWaste = async items => {
+export const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
     .then(result => {
@@ -173,7 +174,7 @@ const addWaste = async items => {
     });
 };
 
-const sellWaste = async transaction => {
+export const sellWaste = async transaction => {
   return functions
     .httpsCallable("sellWaste")(transaction)
     .then(function(result) {
@@ -183,7 +184,7 @@ const sellWaste = async transaction => {
     });
 };
 
-const toggleSwitches = async toggleSearch => {
+export const toggleSwitches = async toggleSearch => {
   console.log("hello");
   return functions
     .httpsCallable("toggleSearch")({ toggleSearch })
@@ -195,7 +196,7 @@ const toggleSwitches = async toggleSearch => {
     });
 };
 
-const createAccount = async user => {
+export const createAccount = async user => {
   return functions
     .httpsCallable("createAccount")(user)
     .then(result => {
@@ -213,17 +214,24 @@ const createAccount = async user => {
     });
 };
 
-export default {
-  getUsers,
-  getSellerItems,
-  getWasteType,
-  getWasteTypeDetail,
-  getSellerListAndWasteType,
-  getTransactions,
-  searchBuyers,
-  addWaste,
-  toggleSwitches,
-  sellWaste,
-  createAccount,
-  getFavBuyers
-};
+export const updateTxStatus = async () => {
+
+}
+
+export const editUserInfo = async () => {
+
+}
+
+export const updateNotificationToken = async () => {
+  let notificationToken = await Notifications.getExpoPushTokenAsync();
+  return functions
+    .httpsCallable("updateNotificationToken")({notificationToken})
+    .then(result => {
+      if (result.data.err == null) {
+        return true
+      } else throw new Error(result.data.err);
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
+}

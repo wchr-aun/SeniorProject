@@ -1,11 +1,11 @@
-import firebaseFunctions from "../../utils/firebaseFunctions";
+import { getWasteType } from "../../utils/firebaseFunctions";
 
 export const FETCH_WASTETYPE = "FETCH_WASTETYPE";
 
 export const fetchWasteType = () => {
   return async dispatch => {
     let wasteTypes = [];
-    wasteTypes = await firebaseFunctions.getWasteType();
+    wasteTypes = await getWasteType();
     // Get only wasteType name
     wasteTypes.forEach((item, index) => {
       // wasteTypes.push(...item, { value: item.wasteTypeId });

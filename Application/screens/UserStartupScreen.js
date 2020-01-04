@@ -9,26 +9,22 @@ export default UserStartupScreen = props => {
   console.log('startup')
 
   useEffect(() => {
-    trySignin();
-  }, [dispatch]);
-
-  const trySignin = async () => {
-    firebaseUtil.auth().onAuthStateChanged(async user => {
+    firebaseUtil.auth().onAuthStateChanged(user => {
       if (user != null) {
-        let config_role = await AsyncStorage.getItem('CONFIG_ROLE');
-        // get user profile from redux
-        await dispatch(authAction.signin());
-
-        if (config_role == "seller")
-          props.navigation.navigate("SellerNavigator")
-        else if (config_role == "buyer") {
-          props.navigation.navigate("SellerNavigator") // wait for buyer screen
-        }
-        else props.navigation.navigate("ConfigAccountScreen")
+        dispatch(authAction.signin()).then(() => {
+          AsyncStorage.getItem('CONFIG_ROLE').then(config_role => {
+            if (config_role == "seller")
+              props.navigation.navigate("SellerNavigator")
+            else if (config_role == "buyer") {
+              props.navigation.navigate("SellerNavigator") // wait for buyer screen
+            }
+            else props.navigation.navigate("ConfigAccountScreen")
+          })
+        })
       }
       else props.navigation.navigate("UserAuthenNavigator")
     });
-  };
+  }, []);
 
   return <View></View>;
 };

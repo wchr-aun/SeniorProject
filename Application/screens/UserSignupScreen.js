@@ -22,7 +22,7 @@ import {
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
-import firebaseFunctions from "../utils/firebaseFunctions";
+import { createAccount } from "../utils/firebaseFunctions";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
@@ -152,23 +152,22 @@ export default UserSignupScreen = props => {
     console.log("--------> Submit ! ----> user");
     console.log(user);
 
-    firebaseFunctions
-      .createAccount(user)
-      .then(() => {
-        AsyncStorage.clear()
-          .then(() => {
-            setIsLoading(false);
-            props.navigation.navigate("ConfigAccountScreen");
-          })
-          .catch(err => {
-            setIsLoading(false);
-            setError(err);
-          });
-      })
-      .catch(err => {
-        setIsLoading(false);
-        setError(err);
-      });
+    createAccount(user)
+    .then(() => {
+      AsyncStorage.clear()
+        .then(() => {
+          setIsLoading(false);
+          props.navigation.navigate("ConfigAccountScreen");
+        })
+        .catch(err => {
+          setIsLoading(false);
+          setError(err);
+        });
+    })
+    .catch(err => {
+      setIsLoading(false);
+      setError(err);
+    });
   };
 
   const inputChangeHandler = useCallback(

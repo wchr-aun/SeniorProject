@@ -1,4 +1,4 @@
-import firebaseFunctions from "../../utils/firebaseFunctions";
+import { getSellerListAndWasteType, addWaste, searchBuyers, sellWaste } from "../../utils/firebaseFunctions";
 
 // export const FETCH_SELLER_ITEMS = "FETCH_SELLER_ITEMS";
 export const SET_WASTE = "SET_WASTE";
@@ -10,7 +10,7 @@ export const fetchSellerItems = () => {
   return async dispatch => {
     let sellerItemsAndWasteType = [];
     try {
-      sellerItemsAndWasteType = await firebaseFunctions.getSellerListAndWasteType();
+      sellerItemsAndWasteType = await getSellerListAndWasteType();
       dispatch({
         type: SET_WASTE,
         sellerItems: [...sellerItemsAndWasteType]
@@ -25,7 +25,7 @@ export const setUserWaste = sellerItems => {
   return async dispatch => {
     // update new wastesData on firebase
     try {
-      await firebaseFunctions.addWaste({
+      await addWaste({
         items: sellerItems
       });
       // set new wastesData
@@ -50,7 +50,7 @@ export const getBuyerList = () => {
   return async dispatch => {
     try {
       // search buyer
-      let buyerList = await firebaseFunctions.searchBuyers("", "desc");
+      let buyerList = await searchBuyers("", "desc");
 
       // dispatch
       dispatch({
@@ -90,7 +90,7 @@ export const chooseBuyerSell = (
       assignedTime: assignedTime
     };
     try {
-      await firebaseFunctions.sellWaste(transaction);
+      await sellWaste(transaction);
       // update redux store
       dispatch({
         type: CHOOSEBUYER_SELL,

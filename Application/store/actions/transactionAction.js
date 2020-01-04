@@ -1,4 +1,4 @@
-import firebaseFunctions from "../../utils/firebaseFunctions";
+import { getTransactions } from "../../utils/firebaseFunctions";
 import libary from "../../utils/libary";
 
 export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
@@ -6,7 +6,7 @@ export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
 export const fetchTransaction = role => {
   return async dispatch => {
     try {
-      let transactions = await firebaseFunctions.getTransactions(role);
+      let transactions = await getTransactions(role);
 
       /***************************CHANGE THIS********************************/
       transactions = transactions[0]; // Change this to whatever you need to
