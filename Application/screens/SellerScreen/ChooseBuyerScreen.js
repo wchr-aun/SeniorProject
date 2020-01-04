@@ -88,6 +88,8 @@ export default UserAuthenScreen = props => {
         )
       );
     } catch (err) {
+      // console.log(JSON.stringify(err.message));
+      // console.log(Object.getOwnPropertyNames(err.message));
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
     }
     console.log("after dispatch  for chooseBuyerSell");
@@ -142,6 +144,7 @@ export default UserAuthenScreen = props => {
         <View style={{ width: wp("90%"), height: hp("30") }}>
           {datepickerShow ? (
             <DateTimePicker
+              mode="datetime"
               isVisible={datepickerShow}
               onConfirm={handleDatePicked}
               onCancel={hideDateTimePicker}

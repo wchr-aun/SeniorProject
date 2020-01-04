@@ -15,73 +15,106 @@ import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import TrashCardForSell from "../../components/TrashCardForSell";
 
 const SELECT_ITEM = "SELECT_ITEM";
-const ADD_WASTE = "ADD_WASTE";
-const MINUS_WASTE = "MINUS_WASTE";
-const EDIT_WASTE = "EDIT_WASTE";
+const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
+const MINUS_AMOUNT_FORSELL = "MINUS_AMOUNT_FORSELL";
+const EDIT_AMOUNT_FORSELL = "EDIT_AMOUNT_FORSELL";
 const SET_WASTE = "SET_WASTE";
 
 const trashSellingReducer = (state, action) => {
-  let founded = false;
   let sellerItems = [...state.sellerItems];
+  let sellerItem = "";
+  let targetIndex = "";
 
   switch (action.type) {
     case SET_WASTE:
       console.log("SET WASTE local Reducer Run");
-      console.log("----------- state");
-      console.log(action.sellerItems);
+      const updatedSellerItems = [...action.sellerItems];
+      updatedSellerItems.forEach((item, index) => {
+        updatedSellerItems[index].amountForSell = 0;
+        updatedSellerItems[index].UI_PlusDisabled = false; //because initially, amountForSell equal to
+        updatedSellerItems[index].UI_MinusDisabled = false;
+      });
       return {
         ...state,
         sellerItems: [...action.sellerItems]
       };
     case SELECT_ITEM:
-      console.log("SELECT_ITEM local Reducer Run");
-      // sellerItems.forEach((item, index) => {
-      //   if (item.wasteType === action.wasteType)
-      //     sellerItems[index].amountForSell = action.amount;
-      // });
-      let updatedItem = sellerItems.filter(
+      console.log("action.preIsSelected");
+      console.log(action.preIsSelected);
+      sellerItem = sellerItems.filter(
         item => item.wasteType === action.wasteType
-      );
-      let updatedItemIndex = sellerItems.indexOf(updatedItem[0]);
-      console.log("updatedItem");
-      console.log(updatedItem);
-      console.log(updatedItemIndex);
+      )[0];
+
+      if (action.preIsSelected) {
+        sellerItem.amountForSell = 0;
+        sellerItem.UI_PlusDisabled = false;
+        sellerItem.UI_PlusDisabled = false;
+      } else {
+        sellerItem.amountForSell = sellerItem.amount;
+        sellerItem.UI_PlusDisabled = true;
+      }
+
       return {
         ...state,
-        sellerItems: sellerItems
+        sellerItems: [...sellerItems]
       };
-    case ADD_WASTE:
+
+    case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
+      sellerItem = sellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+
+      // add + 1 to amount for selling
+      sellerItem.amountForSell = sellerItem.amountForSell + 1;
+      sellerItem.UI_MinusDisabled = false;
+
+      // if amountForSell = amount, plus btn can't be press
+      if (sellerItem.amountForSell === sellerItem.amount)
+        sellerItem.UI_PlusDisabled = true;
 
       return {
         ...state,
         sellerItems: sellerItems
       };
-    case MINUS_WASTE:
+    case MINUS_AMOUNT_FORSELL:
       console.log("MINUS_WASTE local Reducer Run");
-      // change or add
-      sellerItems.forEach((item, index) => {
-        if (item.wasteType === action.wasteType) {
-          founded = true;
-          sellerItems[index].amount = sellerItems[index].amount - 1;
-          if (sellerItems[index].amount === 0) sellerItems.splice(index, 1);
-        }
-      });
+      sellerItem = sellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+
+      // add + 1 to amount for selling
+      sellerItem.amountForSell = sellerItem.amountForSell - 1;
+      sellerItem.UI_PlusDisabled = false;
+
+      // if amountForSell = amount, plus btn can't be press
+      if (sellerItem.amountForSell - 1 === -1)
+        //if amount for sell --> 0
+        sellerItem.UI_MinusDisabled = true;
       return {
         ...state,
         sellerItems: sellerItems
       };
-    case EDIT_WASTE:
+    case EDIT_AMOUNT_FORSELL:
       // edit from text-input
-      console.log("EDIT_WASTE local Reducer Run");
-      sellerItems.forEach((item, index) => {
-        if (item.wasteType === action.wasteType) {
-          sellerItems[index].amount = action.value;
-        }
-      });
+      console.log("EDIT_AMOUNT_FORSELL local Reducer Run");
+      sellerItem = sellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+
+      if (action.value <= sellerItem.amount)
+        sellerItem.amountForSell = action.value;
+      else sellerItem.amountForSell = sellerItem.amount;
+
+      sellerItem.UI_MinusDisabled =
+        sellerItem.amountForSell - 1 === -1 ? true : false;
+
+      sellerItem.UI_PlusDisabled =
+        sellerItem.amountForSell === sellerItem.amount ? true : false;
+
       return {
         ...state,
-        sellerItems: sellerItems
+        sellerItems: [...sellerItems]
       };
   }
   return state;
@@ -179,14 +212,16 @@ export default SellingTrashScreen = props => {
                 amount={itemData.item.amount}
                 amountForSell={itemData.item.amountForSell}
                 style={styles.eachTrashCard}
+                UI_MinusDisabled={itemData.item.UI_MinusDisabled}
+                UI_PlusDisabled={itemData.item.UI_PlusDisabled}
                 dispatchAmountTrashsState={dispatchAmountTrashsState}
-                selectedHandler={() => {
-                  return {
-                    type: SELECT_ITEM,
-                    amount: itemData.item.amount,
-                    wasteType: itemData.item.wasteType
-                  };
-                }}
+                // selectedHandler={() => {
+                //   return {
+                //     type: SELECT_ITEM,
+                //     isSelected: itemData.item.amount,
+                //     wasteType: itemData.item.wasteType
+                //   };
+                // }}
               />
             )}
           />

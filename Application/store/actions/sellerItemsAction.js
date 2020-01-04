@@ -45,9 +45,17 @@ export const setUserWaste = sellerItems => {
 };
 
 export const setSellerItemsForSell = sellerItems => {
-  return {
-    type: SET_WASTE_FOR_SELL,
-    itemsForSell: [...sellerItems]
+  return async dispatch => {
+    console.log("-----> sellerItems");
+    console.log(sellerItems);
+
+    sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
+
+    return dispatch({
+      type: SET_WASTE_FOR_SELL,
+      itemsForSell: [...sellerItemsForSell]
+    });
+    // After this, should set Redux store minus trash that sell
   };
 };
 
@@ -82,7 +90,7 @@ export const chooseBuyerSell = (
     console.log(buyerPriceInfo);
     sellerItems.forEach((item, index) => {
       updatedItems.push({
-        amount: item.amount,
+        amount: item.amountForSell,
         wasteType: item.wasteType,
         price: buyerPriceInfo[item.wasteType]
       });

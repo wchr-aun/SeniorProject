@@ -32,6 +32,7 @@ export default function(state = initialState, action) {
       console.log("CHOOSEBUYER_SELL Reducer Run");
       console.log(action.transaction.sellerItems);
 
+      //************ do remove some existing sellerItems
       return {
         ...state
       };
