@@ -14,32 +14,18 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiText from "./ThaiText";
-import libary from "../utils/libary";
 import ImageCircle from "./UI/ImageCircle";
+import libary from "../utils/libary";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../constants/AppVariableSetting";
 
 export default SellTransactionCard = props => {
-  // Resolve change vertical and horizontal affect to width
-  const [availableWidth, setAvailableWidth] = useState(
-    Dimensions.get("window").width
-  );
-  const [availableHeight, setAvailableHeight] = useState(
-    // Delete status bar height
-    Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
-  );
-  useEffect(() => {
-    const updateScreen = () => {
-      setAvailableWidth(Dimensions.get("window").width);
-      setAvailableHeight(
-        // Real Content Height
-        Dimensions.get("window").height - AppVariableSetting.bottomBarHeight
-      );
-    };
-    Dimensions.addEventListener("change", updateScreen);
-    return () => {
-      Dimensions.removeEventListener("change", updateScreen);
-    };
-  });
   // Set-up the touchable view
   let TouchableComponent = TouchableOpacity;
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -50,23 +36,24 @@ export default SellTransactionCard = props => {
     <TouchableComponent onPress={props.onPress}>
       <View
         style={{
-          ...styles.container,
-          ...props.style,
-          width: availableWidth * 0.95,
+          width: wp("95%"),
+          height: 100,
+          backgroundColor: Colors.on_primary,
+          alignSelf: "center",
+          marginVertical: 5,
           borderRadius: 10,
           flexDirection: "row"
         }}
       >
         <ImageCircle
           imgUrl={props.imgUrl}
-          avariableWidth={availableWidth * 0.2}
-          // style={{marginHorizontal: 10}}
+          avariableWidth={wp("20%")}
+          style={{ marginHorizontal: wp("3%") }}
         />
         <View
           style={{
-            width: availableWidth * 0.7,
-            // padding: 10,
-            backgroundColor: "yellow"
+            width: wp("69%"),
+            padding: wp("1.75%")
           }}
         >
           <View style={{ ...styles.BuyerName }}>
@@ -76,8 +63,6 @@ export default SellTransactionCard = props => {
           <View
             style={{
               ...styles.description,
-              borderColor: "red",
-              borderWidth: 1,
               width: "100%"
             }}
           >
@@ -98,6 +83,7 @@ export default SellTransactionCard = props => {
 };
 
 const styles = StyleSheet.create({
+  container: {},
   userImg: {
     width: "100%",
     height: "100%"

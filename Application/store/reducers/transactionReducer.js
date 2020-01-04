@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
     case FETCH_TRANSACTION:
       return {
         ...state,
-        transactions: [...action.transactions]
+        transactions: [...action.transactionMode[0]]
       };
     case LOGOUT:
       return initialState;

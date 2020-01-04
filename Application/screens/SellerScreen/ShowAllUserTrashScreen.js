@@ -147,27 +147,27 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 const ShowAllUserTrashScreen = props => {
-  // Show height detail
-  useEffect(() => {
-    console.log("------------ Heigth hp100");
-    console.log(hp("100%"));
-    console.log("------------ Heigth dimension window 100");
-    console.log(Dimensions.get("window").height);
-    console.log("------------ Heigth dimension screen 100");
-    console.log(Dimensions.get("screen").height);
-    console.log("------------ get status bar height");
-    console.log(getStatusBarHeight());
-    console.log("------------ get Header.HEIGHTt");
-    console.log(Header.HEIGHT);
-    console.log("------------ get bottomBarHeight height");
-    console.log(AppVariableSetting.bottomBarHeight);
-    console.log(
-      '------------ get hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight --> 596'
-    );
-    console.log(
-      hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight
-    );
-  }, []);
+  // // Show height detail
+  // useEffect(() => {
+  //   console.log("------------ Heigth hp100");
+  //   console.log(hp("100%"));
+  //   console.log("------------ Heigth dimension window 100");
+  //   console.log(Dimensions.get("window").height);
+  //   console.log("------------ Heigth dimension screen 100");
+  //   console.log(Dimensions.get("screen").height);
+  //   console.log("------------ get status bar height");
+  //   console.log(getStatusBarHeight());
+  //   console.log("------------ get Header.HEIGHTt");
+  //   console.log(Header.HEIGHT);
+  //   console.log("------------ get bottomBarHeight height");
+  //   console.log(AppVariableSetting.bottomBarHeight);
+  //   console.log(
+  //     '------------ get hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight --> 596'
+  //   );
+  //   console.log(
+  //     hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight
+  //   );
+  // }, []);
 
   // For back behavior
   useEffect(() => {
@@ -316,10 +316,10 @@ const ShowAllUserTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height:
-            hp("100%") +
-            getStatusBarHeight() -
-            AppVariableSetting.bottomBarHeight,
-          alignItems: "center"
+            hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight,
+          alignItems: "center",
+          borderColor: "black",
+          borderWidth: 3
         }}
       >
         <View
@@ -364,12 +364,10 @@ const ShowAllUserTrashScreen = props => {
         </View>
         <View
           style={{
-            paddingVertical: 5,
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "15%",
-            paddingBottom: getStatusBarHeight()
+            height: "15%"
           }}
         >
           {editingMode ? (
@@ -478,7 +476,7 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   navigateBtn: {
     width: "40%",
-    height: "80%",
+    height: "60%",
     borderRadius: 5,
     marginBottom: 10
   }
