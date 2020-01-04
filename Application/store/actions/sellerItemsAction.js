@@ -98,7 +98,7 @@ export const chooseBuyerSell = (
 
     // do async task
     let transaction = {
-      sellerItems: updatedItems,
+      items: updatedItems,
       addr: sellAddr,
       buyer: buyerName,
       txType: 0,
