@@ -98,10 +98,8 @@ export default UserAuthenScreen = props => {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         updateNotificationToken().then(result => {
-          if (result) {
-            console.log("transfering")
+          if (result)
             props.navigation.navigate("StartupScreen");
-          }
         }).catch(err => {
           setError(err)
         })

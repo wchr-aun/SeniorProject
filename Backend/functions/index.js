@@ -2,6 +2,7 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const serviceAccount = require('./service_account.json')
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG)
+const fetch = require("node-fetch")
 
 adminConfig.credential = admin.credential.cert(serviceAccount)
 admin.initializeApp(adminConfig)
@@ -220,7 +221,7 @@ exports.updateNotificationToken = functions.https.onCall((data,context) => {
   else return {err: "The request is denied because of authetication"}
 })
 
-function sendNotification (token, title, body) {
+exports.sendNotification = functions.https.onCall((data,context) => {
   let reponse = fetch("https://exp.host/--/api/v2/push/send", {
     method: 'POST',
     headers: {
@@ -228,13 +229,15 @@ function sendNotification (token, title, body) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      to: token,
+      to: data.token,
+      priority: "normal",
       sound: "default",
-      title,
-      body
+      title: data.title,
+      body: data.body
     })
   })
-}
+  return {reponse}
+})
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {

@@ -156,7 +156,6 @@ export default UserSignupScreen = props => {
     .then(() => {
       AsyncStorage.clear()
         .then(() => {
-          setIsLoading(false);
           props.navigation.navigate("ConfigAccountScreen");
         })
         .catch(err => {
