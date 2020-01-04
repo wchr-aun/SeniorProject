@@ -9,7 +9,7 @@ export default UserStartupScreen = props => {
   console.log('startup')
 
   useEffect(() => {
-    firebaseUtil.auth().onAuthStateChanged(user => {
+    firebaseUtil.auth().onIdTokenChanged(user => {
       if (user != null) {
         dispatch(authAction.signin()).then(() => {
           AsyncStorage.getItem('CONFIG_ROLE').then(config_role => {
