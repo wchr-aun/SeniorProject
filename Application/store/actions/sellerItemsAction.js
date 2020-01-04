@@ -1,4 +1,9 @@
-import { getSellerListAndWasteType, addWaste, searchBuyers, sellWaste } from "../../utils/firebaseFunctions";
+import {
+  getSellerListAndWasteType,
+  addWaste,
+  searchBuyers,
+  sellWaste
+} from "../../utils/firebaseFunctions";
 
 // export const FETCH_SELLER_ITEMS = "FETCH_SELLER_ITEMS";
 export const SET_WASTE = "SET_WASTE";
@@ -73,6 +78,8 @@ export const chooseBuyerSell = (
   return async dispatch => {
     // Map buyer price into an transaction
     let updatedItems = [];
+    console.log("buyerPriceInfo");
+    console.log(buyerPriceInfo);
     sellerItems.forEach((item, index) => {
       updatedItems.push({
         amount: item.amount,
@@ -89,6 +96,10 @@ export const chooseBuyerSell = (
       txType: 0,
       assignedTime: assignedTime
     };
+
+    console.log("transaction before sending");
+    console.log(transaction);
+
     try {
       await sellWaste(transaction);
       // update redux store

@@ -195,7 +195,6 @@ export default UserSignupScreen = props => {
         inputIdentifier: inputIdentifier
       });
     },
-    // [formState.allFormIsValid, dispatchFormState]
     [dispatchFormState]
   );
 
@@ -211,7 +210,7 @@ export default UserSignupScreen = props => {
       type: "CHOOSE_CURRENT_TIME",
       prestateIsCur: currentAddr
     });
-    setSellerAddr({ sellerAddrResult });
+    setSellerAddr({ ...sellerAddrResult });
   }, [currentAddr]);
 
   // Search map from user input form
