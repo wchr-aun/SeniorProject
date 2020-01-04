@@ -206,20 +206,17 @@ export const toggleSwitches = async toggleSearch => {
 };
 
 export const createAccount = async user => {
-  console.log("user in createAccount");
   return functions
     .httpsCallable("createAccount")(user)
     .then(result => {
-      console.log("1");
       if (result.data.err == null) {
-        console.log("2");
         return firebaseUtil
           .auth()
           .signInWithEmailAndPassword(user.email, user.password)
           .catch(err => {
             throw new Error(err);
           });
-      } else throw new Error(result.data.err);
+      } else throw new Error(result.data.err.errorInfo.message);
     })
     .catch(err => {
       throw new Error(err);

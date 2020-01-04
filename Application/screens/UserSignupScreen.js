@@ -168,10 +168,8 @@ export default UserSignupScreen = props => {
     );
     console.log(user);
 
-    await createAccount(user)
+    createAccount(user)
       .then(result => {
-        console.log("result");
-        console.log(result);
         AsyncStorage.clear()
           .then(() => {
             setIsLoading(false);
@@ -179,14 +177,13 @@ export default UserSignupScreen = props => {
           })
           .catch(err => {
             setIsLoading(false);
-            setError(err);
+            setError(err.message);
           });
       })
       .catch(err => {
         setIsLoading(false);
-        setError(err);
+        setError(err.message);
       });
-    console.log("10");
   };
 
   const inputChangeHandler = useCallback(
