@@ -97,28 +97,32 @@ export const getSellerListAndWasteType = async () => {
   });
 };
 
-export const getTransactions = async (role) => {
-  let allTx = []
-  let promises = []
+export const getTransactions = async role => {
+  let allTx = [];
+  let promises = [];
   for (let status = 0; status < 5; status++) {
-    promises.push(firestore
-      .collection("transactions")
-      .where(role, "==", firebaseUtil.auth().currentUser.uid)
-      .where("txStatus", "==", status)
-      .orderBy("createTimestamp", "desc")
-      .get()
-      .then(querySnapshot => {
-        let tx = [];
-        querySnapshot.forEach(doc => {
-          tx.push({ txId: doc.id, detail: doc.data() });
-        });
-        allTx[status] = tx;
-      })
-      .catch(err => {
-        throw new error(err);
-      }))
+    promises.push(
+      firestore
+        .collection("transactions")
+        .where(role, "==", firebaseUtil.auth().currentUser.uid)
+        .where("txStatus", "==", status)
+        .orderBy("createTimestamp", "desc")
+        .get()
+        .then(querySnapshot => {
+          let tx = [];
+          querySnapshot.forEach(doc => {
+            tx.push({ txId: doc.id, detail: doc.data() });
+          });
+          allTx[status] = tx;
+        })
+        .catch(err => {
+          throw new error(err);
+        })
+    );
   }
-  return Promise.all(promises).then(() => {return allTx})
+  return Promise.all(promises).then(() => {
+    return allTx;
+  });
 };
 
 export const getFavBuyers = async () => {
@@ -137,8 +141,13 @@ export const getFavBuyers = async () => {
           .doc(buyer)
           .get()
           .then(doc => {
-            if (doc.exists) buyersInfo.push({ txId: doc.id, detail: doc.data() });
-            else buyersInfo.push({ txId: doc.id, detail: "The document doesn't exist" });
+            if (doc.exists)
+              buyersInfo.push({ txId: doc.id, detail: doc.data() });
+            else
+              buyersInfo.push({
+                txId: doc.id,
+                detail: "The document doesn't exist"
+              });
           });
       });
       return buyersInfo;
@@ -197,10 +206,13 @@ export const toggleSwitches = async toggleSearch => {
 };
 
 export const createAccount = async user => {
+  console.log("user in createAccount");
   return functions
     .httpsCallable("createAccount")(user)
     .then(result => {
+      console.log("1");
       if (result.data.err == null) {
+        console.log("2");
         return firebaseUtil
           .auth()
           .signInWithEmailAndPassword(user.email, user.password)
@@ -214,24 +226,20 @@ export const createAccount = async user => {
     });
 };
 
-export const updateTxStatus = async () => {
+export const updateTxStatus = async () => {};
 
-}
-
-export const editUserInfo = async () => {
-
-}
+export const editUserInfo = async () => {};
 
 export const updateNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
   return functions
-    .httpsCallable("updateNotificationToken")({notificationToken})
+    .httpsCallable("updateNotificationToken")({ notificationToken })
     .then(result => {
       if (result.data.err == null) {
-        return true
+        return true;
       } else throw new Error(result.data.err);
     })
     .catch(err => {
       throw new Error(err);
     });
-}
+};
