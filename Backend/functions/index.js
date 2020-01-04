@@ -31,7 +31,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addr_geopoint: new firebase.firestore.GeoPoint(data.addr.latitude, data.addr.longtitude),
+      addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude),
       enableSearch: false,
       notificationToken
     }).catch(err => {
@@ -193,11 +193,12 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
   if (context.auth.uid != null) {
     let name = data.name
     let surname = data.surname
-    let addr = data.addr
+    let addr = data.addr.readable
     return userDB.doc(context.auth.id).update({
       name,
       surname,
-      addr
+      addr,
+      addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude)
     }).then(() => {
       return true
     }).catch(err => {
