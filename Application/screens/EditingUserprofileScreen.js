@@ -126,7 +126,7 @@ export default EditingUserprofileScreen = props => {
     }
   }, [error]);
 
-  const [isCurrentAddr, setIsCurrentAddr] = useState(false);
+  const [isCurrentAddr, setIsCurrentAddr] = useState(true);
   const [isAddrModalVisible, setIsAddrModalVisible] = useState(false);
   const [addrReadable, setAddrReadable] = useState(""); // readable
   const [addrCord, setAddrCord] = useState(""); //la, long
@@ -179,7 +179,7 @@ export default EditingUserprofileScreen = props => {
     setIsAddrModalVisible(true);
   };
 
-  const [switchSearch, setSwitchSearch] = useState(false);
+  const [switchSearch, setSwitchSearch] = useState(true);
   const [isSeller, setIsSeller] = useState(true);
 
   const configHandler = role => {
@@ -318,7 +318,16 @@ export default EditingUserprofileScreen = props => {
               >
                 <TouchableOpacity
                   onPress={() => configHandler("seller")}
-                  style={{ alignItems: "center" }}
+                  style={{
+                    alignItems: "center",
+                    width: wp("20%"),
+                    height: wp("20%"),
+                    borderRadius: wp("20%"),
+                    borderWidth: 3,
+                    borderColor: isSeller
+                      ? Colors.primary_variant
+                      : Colors.lineSeparate
+                  }}
                 >
                   <MaterialCommunityIcons
                     name="account"
@@ -331,7 +340,16 @@ export default EditingUserprofileScreen = props => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => configHandler("buyer")}
-                  style={{ alignItems: "center" }}
+                  style={{
+                    alignItems: "center",
+                    width: wp("20%"),
+                    height: wp("20%"),
+                    borderRadius: wp("20%"),
+                    borderWidth: 3,
+                    borderColor: !isSeller
+                      ? Colors.primary_variant
+                      : Colors.lineSeparate
+                  }}
                 >
                   <MaterialCommunityIcons
                     name="car-pickup"
@@ -569,7 +587,9 @@ export default EditingUserprofileScreen = props => {
                 }}
                 onPress={searchMapHandler}
                 btnColor={Colors.on_primary}
-                btnTitleColor={Colors.primary}
+                btnTitleColor={
+                  isCurrentAddr ? Colors.primary : Colors.lineSeparate
+                }
                 btnTitleFontSize={14}
               >
                 ค้นหาสถานที่
@@ -615,7 +635,7 @@ export default EditingUserprofileScreen = props => {
                     btnTitleColor={Colors.on_primary}
                     btnTitleFontSize={14}
                   >
-                    ยืนยันการแก้ไข้
+                    ยืนยันการแก้ไข
                   </CustomButton>
                 )}
               </View>
@@ -664,7 +684,7 @@ export default EditingUserprofileScreen = props => {
               borderColor: Colors.on_secondary
             }}
             onPress={signOutHandler}
-            btnColor={Colors.primary}
+            btnColor={Colors.error}
             btnTitleColor={Colors.on_primary}
             btnTitleFontSize={14}
           >
