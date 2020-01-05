@@ -20,18 +20,18 @@ export default ConfigAccountScreen = props => {
 
   const configHandler = role => {
     toggleSwitches(switchSearch)
-    .then(() => {
-      AsyncStorage.setItem("CONFIG_ROLE", role)
-        .then(() => {
-          props.navigation.navigate("StartupScreen");
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    });
+      .then(() => {
+        AsyncStorage.setItem("CONFIG_ROLE", role)
+          .then(() => {
+            props.navigation.navigate("StartupScreen");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (

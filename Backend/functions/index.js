@@ -35,12 +35,16 @@ exports.createAccount = functions.https.onCall((data, context) => {
       enableSearch: false,
       notificationToken
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }).then(() => {
     return true
   }).catch(err => {
-    return {err}
+    console.log("Error has occurred in createAccount() while creating an account")
+    console.log(err)
+    return {errorMessage: err.message}
   })
 })
 
@@ -51,10 +55,12 @@ exports.addWaste = functions.https.onCall((data, context) => {
     return sellerDB.doc(context.auth.uid).set({ items }, {merge: true}).then(() => {
       return true
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in addWaste() while setting the document " + context.auth.uid)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.sellWaste = functions.https.onCall((data, context) => {
@@ -73,7 +79,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
                 if (items[j].amount < doc.data().items[i].amount)
                   newItems.push({wasteType: items[j].wasteType, amount: doc.data().items[i].amount - items[j].amount})
                 else if (items[j].amount == doc.data().items[i].amount) continue
-                else return {err: "Item's amount doesn't match"}
+                else return {errorMessage: "Item's amount doesn't match"}
               }
             }
           }
@@ -88,22 +94,29 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               assignedTime: new Date(data.assignedTime) || "TBA",
               txStatus: 0
             }).then(() => {
+              // return sendNotification.then(result => { return result })
               return true
             }).catch(err => {
-              return {err}
+              console.log("Error has occurred in sellWaste() while adding a transaction")
+              console.log(err)
+              return {errorMessage: err.message}
             })
           }).catch(err => {
-            return {err}
+            console.log("Error has occurred in sellWaste() while updating the document " + context.auth.uid)
+            console.log(err)
+            return {errorMessage: err.message}
           })
         }
-        else return {err: "The document doesn't exist"}
+        else return {errorMessage: "The document doesn't exist"}
       }).catch(err => {
-        return {err}
+        console.log("Error has occurred in sellWaste() while getting the document " + context.auth.uid)
+        console.log(err)
+        return {errorMessage: err.message}
       })
     }
-    else return {err: "Transaction type is incorrect"}
+    else return {errorMessage: "Transaction type is incorrect"}
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.toggleSearch = functions.https.onCall((data, context) => {
@@ -111,10 +124,12 @@ exports.toggleSearch = functions.https.onCall((data, context) => {
     return usersDB.doc(context.auth.uid).update({enableSearch: data.toggleSearch}).then(() => {
       return true
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in toggleSearch() while updating the document " + context.auth.uid)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.changeTxStatus = functions.https.onCall((data, context) => {
@@ -128,7 +143,9 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             }).then(() => {
               return true
             }).catch(err => {
-              return {err}
+              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
             })
           }
           else {
@@ -138,7 +155,9 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             }).then(() => {
               return true
             }).catch(err => {
-              return {err}
+              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
             })
           }
         }
@@ -151,7 +170,9 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             }, { merge: true }).then(() => {
               return true
             }).catch(err => {
-              return {err}
+              console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
             })
           }
           else if (doc.data().txStatus == 4 || doc.data().txStatus == 5) {
@@ -161,20 +182,22 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             }, { merge: true }).then(() => {
               return true
             }).catch(err => {
-              return {err}
+              console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
             })
           }
         }
-        else return {err: "The transaction format is incorrect"}
+        else return {errorMessage: "The transaction format is incorrect"}
       }
-      else return {err: "The transaction is already completed"}
+      else return {errorMessage: "The transaction is already completed"}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.editBuyerInfo = functions.https.onCall((data, context) => {
-  if (context.auth.uid != null) {
+  if (context.auth != null) {
     let purchaseList = data.purchaseList
     let description = data.desc
     return buyerDB.doc(context.auth.id).update({
@@ -183,14 +206,16 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     }).then(() => {
       return true
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in editBuyerInfo() while updating the document " + context.auth.id)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.editUserInfo = functions.https.onCall((data, context) => {
-  if (context.auth.uid != null) {
+  if (context.auth != null) {
     let name = data.name
     let surname = data.surname
     let addr = data.addr.readable
@@ -202,43 +227,77 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     }).then(() => {
       return true
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.id)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 exports.updateNotificationToken = functions.https.onCall((data,context) => {
-  if (context.auth.uid != null) {
+  if (context.auth != null) {
     return usersDB
     .doc(context.auth.uid)
-    .update({notificationToken: data.notificationToken})
+    .update({notificationToken: admin.firestore.FieldValue.arrayUnion(data.notificationToken)})
     .then(() => {
       return true
     }).catch(err => {
-      return {err}
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.id)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
-  else return {err: "The request is denied because of authetication"}
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
-exports.sendNotification = functions.https.onCall((data,context) => {
-  let reponse = fetch("https://exp.host/--/api/v2/push/send", {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      to: data.token,
-      priority: "normal",
-      sound: "default",
-      title: data.title,
-      body: data.body
+exports.removeNotificationToken = functions.https.onCall((data,context) => {
+  if (context.auth != null) {
+    return usersDB
+    .doc(context.auth.uid)
+    .update({notificationToken: admin.firestore.FieldValue.arrayRemove(data.notificationToken)})
+    .then(() => {
+      return true
+    }).catch(err => {
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.id)
+      console.log(err)
+      return {errorMessage: err.message}
     })
-  })
-  return {reponse}
+  }
+  else return {errorMessage: "The request is denied because of authetication"}
 })
+
+// const sendNotification = async (uid, title, body) => {
+//   return usersDB.doc(uid).get(doc => {
+//     if (doc.exists) return doc.data().notificationToken
+//     else return {errorMessage: "The document doesn't exist"}
+//   }).then(tokens => {
+//     if (tokens.err == null) {
+//       tokens.forEach(token => {
+//         fetch("https://exp.host/--/api/v2/push/send", {
+//           method: 'POST',
+//           headers: {
+//             Accept: 'application/json',
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify({
+//             to: token,
+//             priority: "normal",
+//             sound: "default",
+//             title,
+//             body
+//           })
+//         })
+//       })
+//       return true
+//     }
+//     else return tokens
+//   }).catch(err => {
+//     console.log("Error has occurred in sendNotification()")
+//     console.log(err)
+//     return {errorMessage: "There is something wrong in firestore functions. Please wait for the fix!"}
+//   })
+// }
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {
