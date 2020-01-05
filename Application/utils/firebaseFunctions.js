@@ -52,7 +52,7 @@ export const getWasteType = async () => {
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        wasteTypes.push({ wasteTypeId: doc.id, info: doc.data() });
+        wasteTypes.push({ value: doc.id, info: doc.data() });
       });
       return wasteTypes;
     });
@@ -248,7 +248,6 @@ export const updateTxStatus = async updatedTx => {
       throw new Error(err.message);
     });
 };
-
 
 /* 
 newInfo = {

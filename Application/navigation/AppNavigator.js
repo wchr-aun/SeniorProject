@@ -23,6 +23,7 @@ import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 import AppVariableSetting from "../constants/AppVariableSetting";
 import UIScreenTemplate from "../screens/UIScreenTemplate";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 // for UserHomepageScreen
 const SellerhomepageNavigator = createStackNavigator(
@@ -57,7 +58,12 @@ const ShowAllUserTrashNavigator = createStackNavigator(
     },
     chooseBuyerForSellScreen: ChooseBuyerScreen
   },
-  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+  {
+    headerMode: Platform.OS === "android" ? "screen" : "float",
+    cardStyle: {
+      paddingTop: 0
+    }
+  }
 );
 
 // Hiding bottom tabbar

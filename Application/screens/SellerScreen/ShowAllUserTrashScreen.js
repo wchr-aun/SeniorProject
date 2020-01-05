@@ -295,11 +295,17 @@ const ShowAllUserTrashScreen = props => {
         setModalVisible={setModalVisible}
         data={wasteTypesRedux}
         modalVisible={modalVisible}
-        // dispatchAmountTrashsState={dispatchAmountTrashsState}
-        addNewWasteHandler={(wasteType, amount) => {
+        addNewWasteHandler={(
+          wasteType,
+          wasteDescription,
+          wasteDisposal,
+          amount
+        ) => {
           dispatchAmountTrashsState({
             type: ADD_WASTE,
             wasteType,
+            wasteDescription,
+            wasteDisposal,
             amount
           });
           setModalVisible(false);
@@ -317,9 +323,7 @@ const ShowAllUserTrashScreen = props => {
           width: wp("100%"),
           height:
             hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight,
-          alignItems: "center",
-          borderColor: "black",
-          borderWidth: 3
+          alignItems: "center"
         }}
       >
         <View
@@ -367,7 +371,8 @@ const ShowAllUserTrashScreen = props => {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "15%"
+            height: "15%",
+            paddingBottom: getStatusBarHeight()
           }}
         >
           {editingMode ? (
@@ -476,9 +481,9 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   navigateBtn: {
     width: "40%",
-    height: "60%",
+    height: "80%",
     borderRadius: 5,
-    marginBottom: 10
+    marginVertical: 5
   }
 });
 

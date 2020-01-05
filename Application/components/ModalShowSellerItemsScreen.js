@@ -17,11 +17,30 @@ import {
 } from "react-native-responsive-screen";
 import ThaiText from "./ThaiText";
 
-const ADD_WASTE = "ADD_WASTE";
-
 export default ModalShowSellersItemsScreen = props => {
   const [wasteType, setWasteType] = useState();
+  const [wasteDescription, setWasteDescription] = useState();
+  const [wasteDisposal, setWasteDisposal] = useState();
   const [amount, setAmount] = useState();
+
+  const onDropdownChangeHandler = wasteType => {
+    setWasteType(wasteType);
+
+    let wasteItem = props.data.filter(item => item.value === wasteType)[0];
+    console.log(wasteItem);
+    setWasteDescription(wasteItem.info.description);
+    setWasteDisposal(wasteItem.info.disposal);
+  };
+
+  const addWasteHandler = () => {
+    props.addNewWasteHandler(
+      wasteType,
+      wasteDescription,
+      wasteDisposal,
+      parseInt(amount, 10)
+    );
+    props.setModalVisible(false);
+  };
 
   return (
     <Modal
@@ -47,18 +66,9 @@ export default ModalShowSellersItemsScreen = props => {
           <View style={{ width: "100%", height: "25%" }}>
             <Dropdown
               label="Waste Type"
-              data={
-                props.data.length !== 0
-                  ? props.data
-                  : [
-                      { value: "wasteType/PETE" },
-                      { value: "wasteType/HDPE" },
-                      { value: "wasteType/PP" }
-                    ]
-              }
+              data={props.data}
               onChangeText={thisValue => {
-                console.log(thisValue);
-                setWasteType(thisValue);
+                onDropdownChangeHandler(thisValue);
               }}
             />
           </View>
@@ -86,7 +96,6 @@ export default ModalShowSellersItemsScreen = props => {
               <TextInput
                 keyboardType="number-pad"
                 onChangeText={thisValue => {
-                  console.log(thisValue);
                   setAmount(thisValue);
                 }}
               ></TextInput>
@@ -96,10 +105,7 @@ export default ModalShowSellersItemsScreen = props => {
             <Button
               title={"Add it"}
               color={Colors.primary}
-              onPress={() => {
-                props.addNewWasteHandler(wasteType, parseInt(amount, 10));
-                props.setModalVisible(false);
-              }}
+              onPress={addWasteHandler}
             />
           </View>
           <View>

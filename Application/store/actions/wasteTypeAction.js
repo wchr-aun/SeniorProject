@@ -6,12 +6,6 @@ export const fetchWasteType = () => {
   return async dispatch => {
     let wasteTypes = [];
     wasteTypes = await getWasteType();
-    // Get only wasteType name
-    wasteTypes.forEach((item, index) => {
-      // wasteTypes.push(...item, { value: item.wasteTypeId });
-      wasteTypes[index] = { ...item, value: item.wasteTypeId };
-    });
-
     dispatch({ type: FETCH_WASTETYPE, wasteTypes });
   };
 };
