@@ -1,11 +1,4 @@
-import {
-  AUTHENTICATE,
-  LOGOUT,
-  CREATEACCOUNT,
-  LOGIN,
-  AUTO_SIGNIN,
-  SIGNIN
-} from "../actions/authAction";
+import { LOGOUT, SIGNIN } from "../actions/authAction";
 
 const initialState = {
   user: {

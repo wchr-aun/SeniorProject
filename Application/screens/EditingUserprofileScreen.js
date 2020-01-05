@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { sha256 } from "js-sha256";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   widthPercentageToDP as wp,
@@ -24,12 +24,14 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../constants/AppVariableSetting";
 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as authAction from "../store/actions/authAction";
 
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
+import { getCurrentLocation } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -69,109 +71,37 @@ const formReducer = (state, action) => {
 };
 
 export default EditingUserprofileScreen = props => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [currentAddr, setCurrentAddr] = useState(false);
+  useEffect(() => {
+    console.log("signup");
+  }, []);
+
+  // get all user data
+  const userProfile = useSelector(state => state.userProfile.user);
 
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
     inputValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmpassword: "",
-      name: "",
-      surname: "",
+      name: userProfile.name,
+      surname: userProfile.surname,
       shallowAddr: "",
       subdistrict: "",
       district: "",
-      province: "กรุงเทพมหานคร",
-      postalCode: "",
-      phoneNo: ""
+      province: "กรุงเทพมหานครฯ",
+      postalCode: ""
     },
     inputValidities: {
-      username: false,
-      email: false,
-      password: false,
-      confirmpassword: false,
-      name: false,
-      surname: false,
+      name: true,
+      surname: true,
       shallowAddr: false,
       subdistrict: false,
       district: false,
       province: true,
-      postalCode: false,
-      phoneNo: false
+      postalCode: false
     },
     allFormIsValid: false,
     addrFormIsValide: false
   });
-
-  useEffect(() => {
-    console.log("signup");
-  }, []);
-
-  useEffect(() => {
-    if (error) {
-      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
-      setError("");
-    }
-  }, [error]);
-
-  // firebase call cloud function
-  const signupHandler = async () => {
-    setIsLoading(true);
-
-    console.log(formState);
-    if (!formState.allFormIsValid) {
-      setError("Please fill all the inputs");
-      setIsLoading(false);
-      return;
-    }
-
-    if (
-      formState.inputValues.password !== formState.inputValues.confirmpassword
-    ) {
-      setIsLoading(false);
-      setError("The password and the confirm password don't match");
-      return;
-    }
-
-    let notificationToken = await Notifications.getExpoPushTokenAsync();
-
-    let user = {
-      username: formState.inputValues.username,
-      email: formState.inputValues.email,
-      password: sha256(formState.inputValues.password),
-      name: formState.inputValues.name,
-      surname: formState.inputValues.surname,
-      addr: sellerAddr,
-      phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
-      notificationToken
-    };
-
-    console.log("--------> Submit ! ----> user");
-    console.log(user);
-
-    firebaseFunctions
-      .createAccount(user)
-      .then(() => {
-        AsyncStorage.clear()
-          .then(() => {
-            setIsLoading(false);
-            props.navigation.navigate("ConfigAccountScreen");
-          })
-          .catch(err => {
-            setIsLoading(false);
-            setError(err);
-          });
-      })
-      .catch(err => {
-        setIsLoading(false);
-        setError(err);
-      });
-  };
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -182,24 +112,35 @@ export default EditingUserprofileScreen = props => {
         inputIdentifier: inputIdentifier
       });
     },
-    [formState.allFormIsValid, dispatchFormState]
+    [dispatchFormState]
   );
 
-  const [addrModalVisible, setAddrModalVisible] = useState(false);
-  const [addrReadable, setAddrReadable] = useState("");
-  const [addrCord, setAddrCord] = useState("");
-  const [sellerAddr, setSellerAddr] = useState(""); // really used
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const getCurrentLocationHandler = async () => {
-    let sellerAddrResult = await getCurrentLocation();
-    setSellerAddr({ sellerAddrResult });
-  };
-
-  // Check user addr
+  // Error handling
   useEffect(() => {
-    console.log("This is an user address before sending signup form");
-    console.log(sellerAddr);
-  }, [sellerAddr]);
+    if (error) {
+      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
+      setError("");
+    }
+  }, [error]);
+
+  const [isCurrentAddr, setIsCurrentAddr] = useState(false);
+  const [isAddrModalVisible, setIsAddrModalVisible] = useState(false);
+  const [addrReadable, setAddrReadable] = useState(""); // readable
+  const [addrCord, setAddrCord] = useState(""); //la, long
+  const [sellerAddr, setSellerAddr] = useState(""); // la, long, readable
+
+  const getCurrentLocationHandler = useCallback(async () => {
+    let sellerAddrResult = await getCurrentLocation();
+    // set all addr form valid
+    dispatchFormState({
+      type: "CHOOSE_CURRENT_TIME",
+      prestateIsCur: isCurrentAddr
+    });
+    setSellerAddr({ ...sellerAddrResult });
+  }, [isCurrentAddr]);
 
   // Search map from user input form
   const searchMapHandler = async () => {
@@ -235,14 +176,77 @@ export default EditingUserprofileScreen = props => {
     setAddrReadable(userAddrString);
     let result = await getManualStringLocation(userAddrString);
     setAddrCord(result);
-    setAddrModalVisible(true);
+    setIsAddrModalVisible(true);
   };
 
-  if (addrModalVisible) {
+  const [switchSearch, setSwitchSearch] = useState(false);
+  const [isSeller, setIsSeller] = useState(true);
+
+  const configHandler = role => {
+    setIsSeller(role === "seller" ? true : false);
+  };
+
+  // firebase call cloud function
+  const editHandler = async () => {
+    setIsLoading(true);
+
+    console.log("------> formState");
+    console.log(formState);
+    if (!formState.allFormIsValid) {
+      setError("Please fill all the inputs");
+      setIsLoading(false);
+      return;
+    }
+
+    if (
+      formState.inputValues.password !== formState.inputValues.confirmpassword
+    ) {
+      setIsLoading(false);
+      setError("The password and the confirm password don't match");
+      return;
+    }
+
+    let notificationToken = await Notifications.getExpoPushTokenAsync();
+
+    let user = {
+      username: formState.inputValues.username,
+      email: formState.inputValues.email,
+      password: sha256(formState.inputValues.password),
+      name: formState.inputValues.name,
+      surname: formState.inputValues.surname,
+      addr: sellerAddr,
+      phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
+      notificationToken
+    };
+
+    console.log(
+      "--------> Submit ! ----> user that is passed to createAccount "
+    );
+    console.log(user);
+
+    createAccount(user)
+      .then(() => {
+        AsyncStorage.clear()
+          .then(() => {
+            setIsLoading(false);
+            props.navigation.navigate("ConfigAccountScreen");
+          })
+          .catch(err => {
+            setIsLoading(false);
+            setError(err.message);
+          });
+      })
+      .catch(err => {
+        setIsLoading(false);
+        setError(err.message);
+      });
+  };
+
+  if (isAddrModalVisible) {
     return (
       <ModalShowInteractMap
-        setModalVisible={setAddrModalVisible}
-        modalVisible={addrModalVisible}
+        setModalVisible={setIsAddrModalVisible}
+        modalVisible={isAddrModalVisible}
         latitude={addrCord.latitude}
         longitude={addrCord.longitude}
         setSellerAddr={setSellerAddr}
@@ -268,7 +272,6 @@ export default EditingUserprofileScreen = props => {
     }
   };
 
-  const [switchSearch, setSwitchSearch] = useState(false);
   return (
     <View
       style={{
@@ -285,7 +288,7 @@ export default EditingUserprofileScreen = props => {
             alignSelf: "center"
           }}
         >
-          <ThaiTitleText style={{ color: Colors.on_primary }}>
+          <ThaiTitleText style={{ color: Colors.on_primary, fontSize: 14 }}>
             ตั้งค่าข้อมูลผู้ใช้งาน
           </ThaiTitleText>
         </View>
@@ -309,128 +312,37 @@ export default EditingUserprofileScreen = props => {
               <View
                 style={{
                   flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-around"
-                }}
-              >
-                <ThaiText style={{ fontSize: 12 }}>
-                  ยอมให้สามารถค้นหาตำแหน่งที่อยู่ได้
-                </ThaiText>
-                <SwitchToggle
-                  switchOn={switchSearch}
-                  onPress={() => setSwitchSearch(!switchSearch)}
-                  duration={150}
-                  backgroundColorOn="#5fdba7"
-                  backgroundColorOff="#808080"
-                  circleColorOff="#ffffff"
-                  circleColorOn="#ffffff"
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
                   alignContent: "center",
                   justifyContent: "space-around"
                 }}
               >
-                <Button
-                  title="Seller"
-                  color={Colors.primary}
+                <TouchableOpacity
                   onPress={() => configHandler("seller")}
-                />
-                <Button
-                  title="Buyer"
-                  color={Colors.primary}
+                  style={{ alignItems: "center" }}
+                >
+                  <MaterialCommunityIcons
+                    name="account"
+                    color={
+                      isSeller ? Colors.primary_variant : Colors.lineSeparate
+                    }
+                    size={36}
+                  />
+                  <ThaiText>คนขาย</ThaiText>
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => configHandler("buyer")}
-                />
+                  style={{ alignItems: "center" }}
+                >
+                  <MaterialCommunityIcons
+                    name="car-pickup"
+                    color={
+                      !isSeller ? Colors.primary_variant : Colors.lineSeparate
+                    }
+                    size={36}
+                  />
+                  <ThaiText>คนขาย</ThaiText>
+                </TouchableOpacity>
               </View>
-
-              <Input
-                editable={true}
-                id="username"
-                label="ชื่อผู้ใช้"
-                required
-                autoCapitalize="none"
-                errorText="Please enter a valid username"
-                onInputChange={inputChangeHandler}
-                initialValue={
-                  formState.inputValues.username
-                    ? formState.inputValues.username
-                    : ""
-                }
-                initialValid={
-                  formState.inputValidities.username
-                    ? formState.inputValidities.username
-                    : false
-                }
-                iconName="account"
-              />
-              <Input
-                editable={true}
-                id="email"
-                label="อีเมล"
-                keyboardType="email-address"
-                required
-                email
-                autoCapitalize="none"
-                errorText="Please enter a valid email address."
-                onInputChange={inputChangeHandler}
-                initialValue={
-                  formState.inputValues.email ? formState.inputValues.email : ""
-                }
-                initialValid={
-                  formState.inputValidities.email
-                    ? formState.inputValidities.email
-                    : false
-                }
-                iconName="email"
-              />
-              <Input
-                editable={true}
-                id="password"
-                label="รหัสผ่าน"
-                keyboardType="default"
-                secureTextEntry
-                required
-                minLength={5}
-                autoCapitalize="none"
-                errorText="Please enter a valid password."
-                onInputChange={inputChangeHandler}
-                initialValue={
-                  formState.inputValues.password
-                    ? formState.inputValues.password
-                    : ""
-                }
-                initialValid={
-                  formState.inputValidities.password
-                    ? formState.inputValidities.password
-                    : false
-                }
-                iconName="key-variant"
-              />
-              <Input
-                editable={true}
-                id="confirmpassword"
-                label="ยืนยันรหัสผ่าน"
-                keyboardType="default"
-                secureTextEntry
-                required
-                minLength={5}
-                autoCapitalize="none"
-                errorText="Please enter a valid password."
-                onInputChange={inputChangeHandler}
-                initialValue={
-                  formState.inputValues.confirmpassword
-                    ? formState.inputValues.confirmpassword
-                    : ""
-                }
-                initialValid={
-                  formState.inputValidities.confirmpassword
-                    ? formState.inputValidities.confirmpassword
-                    : false
-                }
-                iconName="key-variant"
-              />
               <Input
                 editable={true}
                 id="name"
@@ -476,17 +388,38 @@ export default EditingUserprofileScreen = props => {
               <View
                 style={{
                   width: "100%",
-                  marginVertical: 3,
+                  marginTop: 15,
+                  marginBottom: 10,
                   alignSelf: "center"
                 }}
               >
-                <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
+                <ThaiText style={{ textAlign: "center", fontSize: 16 }}>
                   ที่อยู่ในการจัดส่ง
                 </ThaiText>
               </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <SwitchToggle
+                  switchOn={switchSearch}
+                  onPress={() => setSwitchSearch(!switchSearch)}
+                  duration={150}
+                  backgroundColorOn="#5fdba7"
+                  backgroundColorOff="#808080"
+                  circleColorOff="#ffffff"
+                  circleColorOn="#ffffff"
+                  // containerStyle={{ marginHorizontal: 5 }}
+                />
+                <ThaiText>ใช้งานตำแหน่งที่ตั้ง</ThaiText>
+              </View>
+
               <TouchableOpacity
                 onPress={() => {
-                  setCurrentAddr(preState => !preState);
+                  setIsCurrentAddr(preState => !preState);
                   getCurrentLocationHandler();
                 }}
               >
@@ -498,18 +431,31 @@ export default EditingUserprofileScreen = props => {
                     flexDirection: "row"
                   }}
                 >
-                  <MaterialIcons
-                    name={currentAddr ? "check-box" : "check-box-outline-blank"}
+                  {/* <MaterialIcons
+                    name={
+                      isCurrentAddr ? "check-box" : "check-box-outline-blank"
+                    }
                     size={15}
                     color={Colors.primary}
+                  /> */}
+                  <SwitchToggle
+                    switchOn={isCurrentAddr}
+                    onPress={() => setIsCurrentAddr(!isCurrentAddr)}
+                    duration={150}
+                    backgroundColorOn="#5fdba7"
+                    backgroundColorOff="#808080"
+                    circleColorOff="#ffffff"
+                    circleColorOn="#ffffff"
+                    // containerStyle={{ marginHorizontal: 5 }}
                   />
-                  <ThaiText style={{ fontSize: 10, textAlign: "center" }}>
+                  <ThaiText style={{ textAlign: "center" }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
                   </ThaiText>
                 </View>
               </TouchableOpacity>
+
               <Input
-                editable={!currentAddr}
+                editable={!isCurrentAddr}
                 id="shallowAddr"
                 label="ที่อยู่"
                 keyboardType="default"
@@ -528,7 +474,7 @@ export default EditingUserprofileScreen = props => {
                 iconName="account-card-details"
               />
               <Input
-                editable={!currentAddr}
+                editable={!isCurrentAddr}
                 id="subdistrict"
                 label="ตำบล"
                 keyboardType="default"
@@ -547,7 +493,7 @@ export default EditingUserprofileScreen = props => {
                 iconName="account-card-details"
               />
               <Input
-                editable={!currentAddr}
+                editable={!isCurrentAddr}
                 id="district"
                 label="อำเภอ"
                 keyboardType="default"
@@ -566,7 +512,7 @@ export default EditingUserprofileScreen = props => {
                 iconName="account-card-details"
               />
               <Input
-                editable={!currentAddr}
+                editable={!isCurrentAddr}
                 id="province"
                 label="จังหวัด"
                 keyboardType="default"
@@ -585,7 +531,7 @@ export default EditingUserprofileScreen = props => {
                 iconName="account-card-details"
               />
               <Input
-                editable={!currentAddr}
+                editable={!isCurrentAddr}
                 id="postalCode"
                 label="รหัสไปรษณีย์"
                 keyboardType="numeric"
@@ -607,13 +553,13 @@ export default EditingUserprofileScreen = props => {
                 style={{
                   fontSize: 12,
                   color:
-                    currentAddr === true ? Colors.on_primary : Colors.primary
+                    isCurrentAddr === true ? Colors.on_primary : Colors.primary
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
               </ThaiText>
               <CustomButton
-                disable={currentAddr}
+                disable={isCurrentAddr}
                 style={{
                   width: wp("40%"),
                   height: hp("6%"),
@@ -663,13 +609,13 @@ export default EditingUserprofileScreen = props => {
                       alignSelf: "center"
                     }}
                     onPress={() => {
-                      signupHandler();
+                      editHandler();
                     }}
                     btnColor={Colors.primary}
                     btnTitleColor={Colors.on_primary}
                     btnTitleFontSize={14}
                   >
-                    ยืนยันลงทะเบียน
+                    ยืนยันการแก้ไข้
                   </CustomButton>
                 )}
               </View>
@@ -681,6 +627,7 @@ export default EditingUserprofileScreen = props => {
             width: wp("90%"),
             height: "15%",
             justifyContent: "space-around",
+            flexDirection: "row",
             paddingBottom: getStatusBarHeight()
           }}
         >

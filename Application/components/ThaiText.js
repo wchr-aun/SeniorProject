@@ -11,7 +11,7 @@ export default ThaiMdText = props => {
 
 const styles = StyleSheet.create({
   customStyle: {
-    fontSize: 26,
+    fontSize: 14,
     fontFamily: "REG_K2D"
   }
 });
