@@ -37,11 +37,11 @@ const MINUS_WASTE = "MINUS_WASTE";
 const SET_WASTE = "SET_WASTE";
 const EDIT_WASTE = "EDIT_WASTE";
 const CANCEL = "CANCEL";
-const CONFIRM_SELLERITEMS = "CONFIRM_SELLERITEMS";
 
 const trashsModifyingReducer = (state, action) => {
   let updatedSellerItems = [...state.sellerItemsNew];
   let updatedItem = "";
+  let targetIndex = "";
 
   switch (action.type) {
     case SET_WASTE:
@@ -63,19 +63,21 @@ const trashsModifyingReducer = (state, action) => {
       };
     case ADD_WASTE:
       console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
+      console.log(action);
+      console.log(updatedSellerItems);
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
       )[0];
-      targetIndex = updatedSellerItems.indexOf(updatedItem);
-      updatedItem.amount = updatedItem.amount + action.amount;
+      console.log("pass 1");
+      if (updatedItem) {
+        targetIndex = updatedSellerItems.indexOf(updatedItem);
+        updatedItem.amount = updatedItem.amount + action.amount;
 
-      updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
-        ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
-        : (updatedItem.UI_diff = updatedItem.amount);
-      updatedItem.UI_disabledMinus = false;
-
-      // this this problem
-      if (!updatedItem) {
+        updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
+          ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
+          : (updatedItem.UI_diff = updatedItem.amount);
+        updatedItem.UI_disabledMinus = false;
+      } else {
         console.log(" !!!!!!!!!!!!!!!! ADD_WASTE_NEW_TYPE");
         updatedSellerItems.push({
           amount: action.amount,
@@ -100,13 +102,15 @@ const trashsModifyingReducer = (state, action) => {
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
       )[0];
-      targetIndex = updatedSellerItems.indexOf(updatedItem);
-      updatedItem.amount = updatedItem.amount - action.amount;
-      updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
-        ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
-        : (updatedItem.UI_diff = updatedItem.amount);
-      updatedItem.UI_disabledMinus = updatedItem.amount === 0 ? true : false;
-      updatedSellerItems[targetIndex] = updatedItem;
+      if (updatedItem) {
+        targetIndex = updatedSellerItems.indexOf(updatedItem);
+        updatedItem.amount = updatedItem.amount - action.amount;
+        updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
+          ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
+          : (updatedItem.UI_diff = updatedItem.amount);
+        updatedItem.UI_disabledMinus = updatedItem.amount === 0 ? true : false;
+        updatedSellerItems[targetIndex] = updatedItem;
+      }
       return {
         ...state,
         sellerItemsNew: [...updatedSellerItems]

@@ -1,0 +1,1 @@
+1. Modify amount of sellerItems, ช้าไป จะลดจาก สองอาเรย์ เหลือแค่อาเรย์เดียว เหมือนในหน้า Sell Trash
