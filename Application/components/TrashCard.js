@@ -52,7 +52,7 @@ const AmountOfTrash = props => {
                 : Colors.error
           }}
         >
-          {props.amountOfTrash.toString()}
+          {props.amount.toString()}
         </Text>
       </View>
     </View>
@@ -88,7 +88,7 @@ const AdjustAmountOfTrash = props => {
               value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
             });
           }}
-          value={(props.UI_diff ? props.UI_diff : 0).toString()}
+          value={(props.amount > 0 ? props.amount : 0).toString()}
           style={{ textAlign: "center" }}
         ></TextInput>
       </View>
@@ -140,10 +140,7 @@ export default TrashCard = props => {
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
-        <AmountOfTrash
-          amountOfTrash={props.amountOfTrash}
-          UI_diff={props.UI_diff}
-        />
+        <AmountOfTrash amount={props.amount} UI_diff={props.UI_diff} />
       </View>
 
       <View
@@ -197,7 +194,7 @@ export default TrashCard = props => {
         {!props.editingMode && !isSelected ? null : (
           <AdjustAmountOfTrash
             wasteType={props.wasteType}
-            amountOfTrash={props.amountOfTrash}
+            amount={props.amount}
             dispatchAmountTrashsState={props.dispatchAmountTrashsState}
             UI_disabledMinus={props.UI_disabledMinus}
             UI_diff={props.UI_diff}

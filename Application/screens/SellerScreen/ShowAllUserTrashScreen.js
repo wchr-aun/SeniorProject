@@ -40,8 +40,8 @@ const CANCEL = "CANCEL";
 const CONFIRM_SELLERITEMS = "CONFIRM_SELLERITEMS";
 
 const trashsModifyingReducer = (state, action) => {
-  let founded = false;
   let updatedSellerItems = [...state.sellerItemsNew];
+  let updatedItem = "";
 
   switch (action.type) {
     case SET_WASTE:
@@ -63,27 +63,19 @@ const trashsModifyingReducer = (state, action) => {
       };
     case ADD_WASTE:
       console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
-      // change or add ---> no problem
-      updatedSellerItems.some((item, index) => {
-        if (item.wasteType === action.wasteType) {
-          updatedSellerItems[index].amount =
-            updatedSellerItems[index].amount + action.amount;
+      updatedItem = updatedSellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+      targetIndex = updatedSellerItems.indexOf(updatedItem);
+      updatedItem.amount = updatedItem.amount + action.amount;
 
-          if (state.sellerItemsOld[index]) {
-            updatedSellerItems[index].UI_diff =
-              updatedSellerItems[index].amount -
-              state.sellerItemsOld[index].amount;
-          } else {
-            updatedSellerItems[index].UI_diff =
-              updatedSellerItems[index].amount;
-          }
-          updatedSellerItems[index].UI_disabledMinus = false;
-          founded = true;
-          return true;
-        }
-      });
+      updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
+        ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
+        : (updatedItem.UI_diff = updatedItem.amount);
+      updatedItem.UI_disabledMinus = false;
+
       // this this problem
-      if (!founded) {
+      if (!updatedItem) {
         console.log(" !!!!!!!!!!!!!!!! ADD_WASTE_NEW_TYPE");
         updatedSellerItems.push({
           amount: action.amount,
@@ -96,6 +88,8 @@ const trashsModifyingReducer = (state, action) => {
           updatedSellerItems: false
         });
       }
+
+      updatedSellerItems[targetIndex] = updatedItem;
       return {
         ...state,
         sellerItemsNew: [...updatedSellerItems]
@@ -103,37 +97,33 @@ const trashsModifyingReducer = (state, action) => {
     case MINUS_WASTE:
       console.log("!!!!!!!!!!!!!!!! MINUS_TRASH local Reducer Run");
       // change or add
-      updatedSellerItems.forEach((item, index) => {
-        if (item.wasteType === action.wasteType) {
-          founded = true;
-          updatedSellerItems[index].amount =
-            updatedSellerItems[index].amount - action.amount;
-
-          if (state.sellerItemsOld[index]) {
-            updatedSellerItems[index].UI_diff =
-              updatedSellerItems[index].amount -
-              state.sellerItemsOld[index].amount;
-          } else {
-            updatedSellerItems[index].UI_diff =
-              updatedSellerItems[index].amount;
-          }
-
-          if (updatedSellerItems[index].amount === 0)
-            updatedSellerItems[index].UI_disabledMinus = true;
-        }
-      });
+      updatedItem = updatedSellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+      targetIndex = updatedSellerItems.indexOf(updatedItem);
+      updatedItem.amount = updatedItem.amount - action.amount;
+      updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
+        ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
+        : (updatedItem.UI_diff = updatedItem.amount);
+      updatedItem.UI_disabledMinus = updatedItem.amount === 0 ? true : false;
+      updatedSellerItems[targetIndex] = updatedItem;
       return {
         ...state,
-        sellerItemsNew: updatedSellerItems
+        sellerItemsNew: [...updatedSellerItems]
       };
     case EDIT_WASTE:
       // edit from text-input
       console.log("!!!!!!!!!!!!!!!! EDIT_TRASH local Reducer Run");
-      updatedSellerItems.forEach((item, index) => {
-        if (item.wasteType === action.wasteType) {
-          updatedSellerItems[index].amount = action.value;
-        }
-      });
+      updatedItem = updatedSellerItems.filter(
+        item => item.wasteType === action.wasteType
+      )[0];
+      targetIndex = updatedSellerItems.indexOf(updatedItem);
+      updatedItem.amount = action.value;
+      updatedItem.UI_diff = state.sellerItemsOld[targetIndex]
+        ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
+        : updatedItem.amount;
+      updatedSellerItems[targetIndex] = updatedItem;
+      console.log(updatedItem);
       return {
         ...state,
         sellerItemsNew: updatedSellerItems
@@ -241,7 +231,6 @@ const ShowAllUserTrashScreen = props => {
 
     // update new wasteData on local redux
     dispatchAmountTrashsState({
-      // type: CONFIRM_SELLERITEMS
       type: SET_WASTE,
       sellerItemsNew: [...trashsState.sellerItemsNew]
     });
@@ -329,7 +318,7 @@ const ShowAllUserTrashScreen = props => {
                 wasteDisposal={itemData.item.wasteDisposal}
                 wasteDescription={itemData.item.wasteDescription}
                 trashDisposal={null}
-                amountOfTrash={itemData.item.amount}
+                amount={itemData.item.amount}
                 UI_diff={itemData.item.UI_diff}
                 UI_disabledMinus={itemData.item.UI_disabledMinus}
                 trashAdjustPrice={
