@@ -1,32 +1,15 @@
 import React, { useState } from "react";
 import { View, Button, Image, Text, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
 import * as ImageManipulator from "expo-image-manipulator";
-
+import { verifyCameraPermissions } from "../utils/permissions";
 import Colors from "../constants/Colors";
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();
 
-  const verifyPermissions = async () => {
-    const result = await Permissions.askAsync(
-      Permissions.CAMERA_ROLL,
-      Permissions.CAMERA
-    );
-    if (result.status !== "granted") {
-      Alert.alert(
-        "Insufficient permissions!",
-        "You need to grant camera permissions to use this app.",
-        [{ text: "Okay" }]
-      );
-      return false;
-    }
-    return true;
-  };
-
   const takeImageHandler = async () => {
-    const hasPermission = await verifyPermissions();
+    const hasPermission = await verifyCameraPermissions();
     if (!hasPermission) {
       return;
     }
@@ -37,24 +20,15 @@ const ImgPicker = props => {
       base64: true
     });
 
-    // console.log("image");
-    // console.log(image);
-    // console.log(image.width + " " + image.height);
-
     let resized =
       image.height > image.width
         ? { resize: { width: 600 } }
         : { resize: { height: 600 } };
-    // console.log("resized");
-    // console.log(resized);
     const resizedImage = await ImageManipulator.manipulateAsync(
       image.uri,
       [resized],
       { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
     );
-    // console.log("resizedImage");
-    // console.log(resizedImage.width + " " + resizedImage.height);
-    // console.log(resizedImage);
     setPickedImage(resizedImage);
     props.onImageTaken(resizedImage);
   };
