@@ -17,8 +17,9 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
-import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 export default UserAuthenScreen = props => {
   useEffect(() => {
@@ -87,9 +88,10 @@ export default UserAuthenScreen = props => {
           date.getTime()
         )
       );
+
+      await dispatch(transactionAction.fetchTransaction("seller"));
+      props.navigation.navigate("SellTransaction");
     } catch (err) {
-      // console.log(JSON.stringify(err.message));
-      // console.log(Object.getOwnPropertyNames(err.message));
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
     }
     console.log("after dispatch  for chooseBuyerSell");

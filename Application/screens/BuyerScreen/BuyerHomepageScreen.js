@@ -16,7 +16,6 @@ import {
 import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
-import { SELLINGTRANSACTION } from "../../data/dummy-data";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import * as authAction from "../../store/actions/authAction";

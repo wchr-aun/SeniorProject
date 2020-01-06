@@ -1,4 +1,7 @@
-import { getUsers, removeNotificationToken } from "../../utils/firebaseFunctions";
+import {
+  getUsers,
+  removeNotificationToken
+} from "../../utils/firebaseFunctions";
 import firebaseUtil from "../../firebase";
 
 export const AUTHENTICATE = "AUTHENTICATE";
@@ -11,6 +14,8 @@ export const signin = () => {
   return async dispatch => {
     // do async task-2
     return getUsers().then(result => {
+      console.log("result");
+      console.log(result);
       dispatch({
         type: SIGNIN,
         userProfile: {
@@ -25,20 +30,21 @@ export const signin = () => {
 export const signout = () => {
   return async dispatch => {
     // do async task
-    return removeNotificationToken().then(() => {
-      return firebaseUtil
-        .auth()
-        .signOut()
-        .then(() => {
-          dispatch({ type: LOGOUT });
-          return true;
-        })
-        .catch(() => {
-          return false;
-        });
+    return removeNotificationToken()
+      .then(() => {
+        return firebaseUtil
+          .auth()
+          .signOut()
+          .then(() => {
+            dispatch({ type: LOGOUT });
+            return true;
+          })
+          .catch(() => {
+            return false;
+          });
       })
       .catch(err => {
-        console.log(err.message)
+        console.log(err.message);
         return false;
       });
   };

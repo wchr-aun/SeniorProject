@@ -31,6 +31,10 @@ const formatDate = date => {
   );
 };
 
+const formatTime = date => {
+  return date.toLocaleTimeString() + " น.";
+};
+
 const getTransactionList = async role => {
   let allTx = [];
   for (let i = 0; i < 6; i++) {
@@ -97,5 +101,6 @@ export const getManualStringLocation = async address => {
 
 export default {
   formatDate,
-  getTransactionList
+  getTransactionList,
+  formatTime
 };

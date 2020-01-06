@@ -215,13 +215,6 @@ export default SellingTrashScreen = props => {
                 UI_MinusDisabled={itemData.item.UI_MinusDisabled}
                 UI_PlusDisabled={itemData.item.UI_PlusDisabled}
                 dispatchAmountTrashsState={dispatchAmountTrashsState}
-                // selectedHandler={() => {
-                //   return {
-                //     type: SELECT_ITEM,
-                //     isSelected: itemData.item.amount,
-                //     wasteType: itemData.item.wasteType
-                //   };
-                // }}
               />
             )}
           />

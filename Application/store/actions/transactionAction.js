@@ -7,7 +7,6 @@ export const fetchTransaction = role => {
   return async dispatch => {
     try {
       let transactionMode = await getTransactions(role);
-
       dispatch({ type: FETCH_TRANSACTION, transactionMode });
     } catch (err) {
       console.log(err.message);

@@ -3,6 +3,7 @@ import { Notifications } from "expo";
 
 const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
+const auth = firebaseUtil.auth();
 
 // Get firebase document (trashOfUser)
 export const getSellerItems = async () => {
@@ -32,12 +33,17 @@ export const getUsers = async () => {
           uid: auth.currentUser.uid,
           name: doc.data().name,
           surname: doc.data().surname,
-          addr: doc.data().addr,
-          enableAddr: doc.data().enableAddr,
+          addr: {
+            readable: doc.data().addr,
+            latitude: doc.data().addr_geopoint.latitude,
+            longitude: doc.data().addr_geopoint.longitude
+          },
           enableSearch: doc.data().enableSearch,
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
-          photoURL: auth.currentUser.photoURL || "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb"
+          photoURL:
+            auth.currentUser.photoURL ||
+            "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb"
         };
       } else throw new Error("The document doesn't exist");
     })
@@ -278,7 +284,7 @@ export const editUserInfo = async newInfo => {
 
 export const updateNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
-  console.log("getting in the function")
+  console.log("getting in the function");
   return functions
     .httpsCallable("updateNotificationToken")({ notificationToken })
     .then(result => {

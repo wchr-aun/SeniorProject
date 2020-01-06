@@ -20,8 +20,9 @@ export default (state = initialState, action) => {
           name: action.userProfile.name,
           surname: action.userProfile.surname,
           addr: action.userProfile.addr,
-          enableAddr: action.userProfile.enableAddr,
-          enableSearch: action.userProfile.enableSearch
+          enableSearch: action.userProfile.enableSearch,
+          photoURL: action.userProfile.photoURL,
+          phoneNo: action.userProfile.phoneNo
         }
       };
     case LOGOUT:

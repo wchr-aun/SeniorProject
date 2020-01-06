@@ -58,7 +58,6 @@ export default SellerHomepageScreen = props => {
 
   const dispatch = useDispatch();
   // Get transactions for initially
-  const transactions = useSelector(state => state.transactions.transactions);
   useEffect(() => {
     try {
       dispatch(transactionAction.fetchTransaction("seller"));
@@ -66,6 +65,7 @@ export default SellerHomepageScreen = props => {
       setError(err.message);
     }
   }, []);
+  const transactions = useSelector(state => state.transactions.transactions);
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
@@ -113,7 +113,7 @@ export default SellerHomepageScreen = props => {
               }
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
-              address={userProfile.addr}
+              address={userProfile.addr.readable}
               // onSignout={() => signOutHandler()}
               onSignout={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
@@ -150,7 +150,6 @@ export default SellerHomepageScreen = props => {
               </View>
 
               <FlatList
-                // data={SELLINGTRANSACTION}
                 data={transactions}
                 keyExtractor={item => item.txId}
                 renderItem={itemData => (
@@ -160,7 +159,10 @@ export default SellerHomepageScreen = props => {
                       "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
                     }
                     userName={itemData.item.detail.buyer}
-                    meetTime={libary.formatDate(
+                    meetDate={libary.formatDate(
+                      itemData.item.detail.assignedTime.toDate()
+                    )}
+                    meetTime={libary.formatTime(
                       itemData.item.detail.assignedTime.toDate()
                     )}
                     onPress={() => {

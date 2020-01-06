@@ -114,7 +114,9 @@ export default EditingUserprofileScreen = props => {
       subdistrict: "",
       district: "",
       province: "กรุงเทพมหานครฯ",
-      postalCode: ""
+      postalCode: "",
+      photoURL: userProfile.photoURL,
+      phoneNo: userProfile.phoneNo
     },
     inputValidities: {
       name: true,
@@ -123,7 +125,9 @@ export default EditingUserprofileScreen = props => {
       subdistrict: true,
       district: true,
       province: true,
-      postalCode: true
+      postalCode: true,
+      photoURL: true,
+      phoneNo: true
     },
     allFormIsValid: true,
     addrFormIsValide: true
@@ -147,7 +151,9 @@ export default EditingUserprofileScreen = props => {
   // Error handling
   useEffect(() => {
     if (error) {
-      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
+      Alert.alert("มีข้อผิดพลาดบางอย่างเกิดขึ้น", error.message, [
+        { text: "OK" }
+      ]);
       setError("");
     }
   }, [error]);
@@ -233,12 +239,15 @@ export default EditingUserprofileScreen = props => {
     let user = {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
-      addr: sellerAddr
+      addr: sellerAddr,
+      photoURL: formState.inputValues.photoURL,
+      phoneNo: formState.inputValues.phoneNo
     };
 
     console.log(
       "--------> Submit ! ----> user that is passed to editUserInfo "
     );
+    console.log(user);
 
     editUserInfo(user)
       .then(() => {
@@ -473,7 +482,7 @@ export default EditingUserprofileScreen = props => {
                       : Colors.lineSeparate
                   }}
                 >
-                  {userProfile.addr}
+                  {userProfile.addr.readable}
                 </ThaiText>
               </View>
 

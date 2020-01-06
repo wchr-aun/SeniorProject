@@ -5,19 +5,23 @@ import { Platform, Dimensions } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+
+import StartupScreen from "../screens/UserStartupScreen";
+import UserSigninScreen from "../screens/UserSigninScreen";
+import UserSignupScreen from "../screens/UserSignupScreen";
+import ConfigAccountScreen from "../screens/ConfigAccountScreen";
+
 import ShowAllUserTrashScreen from "../screens/SellerScreen/ShowAllUserTrashScreen";
 import OptionTrashCheckScreen from "../screens/SellerScreen/OptionTrashCheck";
 import SellingTransactionScreen from "../screens/SellerScreen/SellingTransactionScreen";
 import SellerHomepageScreen from "../screens/SellerScreen/SellerHomepageScreen";
-import UserSigninScreen from "../screens/UserSigninScreen";
-import { Ionicons } from "@expo/vector-icons";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
-import UserSignupScreen from "../screens/UserSignupScreen";
-import StartupScreen from "../screens/UserStartupScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
-import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
+
+import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
@@ -25,6 +29,7 @@ import UIScreenTemplate from "../screens/UIScreenTemplate";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
+// ************************************* Seller ***********************************
 // for UserHomepageScreen
 const SellerhomepageNavigator = createStackNavigator(
   {
@@ -164,6 +169,68 @@ const SellerNavigator =
         }
       });
 
+// **************************** For Buyer ****************************
+
+// Trash Main
+const BuyerBottomTabConfig = {
+  Home: {
+    screen: BuyerHomepageScreen,
+    navigationOptions: {
+      tabBarLabel: "หน้าหลัก",
+      tabBarIcon: tabInfo => {
+        return <Ionicons name="md-home" size={25} color={tabInfo.tintColor} />;
+      },
+      tabBarColor: Colors.primary
+    }
+  },
+  sellingRequest: {
+    screen: BuyerHomepageScreen,
+    navigationOptions: {
+      tabBarLabel: "คำขอขายขยะ",
+      tabBarIcon: tabInfo => {
+        return <Ionicons name="md-trash" size={25} color={tabInfo.tintColor} />;
+      },
+      tabBarColor: Colors.primary
+    }
+  },
+  buyTransaction: {
+    screen: BuyerHomepageScreen,
+    navigationOptions: {
+      tabBarLabel: "การรับซื้อขยะ",
+      tabBarIcon: tabInfo => {
+        return (
+          <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
+        );
+      },
+      tabBarColor: Colors.primary
+    }
+  }
+};
+
+// Like a root navigator
+const BuyerNavigator =
+  Platform.OS === "android"
+    ? createMaterialBottomTabNavigator(BuyerBottomTabConfig, {
+        activeColor: Colors.primary_variant,
+        shifting: true,
+        labeled: true,
+        inactiveColor: Colors.on_primary,
+        barStyle: {
+          height: AppVariableSetting.bottomBarHeight,
+          backgroundColor: Colors.primary
+        }
+      })
+    : createBottomTabNavigator(BuyerBottomTabConfig, {
+        tabBarOptions: {
+          // when using like 'color={tabTintColor}
+          activeTintColor: Colors.on_primary,
+          style: {
+            backgroundColor: Colors.primary,
+            height: AppVariableSetting.bottomBarHeight
+          }
+        }
+      });
+
 // for UserHomepageScreen
 const UserAuthenNavigator = createStackNavigator(
   {
@@ -177,6 +244,7 @@ const MainNavigator = createSwitchNavigator({
   StartupScreen: StartupScreen,
   UserAuthenNavigator: UserAuthenNavigator,
   SellerNavigator: SellerNavigator, //Seller Homepage
+  BuyerNavigator: BuyerNavigator, //Seller Homepage
   EditingUserprofileScreen: EditingUserprofileScreen,
   ConfigAccountScreen: ConfigAccountScreen
 });

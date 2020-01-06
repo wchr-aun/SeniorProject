@@ -1,1 +1,4 @@
 1. Modify amount of sellerItems, ช้าไป จะลดจาก สองอาเรย์ เหลือแค่อาเรย์เดียว เหมือนในหน้า Sell Trash
+2. ตอน fetch transaction --> dispatch(transactionAction.fetchTransaction("seller")); ใส่ role แทน 'seller'
+    - sellerHomepageScreen.js
+    - SellingTransactionScreen.js

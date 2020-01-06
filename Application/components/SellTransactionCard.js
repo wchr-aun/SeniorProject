@@ -72,8 +72,13 @@ export default SellTransactionCard = props => {
                 {props.amountOfType} ประเภท
               </ThaiText>
             </View>
+          </View>
+          <View style={{ ...styles.description }}>
             <View style={{ width: "50%" }}>
               <ThaiText style={{ fontSize: 14 }}>{props.meetTime}</ThaiText>
+            </View>
+            <View style={{ width: "50%" }}>
+              <ThaiText style={{ fontSize: 14 }}>{props.meetDate}</ThaiText>
             </View>
           </View>
         </View>
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
   },
   description: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "flex-start"
   },
   amountOfType: {
     flexDirection: "row",

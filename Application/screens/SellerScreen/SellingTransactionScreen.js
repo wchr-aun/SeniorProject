@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
-import { SafeAreaView } from "react-navigation";
 import { useSelector } from "react-redux";
 
 import {
@@ -47,7 +46,10 @@ export default SellingTransactionScreen = props => {
                 "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
               }
               userName={itemData.item.detail.buyer}
-              meetTime={libary.formatDate(
+              meetDate={libary.formatDate(
+                itemData.item.detail.assignedTime.toDate()
+              )}
+              meetTime={libary.formatTime(
                 itemData.item.detail.assignedTime.toDate()
               )}
               onPress={() => {
@@ -60,11 +62,14 @@ export default SellingTransactionScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "50%",
-          backgroundColor: "blue",
+          height: "30%",
           paddingBottom: getStatusBarHeight()
         }}
-      ></View>
+      >
+        <View>
+          <ThaiText>สำหรับใส่ Transaction [3,1,0]</ThaiText>
+        </View>
+      </View>
     </View>
   );
 };
