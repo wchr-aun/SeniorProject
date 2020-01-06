@@ -661,7 +661,7 @@ export default EditingUserprofileScreen = props => {
               borderColor: Colors.on_secondary
             }}
             onPress={() => {
-              props.navigation.navigate("EditingUserprofileScreen");
+              props.navigation.navigate("StartupScreen");
             }}
             btnColor={Colors.on_primary}
             btnTitleColor={Colors.primary}

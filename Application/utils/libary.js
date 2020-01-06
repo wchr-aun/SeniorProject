@@ -1,5 +1,6 @@
 import firebaseFunctions from "./firebaseFunctions";
-import { LOCATION, askAsync } from "expo-permissions";
+import { verifyLocationPermissions } from "./permissions";
+
 import {
   getCurrentPositionAsync,
   reverseGeocodeAsync,
@@ -45,20 +46,8 @@ const getTransactionList = async role => {
   return allTx;
 };
 
-const verifyPermissions = async () => {
-  const result = await askAsync(LOCATION);
-  if (result.status !== "granted") {
-    console.log(
-      "Insufficient permissions!",
-      "You need to grant location permissions to use this app."
-    );
-    return false;
-  }
-  return true;
-};
-
 export const getCurrentLocation = async () => {
-  const hasPermission = await verifyPermissions();
+  const hasPermission = await verifyLocationPermissions();
   if (!hasPermission) {
     return;
   }
