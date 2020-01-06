@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { sha256 } from "js-sha256";
 import { useDispatch, useSelector } from "react-redux";
+import { toggleSearch, editUserInfo } from "../utils/firebaseFunctions";
 
 import {
   widthPercentageToDP as wp,
@@ -34,49 +35,74 @@ import ThaiText from "../components/ThaiText";
 import { getCurrentLocation } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
+// CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.inputIdentifier]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.inputIdentifier]: action.isValid
-    };
-    let updatedAllFormIsValid = true;
-    for (const key in updatedValidities)
-      updatedAllFormIsValid = Boolean(
-        updatedAllFormIsValid && updatedValidities[key]
+  switch (action.type) {
+    case FORM_INPUT_UPDATE:
+      const updatedValues = {
+        ...state.inputValues,
+        [action.inputIdentifier]: action.value
+      };
+      const updatedValidities = {
+        ...state.inputValidities,
+        [action.inputIdentifier]: action.isValid
+      };
+      let updatedAllFormIsValid = true;
+      for (const key in updatedValidities)
+        updatedAllFormIsValid = Boolean(
+          updatedAllFormIsValid && updatedValidities[key]
+        );
+      let updatedAddrFormIsValid = Boolean(
+        updatedValidities["shallowAddr"] &&
+          updatedValidities["subdistrict"] &&
+          updatedValidities["district"] &&
+          updatedValidities["province"] &&
+          updatedValidities["postalCode"]
       );
-    let updatedAddrFormIsValid = Boolean(
-      updatedValidities["shallowAddr"] &&
-        updatedValidities["subdistrict"] &&
-        updatedValidities["district"] &&
-        updatedValidities["province"] &&
-        updatedValidities["postalCode"]
-    );
 
-    return {
-      ...state,
-      inputValues: updatedValues,
-      inputValidities: updatedValidities,
-      allFormIsValid: updatedAllFormIsValid,
-      addrFormIsValide: updatedAddrFormIsValid
-    };
+      return {
+        ...state,
+        inputValues: updatedValues,
+        inputValidities: updatedValidities,
+        allFormIsValid: updatedAllFormIsValid,
+        addrFormIsValide: updatedAddrFormIsValid
+      };
+    case "CHOOSE_CURRENT_TIME":
+      return {
+        ...state,
+        inputValidities: {
+          ...state.inputValidities,
+          shallowAddr: !action.prestateIsCur,
+          subdistrict: !action.prestateIsCur,
+          district: !action.prestateIsCur,
+          province: !action.prestateIsCur,
+          postalCode: !action.prestateIsCur
+        }
+      };
   }
   return state;
 };
 
 export default EditingUserprofileScreen = props => {
   useEffect(() => {
-    console.log("signup");
+    console.log("Edit");
   }, []);
 
   // get all user data
   const userProfile = useSelector(state => state.userProfile.user);
+  // Role
+  const [isSeller, setIsSeller] = useState(true);
+  // User Address
+  const [isCurrentAddr, setIsCurrentAddr] = useState(true);
+  const [addrReadable, setAddrReadable] = useState(""); // readable
+  const [addrCord, setAddrCord] = useState(""); //la, long
+  const [sellerAddr, setSellerAddr] = useState(userProfile.addr); // la, long, readable
+  const [isEnableSearch, setIsEnableSearch] = useState(
+    userProfile.enableSearch
+  );
+  const [isAddrModalVisible, setIsAddrModalVisible] = useState(false);
 
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -93,14 +119,14 @@ export default EditingUserprofileScreen = props => {
     inputValidities: {
       name: true,
       surname: true,
-      shallowAddr: false,
-      subdistrict: false,
-      district: false,
+      shallowAddr: true,
+      subdistrict: true,
+      district: true,
       province: true,
-      postalCode: false
+      postalCode: true
     },
-    allFormIsValid: false,
-    addrFormIsValide: false
+    allFormIsValid: true,
+    addrFormIsValide: true
   });
 
   const inputChangeHandler = useCallback(
@@ -125,12 +151,6 @@ export default EditingUserprofileScreen = props => {
       setError("");
     }
   }, [error]);
-
-  const [isCurrentAddr, setIsCurrentAddr] = useState(true);
-  const [isAddrModalVisible, setIsAddrModalVisible] = useState(false);
-  const [addrReadable, setAddrReadable] = useState(""); // readable
-  const [addrCord, setAddrCord] = useState(""); //la, long
-  const [sellerAddr, setSellerAddr] = useState(""); // la, long, readable
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
@@ -179,52 +199,48 @@ export default EditingUserprofileScreen = props => {
     setIsAddrModalVisible(true);
   };
 
-  const [switchSearch, setSwitchSearch] = useState(true);
-  const [isSeller, setIsSeller] = useState(true);
-
-  const configHandler = role => {
+  const changeRoleHandler = async role => {
+    // UI
     setIsSeller(role === "seller" ? true : false);
+    await toggleSearch(isEnableSearch)
+      .then(() => {
+        AsyncStorage.setItem("CONFIG_ROLE", role).catch(err => {
+          console.log(err);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   // firebase call cloud function
   const editHandler = async () => {
     setIsLoading(true);
 
+    if (!formState.allFormIsValid) {
+      setError("โปรดกรอกข้อมูลให้ครบถ้วน");
+      setIsLoading(false);
+      return;
+    }
     console.log("------> formState");
     console.log(formState);
-    if (!formState.allFormIsValid) {
-      setError("Please fill all the inputs");
-      setIsLoading(false);
-      return;
-    }
 
-    if (
-      formState.inputValues.password !== formState.inputValues.confirmpassword
-    ) {
-      setIsLoading(false);
-      setError("The password and the confirm password don't match");
-      return;
-    }
+    // passed to toggleSearch
+    console.log("isEnableSearch");
+    console.log(isEnableSearch);
 
-    let notificationToken = await Notifications.getExpoPushTokenAsync();
-
+    // passed to editUserInfo()
     let user = {
-      username: formState.inputValues.username,
-      email: formState.inputValues.email,
-      password: sha256(formState.inputValues.password),
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
-      addr: sellerAddr,
-      phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
-      notificationToken
+      addr: sellerAddr
     };
 
     console.log(
-      "--------> Submit ! ----> user that is passed to createAccount "
+      "--------> Submit ! ----> user that is passed to editUserInfo "
     );
-    console.log(user);
 
-    createAccount(user)
+    editUserInfo(user)
       .then(() => {
         AsyncStorage.clear()
           .then(() => {
@@ -317,7 +333,7 @@ export default EditingUserprofileScreen = props => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => configHandler("seller")}
+                  onPress={() => changeRoleHandler("seller")}
                   style={{
                     alignItems: "center",
                     width: wp("20%"),
@@ -339,7 +355,7 @@ export default EditingUserprofileScreen = props => {
                   <ThaiText>คนขาย</ThaiText>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => configHandler("buyer")}
+                  onPress={() => changeRoleHandler("buyer")}
                   style={{
                     alignItems: "center",
                     width: wp("20%"),
@@ -361,6 +377,30 @@ export default EditingUserprofileScreen = props => {
                   <ThaiText>คนขาย</ThaiText>
                 </TouchableOpacity>
               </View>
+              {isSeller ? null : (
+                <View
+                  style={{
+                    width: "100%",
+                    marginVertical: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <SwitchToggle
+                    switchOn={isEnableSearch}
+                    onPress={() => setIsEnableSearch(!isEnableSearch)}
+                    duration={150}
+                    backgroundColorOn="#5fdba7"
+                    backgroundColorOff="#808080"
+                    circleColorOff="#ffffff"
+                    circleColorOn="#ffffff"
+                  />
+                  <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
+                    สามารถถูกค้นหาได้
+                  </ThaiText>
+                </View>
+              )}
+
               <Input
                 editable={true}
                 id="name"
@@ -415,30 +455,32 @@ export default EditingUserprofileScreen = props => {
                   ที่อยู่ในการจัดส่ง
                 </ThaiText>
               </View>
+
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-start"
+                  width: "100%",
+                  marginTop: 15,
+                  marginBottom: 10,
+                  alignSelf: "center"
                 }}
               >
-                <SwitchToggle
-                  switchOn={switchSearch}
-                  onPress={() => setSwitchSearch(!switchSearch)}
-                  duration={150}
-                  backgroundColorOn="#5fdba7"
-                  backgroundColorOff="#808080"
-                  circleColorOff="#ffffff"
-                  circleColorOn="#ffffff"
-                  // containerStyle={{ marginHorizontal: 5 }}
-                />
-                <ThaiText>ใช้งานตำแหน่งที่ตั้ง</ThaiText>
+                <ThaiText
+                  style={{
+                    textAlign: "center",
+                    fontSize: 12,
+                    color: isCurrentAddr
+                      ? Colors.primary_variant
+                      : Colors.lineSeparate
+                  }}
+                >
+                  {userProfile.addr}
+                </ThaiText>
               </View>
 
               <TouchableOpacity
                 onPress={() => {
                   setIsCurrentAddr(preState => !preState);
-                  getCurrentLocationHandler();
+                  // getCurrentLocationHandler();
                 }}
               >
                 <View
@@ -449,24 +491,15 @@ export default EditingUserprofileScreen = props => {
                     flexDirection: "row"
                   }}
                 >
-                  {/* <MaterialIcons
-                    name={
-                      isCurrentAddr ? "check-box" : "check-box-outline-blank"
-                    }
-                    size={15}
-                    color={Colors.primary}
-                  /> */}
                   <SwitchToggle
                     switchOn={isCurrentAddr}
-                    onPress={() => setIsCurrentAddr(!isCurrentAddr)}
                     duration={150}
                     backgroundColorOn="#5fdba7"
                     backgroundColorOff="#808080"
                     circleColorOff="#ffffff"
                     circleColorOn="#ffffff"
-                    // containerStyle={{ marginHorizontal: 5 }}
                   />
-                  <ThaiText style={{ textAlign: "center" }}>
+                  <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
                   </ThaiText>
                 </View>
@@ -588,34 +621,12 @@ export default EditingUserprofileScreen = props => {
                 onPress={searchMapHandler}
                 btnColor={Colors.on_primary}
                 btnTitleColor={
-                  isCurrentAddr ? Colors.primary : Colors.lineSeparate
+                  !isCurrentAddr ? Colors.primary : Colors.lineSeparate
                 }
                 btnTitleFontSize={14}
               >
                 ค้นหาสถานที่
               </CustomButton>
-              <Input
-                editable={true}
-                id="phoneNo"
-                label="เบอร์โทรศัพท์"
-                keyboardType="numeric"
-                required
-                minLength={5}
-                autoCapitalize="none"
-                errorText="Please enter a phoneNo."
-                onInputChange={inputChangeHandler}
-                initialValue={
-                  formState.inputValues.phoneNo
-                    ? formState.inputValues.phoneNo
-                    : ""
-                }
-                initialValid={
-                  formState.inputValidities.phoneNo
-                    ? formState.inputValidities.phoneNo
-                    : false
-                }
-                iconName="cellphone-android"
-              />
               <View style={styles.buttonContainer}>
                 {isLoading ? (
                   <ActivityIndicator size="small" color={Colors.primary} />

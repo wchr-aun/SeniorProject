@@ -1,5 +1,5 @@
 import firebaseFunctions from "./firebaseFunctions";
-import { verifyLocationPermissions } from "./permissions";
+import { Permission } from "./permissions";
 
 import {
   getCurrentPositionAsync,
@@ -47,7 +47,7 @@ const getTransactionList = async role => {
 };
 
 export const getCurrentLocation = async () => {
-  const hasPermission = await verifyLocationPermissions();
+  const hasPermission = await Permission.verifyLocationPermissions();
   if (!hasPermission) {
     return;
   }

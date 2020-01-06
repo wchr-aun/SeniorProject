@@ -1,4 +1,10 @@
-import { LOCATION, askAsync, NOTIFICATIONS } from "expo-permissions";
+import {
+  LOCATION,
+  askAsync,
+  NOTIFICATIONS,
+  CAMERA,
+  CAMERA_ROLL
+} from "expo-permissions";
 
 const verifyLocationPermissions = async () => {
   const result = await askAsync(LOCATION);
@@ -13,10 +19,7 @@ const verifyLocationPermissions = async () => {
 };
 
 const verifyCameraPermissions = async () => {
-  const result = await Permissions.askAsync(
-    Permissions.CAMERA_ROLL,
-    Permissions.CAMERA
-  );
+  const result = await askAsync(CAMERA_ROLL, CAMERA);
   if (result.status !== "granted") {
     console.log(
       "Insufficient permissions! You need to grant camera permissions to use this app."
@@ -38,7 +41,7 @@ const verifyNotificationsPermissions = async () => {
   return true;
 };
 
-export default {
+export const Permission = {
   verifyLocationPermissions,
   verifyNotificationsPermissions,
   verifyCameraPermissions

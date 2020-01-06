@@ -9,7 +9,7 @@ import {
   AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { toggleSwitches } from "../utils/firebaseFunctions";
+import { toggleSearch } from "../utils/firebaseFunctions";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 import Card from "../components/UI/Card";
@@ -19,7 +19,7 @@ export default ConfigAccountScreen = props => {
   const [switchSearch, setSwitchSearch] = useState(false);
 
   const configHandler = role => {
-    toggleSwitches(switchSearch)
+    toggleSearch(switchSearch)
       .then(() => {
         AsyncStorage.setItem("CONFIG_ROLE", role)
           .then(() => {

@@ -83,7 +83,6 @@ SellingTransactionNavigator = createStackNavigator(
       screen: SellingTransactionScreen,
       navigationOptions: { headerTitle: "การขายขยะ" }
     },
-    // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
     SellingTransactionDetailScreen: {
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" }

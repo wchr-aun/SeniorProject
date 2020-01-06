@@ -193,7 +193,7 @@ export const sellWaste = async transaction => {
     });
 };
 
-export const toggleSwitches = async toggleSearch => {
+export const toggleSearch = async toggleSearch => {
   console.log("hello toggle");
   return functions
     .httpsCallable("toggleSearch")({ toggleSearch })

@@ -1,9 +1,8 @@
 import * as FileSystem from "expo-file-system";
 
-// import { insertPlace, fetchPlaces } from "../helpers/db";
-
 export const GET_PREDICTION = "GET_PREDICTION";
 export const SET_PLACES = "SET_PLACES";
+const PERDICT_LINK = "http://9d0af1bc.ngrok.io/predict";
 
 export const getPrediction = image => {
   return async dispatch => {
@@ -42,7 +41,7 @@ export const getPrediction = image => {
     console.log(typeof image.base64);
 
     // send an image
-    fetch("http://f64b4a39.ngrok.io/predict", {
+    fetch(PERDICT_LINK, {
       method: "POST",
       headers: {
         // "content-type": "multipart/form-data"
