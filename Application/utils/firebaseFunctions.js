@@ -275,16 +275,22 @@ export const editUserInfo = async newInfo => {
     .httpsCallable("editUserInfo")(newInfo)
     .then(result => {
       if (result.data.errorMessage == null) return true;
-      else throw new Error(result.data.errorMessage);
+      // else throw new Error(result.data.errorMessage);
+      else {
+        console.log("----1 -----result.data.errorMessage in editUserInfo");
+        console.log(result.data.errorMessage);
+        throw new Error(result.data.errorMessage);
+      }
     })
     .catch(err => {
+      console.log("----2 -----result.data.errorMessage in editUserInfo");
+      console.log(err.message);
       throw new Error(err.message);
     });
 };
 
 export const updateNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
-  console.log("getting in the function");
   return functions
     .httpsCallable("updateNotificationToken")({ notificationToken })
     .then(result => {

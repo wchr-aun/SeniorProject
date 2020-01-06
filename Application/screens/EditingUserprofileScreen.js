@@ -91,9 +91,11 @@ export default EditingUserprofileScreen = props => {
   }, []);
 
   // get all user data
-  const userProfile = useSelector(state => state.userProfile.user);
+  const userProfile = useSelector(state => state.user.userProfile);
   // Role
-  const [isSeller, setIsSeller] = useState(true);
+  const [userRole, setUserRole] = useState(
+    useSelector(state => state.user.userRole)
+  );
   // User Address
   const [isCurrentAddr, setIsCurrentAddr] = useState(true);
   const [addrReadable, setAddrReadable] = useState(""); // readable
@@ -116,7 +118,7 @@ export default EditingUserprofileScreen = props => {
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
       photoURL: userProfile.photoURL,
-      phoneNo: userProfile.phoneNo
+      phoneNo: userProfile.phoneNo.replace("+66", "0")
     },
     inputValidities: {
       name: true,
@@ -207,16 +209,17 @@ export default EditingUserprofileScreen = props => {
 
   const changeRoleHandler = async role => {
     // UI
-    setIsSeller(role === "seller" ? true : false);
-    await toggleSearch(isEnableSearch)
-      .then(() => {
-        AsyncStorage.setItem("CONFIG_ROLE", role).catch(err => {
-          console.log(err);
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    setUserRole(role);
+    dispatch(authAction.changeRole(role));
+    // await toggleSearch(isEnableSearch)
+    //   .then(() => {
+    //     AsyncStorage.setItem("CONFIG_ROLE", role).catch(err => {
+    //       console.log(err);
+    //     });
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
   };
 
   // firebase call cloud function
@@ -241,7 +244,7 @@ export default EditingUserprofileScreen = props => {
       surname: formState.inputValues.surname,
       addr: sellerAddr,
       photoURL: formState.inputValues.photoURL,
-      phoneNo: formState.inputValues.phoneNo
+      phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
     console.log(
@@ -308,7 +311,7 @@ export default EditingUserprofileScreen = props => {
         <View
           style={{
             padding: wp("3%"),
-            height: "10%",
+            height: "15%",
             paddingTop: getStatusBarHeight(),
             alignSelf: "center"
           }}
@@ -349,15 +352,18 @@ export default EditingUserprofileScreen = props => {
                     height: wp("20%"),
                     borderRadius: wp("20%"),
                     borderWidth: 3,
-                    borderColor: isSeller
-                      ? Colors.primary_variant
-                      : Colors.lineSeparate
+                    borderColor:
+                      userRole === "seller"
+                        ? Colors.primary_variant
+                        : Colors.lineSeparate
                   }}
                 >
                   <MaterialCommunityIcons
                     name="account"
                     color={
-                      isSeller ? Colors.primary_variant : Colors.lineSeparate
+                      userRole === "seller"
+                        ? Colors.primary_variant
+                        : Colors.lineSeparate
                     }
                     size={36}
                   />
@@ -371,28 +377,33 @@ export default EditingUserprofileScreen = props => {
                     height: wp("20%"),
                     borderRadius: wp("20%"),
                     borderWidth: 3,
-                    borderColor: !isSeller
-                      ? Colors.primary_variant
-                      : Colors.lineSeparate
+                    borderColor:
+                      userRole === "buyer"
+                        ? Colors.primary_variant
+                        : Colors.lineSeparate
                   }}
                 >
                   <MaterialCommunityIcons
                     name="car-pickup"
                     color={
-                      !isSeller ? Colors.primary_variant : Colors.lineSeparate
+                      userRole === "buyer"
+                        ? Colors.primary_variant
+                        : Colors.lineSeparate
                     }
                     size={36}
                   />
-                  <ThaiText>คนขาย</ThaiText>
+                  <ThaiText>คนซื้อ</ThaiText>
                 </TouchableOpacity>
               </View>
-              {isSeller ? null : (
+              {!userRole === "buyer" ? null : (
                 <View
                   style={{
                     width: "100%",
                     marginVertical: 3,
                     alignSelf: "center",
-                    flexDirection: "row"
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "flex-end"
                   }}
                 >
                   <SwitchToggle
@@ -403,10 +414,26 @@ export default EditingUserprofileScreen = props => {
                     backgroundColorOff="#808080"
                     circleColorOff="#ffffff"
                     circleColorOn="#ffffff"
+                    containerStyle={{
+                      marginTop: 16,
+                      width: 36,
+                      height: 16,
+                      borderRadius: 25,
+                      backgroundColor: "#ccc",
+                      padding: 5
+                    }}
+                    circleStyle={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: 19,
+                      backgroundColor: "white" // rgb(102,134,205)
+                    }}
                   />
-                  <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
-                    สามารถถูกค้นหาได้
-                  </ThaiText>
+                  <View>
+                    <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
+                      สามารถถูกค้นหาได้
+                    </ThaiText>
+                  </View>
                 </View>
               )}
 
@@ -451,6 +478,28 @@ export default EditingUserprofileScreen = props => {
                     : false
                 }
                 iconName="account-multiple"
+              />
+              <Input
+                editable={true}
+                id="phoneNo"
+                label="เบอร์โทรศัพท์"
+                keyboardType="numeric"
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a phoneNo."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.phoneNo
+                    ? formState.inputValues.phoneNo
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.phoneNo
+                    ? formState.inputValidities.phoneNo
+                    : false
+                }
+                iconName="cellphone-android"
               />
               <View
                 style={{
@@ -664,9 +713,9 @@ export default EditingUserprofileScreen = props => {
         </View>
         <View
           style={{
-            width: wp("90%"),
-            height: "15%",
-            justifyContent: "space-around",
+            width: wp("100%"),
+            height: "10%",
+            justifyContent: "center",
             flexDirection: "row",
             paddingBottom: getStatusBarHeight()
           }}
@@ -674,7 +723,7 @@ export default EditingUserprofileScreen = props => {
           <CustomButton
             style={{
               width: "40%",
-              height: "60%",
+              height: "80%",
               borderRadius: 10,
               margin: wp("1.25%"),
               borderWidth: 1,
@@ -697,7 +746,7 @@ export default EditingUserprofileScreen = props => {
           <CustomButton
             style={{
               width: "40%",
-              height: "60%",
+              height: "80%",
               borderRadius: 10,
               margin: wp("1.25%"),
               borderWidth: 1,

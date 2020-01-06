@@ -1,21 +1,22 @@
-import { LOGOUT, SIGNIN } from "../actions/authAction";
+import { LOGOUT, SIGNIN, SET_ROLE } from "../actions/authAction";
 
 const initialState = {
-  user: {
+  userProfile: {
     uid: null,
     name: "",
     surname: "",
     addr: "",
     enableAddr: "",
     enableSearch: ""
-  }
+  },
+  userRole: ""
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
       return {
-        user: {
+        userProfile: {
           uid: action.userProfile.uid,
           name: action.userProfile.name,
           surname: action.userProfile.surname,
@@ -23,7 +24,15 @@ export default (state = initialState, action) => {
           enableSearch: action.userProfile.enableSearch,
           photoURL: action.userProfile.photoURL,
           phoneNo: action.userProfile.phoneNo
-        }
+        },
+        userRole: action.userRole
+      };
+    case SET_ROLE:
+      console.log("Chnage Role! in authReducer " + action);
+
+      return {
+        ...state,
+        userRole: action.userRole
       };
     case LOGOUT:
       return initialState;

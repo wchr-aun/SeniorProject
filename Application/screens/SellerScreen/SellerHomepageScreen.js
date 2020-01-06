@@ -49,7 +49,8 @@ export default SellerHomepageScreen = props => {
   }, [error]);
 
   // Get user profile
-  const userProfile = useSelector(state => state.userProfile.user);
+  const userProfile = useSelector(state => state.user.userProfile);
+  const userRole = useSelector(state => state.user.userRole);
   useEffect(() => {
     console.log(userProfile);
     setIsLoading(true);
@@ -60,7 +61,7 @@ export default SellerHomepageScreen = props => {
   // Get transactions for initially
   useEffect(() => {
     try {
-      dispatch(transactionAction.fetchTransaction("seller"));
+      dispatch(transactionAction.fetchTransaction(userRole));
     } catch (err) {
       setError(err.message);
     }

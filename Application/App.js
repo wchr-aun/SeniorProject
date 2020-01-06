@@ -24,7 +24,7 @@ const fetchFonts = () => {
 
 // --- Redux Settup --- //
 const rootReducer = combineReducers({
-  userProfile: authReducer,
+  user: authReducer,
   sellerItems: sellerItemsReducer,
   transactions: transactionReducer,
   wasteTypes: wasteTypeReducer

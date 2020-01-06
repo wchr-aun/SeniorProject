@@ -30,8 +30,7 @@ export default UserAuthenScreen = props => {
   const sellerItemsForSell = useSelector(
     state => state.sellerItems.itemsForSell
   );
-  const sellerAddr = useSelector(state => state.userProfile.user.addr);
-  // const price = 0.5
+  const sellerAddr = useSelector(state => state.user.userProfile.addr);
 
   const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
 

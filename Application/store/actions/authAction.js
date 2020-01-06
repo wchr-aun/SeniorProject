@@ -3,19 +3,19 @@ import {
   removeNotificationToken
 } from "../../utils/firebaseFunctions";
 import firebaseUtil from "../../firebase";
+import { AsyncStorage } from "react-native";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGIN = "LOGIN";
 export const CREATEACCOUNT = "CREATEACCOUNT";
 export const LOGOUT = "LOGOUT";
 export const SIGNIN = "SIGNIN";
+export const SET_ROLE = "CHANGE_ROLE";
 
 export const signin = () => {
   return async dispatch => {
-    // do async task-2
+    // do async task-2 get user info from firebase
     return getUsers().then(result => {
-      console.log("result");
-      console.log(result);
       dispatch({
         type: SIGNIN,
         userProfile: {
@@ -24,6 +24,13 @@ export const signin = () => {
       });
       return;
     });
+  };
+};
+
+export const setUserRole = role => {
+  return {
+    type: SET_ROLE,
+    userRole: role
   };
 };
 
@@ -47,5 +54,21 @@ export const signout = () => {
         console.log(err.message);
         return false;
       });
+  };
+};
+
+export const changeRole = role => {
+  return async dispatch => {
+    // do async task - set user role
+    console.log("Chnage Role! in authActions into --> " + role);
+    try {
+      await AsyncStorage.setItem("CONFIG_ROLE", role);
+      dispatch({
+        type: SET_ROLE,
+        userRole: role
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 };

@@ -11,23 +11,29 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { toggleSearch } from "../utils/firebaseFunctions";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
+import { useDispatch } from "react-redux";
+import * as authAction from "../store/actions/authAction";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
 
 export default ConfigAccountScreen = props => {
   const [switchSearch, setSwitchSearch] = useState(false);
+  const dispatch = useDispatch();
 
   const configHandler = role => {
     toggleSearch(switchSearch)
-      .then(() => {
-        AsyncStorage.setItem("CONFIG_ROLE", role)
-          .then(() => {
-            props.navigation.navigate("StartupScreen");
-          })
-          .catch(err => {
-            console.log(err);
-          });
+      .then(async () => {
+        // AsyncStorage.setItem("CONFIG_ROLE", role)
+        //   .then(() => {
+        //     dispatch(authAction.changeRole(role));
+        //     props.navigation.navigate("StartupScreen");
+        //   })
+        //   .catch(err => {
+        //     console.log(err);
+        //   });
+        await dispatch(authAction.changeRole(role));
+        props.navigation.navigate("StartupScreen");
       })
       .catch(err => {
         console.log(err);
