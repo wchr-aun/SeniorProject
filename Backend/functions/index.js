@@ -200,7 +200,9 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
   if (context.auth != null) {
     let purchaseList = data.purchaseList
     let description = data.desc
+    let addr = data.addr
     return buyerDB.doc(context.auth.id).update({
+      addr,
       purchaseList,
       description
     }).then(() => {
@@ -225,7 +227,10 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
       addr,
       addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude)
     }).then(() => {
-      return true
+      auth.updateUser(context.auth.uid, {
+        phoneNumber: data.phoneNo,
+        photoURL: data.photoURL
+      })
     }).catch(err => {
       console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.id)
       console.log(err)
