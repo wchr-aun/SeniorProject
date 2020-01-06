@@ -101,6 +101,7 @@ export default UserAuthenScreen = props => {
       .then(() => {
         updateNotificationToken()
           .then(result => {
+            console.log("getting in")
             if (result) {
               props.navigation.navigate("StartupScreen");
             }
