@@ -16,6 +16,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import ThaiText from "./ThaiText";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default ModalShowSellersItemsScreen = props => {
   const [wasteType, setWasteType] = useState();
@@ -56,49 +57,51 @@ export default ModalShowSellersItemsScreen = props => {
         style={{
           flex: 1,
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          paddingTop: getStatusBarHeight()
         }}
       >
-        <Text>เพิ่มขยะ</Text>
         <View
           style={{
             width: wp("80%"),
-            height: hp("70%"),
-            alignItems: "center",
-            flexDirection: "row"
+            height: hp("100%"),
+            alignItems: "center"
           }}
         >
-          <View style={{ width: "60%", height: "25%" }}>
-            <Dropdown
-              label="Waste Type"
-              data={props.data}
-              onChangeText={thisValue => {
-                onDropdownChangeHandler(thisValue);
-              }}
-            />
+          <View style={{ width: "100%", height: "10%" }}>
+            <Text>เพิ่มขยะ</Text>
           </View>
           <View
             style={{
-              width: "40%",
-              height: "10%",
-              alignSelf: "center",
-              marginVertical: wp("3%"),
-              flexDirection: "row"
+              justifyContent: "space-around",
+              flexDirection: "row",
+              width: "100%",
+              height: "30%",
+              alignItems: "center"
             }}
           >
-            <View style={{ width: "50%", height: "100%" }}>
-              <ThaiText>จำนวน</ThaiText>
+            <View style={{ width: "40%", height: wp("10%") }}>
+              <Dropdown
+                label="Waste Type"
+                data={props.data}
+                onChangeText={thisValue => {
+                  onDropdownChangeHandler(thisValue);
+                }}
+              />
             </View>
             <View
               style={{
-                width: "50%",
-                height: "100%",
+                width: "40%",
+                height: wp("10%"),
+                paddingVertical: wp("3%"),
+                flexDirection: "row",
                 borderWidth: 1,
-                borderColor: Colors.lineSeparate,
-                borderRadius: 5
+                borderRadius: 5,
+                borderColor: Colors.lineSeparate
               }}
             >
               <TextInput
+                placeholder="จำนวน"
                 keyboardType="number-pad"
                 onChangeText={thisValue => {
                   setAmount(thisValue);
@@ -106,7 +109,13 @@ export default ModalShowSellersItemsScreen = props => {
               ></TextInput>
             </View>
           </View>
-          <View style={{ width: "100%", flexDirection: "row" }}>
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around"
+            }}
+          >
             <View>
               <Button
                 title={"เพิ่ม"}
@@ -116,7 +125,7 @@ export default ModalShowSellersItemsScreen = props => {
             </View>
             <View>
               <Button
-                title={"Hide Modal"}
+                title={"ปิดหน้าต่าง"}
                 color={Colors.primary}
                 onPress={() => {
                   props.setModalVisible(false);
