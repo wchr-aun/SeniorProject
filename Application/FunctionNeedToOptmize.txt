@@ -2,3 +2,4 @@
 2. ตอน fetch transaction --> dispatch(transactionAction.fetchTransaction("seller")); ใส่ role แทน 'seller'
     - sellerHomepageScreen.js
     - SellingTransactionScreen.js
+3. Map หน้า signup เพิ่มสถานที่ปัจจุบันที่กด บนหัว

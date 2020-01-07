@@ -4,7 +4,8 @@ import { Permission } from "./permissions";
 import {
   getCurrentPositionAsync,
   reverseGeocodeAsync,
-  geocodeAsync
+  geocodeAsync,
+  Accuracy
 } from "expo-location";
 
 const formatDate = date => {
@@ -59,7 +60,8 @@ export const getCurrentLocation = async () => {
   // Step-1
   try {
     const location = await getCurrentPositionAsync({
-      timeout: 5000
+      timeout: 5000,
+      accuracy: Accuracy.BestForNavigation
     });
     // Step-2
     try {
@@ -68,9 +70,7 @@ export const getCurrentLocation = async () => {
       console.log(locationInfo);
       return {
         readable:
-          locationInfo[0].street +
-          " " +
-          locationInfo[0].city +
+          locationInfo[0].name +
           " " +
           locationInfo[0].region +
           " " +

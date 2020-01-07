@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   lineSeparate: {
-    borderBottomColor: Colors.primary_variant,
+    borderBottomColor: Colors.lineSeparate,
     borderBottomWidth: 1,
     marginVertical: 5
   }

@@ -96,7 +96,7 @@ export default BuyerHomepageScreen = props => {
             <UserInfoCard
               style={{
                 ...styles.userInfoCard,
-                height: "30%",
+                height: "40%",
                 width: "100%"
               }}
               imgUrl={
@@ -115,7 +115,7 @@ export default BuyerHomepageScreen = props => {
             <View
               style={{
                 width: "100%",
-                height: "70%",
+                height: "60%",
                 alignSelf: "center",
                 alignItems: "center",
                 paddingVertical: 10,

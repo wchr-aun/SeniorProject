@@ -62,7 +62,7 @@ const formReducer = (state, action) => {
         inputValues: updatedValues,
         inputValidities: updatedValidities,
         allFormIsValid: updatedAllFormIsValid,
-        addrFormIsValide: updatedAddrFormIsValid
+        addrFormIsValid: updatedAddrFormIsValid
       };
     case "CHOOSE_CURRENT_TIME":
       return {
@@ -117,7 +117,7 @@ export default UserSignupScreen = props => {
       phoneNo: false
     },
     allFormIsValid: false,
-    addrFormIsValide: false
+    addrFormIsValid: false
   });
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default UserSignupScreen = props => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An error has occurred!", error, [{ text: "OK" }]);
+      Alert.alert("มีข้อผิดพลาดบางอย่างเกิดขึ้น!", error, [{ text: "OK" }]);
       setError("");
     }
   }, [error]);
@@ -134,10 +134,8 @@ export default UserSignupScreen = props => {
   // firebase call cloud function
   const signupHandler = async () => {
     setIsLoading(true);
-
-    console.log(formState);
     if (!formState.allFormIsValid) {
-      setError("Please fill all the inputs");
+      setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
       setIsLoading(false);
       return;
     }
@@ -146,7 +144,7 @@ export default UserSignupScreen = props => {
       formState.inputValues.password !== formState.inputValues.confirmpassword
     ) {
       setIsLoading(false);
-      setError("The password and the confirm password don't match");
+      setError("รหัสผ่านกับการยืนยันรหัสผ่านต้องเหมือนกัน");
       return;
     }
 
@@ -162,17 +160,10 @@ export default UserSignupScreen = props => {
       phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
       notificationToken
     };
-
-    console.log(
-      "--------> Submit ! ----> user that is passed to createAccount "
-    );
-    console.log(user);
-
     createAccount(user)
       .then(() => {
         AsyncStorage.clear()
           .then(() => {
-            setIsLoading(false);
             props.navigation.navigate("ConfigAccountScreen");
           })
           .catch(err => {
@@ -205,6 +196,8 @@ export default UserSignupScreen = props => {
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
+    console.log("-------> sellerAddrResult");
+    console.log(sellerAddrResult);
     // set all addr form valid
     dispatchFormState({
       type: "CHOOSE_CURRENT_TIME",
@@ -216,8 +209,11 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    if (!formState.addrFormIsValide) {
-      setError("Please fill all the addresses");
+    console.log("Search Map Handler");
+    console.log(formState);
+
+    if (!formState.addrFormIsValid) {
+      setError("โปรดเติมข้อมูลที่อยู่ข้างต้น ให้สมบูรณ์");
       return;
     }
 
@@ -264,7 +260,8 @@ export default UserSignupScreen = props => {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    // <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <View style={{ flex: 1 }}>
       <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
         <View
           style={{
@@ -288,335 +285,344 @@ export default UserSignupScreen = props => {
             borderRadius: 3
           }}
         >
-          <ScrollView keyboardShouldPersistTaps={"handled"}>
-            <Input
-              editable={true}
-              id="username"
-              label="ชื่อผู้ใช้"
-              required
-              autoCapitalize="none"
-              errorText="Please enter a valid username"
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.username
-                  ? formState.inputValues.username
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.username
-                  ? formState.inputValidities.username
-                  : false
-              }
-              iconName="account"
-            />
-            <Input
-              editable={true}
-              id="email"
-              label="อีเมล"
-              keyboardType="email-address"
-              required
-              email
-              autoCapitalize="none"
-              errorText="Please enter a valid email address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.email ? formState.inputValues.email : ""
-              }
-              initialValid={
-                formState.inputValidities.email
-                  ? formState.inputValidities.email
-                  : false
-              }
-              iconName="email"
-            />
-            <Input
-              editable={true}
-              id="password"
-              label="รหัสผ่าน"
-              keyboardType="default"
-              secureTextEntry
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid password."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.password
-                  ? formState.inputValues.password
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.password
-                  ? formState.inputValidities.password
-                  : false
-              }
-              iconName="key-variant"
-            />
-            <Input
-              editable={true}
-              id="confirmpassword"
-              label="ยืนยันรหัสผ่าน"
-              keyboardType="default"
-              secureTextEntry
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid password."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.confirmpassword
-                  ? formState.inputValues.confirmpassword
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.confirmpassword
-                  ? formState.inputValidities.confirmpassword
-                  : false
-              }
-              iconName="key-variant"
-            />
-            <Input
-              editable={true}
-              id="name"
-              label="ชื่อจริง"
-              keyboardType="default"
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid name."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.name ? formState.inputValues.name : ""
-              }
-              initialValid={
-                formState.inputValidities.name
-                  ? formState.inputValidities.name
-                  : false
-              }
-              iconName="account"
-            />
-            <Input
-              editable={true}
-              id="surname"
-              label="นามสกุล"
-              keyboardType="default"
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid surname."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.surname
-                  ? formState.inputValues.surname
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.surname
-                  ? formState.inputValidities.surname
-                  : false
-              }
-              iconName="account-multiple"
-            />
-            <View
-              style={{
-                width: "100%",
-                marginVertical: 3,
-                alignSelf: "center"
-              }}
-            >
-              <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
-                ที่อยู่ในการจัดส่ง
-              </ThaiText>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                setCurrentAddr(preState => !preState);
-                getCurrentLocationHandler();
-              }}
-            >
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior="padding"
+            keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
+          >
+            <ScrollView keyboardShouldPersistTaps={"handled"}>
+              <Input
+                editable={true}
+                id="username"
+                label="ชื่อผู้ใช้"
+                required
+                autoCapitalize="none"
+                errorText="Please enter a valid username"
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.username
+                    ? formState.inputValues.username
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.username
+                    ? formState.inputValidities.username
+                    : false
+                }
+                iconName="account"
+              />
+              <Input
+                editable={true}
+                id="email"
+                label="อีเมล"
+                keyboardType="email-address"
+                required
+                email
+                autoCapitalize="none"
+                errorText="Please enter a valid email address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.email ? formState.inputValues.email : ""
+                }
+                initialValid={
+                  formState.inputValidities.email
+                    ? formState.inputValidities.email
+                    : false
+                }
+                iconName="email"
+              />
+              <Input
+                editable={true}
+                id="password"
+                label="รหัสผ่าน"
+                keyboardType="default"
+                secureTextEntry
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid password."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.password
+                    ? formState.inputValues.password
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.password
+                    ? formState.inputValidities.password
+                    : false
+                }
+                iconName="key-variant"
+              />
+              <Input
+                editable={true}
+                id="confirmpassword"
+                label="ยืนยันรหัสผ่าน"
+                keyboardType="default"
+                secureTextEntry
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid password."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.confirmpassword
+                    ? formState.inputValues.confirmpassword
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.confirmpassword
+                    ? formState.inputValidities.confirmpassword
+                    : false
+                }
+                iconName="key-variant"
+              />
+              <Input
+                editable={true}
+                id="name"
+                label="ชื่อจริง"
+                keyboardType="default"
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid name."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.name ? formState.inputValues.name : ""
+                }
+                initialValid={
+                  formState.inputValidities.name
+                    ? formState.inputValidities.name
+                    : false
+                }
+                iconName="account"
+              />
+              <Input
+                editable={true}
+                id="surname"
+                label="นามสกุล"
+                keyboardType="default"
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid surname."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.surname
+                    ? formState.inputValues.surname
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.surname
+                    ? formState.inputValidities.surname
+                    : false
+                }
+                iconName="account-multiple"
+              />
               <View
                 style={{
                   width: "100%",
                   marginVertical: 3,
-                  alignSelf: "center",
-                  flexDirection: "row"
+                  alignSelf: "center"
                 }}
               >
-                <MaterialIcons
-                  name={currentAddr ? "check-box" : "check-box-outline-blank"}
-                  size={15}
-                  color={Colors.primary}
-                />
-                <ThaiText style={{ fontSize: 10, textAlign: "center" }}>
-                  ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
+                <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
+                  ที่อยู่ในการจัดส่ง
                 </ThaiText>
               </View>
-            </TouchableOpacity>
-            <Input
-              editable={!currentAddr}
-              id="shallowAddr"
-              label="ที่อยู่"
-              keyboardType="default"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.shallowAddr
-                  ? formState.inputValues.shallowAddr
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.shallowAddr
-                  ? formState.inputValidities.shallowAddr
-                  : false
-              }
-              iconName="account-card-details"
-            />
-            <Input
-              editable={!currentAddr}
-              id="subdistrict"
-              label="ตำบล"
-              keyboardType="default"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.subdistrict
-                  ? formState.inputValues.subdistrict
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.subdistrict
-                  ? formState.inputValidities.subdistrict
-                  : false
-              }
-              iconName="account-card-details"
-            />
-            <Input
-              editable={!currentAddr}
-              id="district"
-              label="อำเภอ"
-              keyboardType="default"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.district
-                  ? formState.inputValues.district
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.district
-                  ? formState.inputValidities.district
-                  : false
-              }
-              iconName="account-card-details"
-            />
-            <Input
-              editable={!currentAddr}
-              id="province"
-              label="จังหวัด"
-              keyboardType="default"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.province
-                  ? formState.inputValues.province
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.province
-                  ? formState.inputValidities.province
-                  : false
-              }
-              iconName="account-card-details"
-            />
-            <Input
-              editable={!currentAddr}
-              id="postalCode"
-              label="รหัสไปรษณีย์"
-              keyboardType="numeric"
-              errorText="Please enter a valid address."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.postalCode
-                  ? formState.inputValues.postalCode
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.postalCode
-                  ? formState.inputValidities.postalCode
-                  : false
-              }
-              iconName="account-card-details"
-            />
-            <ThaiText
-              style={{
-                fontSize: 12,
-                color: currentAddr === true ? Colors.on_primary : Colors.primary
-              }}
-            >
-              กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
-            </ThaiText>
-            <CustomButton
-              disable={currentAddr}
-              style={{
-                width: wp("40%"),
-                height: hp("6%"),
-                borderRadius: 10,
-                margin: wp("1.25%"),
-                alignSelf: "center"
-              }}
-              onPress={searchMapHandler}
-              btnColor={Colors.on_primary}
-              btnTitleColor={Colors.primary}
-              btnTitleFontSize={14}
-            >
-              ค้นหาสถานที่
-            </CustomButton>
-            <Input
-              editable={true}
-              id="phoneNo"
-              label="เบอร์โทรศัพท์"
-              keyboardType="numeric"
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a phoneNo."
-              onInputChange={inputChangeHandler}
-              initialValue={
-                formState.inputValues.phoneNo
-                  ? formState.inputValues.phoneNo
-                  : ""
-              }
-              initialValid={
-                formState.inputValidities.phoneNo
-                  ? formState.inputValidities.phoneNo
-                  : false
-              }
-              iconName="cellphone-android"
-            />
-            <View style={styles.buttonContainer}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
-                <CustomButton
+              <TouchableOpacity
+                onPress={() => {
+                  setCurrentAddr(preState => !preState);
+                  getCurrentLocationHandler();
+                }}
+              >
+                <View
                   style={{
-                    width: wp("40%"),
-                    height: hp("6%"),
-                    borderRadius: 10,
-                    margin: wp("1.25%"),
-                    alignSelf: "center"
+                    width: "100%",
+                    marginVertical: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
                   }}
-                  onPress={() => {
-                    signupHandler();
-                  }}
-                  btnColor={Colors.primary}
-                  btnTitleColor={Colors.on_primary}
-                  btnTitleFontSize={14}
                 >
-                  ยืนยันลงทะเบียน
-                </CustomButton>
-              )}
-            </View>
-          </ScrollView>
+                  <MaterialIcons
+                    name={currentAddr ? "check-box" : "check-box-outline-blank"}
+                    size={15}
+                    color={Colors.primary}
+                  />
+                  <ThaiText style={{ fontSize: 10, textAlign: "center" }}>
+                    ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
+                  </ThaiText>
+                </View>
+              </TouchableOpacity>
+              <Input
+                editable={!currentAddr}
+                id="shallowAddr"
+                label="ที่อยู่"
+                keyboardType="default"
+                errorText="Please enter a valid address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.shallowAddr
+                    ? formState.inputValues.shallowAddr
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.shallowAddr
+                    ? formState.inputValidities.shallowAddr
+                    : false
+                }
+                iconName="account-card-details"
+              />
+              <Input
+                editable={!currentAddr}
+                id="subdistrict"
+                label="ตำบล/แขวง"
+                keyboardType="default"
+                errorText="Please enter a valid address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.subdistrict
+                    ? formState.inputValues.subdistrict
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.subdistrict
+                    ? formState.inputValidities.subdistrict
+                    : false
+                }
+                iconName="account-card-details"
+              />
+              <Input
+                editable={!currentAddr}
+                id="district"
+                label="อำเภอ/เขต"
+                keyboardType="default"
+                errorText="Please enter a valid address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.district
+                    ? formState.inputValues.district
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.district
+                    ? formState.inputValidities.district
+                    : false
+                }
+                iconName="account-card-details"
+              />
+              <Input
+                editable={!currentAddr}
+                id="province"
+                label="จังหวัด"
+                keyboardType="default"
+                errorText="Please enter a valid address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.province
+                    ? formState.inputValues.province
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.province
+                    ? formState.inputValidities.province
+                    : false
+                }
+                iconName="account-card-details"
+              />
+              <Input
+                editable={!currentAddr}
+                id="postalCode"
+                label="รหัสไปรษณีย์"
+                keyboardType="numeric"
+                errorText="Please enter a valid address."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.postalCode
+                    ? formState.inputValues.postalCode
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.postalCode
+                    ? formState.inputValidities.postalCode
+                    : false
+                }
+                iconName="account-card-details"
+              />
+              <ThaiText
+                style={{
+                  fontSize: 12,
+                  color:
+                    currentAddr === true ? Colors.on_primary : Colors.primary
+                }}
+              >
+                กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
+              </ThaiText>
+              <CustomButton
+                disable={currentAddr}
+                style={{
+                  width: wp("40%"),
+                  height: hp("6%"),
+                  borderRadius: 10,
+                  margin: wp("1.25%"),
+                  alignSelf: "center"
+                }}
+                onPress={searchMapHandler}
+                btnColor={Colors.on_primary}
+                btnTitleColor={
+                  currentAddr ? Colors.lineSeparate : Colors.primary
+                }
+                btnTitleFontSize={14}
+              >
+                ค้นหาสถานที่
+              </CustomButton>
+              <Input
+                editable={true}
+                id="phoneNo"
+                label="เบอร์โทรศัพท์"
+                keyboardType="numeric"
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a phoneNo."
+                onInputChange={inputChangeHandler}
+                initialValue={
+                  formState.inputValues.phoneNo
+                    ? formState.inputValues.phoneNo
+                    : ""
+                }
+                initialValid={
+                  formState.inputValidities.phoneNo
+                    ? formState.inputValidities.phoneNo
+                    : false
+                }
+                iconName="cellphone-android"
+              />
+              <View style={styles.buttonContainer}>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                  <CustomButton
+                    style={{
+                      width: wp("40%"),
+                      height: hp("6%"),
+                      borderRadius: 10,
+                      margin: wp("1.25%"),
+                      alignSelf: "center"
+                    }}
+                    onPress={() => {
+                      signupHandler();
+                    }}
+                    btnColor={Colors.primary}
+                    btnTitleColor={Colors.on_primary}
+                    btnTitleFontSize={14}
+                  >
+                    ยืนยันลงทะเบียน
+                  </CustomButton>
+                )}
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </View>
         <View
           style={{
@@ -652,7 +658,8 @@ export default UserSignupScreen = props => {
           </CustomButton>
         </View>
       </LinearGradient>
-    </KeyboardAvoidingView>
+      {/* </KeyboardAvoidingView> */}
+    </View>
   );
 };
 

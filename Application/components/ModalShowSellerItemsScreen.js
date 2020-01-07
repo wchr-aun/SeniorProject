@@ -59,11 +59,16 @@ export default ModalShowSellersItemsScreen = props => {
           justifyContent: "center"
         }}
       >
+        <Text>เพิ่มขยะ</Text>
         <View
-          style={{ width: wp("80%"), height: hp("70%"), alignItems: "center" }}
+          style={{
+            width: wp("80%"),
+            height: hp("70%"),
+            alignItems: "center",
+            flexDirection: "row"
+          }}
         >
-          <Text>Waste Adding</Text>
-          <View style={{ width: "100%", height: "25%" }}>
+          <View style={{ width: "60%", height: "25%" }}>
             <Dropdown
               label="Waste Type"
               data={props.data}
@@ -74,19 +79,19 @@ export default ModalShowSellersItemsScreen = props => {
           </View>
           <View
             style={{
-              width: "100%",
+              width: "40%",
               height: "10%",
               alignSelf: "center",
               marginVertical: wp("3%"),
               flexDirection: "row"
             }}
           >
-            <View style={{ width: "30%", height: "100%" }}>
+            <View style={{ width: "50%", height: "100%" }}>
               <ThaiText>จำนวน</ThaiText>
             </View>
             <View
               style={{
-                width: "70%",
+                width: "50%",
                 height: "100%",
                 borderWidth: 1,
                 borderColor: Colors.lineSeparate,
@@ -101,21 +106,23 @@ export default ModalShowSellersItemsScreen = props => {
               ></TextInput>
             </View>
           </View>
-          <View>
-            <Button
-              title={"Add it"}
-              color={Colors.primary}
-              onPress={addWasteHandler}
-            />
-          </View>
-          <View>
-            <Button
-              title={"Hide Modal"}
-              color={Colors.primary}
-              onPress={() => {
-                props.setModalVisible(false);
-              }}
-            />
+          <View style={{ width: "100%", flexDirection: "row" }}>
+            <View>
+              <Button
+                title={"เพิ่ม"}
+                color={Colors.primary}
+                onPress={addWasteHandler}
+              />
+            </View>
+            <View>
+              <Button
+                title={"Hide Modal"}
+                color={Colors.primary}
+                onPress={() => {
+                  props.setModalVisible(false);
+                }}
+              />
+            </View>
           </View>
         </View>
       </View>

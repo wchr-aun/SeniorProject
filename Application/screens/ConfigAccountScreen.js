@@ -24,14 +24,6 @@ export default ConfigAccountScreen = props => {
   const configHandler = role => {
     toggleSearch(switchSearch)
       .then(async () => {
-        // AsyncStorage.setItem("CONFIG_ROLE", role)
-        //   .then(() => {
-        //     dispatch(authAction.changeRole(role));
-        //     props.navigation.navigate("StartupScreen");
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   });
         await dispatch(authAction.changeRole(role));
         props.navigation.navigate("StartupScreen");
       })

@@ -63,12 +63,9 @@ const trashsModifyingReducer = (state, action) => {
       };
     case ADD_WASTE:
       console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
-      console.log(action);
-      console.log(updatedSellerItems);
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
       )[0];
-      console.log("pass 1");
       if (updatedItem) {
         targetIndex = updatedSellerItems.indexOf(updatedItem);
         updatedItem.amount = updatedItem.amount + action.amount;
@@ -155,9 +152,9 @@ const ShowAllUserTrashScreen = props => {
   });
 
   // trash user snapshot
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
 
   // Get sellerItems and wasteTyp from redux
@@ -220,7 +217,7 @@ const ShowAllUserTrashScreen = props => {
   useEffect(() => {
     dispatchAmountTrashsState({
       type: SET_WASTE,
-      sellerItemsNew: JSON.parse(JSON.stringify(sellerItemsRedux))
+      sellerItemsNew: sellerItemsRedux
     });
   }, [sellerItemsRedux]);
 

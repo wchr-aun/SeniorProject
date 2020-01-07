@@ -134,9 +134,9 @@ export default SellingTrashScreen = props => {
 
   // Get data from redux
   // Get User
-  const userProfile = useSelector(state => {
-    return state.userProfile.user;
-  });
+  // const userProfile = useSelector(state => {
+  //   return state.user.userProfile;
+  // });
   // Get User trash
   const userTrashsFromRedux = useSelector(reducers => {
     return reducers.sellerItems.sellerItems;

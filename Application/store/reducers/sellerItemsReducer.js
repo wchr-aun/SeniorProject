@@ -9,6 +9,7 @@ import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
   sellerItems: [],
+  sellerItemsCamera: [],
   itemsForSell: [],
   buyerList: []
 };

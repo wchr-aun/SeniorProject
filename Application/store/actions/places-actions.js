@@ -2,12 +2,11 @@ import * as FileSystem from "expo-file-system";
 
 export const GET_PREDICTION = "GET_PREDICTION";
 export const SET_PLACES = "SET_PLACES";
-const PERDICT_LINK = "http://9d0af1bc.ngrok.io/predict";
+const PERDICT_LINK = "http://776a44a1.ngrok.io/predict";
 
 export const getPrediction = image => {
   return async dispatch => {
     console.log("getPrediction is called");
-    console.log(image);
     console.log(image.width + " " + image.height);
 
     // Move to new directory

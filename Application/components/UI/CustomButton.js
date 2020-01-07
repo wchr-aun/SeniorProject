@@ -1,12 +1,20 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  TouchableWithoutFeedback
+} from "react-native";
 
 import ThaiButtonText from "./../ThaiButtonText";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default CustomButton = props => {
+  let TouchableComp = props.disable
+    ? TouchableWithoutFeedback
+    : TouchableOpacity;
   return (
-    <TouchableOpacity
+    <TouchableComp
       style={{
         ...props.style,
         backgroundColor: props.btnColor,
@@ -32,7 +40,7 @@ export default CustomButton = props => {
           {props.children}
         </ThaiButtonText>
       </View>
-    </TouchableOpacity>
+    </TouchableComp>
   );
 };
 

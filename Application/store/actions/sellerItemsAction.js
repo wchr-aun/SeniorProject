@@ -10,6 +10,7 @@ export const SET_WASTE = "SET_WASTE";
 export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 export const GET_BUYER_LIST = "GET_BUYER_LIST";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
+export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
 
 export const fetchSellerItems = () => {
   return async dispatch => {
@@ -75,6 +76,12 @@ export const getBuyerList = () => {
     }
   };
 };
+
+// export const setSellerItemsFromCamera = (res) => {
+//   return {
+
+//   }
+// }
 
 export const chooseBuyerSell = (
   sellAddr,

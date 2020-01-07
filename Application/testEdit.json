@@ -1,0 +1,25 @@
+// payload editFn
+Object {
+    "addr": Object {
+      "latitude": 13.8565505,
+      "longitude": 100.0703087,
+      "readable": "ซอย ห้วยชัน 1 ตำบล มาบแค นครปฐม ประเทศไทย 73000",
+    },
+    "name": "นราวิชญ์",
+    "phoneNo": "+66867676767",
+    "photoURL": "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb",
+    "surname": "ทับทิมโต",
+  }
+
+  // aun format
+  newInfo = {
+    addr: {
+      "latitude": number,
+      "longitude": number,
+      "readable": "E",
+    },
+    name: "asdfasdfasdfasdfasdf",
+    phoneNo: "+666666666666"
+    photoURL: "https://url.url.url.com",
+    surname: "asdfasdfasdfasdf",
+  } */

@@ -247,11 +247,6 @@ export default EditingUserprofileScreen = props => {
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
-    console.log(
-      "--------> Submit ! ----> user that is passed to editUserInfo "
-    );
-    console.log(user);
-
     editUserInfo(user)
       .then(() => {
         AsyncStorage.clear()
@@ -334,7 +329,7 @@ export default EditingUserprofileScreen = props => {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior="padding"
-            keyboardVerticalOffset={Platform.OS === "android" ? -200 : 0}
+            keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
               <View

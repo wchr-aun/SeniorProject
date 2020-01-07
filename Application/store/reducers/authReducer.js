@@ -28,8 +28,6 @@ export default (state = initialState, action) => {
         userRole: action.userRole
       };
     case SET_ROLE:
-      console.log("Chnage Role! in authReducer " + action);
-
       return {
         ...state,
         userRole: action.userRole
