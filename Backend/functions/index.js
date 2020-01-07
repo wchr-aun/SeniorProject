@@ -32,7 +32,6 @@ exports.createAccount = functions.https.onCall((data, context) => {
       surname,
       addr,
       addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude),
-      enableSearch: false,
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).catch(err => {
       console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
@@ -198,14 +197,16 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
 
 exports.editBuyerInfo = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    let purchaseList = data.purchaseList
-    let description = data.desc
-    let addr = data.addr.readable
-    return buyerDB.doc(context.auth.id).update({
+    let purchaseList = data.purchaseList || []
+    let description = data.desc || "default description"
+    let addr = data.addr.readable || {}
+    let enableSearch = data.enableSearch || false
+    return buyerDB.doc(context.auth.uid).set({
       addr,
       addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude),
       purchaseList,
-      description
+      description,
+      enableSearch,
     }).then(() => {
       return true
     }).catch(err => {
