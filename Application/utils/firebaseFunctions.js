@@ -23,6 +23,7 @@ export const getSellerItems = async () => {
 
 // Get firebase UserProfile
 export const getUsers = async () => {
+  console.log("getUser(): ", auth.currentUser.uid)
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
@@ -331,18 +332,18 @@ buyerInfo = {
 
 export const editBuyerInfo = async buyerInfo => {
   return functions
-    .httpsCallable("editUserInfo")(buyerInfo)
+    .httpsCallable("editBuyerInfo")(buyerInfo)
     .then(result => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
-        console.log("----1 -----result.data.errorMessage in editUserInfo");
+        console.log("----1 -----result.data.errorMessage in editBuyerInfo");
         console.log(result.data.errorMessage);
         throw new Error(result.data.errorMessage);
       }
     })
     .catch(err => {
-      console.log("----2 -----result.data.errorMessage in editUserInfo");
+      console.log("----2 -----result.data.errorMessage in editBuyerInfo");
       console.log(err.message);
       throw new Error(err.message);
     });

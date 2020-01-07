@@ -9,9 +9,9 @@ import {
   AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { toggleSearch } from "../utils/firebaseFunctions";
+import { toggleSearch, editBuyerInfo } from "../utils/firebaseFunctions";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as authAction from "../store/actions/authAction";
 
 import Card from "../components/UI/Card";
@@ -20,12 +20,19 @@ import Colors from "../constants/Colors";
 export default ConfigAccountScreen = props => {
   const [switchSearch, setSwitchSearch] = useState(false);
   const dispatch = useDispatch();
+  const addr = useSelector(state => state.user.userProfile.addr)
 
   const configHandler = role => {
     toggleSearch(switchSearch)
       .then(async () => {
-        await dispatch(authAction.changeRole(role));
-        props.navigation.navigate("StartupScreen");
+        dispatch(authAction.changeRole(role)).then(() => {
+          if (role == "buyer")
+            editBuyerInfo({addr: addr, enableSearch: true}).then(() => {
+              props.navigation.navigate("StartupScreen");
+            })
+          else
+            props.navigation.navigate("StartupScreen");
+        })
       })
       .catch(err => {
         console.log(err);
@@ -41,24 +48,6 @@ export default ConfigAccountScreen = props => {
       <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
           <ScrollView keyboardShouldPersistTaps="handled">
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around"
-              }}
-            >
-              <Text>Enable Address</Text>
-              <SwitchToggle
-                switchOn={switchSearch}
-                onPress={() => setSwitchSearch(!switchSearch)}
-                duration={150}
-                backgroundColorOn="#5fdba7"
-                backgroundColorOff="#808080"
-                circleColorOff="#ffffff"
-                circleColorOn="#ffffff"
-              />
-            </View>
             <View
               style={{
                 flexDirection: "row",

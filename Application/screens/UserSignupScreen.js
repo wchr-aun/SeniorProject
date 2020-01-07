@@ -19,7 +19,6 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
-import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import { createAccount } from "../utils/firebaseFunctions";
@@ -29,6 +28,7 @@ import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Notifications } from "expo";
+import firebaseUtil from "../firebase";
 
 // CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -164,7 +164,10 @@ export default UserSignupScreen = props => {
       .then(() => {
         AsyncStorage.clear()
           .then(() => {
-            props.navigation.navigate("ConfigAccountScreen");
+            firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password).then(userCredential => {
+              console.log(userCredential.user.uid)
+              props.navigation.navigate("StartupScreen");
+            })
           })
           .catch(err => {
             setIsLoading(false);
