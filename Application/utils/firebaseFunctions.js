@@ -314,3 +314,36 @@ export const removeNotificationToken = async () => {
       throw new Error(err.message);
     });
 };
+
+/* 
+buyerInfo = {
+  purchaseList: {
+    PP(waste type): 159(price),
+    HDPE(waste type): 999(price)
+  },
+  desc: "description",
+  addr: {
+    "latitude": number,
+    "longitude": number,
+    "readable": "E",
+  }
+} */
+
+export const editBuyerInfo = async buyerInfo => {
+  return functions
+    .httpsCallable("editUserInfo")(buyerInfo)
+    .then(result => {
+      if (result.data.errorMessage == null) return true;
+      // else throw new Error(result.data.errorMessage);
+      else {
+        console.log("----1 -----result.data.errorMessage in editUserInfo");
+        console.log(result.data.errorMessage);
+        throw new Error(result.data.errorMessage);
+      }
+    })
+    .catch(err => {
+      console.log("----2 -----result.data.errorMessage in editUserInfo");
+      console.log(err.message);
+      throw new Error(err.message);
+    });
+};

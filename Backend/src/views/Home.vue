@@ -1,5 +1,6 @@
 <template>
   <div class="Home">
+    <WasteAmount />
   </div>
 </template>
 
