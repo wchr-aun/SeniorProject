@@ -30,7 +30,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Notifications } from "expo";
 import firebaseUtil from "../firebase";
 
-// CHOOSE_CURRENT_TIME
+// CHOOSE_CURRENT_ADDR
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
@@ -64,7 +64,7 @@ const formReducer = (state, action) => {
         allFormIsValid: updatedAllFormIsValid,
         addrFormIsValid: updatedAddrFormIsValid
       };
-    case "CHOOSE_CURRENT_TIME":
+    case "CHOOSE_CURRENT_ADDR":
       return {
         ...state,
         inputValidities: {
@@ -137,6 +137,7 @@ export default UserSignupScreen = props => {
     console.log(formState);
 
     setIsLoading(true);
+    console.log(formState);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
       setIsLoading(false);
@@ -206,7 +207,7 @@ export default UserSignupScreen = props => {
     let sellerAddrResult = await getCurrentLocation();
     // set all addr form valid
     dispatchFormState({
-      type: "CHOOSE_CURRENT_TIME",
+      type: "CHOOSE_CURRENT_ADDR",
       prestateIsCur: currentAddr
     });
     setSellerAddr({ ...sellerAddrResult });
@@ -215,7 +216,6 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-
     if (!formState.addrFormIsValid) {
       setError("โปรดเติมข้อมูลที่อยู่ข้างต้น ให้สมบูรณ์");
       return;

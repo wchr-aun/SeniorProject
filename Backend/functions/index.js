@@ -97,8 +97,10 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               assignedTime: new Date(data.assignedTime) || "TBA",
               txStatus: 0
             }).then(() => {
-              // return sendNotification.then(result => { return result })
-              return true
+              let title = ""
+              let body = ""
+              (title, body) = getTitleAndBody({uid: context.auth.uid, txType, txStatus: 0})
+              return sendNotification(context.auth.uid, title, body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in sellWaste() while adding a transaction")
               console.log(err)
@@ -144,7 +146,15 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return txDB.doc(data.txID).update({
               txStatus: data.status
             }).then(() => {
-              return true
+              let title = ""
+              let body = ""
+              (title, body) = getTitleAndBody({
+                uid: context.auth.uid,
+                txType: doc.data().txType,
+                txStatus: data.status,
+                date: doc.data().assignedTime
+              })
+              return sendNotification(doc.data().seller, title, body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
@@ -171,7 +181,15 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               buyer: context.auth.uid,
               items: data.items
             }, { merge: true }).then(() => {
-              return true
+              let title = ""
+              let body = ""
+              (title, body) = getTitleAndBody({
+                uid: context.auth.uid,
+                txType: doc.data().txType,
+                txStatus: data.status,
+                date: doc.data().assignedTime
+              })
+              return sendNotification(doc.data().seller, title, body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
               console.log(err)
@@ -186,6 +204,25 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               return true
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
+            })
+          }
+          else {
+            return txDB.doc(data.txID).update({
+              txStatus: data.status
+            }).then(() => {
+              let title = ""
+              let body = ""
+              (title, body) = getTitleAndBody({
+                uid: context.auth.uid,
+                txType: doc.data().txType,
+                txStatus: data.status,
+                date: doc.data().assignedTime
+              })
+              return sendNotification(doc.data().seller, title, body).then(result => { return result })
+            }).catch(err => {
+              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
               return {errorMessage: err.message}
             })
@@ -287,8 +324,7 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
     const wasteType = data.wasteType
     return geofirex.get(query).then(querySnapshot => {
       querySnapshot.forEach(buyer => {
-        buyerList.push(buyer)
-        const lastestArray = buyerList.length - 1
+        const lastestArray = buyerList.push(buyer) - 1
         buyerList[lastestArray].totalPrice = 0
         buyerList[lastestArray].unavailableTypes = []
         for (type in wasteType) {
@@ -315,37 +351,60 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
   }
 })
 
-// const sendNotification = async (uid, title, body) => {
-//   return usersDB.doc(uid).get(doc => {
-//     if (doc.exists) return doc.data().notificationToken
-//     else return {errorMessage: "The document doesn't exist"}
-//   }).then(tokens => {
-//     if (tokens.err == null) {
-//       tokens.forEach(token => {
-//         fetch("https://exp.host/--/api/v2/push/send", {
-//           method: 'POST',
-//           headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({
-//             to: token,
-//             priority: "normal",
-//             sound: "default",
-//             title,
-//             body
-//           })
-//         })
-//       })
-//       return true
-//     }
-//     else return tokens
-//   }).catch(err => {
-//     console.log("Error has occurred in sendNotification()")
-//     console.log(err)
-//     return {errorMessage: "There is something wrong in firestore functions. Please wait for the fix!"}
-//   })
-// }
+const getTitleAndBody = (data) => {
+  const uid = data.uid
+  const days = data.days || ""
+  const index = (data.txType + 1) % 2 + data.txStatus
+  const title = [
+    "คำร้องขอถึงคุณ",
+    "คำร้องขอในบริเววณของคุณ",
+    "คำขอเลื่อนเวลา",
+    "ผู้ซื้อตอบตกลงคำร้องขอ",
+    "วันนี้คุณมีนัดซื้อ-ขายขยะ",
+    "ผู้ซื้อกำลังเดินทางมา"
+  ]
+  const body = [
+    uid + " ต้องการขายขยะให้คุณ",
+    uid + " ต้องการขายขยะ",
+    uid + " ต้องการนัดเวลาใหม่",
+    uid + " เดินทางมาในอีก " + days + " วัน",
+    uid + " จะเดินทางมาถึงเวลาประมาณ",
+    uid + " กำลังเดินทางมาหาคุณ"
+  ]
+  return (title[index], body[index])
+}
+
+const sendNotification = async (uid, title, body) => {
+  return usersDB.doc(uid).get(doc => {
+    if (doc.exists) return doc.data().notificationToken
+    else return {errorMessage: "The document doesn't exist"}
+  }).then(tokens => {
+    if (tokens.err == null) {
+      tokens.forEach(token => {
+        fetch("https://exp.host/--/api/v2/push/send", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            to: token,
+            priority: "normal",
+            sound: "default",
+            title,
+            body
+          })
+        })
+      })
+      return true
+    }
+    else return {errorMessage: "The document doesn't exist"}
+  }).catch(err => {
+    console.log("Error has occurred in sendNotification()")
+    console.log(err)
+    return {errorMessage: "There is something wrong in firestore functions. Please wait for the fix!"}
+  })
+}
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
 //   if (context.auth.uid != null) {

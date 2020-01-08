@@ -6,7 +6,7 @@ import {
   CAMERA_ROLL
 } from "expo-permissions";
 
-const verifyLocationPermissions = async () => {
+export const verifyLocationPermissions = async () => {
   const result = await askAsync(LOCATION);
   if (result.status !== "granted") {
     console.log(
@@ -18,7 +18,7 @@ const verifyLocationPermissions = async () => {
   return true;
 };
 
-const verifyCameraPermissions = async () => {
+export const verifyCameraPermissions = async () => {
   const result = await askAsync(CAMERA_ROLL, CAMERA);
   if (result.status !== "granted") {
     console.log(
@@ -29,7 +29,7 @@ const verifyCameraPermissions = async () => {
   return true;
 };
 
-const verifyNotificationsPermissions = async () => {
+export const verifyNotificationsPermissions = async () => {
   const result = await askAsync(NOTIFICATIONS);
   if (result.status !== "granted") {
     console.log(
@@ -39,10 +39,4 @@ const verifyNotificationsPermissions = async () => {
     return false;
   }
   return true;
-};
-
-export const Permission = {
-  verifyLocationPermissions,
-  verifyNotificationsPermissions,
-  verifyCameraPermissions
 };
