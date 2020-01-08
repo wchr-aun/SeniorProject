@@ -3,6 +3,7 @@ const admin = require('firebase-admin')
 const serviceAccount = require('./service_account.json')
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG)
 const fetch = require("node-fetch")
+const geofirex = require('geofirex');
 
 adminConfig.credential = admin.credential.cert(serviceAccount)
 admin.initializeApp(adminConfig)
@@ -15,6 +16,9 @@ const usersDB = firestore.collection('users')
 const buyerDB = firestore.collection('buyerLists')
 const sellerDB = firestore.collection('sellerItems')
 const txDB = firestore.collection('transactions')
+
+const geo = geofirex.init(admin)
+const geoBuyers = geo.query(buyerDB)
 
 exports.createAccount = functions.https.onCall((data, context) => {
   let name = data.name
@@ -31,7 +35,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude),
+      addr_geopoint: {latitude: Number(data.addr.latitude), longitude: Number(data.addr.longitude)},
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).catch(err => {
       console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
@@ -197,13 +201,13 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
 
 exports.editBuyerInfo = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    let purchaseList = data.purchaseList || []
+    let purchaseList = data.purchaseList || {}
     let description = data.desc || "default description"
     let addr = data.addr.readable || {}
     let enableSearch = data.enableSearch || false
     return buyerDB.doc(context.auth.uid).set({
       addr,
-      addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude),
+      addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       purchaseList,
       description,
       enableSearch,
@@ -227,7 +231,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addr_geopoint: new admin.firestore.GeoPoint(data.addr.latitude, data.addr.longitude)
+      addr_geopoint: {latitude: Number(data.addr.latitude), longitude: Number(data.addr.longitude)}
     }).then(() => {
       auth.updateUser(context.auth.uid, {
         phoneNumber: data.phoneNo,
@@ -272,6 +276,43 @@ exports.removeNotificationToken = functions.https.onCall((data,context) => {
     })
   }
   else return {errorMessage: "The request is denied because of authetication"}
+})
+
+exports.queryBuyers = functions.https.onCall((data,context) => {
+  if (context.auth == null) {
+    const center = geo.point(data.addr_geopoint.latitude, data.addr_geopoint.longitude)
+    const radius = data.distance
+    const query = geoBuyers.within(center, radius, "addr_geopoint")
+    let buyerList = []
+    const wasteType = data.wasteType
+    return geofirex.get(query).then(querySnapshot => {
+      querySnapshot.forEach(buyer => {
+        buyerList.push(buyer)
+        const lastestArray = buyerList.length - 1
+        buyerList[lastestArray].totalPrice = 0
+        buyerList[lastestArray].unavailableTypes = []
+        for (type in wasteType) {
+          if (buyerList[lastestArray].purchaseList[type] != undefined) 
+            buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type] * wasteType[type]
+          else
+            buyerList[lastestArray].unavailableTypes.push(type)
+        }
+        if (buyerList[lastestArray].unavailableTypes.length == Object.keys(wasteType).length)
+          buyerList.pop()
+        else
+          buyerList[lastestArray].sorting = (Object.keys(wasteType).length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
+          buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
+      })
+      buyerList.sort((a, b) => {
+        return b.sorting - a.sorting
+      })
+      return buyerList
+    }).catch(err => {
+      console.log("Error has occurred in queryBuyers() while querying")
+      console.log(err)
+      return {errorMessage: err.message}
+    })
+  }
 })
 
 // const sendNotification = async (uid, title, body) => {
