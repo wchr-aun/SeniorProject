@@ -7,7 +7,7 @@ export default {
   secondary: "#0084ff",
   on_secondary: "#effffb",
   lineSeparate: "#cccccc",
-  error: "#ff9d76",
+  error: "#8c0b04",
   linearGradient: ["#2abf9d", "#0084ff"],
   linearGradientB: ["#2abfbf", "#3797f0"]
 };

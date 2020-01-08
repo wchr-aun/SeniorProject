@@ -17,13 +17,23 @@ initialState = {
       }
     ]
   */
-  wasteTypesList: []
+  wasteTypesList: [],
+  purchaseList: {
+    PP: 12,
+    HDPE: 8.5,
+    PS: 4.5,
+    PETE: 7,
+    PVC: 17,
+    Red: 4,
+    Green: 2
+  }
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_WASTETYPE:
       return {
+        ...state,
         wasteTypesList: [...action.wasteTypesList]
       };
     case LOGOUT:

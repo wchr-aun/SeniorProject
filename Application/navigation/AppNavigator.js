@@ -187,7 +187,19 @@ const BuyerBottomTabConfig = {
   EditBuyerInfo: {
     screen: EditBuyerInfomationScreen,
     navigationOptions: {
-      tabBarLabel: "คำขอขายขยะ",
+      tabBarLabel: "จัดการรายการ",
+      tabBarIcon: tabInfo => {
+        return (
+          <Ionicons name="ios-build" size={25} color={tabInfo.tintColor} />
+        );
+      },
+      tabBarColor: Colors.primary
+    }
+  },
+  buyerTransaction: {
+    screen: EditBuyerInfomationScreen,
+    navigationOptions: {
+      tabBarLabel: "การรับซื้อขยะ",
       tabBarIcon: tabInfo => {
         return (
           <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
@@ -196,7 +208,7 @@ const BuyerBottomTabConfig = {
       tabBarColor: Colors.primary
     }
   },
-  buyTransaction: {
+  searchSellTransaction: {
     screen: BuyerHomepageScreen,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",

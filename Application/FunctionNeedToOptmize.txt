@@ -3,3 +3,5 @@
     - sellerHomepageScreen.js
     - SellingTransactionScreen.js
 3. Map หน้า signup เพิ่มสถานที่ปัจจุบันที่กด บนหัว
+4. ตอน Get user address มีการเปลี่ยน property
+5. ดัก จำนวน ขยะที่ขาย / ราคา ให้ไม่มากเกินไป

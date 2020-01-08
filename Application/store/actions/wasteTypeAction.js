@@ -6,8 +6,6 @@ export const fetchWasteType = () => {
   return async dispatch => {
     let wasteTypesList = [];
     wasteTypesList = await getWasteType();
-    // console.log("wasteTypes --- fetchWasteType --- wasteTypeAction");
-    // console.log(wasteTypesList);
     dispatch({ type: FETCH_WASTETYPE, wasteTypesList });
   };
 };

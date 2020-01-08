@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
 import ImagePicker from "../../components/ImagePicker";
 import { useDispatch } from "react-redux";
-import * as imgActions from "../../store/actions/places-actions";
+import * as imgActions from "../../store/actions/imageAction";
 
 import {
   widthPercentageToDP as wp,
