@@ -133,6 +133,9 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
+    console.log("formState");
+    console.log(formState);
+
     setIsLoading(true);
     console.log(formState);
     if (!formState.allFormIsValid) {
@@ -165,10 +168,12 @@ export default UserSignupScreen = props => {
       .then(() => {
         AsyncStorage.clear()
           .then(() => {
-            firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password).then(userCredential => {
-              console.log(userCredential.user.uid)
-              props.navigation.navigate("StartupScreen");
-            })
+            firebaseUtil
+              .auth()
+              .signInWithEmailAndPassword(user.email, user.password)
+              .then(userCredential => {
+                props.navigation.navigate("StartupScreen");
+              });
           })
           .catch(err => {
             setIsLoading(false);
@@ -200,8 +205,6 @@ export default UserSignupScreen = props => {
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
-    console.log("-------> sellerAddrResult");
-    console.log(sellerAddrResult);
     // set all addr form valid
     dispatchFormState({
       type: "CHOOSE_CURRENT_ADDR",
@@ -289,7 +292,7 @@ export default UserSignupScreen = props => {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior="padding"
-            keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
+            keyboardVerticalOffset={100}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
               <Input

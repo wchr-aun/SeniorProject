@@ -1,4 +1,4 @@
-import { LOGOUT, SIGNIN, SET_ROLE } from "../actions/authAction";
+import { LOGOUT, SIGNIN, CHANGE_ROLE } from "../actions/authAction";
 
 const initialState = {
   userProfile: {
@@ -15,6 +15,8 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
+      console.log("SIGN-IN --- reducer");
+      console.log(action);
       return {
         userProfile: {
           uid: action.userProfile.uid,
@@ -27,7 +29,7 @@ export default (state = initialState, action) => {
         },
         userRole: action.userRole
       };
-    case SET_ROLE:
+    case CHANGE_ROLE:
       return {
         ...state,
         userRole: action.userRole

@@ -162,7 +162,7 @@ const ShowAllUserTrashScreen = props => {
     return state.sellerItems.sellerItems;
   });
   const wasteTypesRedux = useSelector(state => {
-    return state.wasteTypes.wasteTypes;
+    return state.waste.wasteTypes;
   });
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(

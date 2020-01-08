@@ -1,7 +1,37 @@
 import { FETCH_WASTETYPE } from "../actions/wasteTypeAction";
-import { LOGOUT } from "../actions/authAction";
+import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
-  /*
+  wasteTypesList: [],
+  purchaseList: {}
+};
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_WASTETYPE:
+      return {
+        ...state,
+        wasteTypesList: [...action.wasteTypesList],
+        purchaseList: { ...action.purchaseList }
+      };
+    case CHANGE_ROLE:
+      return initialState;
+    case LOGOUT:
+      return initialState;
+  }
+  return state;
+};
+
+// purchaseList: {
+//   PP: {selected: 1, price: 12},
+//   HDPE: 8.5,
+//   PS: 4.5,
+//   PETE: 7,
+//   PVC: 17,
+//   Red: 4,
+//   Green: 2
+// }
+
+/*
     array[
       {
         value: 'Plastic',
@@ -17,27 +47,3 @@ initialState = {
       }
     ]
   */
-  wasteTypesList: [],
-  purchaseList: {
-    PP: 12,
-    HDPE: 8.5,
-    PS: 4.5,
-    PETE: 7,
-    PVC: 17,
-    Red: 4,
-    Green: 2
-  }
-};
-
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case FETCH_WASTETYPE:
-      return {
-        ...state,
-        wasteTypesList: [...action.wasteTypesList]
-      };
-    case LOGOUT:
-      return initialState;
-  }
-  return state;
-};

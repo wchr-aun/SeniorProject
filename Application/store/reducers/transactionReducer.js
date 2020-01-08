@@ -1,5 +1,5 @@
 import { FETCH_TRANSACTION } from "../actions/transactionAction";
-import { LOGOUT } from "../actions/authAction";
+import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 
 initialState = {
   transactions: []
@@ -12,6 +12,8 @@ export default (state = initialState, action) => {
         ...state,
         transactions: [...action.transactionMode[0]]
       };
+    case CHANGE_ROLE:
+      return initialState;
     case LOGOUT:
       return initialState;
   }

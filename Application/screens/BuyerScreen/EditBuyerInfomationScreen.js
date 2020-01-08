@@ -18,15 +18,24 @@ import ThaiText from "../../components/ThaiText";
 import CustomButton from "../../components/UI/CustomButton";
 
 const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
+const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
+const SET_PURCHASELIST = "SET_PURCHASELIST";
+
 const buyerWasteReducer = (state, action) => {
   switch (action.type) {
-    case EDIT_PURCHASELIST:
-      console.log("---> EDIT ---> action");
+    case SET_PURCHASELIST:
+      console.log("SET_PURCHASELSIT Reducer - run");
       console.log(action);
       return {
         ...state,
-        purchaseListTemp: {
-          ...state.purchaseListTemp,
+        purchaseList: { ...action.purchaseList }
+      }; //not work initially
+    case EDIT_PURCHASELIST:
+      console.log("---> EDIT ---> action");
+      return {
+        ...state,
+        purchaseList: {
+          ...state.purchaseList,
           [action.index]: parseInt(action.value, 10)
         }
       };
@@ -37,20 +46,22 @@ const buyerWasteReducer = (state, action) => {
   }
 };
 
-export default BuyerHomepageScreen = props => {
+export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
   useEffect(() => {
+    setIsLoading(true);
     dispatch(wasteTypeAction.fetchWasteType());
+    setIsLoading(false);
   }, []);
 
-  const wasteTypesList = useSelector(state => state.waste.wasteTypesList);
-  const purchaseList = useSelector(state => state.waste.purchaseList);
+  const [isLoading, setIsLoading] = useState(false);
+  const wasteTypesList = useSelector(state => state.waste.wasteTypesList); //why its not update. ?
+  const purchaseList = useSelector(state => state.waste.purchaseList); //not have
   const [isEditingMode, setIsEditingMode] = useState(false);
 
   const [buyerWasteState, dispatchBuyerWaste] = useReducer(buyerWasteReducer, {
-    purchaseList,
-    purchaseListTemp: { ...purchaseList }
+    purchaseList: {}
   });
 
   const toggleModeHandler = () => {
@@ -68,8 +79,17 @@ export default BuyerHomepageScreen = props => {
     console.log("Edit Price");
     console.log(text);
     dispatchBuyerWaste({ type: EDIT_PURCHASELIST, index, value: text });
-    console.log(buyerWasteState);
   };
+
+  // if redux update, local redux update
+  useEffect(() => {
+    dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
+  }, [purchaseList]);
+
+  useEffect(() => {
+    console.log("purchaseList --> update --> buyerWasteState");
+    console.log(buyerWasteState);
+  }, [buyerWasteState]);
 
   return (
     <View>
@@ -95,7 +115,7 @@ export default BuyerHomepageScreen = props => {
             btnTitleColor={Colors.primary}
             btnTitleFontSize={10}
           >
-            แก้ไขราคา
+            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขราคา"}
           </CustomButton>
         </View>
         <View
@@ -106,16 +126,15 @@ export default BuyerHomepageScreen = props => {
           }}
         >
           <SectionList
-            sections={
-              isEditingMode ? buyerWasteState.purchaseListTemp : wasteTypesList
-            }
+            sections={wasteTypesList}
+            refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
-            renderItem={({ item, section: { value } }) => {
+            renderItem={({ item }) => {
               return (
                 <View
                   style={{
                     width: "100%",
-                    height: 100,
+                    height: 50,
                     borderRadius: 5,
                     backgroundColor: Colors.on_primary,
                     padding: 10,
@@ -133,69 +152,58 @@ export default BuyerHomepageScreen = props => {
                       alignItems: "center"
                     }}
                   >
-                    <View style={{ width: "80%" }}>
+                    <View style={{ width: "20%" }}>
                       <ThaiText>{item.value}</ThaiText>
                     </View>
-                    <View style={{ width: "20%" }}>
-                      <MaterialIcons
-                        // name={
-                        //   isSelected ? "check-box" : "check-box-outline-blank"
-                        // }
-                        name="check-box"
-                        size={15}
-                        color={Colors.primary}
-                      />
-                    </View>
-                  </View>
 
-                  {/* Row 2 */}
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "50%",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      alignItems: "center"
-                    }}
-                  >
                     <View
                       style={{
-                        width: "40%",
+                        width: "60%",
                         flexDirection: "row"
                       }}
                     >
                       <View
                         style={{
                           borderWidth: 0.75,
-                          borderColor: Colors.lineSeparate
+                          borderColor: Colors.lineSeparate,
+                          width: "50%"
                         }}
                       >
-                        <TextInput
-                          value={buyerWasteState.purchaseList[
-                            item.value
-                          ].toString()}
-                          onChangeText={text =>
-                            editPriceHandler(text, item.value)
-                          }
-                          keyboardType="numeric"
-                        />
+                        {!isEditingMode ? (
+                          <ThaiText>
+                            {purchaseList[item.value]["price"].toString()}
+                          </ThaiText>
+                        ) : (
+                          <TextInput
+                            value={purchaseList[item.value]["price"].toString()}
+                            onChangeText={text =>
+                              editPriceHandler(text, item.value)
+                            }
+                            keyboardType="numeric"
+                          />
+                        )}
                       </View>
                       <ThaiText> บาท/ กก.</ThaiText>
                     </View>
-
-                    <CustomButton
-                      style={{
-                        width: "30%",
-                        height: "100%",
-                        borderRadius: 5
-                      }}
-                      btnColor={Colors.error}
-                      onPress={null}
-                      btnTitleColor={Colors.on_primary}
-                      btnTitleFontSize={10}
-                    >
-                      ลบออก
-                    </CustomButton>
+                    {!isEditingMode ? null : (
+                      <View style={{ width: "20%" }}>
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            dispatchBuyerWaste();
+                          }}
+                        >
+                          <MaterialIcons
+                            name={
+                              purchaseList[item.value]["selected"] === 1
+                                ? "check-box"
+                                : "check-box-outline-blank"
+                            }
+                            size={15}
+                            color={Colors.primary_variant}
+                          />
+                        </TouchableWithoutFeedback>
+                      </View>
+                    )}
                   </View>
                 </View>
               );
