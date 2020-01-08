@@ -337,14 +337,40 @@ export const editBuyerInfo = async buyerInfo => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
-        console.log("----1 -----result.data.errorMessage in editBuyerInfo");
         console.log(result.data.errorMessage);
         throw new Error(result.data.errorMessage);
       }
     })
     .catch(err => {
-      console.log("----2 -----result.data.errorMessage in editBuyerInfo");
       console.log(err.message);
       throw new Error(err.message);
     });
 };
+
+/*
+queryData = {
+  distance: 99,
+  wasteType: {
+    "PP": 159
+  },
+  addr_geopoint: {
+    "latitude": 13.6487182,
+    "longitude": 100.5007269
+  }
+}*/
+
+export const queryBuyers = async queryData => {
+  return functions
+    .httpsCallable("queryBuyers")(queryData)
+    .then(result => {
+      if (result.data.errorMessage == null) return result.data;
+      else {
+        console.log(result.data.errorMessage);
+        throw new Error(result.data.errorMessage);
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+      throw new Error(err.message);
+    });
+}
