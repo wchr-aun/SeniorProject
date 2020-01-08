@@ -1,15 +1,15 @@
 import { FETCH_WASTETYPE } from "../actions/wasteTypeAction";
 import { LOGOUT } from "../actions/authAction";
 initialState = {
-  wasteTypes: []
+  wasteTypesList: []
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_WASTETYPE:
-      console.log("From wasteTypeReducer --> fetchWasteType");
+      // console.log("From wasteTypeReducer --> fetchWasteType");
       return {
-        wasteTypes: [...action.wasteTypes]
+        wasteTypesList: [...action.wasteTypesList]
       };
     case LOGOUT:
       return initialState;

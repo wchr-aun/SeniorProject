@@ -55,15 +55,37 @@ export const getUsers = async () => {
 
 // Get firebase firestore wasteType
 export const getWasteType = async () => {
-  let wasteTypes = [];
+  let wasteTypesList = [];
   return firestore
     .collection("wasteType")
     .get()
     .then(querySnapshot => {
+      const WASTETYPE = [];
       querySnapshot.forEach(doc => {
-        wasteTypes.push({ value: doc.id, info: doc.data() });
+        let wasteTypeList = doc.data();
+        // const object = {HDPE:{disposal:1,description:2}, PP:{description:1,disposal:3}};
+        let data = [];
+
+        // console.log("wasteTypeList");
+        // console.log(wasteTypeList);
+        // console.log("wasteType");
+        for (const wasteType in wasteTypeList) {
+          // console.log(wasteType);
+          // //HDPE, PP, PS
+          let property = {};
+          for (const wasteTypeInfo in wasteTypeList[wasteType]) {
+            //console.log(wasteTypeInfo) //interate over prop in {disposal:1, description:2} --> 'disposal', 'description'
+            property = {
+              ...property,
+              [wasteTypeInfo]: wasteTypeList[wasteType][wasteTypeInfo]
+            };
+          }
+          data.push({ value: wasteType, ...property });
+        }
+
+        WASTETYPE.push({ value: doc.id, data });
       });
-      return wasteTypes;
+      return WASTETYPE;
     });
 };
 

@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
   user: authReducer,
   sellerItems: sellerItemsReducer,
   transactions: transactionReducer,
-  wasteTypes: wasteTypeReducer
+  waste: wasteTypeReducer
 });
 const store = createStore(
   rootReducer,

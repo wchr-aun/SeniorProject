@@ -22,6 +22,7 @@ import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
 import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 
 import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
+import EditBuyerInfomationScreen from "../screens/BuyerScreen/EditBuyerInfomationScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
@@ -183,12 +184,14 @@ const BuyerBottomTabConfig = {
       tabBarColor: Colors.primary
     }
   },
-  sellingRequest: {
-    screen: BuyerHomepageScreen,
+  EditBuyerInfo: {
+    screen: EditBuyerInfomationScreen,
     navigationOptions: {
       tabBarLabel: "คำขอขายขยะ",
       tabBarIcon: tabInfo => {
-        return <Ionicons name="md-trash" size={25} color={tabInfo.tintColor} />;
+        return (
+          <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
+        );
       },
       tabBarColor: Colors.primary
     }
