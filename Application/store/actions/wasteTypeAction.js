@@ -14,11 +14,11 @@ const purchaseList = {
 
 export const fetchWasteType = () => {
   return async dispatch => {
-    let wasteTypesList = [];
+    let allWasteTypeList = [];
     // wasteType
-    wasteTypesList = await getAllWasteType();
+    allWasteTypeList = await getAllWasteType();
     console.log("------------- wasteTypesList RAW from wasteTypeAction");
-    console.log(wasteTypesList);
+    console.log(allWasteTypeList);
 
     // purchaseList
     let modifiedPurchaseList = {};
@@ -32,12 +32,10 @@ export const fetchWasteType = () => {
       };
     }
 
-    console.log("wasteTypesList");
-    console.log(wasteTypesList);
-
     dispatch({
       type: FETCH_WASTETYPE,
-      wasteTypesList,
+      WasteListSectionFormat: allWasteTypeList.WasteListSectionFormat,
+      WasteList: allWasteTypeList.WasteList,
       purchaseList: modifiedPurchaseList
     });
   };

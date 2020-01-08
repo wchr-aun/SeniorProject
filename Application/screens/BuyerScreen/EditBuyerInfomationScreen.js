@@ -49,13 +49,13 @@ export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
   useEffect(() => {
-    setIsLoading(true);
     dispatch(wasteTypeAction.fetchWasteType());
-    setIsLoading(false);
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const wasteTypesList = useSelector(state => state.waste.wasteTypesList); //why its not update. ?
+  const WasteListSectionFormat = useSelector(
+    state => state.waste.WasteListSectionFormat
+  ); //why its not update. ?
   const purchaseList = useSelector(state => state.waste.purchaseList); //not have
   const [isEditingMode, setIsEditingMode] = useState(false);
 
@@ -120,7 +120,7 @@ export default EditBuyerInfomationScreen = props => {
           }}
         >
           <SectionList
-            sections={wasteTypesList}
+            sections={WasteListSectionFormat}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item }) => {

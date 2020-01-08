@@ -58,6 +58,7 @@ export const getAllWasteType = async () => {
   const types = ["plastic", "glass", "paper", "danger"];
   const promises = [];
   const WasteListSectionFormat = []; // for storing Plastic, Glass
+  const WasteList = {}; // for storing obj
 
   for (let type of types) {
     promises.push(
@@ -68,15 +69,19 @@ export const getAllWasteType = async () => {
         .then(querySnapshot => {
           let data = [];
           querySnapshot.forEach(doc => {
-            let subWasteTypesInfo = doc.data(); //get dis,desc,type, ...next PP
+            let subWasteTypesInfo = doc.data();
             data.push({ ...subWasteTypesInfo, value: doc.id });
           });
           WasteListSectionFormat.push({ type: type, data: data });
+          WasteList[type] = data;
         })
     );
   }
   return Promise.all(promises).then(() => {
-    return WasteListSectionFormat;
+    return {
+      WasteListSectionFormat: [...WasteListSectionFormat],
+      WasteList: WasteList
+    };
   });
 };
 
