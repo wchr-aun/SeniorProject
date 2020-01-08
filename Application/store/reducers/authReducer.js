@@ -15,8 +15,6 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
-      console.log("SIGN-IN --- reducer");
-      console.log(action);
       return {
         userProfile: {
           uid: action.userProfile.uid,

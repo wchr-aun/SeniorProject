@@ -40,7 +40,7 @@ export const setUserRole = role => {
 export const signout = () => {
   return async dispatch => {
     // do async task
-    const notiPermission = await verifyNotificationsPermissions()
+    const notiPermission = await verifyNotificationsPermissions();
     if (notiPermission)
       return removeNotificationToken()
         .then(() => {

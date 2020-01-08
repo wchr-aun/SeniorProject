@@ -1,5 +1,5 @@
 import {
-  getSellerListAndWasteType,
+  getSellerList,
   addWaste,
   searchBuyers,
   sellWaste
@@ -14,12 +14,12 @@ export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
 
 export const fetchSellerItems = () => {
   return async dispatch => {
-    let sellerItemsAndWasteType = [];
+    let sellerItems = [];
     try {
-      sellerItemsAndWasteType = await getSellerListAndWasteType();
+      sellerItems = await getSellerItems();
       dispatch({
         type: SET_WASTE,
-        sellerItems: [...sellerItemsAndWasteType]
+        sellerItems: [...sellerItems]
       });
     } catch (err) {
       throw new Error(err.message);
@@ -47,9 +47,6 @@ export const setUserWaste = sellerItems => {
 
 export const setSellerItemsForSell = sellerItems => {
   return async dispatch => {
-    console.log("-----> sellerItems");
-    console.log(sellerItems);
-
     sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
 
     return dispatch({
@@ -77,12 +74,6 @@ export const getBuyerList = () => {
   };
 };
 
-// export const setSellerItemsFromCamera = (res) => {
-//   return {
-
-//   }
-// }
-
 export const chooseBuyerSell = (
   sellAddr,
   sellerItems,
@@ -93,8 +84,6 @@ export const chooseBuyerSell = (
   return async dispatch => {
     // Map buyer price into an transaction
     let updatedItems = [];
-    console.log("buyerPriceInfo");
-    console.log(buyerPriceInfo);
     sellerItems.forEach((item, index) => {
       updatedItems.push({
         amount: item.amountForSell,
@@ -111,9 +100,6 @@ export const chooseBuyerSell = (
       txType: 0,
       assignedTime: assignedTime
     };
-
-    console.log("transaction before sending");
-    console.log(transaction);
 
     try {
       await sellWaste(transaction);

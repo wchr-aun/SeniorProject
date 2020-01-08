@@ -25,7 +25,6 @@ const buyerWasteReducer = (state, action) => {
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHASELSIT Reducer - run");
-      console.log(action);
       return {
         ...state,
         purchaseList: { ...action.purchaseList }
@@ -50,13 +49,13 @@ export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
   useEffect(() => {
-    setIsLoading(true);
     dispatch(wasteTypeAction.fetchWasteType());
-    setIsLoading(false);
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const wasteTypesList = useSelector(state => state.waste.wasteTypesList); //why its not update. ?
+  const WasteListSectionFormat = useSelector(
+    state => state.waste.WasteListSectionFormat
+  ); //why its not update. ?
   const purchaseList = useSelector(state => state.waste.purchaseList); //not have
   const [isEditingMode, setIsEditingMode] = useState(false);
 
@@ -85,11 +84,6 @@ export default EditBuyerInfomationScreen = props => {
   useEffect(() => {
     dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
   }, [purchaseList]);
-
-  useEffect(() => {
-    console.log("purchaseList --> update --> buyerWasteState");
-    console.log(buyerWasteState);
-  }, [buyerWasteState]);
 
   return (
     <View>
@@ -126,7 +120,7 @@ export default EditBuyerInfomationScreen = props => {
           }}
         >
           <SectionList
-            sections={wasteTypesList}
+            sections={WasteListSectionFormat}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item }) => {
@@ -208,8 +202,8 @@ export default EditBuyerInfomationScreen = props => {
                 </View>
               );
             }}
-            renderSectionHeader={({ section: { value } }) => {
-              return <ThaiTitleText>{value}</ThaiTitleText>;
+            renderSectionHeader={({ section: { type } }) => {
+              return <ThaiTitleText>{type}</ThaiTitleText>;
             }}
           />
         </View>
