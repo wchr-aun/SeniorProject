@@ -19,6 +19,7 @@ const txDB = firestore.collection('transactions')
 
 const geo = geofirex.init(admin)
 const geoBuyers = geo.query(buyerDB)
+const geoSellers = geo.query(txDB.where("txStatus", "==", 0).where("txType", "==", 1))
 
 exports.createAccount = functions.https.onCall((data, context) => {
   let name = data.name
@@ -67,7 +68,7 @@ exports.addWaste = functions.https.onCall((data, context) => {
 })
 
 exports.sellWaste = functions.https.onCall((data, context) => {
-  if (context.auth == null){
+  if (context.auth != null){
     let items = data.items
     let buyer = data.buyer || ""
     let addr = data.addr.readable
@@ -319,7 +320,7 @@ exports.removeNotificationToken = functions.https.onCall((data,context) => {
 })
 
 exports.queryBuyers = functions.https.onCall((data,context) => {
-  if (context.auth == null) {
+  if (context.auth != null) {
     const center = geo.point(data.addr.latitude, data.addr.longitude)
     const radius = data.distance
     const query = geoBuyers.within(center, radius, "addr_geopoint")
@@ -349,16 +350,49 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
       })
       return buyerList
     }).catch(err => {
-      console.log("Error has occurred in queryBuyers() while querying")
+      console.log("Error has occurred in queryBuyers() while geo querying")
       console.log(err)
       return {errorMessage: err.message}
     })
   }
+  else return {errorMessage: "The request is denied because of authetication"}
+})
+
+exports.querySellers = functions.https.onCall((data,context) => {
+  if (context.auth != null) {
+    const purchaseList = data.purchaseList
+    let txList = []
+    const center = geo.point(data.addr.latitude, data.addr.longitude)
+    const radius = data.distance
+    const query = geoSellers.within(center, radius, "addr_geopoint")
+    return geofirex.get(query).then(querySnapshot => {
+      querySnapshot.forEach(seller => {
+        const lastestArray = txList.push(seller) - 1
+        txList[lastestArray].unavailableTypes = []
+        for (type in wasteType) {
+          for (subtype in wasteType[type]) {
+            if (txList[lastestArray].purchaseList[type][subtype] == undefined)
+            txList[lastestArray].unavailableTypes.push(subtype)
+          }
+        }
+        if (txList[lastestArray].unavailableTypes.length == wasteType.length)
+          txList.pop()
+      })
+      return txList
+    }).catch(err => {
+      console.log("Error has occurred in querySellers() while geo querying")
+      console.log(err)
+      return {errorMessage: err.message}
+    })
+  }
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 const getTitleAndBody = (data) => {
   const uid = data.uid
-  const days = data.days || ""
+  const days = Math.floor((data.date - new Date()) / 86400000) || ""
+  const hour = new Date(data.date).getHours()
+  const min = new Date(data.date).getMinutes()
   const index = (data.txType + 1) % 2 + data.txStatus
   const title = [
     "คำร้องขอในบริเวณของคุณ",
@@ -372,8 +406,8 @@ const getTitleAndBody = (data) => {
     uid + " ต้องการขายขยะ",
     uid + " ต้องการขายขยะให้คุณ",
     uid + " ต้องการนัดเวลาใหม่",
-    uid + " เดินทางมาในอีก " + days + " วัน",
-    uid + " จะเดินทางมาถึงเวลาประมาณ",
+    uid + " จะเดินทางมาในอีก " + days + " วัน",
+    uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + "น.",
     uid + " กำลังเดินทางมาหาคุณ"
   ]
   return {title: title[index], body: body[index]}
@@ -383,36 +417,12 @@ const quickSellingNotification = async (center, title, body) => {
   const query = geoBuyers.within(center, 5, "addr_geopoint")
   return geofirex.get(query).then(querySnapshot => {
     querySnapshot.forEach(buyer => {
-      return usersDB.doc(buyer.id).get().then(doc => {
-        if (doc.exists) return doc.data().notificationToken
-        else return {errorMessage: "The document doesn't exist"}
-      }).then(tokens => {
-        if (tokens.err == null) {
-          tokens.forEach(token => {
-            fetch("https://exp.host/--/api/v2/push/send", {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                to: token,
-                priority: "normal",
-                sound: "default",
-                title,
-                body
-              })
-            })
-          })
-          return true
-        }
-        else return {errorMessage: "The document doesn't exist"}
-      }).catch(err => {
-        console.log("Error has occurred in sendNotification()")
-        console.log(err)
-        return {errorMessage: "There is something wrong in firestore functions. Please wait for the fix!"}
-      })
+      return sendNotification(buyer.id, title, body)
     })
+  }).catch(err => {
+    console.log("Error has occurred in quickSellingNotification() while geo querying")
+    console.log(err)
+    return {errorMessage: err.message}
   })
 }
 

@@ -11,16 +11,15 @@ export class AllUserTrash {
 export class Wastes {
   constructor(firebaseObj) {
     this.length = 0
-    this.obj = {}
-    firebaseObj = firebaseObj || []
-    for (type in firebaseObj) {
-      for (subtype in firebaseObj[type]) {
+    this._obj = {}
+    for (let type in firebaseObj) {
+      for (let subtype in firebaseObj[type]) {
         if (this[type] == undefined) {
           this[type] = {}
-          this.obj[type] = {}
+          this._obj[type] = {}
         }
         this[type][subtype] = firebaseObj[type][subtype]
-        this.obj[type][subtype] = firebaseObj[type][subtype]
+        this._obj[type][subtype] = firebaseObj[type][subtype]
         this.length += 1
       }
     }
@@ -30,26 +29,33 @@ export class Wastes {
     else {
       if (this[type] == undefined) {
         this[type] = {}
-        this.obj[type] = {}
+        this._obj[type] = {}
       }
       this[type][subtype] = amount
-      this.obj[type][subtype] = amount
+      this._obj[type][subtype] = amount
       this.length += 1
     }
   }
-  removeWaste(type, subtype) {
+  _removeWaste(type, subtype) {
     if (this[type] != undefined) {
       delete this[type][subtype]
-      delete this.obj[type][subtype]
-      if (Object.keys(this.obj[type]).length == 0) {
+      delete this._obj[type][subtype]
+      if (Object.keys(this._obj[type]).length == 0) {
         delete this[type]
-        delete this.obj[type]
+        delete this._obj[type]
       }
       this.length -= 1
     }
   }
+  getValueBySubtype(subtype) {
+    for (let type in this._obj) {
+      if (this[type][subtype] != undefined)
+        return {path: type + "/" + subtype, amount: this[type][subtype]}
+    }
+    return false
+  }
   getObject() {
-    this.obj.length = this.length
-    return this.obj
+    this._obj.length = this.length
+    return this._obj
   }
 }
