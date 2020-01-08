@@ -55,63 +55,30 @@ export const getSellerItems = async () => {
 
 // Get all wasteType in system to be query in future
 export const getAllWasteType = async () => {
-  return firestore
-    .collection("wasteType")
-    .where("type", "==", "plastic")
-    .get()
-    .then(querySnapshot => {
-      let WasteListSectionFormat = []; // for storing Plastic, Glass
-      let data = [];
+  const types = ["plastic", "glass", "paper", "danger"];
+  const promises = [];
+  const WasteListSectionFormat = []; // for storing Plastic, Glass
 
-      querySnapshot.forEach(doc => {
-        let subWasteTypesInfo = doc.data(); //get dis,desc,type, ...next PP
-        data.push({ ...subWasteTypesInfo, value: doc.id });
-      });
-      WasteListSectionFormat.push({ type: "plastic", data: data });
-      console.log(WasteListSectionFormat);
-
-      return WasteListSectionFormat;
-    });
+  for (let type of types) {
+    promises.push(
+      firestore
+        .collection("wasteType")
+        .where("type", "==", type)
+        .get()
+        .then(querySnapshot => {
+          let data = [];
+          querySnapshot.forEach(doc => {
+            let subWasteTypesInfo = doc.data(); //get dis,desc,type, ...next PP
+            data.push({ ...subWasteTypesInfo, value: doc.id });
+          });
+          WasteListSectionFormat.push({ type: type, data: data });
+        })
+    );
+  }
+  return Promise.all(promises).then(() => {
+    return WasteListSectionFormat;
+  });
 };
-
-// // Get firebase UserProfile
-// export const getWasteTypeDetail = async wasteTypeId => {
-//   return firestore
-//     .collection("wasteType")
-//     .doc(wasteTypeId)
-//     .get()
-//     .then(function(doc) {
-//       if (doc.exists) return doc.data();
-//       else throw new Error("The document doesn't exist");
-//     })
-//     .catch(err => {
-//       throw new Error(err.message);
-//     });
-// };
-
-// export const getSellerListAndWasteType = async () => {
-//   return getSellerItems().then(itemsReturned => {
-//     return new Promise((resolve, reject) => {
-//       if (itemsReturned.length > 0) {
-//         for (let i = 0; i < itemsReturned.length; i++) {
-//           getWasteTypeDetail(itemsReturned[i].wasteType).then( //HDPE, PP, PS --> itemsReturned[i].wasteType
-//             wasteTypeDetail => {
-//               itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
-//               itemsReturned[i].wasteDescription = wasteTypeDetail.description;
-//               if (i === itemsReturned.length - 1) resolve();
-//             }
-//           );
-//         }
-//       } else resolve();
-//     })
-//       .then(() => {
-//         return itemsReturned;
-//       })
-//       .catch(err => {
-//         return [];
-//       });
-//   });
-// };
 
 export const getTransactions = async role => {
   let allTx = [];
@@ -381,3 +348,27 @@ export const queryBuyers = async queryData => {
       throw new Error(err.message);
     });
 };
+
+// export const getSellerListAndWasteType = async () => {
+//   return getSellerItems().then(itemsReturned => {
+//     return new Promise((resolve, reject) => {
+//       if (itemsReturned.length > 0) {
+//         for (let i = 0; i < itemsReturned.length; i++) {
+//           getWasteTypeDetail(itemsReturned[i].wasteType).then( //HDPE, PP, PS --> itemsReturned[i].wasteType
+//             wasteTypeDetail => {
+//               itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
+//               itemsReturned[i].wasteDescription = wasteTypeDetail.description;
+//               if (i === itemsReturned.length - 1) resolve();
+//             }
+//           );
+//         }
+//       } else resolve();
+//     })
+//       .then(() => {
+//         return itemsReturned;
+//       })
+//       .catch(err => {
+//         return [];
+//       });
+//   });
+// };
