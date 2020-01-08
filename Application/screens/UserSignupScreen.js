@@ -133,6 +133,9 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
+    console.log("formState");
+    console.log(formState);
+
     setIsLoading(true);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
@@ -164,10 +167,12 @@ export default UserSignupScreen = props => {
       .then(() => {
         AsyncStorage.clear()
           .then(() => {
-            firebaseUtil.auth().signInWithEmailAndPassword(user.email, user.password).then(userCredential => {
-              console.log(userCredential.user.uid)
-              props.navigation.navigate("StartupScreen");
-            })
+            firebaseUtil
+              .auth()
+              .signInWithEmailAndPassword(user.email, user.password)
+              .then(userCredential => {
+                props.navigation.navigate("StartupScreen");
+              });
           })
           .catch(err => {
             setIsLoading(false);
@@ -199,8 +204,6 @@ export default UserSignupScreen = props => {
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
-    console.log("-------> sellerAddrResult");
-    console.log(sellerAddrResult);
     // set all addr form valid
     dispatchFormState({
       type: "CHOOSE_CURRENT_TIME",
@@ -212,8 +215,6 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    console.log("Search Map Handler");
-    console.log(formState);
 
     if (!formState.addrFormIsValid) {
       setError("โปรดเติมข้อมูลที่อยู่ข้างต้น ให้สมบูรณ์");
@@ -291,7 +292,7 @@ export default UserSignupScreen = props => {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior="padding"
-            keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
+            keyboardVerticalOffset={100}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
               <Input

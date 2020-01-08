@@ -59,6 +59,8 @@ export default SellerHomepageScreen = props => {
 
   const dispatch = useDispatch();
   // Get transactions for initially
+  console.log("SellerHomepage ------- user role");
+  console.log(userRole);
   useEffect(() => {
     try {
       dispatch(transactionAction.fetchTransaction(userRole));

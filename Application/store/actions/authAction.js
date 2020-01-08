@@ -10,7 +10,7 @@ export const LOGIN = "LOGIN";
 export const CREATEACCOUNT = "CREATEACCOUNT";
 export const LOGOUT = "LOGOUT";
 export const SIGNIN = "SIGNIN";
-export const SET_ROLE = "CHANGE_ROLE";
+export const CHANGE_ROLE = "CHANGE_ROLE";
 
 export const signin = () => {
   return async dispatch => {
@@ -28,9 +28,11 @@ export const signin = () => {
 };
 
 export const setUserRole = role => {
-  return {
-    type: SET_ROLE,
-    userRole: role
+  return async dispatch => {
+    dispatch({
+      type: CHANGE_ROLE,
+      userRole: role
+    });
   };
 };
 
@@ -64,7 +66,7 @@ export const changeRole = role => {
     try {
       await AsyncStorage.setItem("CONFIG_ROLE", role);
       dispatch({
-        type: SET_ROLE,
+        type: CHANGE_ROLE,
         userRole: role
       });
     } catch (err) {

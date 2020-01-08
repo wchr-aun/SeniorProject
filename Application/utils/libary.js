@@ -56,7 +56,6 @@ export const getCurrentLocation = async () => {
   if (!hasPermission) {
     return;
   }
-
   // Step-1
   try {
     const location = await getCurrentPositionAsync({
