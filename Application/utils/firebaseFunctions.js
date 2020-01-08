@@ -180,23 +180,6 @@ export const getFavBuyers = async () => {
     });
 };
 
-export const searchBuyers = async (condition, orderBy) => {
-  return firestore
-    .collection("buyerList")
-    .orderBy(condition || "purchaseList", orderBy)
-    .get()
-    .then(querySnapshot => {
-      let buyers = [];
-      querySnapshot.forEach(doc => {
-        buyers.push({ id: doc.id, wastePriceInfo: doc.data() });
-      });
-      return buyers;
-    })
-    .catch(err => {
-      throw new error(err.message);
-    });
-};
-
 export const addWaste = async items => {
   return functions
     .httpsCallable("addWaste")(items)
