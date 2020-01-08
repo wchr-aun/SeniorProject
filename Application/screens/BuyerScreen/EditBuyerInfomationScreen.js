@@ -25,7 +25,6 @@ const buyerWasteReducer = (state, action) => {
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHASELSIT Reducer - run");
-      console.log(action);
       return {
         ...state,
         purchaseList: { ...action.purchaseList }
@@ -85,11 +84,6 @@ export default EditBuyerInfomationScreen = props => {
   useEffect(() => {
     dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
   }, [purchaseList]);
-
-  useEffect(() => {
-    console.log("purchaseList --> update --> buyerWasteState");
-    console.log(buyerWasteState);
-  }, [buyerWasteState]);
 
   return (
     <View>

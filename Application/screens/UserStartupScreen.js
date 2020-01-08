@@ -13,8 +13,6 @@ export default UserStartupScreen = props => {
       if (user != null) {
         dispatch(authAction.signin()).then(() => {
           AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
-            console.log("set role in startup occur");
-            console.log(config_role);
             dispatch(authAction.setUserRole(config_role));
             if (config_role == "seller")
               props.navigation.navigate("SellerNavigator");

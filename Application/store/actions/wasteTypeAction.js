@@ -1,4 +1,4 @@
-import { getWasteType } from "../../utils/firebaseFunctions";
+import { getAllWasteType } from "../../utils/firebaseFunctions";
 
 export const FETCH_WASTETYPE = "FETCH_WASTETYPE";
 
@@ -16,7 +16,9 @@ export const fetchWasteType = () => {
   return async dispatch => {
     let wasteTypesList = [];
     // wasteType
-    wasteTypesList = await getWasteType();
+    wasteTypesList = await getAllWasteType();
+    console.log("------------- wasteTypesList RAW from wasteTypeAction");
+    console.log(wasteTypesList);
 
     // purchaseList
     let modifiedPurchaseList = {};
@@ -29,6 +31,10 @@ export const fetchWasteType = () => {
         }
       };
     }
+
+    console.log("wasteTypesList");
+    console.log(wasteTypesList);
+
     dispatch({
       type: FETCH_WASTETYPE,
       wasteTypesList,

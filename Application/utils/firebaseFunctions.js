@@ -5,22 +5,6 @@ const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
 const auth = firebaseUtil.auth();
 
-// Get firebase document (trashOfUser)
-export const getSellerItems = async () => {
-  return firestore
-    .collection("sellerItems")
-    .doc(auth.currentUser.uid)
-    .get()
-    .then(function(doc) {
-      if (doc.exists) {
-        return doc.data().items;
-      } else return [];
-    })
-    .catch(err => {
-      throw new Error(err.message);
-    });
-};
-
 // Get firebase UserProfile
 export const getUsers = async () => {
   console.log("getUser(): ", auth.currentUser.uid);
@@ -53,72 +37,93 @@ export const getUsers = async () => {
     });
 };
 
-// Get firebase firestore wasteType
-export const getWasteType = async () => {
+// Get firebase document (trashOfUser)
+export const getSellerItems = async () => {
   return firestore
-    .collection("wasteType")
-    .get()
-    .then(querySnapshot => {
-      const WasteTypeList = []; // for storing Plastic, Glass
-      querySnapshot.forEach(doc => {
-        let subWasteTypes = doc.data(); //HDPE, PP, PS
-        let data = [];
-        /* Make data compatible with sectionList component */
-        for (const subWasteType in subWasteTypes) {
-          let properties = {};
-          for (const subWasteTypeProp in subWasteTypes[subWasteType]) {
-            properties = {
-              ...properties,
-              [subWasteTypeProp]: subWasteTypes[subWasteType][subWasteTypeProp]
-            };
-          }
-          data.push({ value: subWasteType, ...properties });
-        }
-
-        WasteTypeList.push({ value: doc.id, data });
-      });
-      return WasteTypeList;
-    });
-};
-
-// Get firebase UserProfile
-export const getWasteTypeDetail = async wasteTypeId => {
-  return firestore
-    .collection("wasteType")
-    .doc(wasteTypeId)
+    .collection("sellerItems")
+    .doc(auth.currentUser.uid)
     .get()
     .then(function(doc) {
-      if (doc.exists) return doc.data();
-      else throw new Error("The document doesn't exist");
+      if (doc.exists) {
+        return doc.data().items;
+      } else return [];
     })
     .catch(err => {
       throw new Error(err.message);
     });
 };
 
-export const getSellerListAndWasteType = async () => {
-  return getSellerItems().then(itemsReturned => {
-    return new Promise((resolve, reject) => {
-      if (itemsReturned.length > 0) {
-        for (let i = 0; i < itemsReturned.length; i++) {
-          getWasteTypeDetail(itemsReturned[i].wasteType).then(
-            wasteTypeDetail => {
-              itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
-              itemsReturned[i].wasteDescription = wasteTypeDetail.description;
-              if (i === itemsReturned.length - 1) resolve();
-            }
-          );
-        }
-      } else resolve();
-    })
-      .then(() => {
-        return itemsReturned;
-      })
-      .catch(err => {
-        return [];
+// Get all wasteType in system to be query in future
+export const getAllWasteType = async () => {
+  return firestore
+    .collection("wasteType")
+    .where("type", "==", "plastic")
+    .get()
+    .then(querySnapshot => {
+      const WasteListSectionFormat = []; // for storing Plastic, Glass
+      querySnapshot.forEach(doc => {
+        let subWasteTypes = doc.data();
+        let data = [];
+        console.log("From firebaseFunction");
+        console.log(subWasteTypes);
+        console.log(doc.id);
       });
-  });
+      return WasteListSectionFormat;
+    });
 };
+
+// /* Make data compatible with sectionList component */
+// for (const subWasteType in subWasteTypes) {
+//   let properties = {};
+//   for (const subWasteTypeProp in subWasteTypes[subWasteType]) {
+//     properties = {
+//       ...properties,
+//       [subWasteTypeProp]: subWasteTypes[subWasteType][subWasteTypeProp]
+//     };
+//   }
+//   data.push({ value: subWasteType, ...properties });
+// }
+// // sectionList format
+// WasteListSectionFormat.push({ value: doc.id, data });
+
+// // Get firebase UserProfile
+// export const getWasteTypeDetail = async wasteTypeId => {
+//   return firestore
+//     .collection("wasteType")
+//     .doc(wasteTypeId)
+//     .get()
+//     .then(function(doc) {
+//       if (doc.exists) return doc.data();
+//       else throw new Error("The document doesn't exist");
+//     })
+//     .catch(err => {
+//       throw new Error(err.message);
+//     });
+// };
+
+// export const getSellerListAndWasteType = async () => {
+//   return getSellerItems().then(itemsReturned => {
+//     return new Promise((resolve, reject) => {
+//       if (itemsReturned.length > 0) {
+//         for (let i = 0; i < itemsReturned.length; i++) {
+//           getWasteTypeDetail(itemsReturned[i].wasteType).then( //HDPE, PP, PS --> itemsReturned[i].wasteType
+//             wasteTypeDetail => {
+//               itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
+//               itemsReturned[i].wasteDescription = wasteTypeDetail.description;
+//               if (i === itemsReturned.length - 1) resolve();
+//             }
+//           );
+//         }
+//       } else resolve();
+//     })
+//       .then(() => {
+//         return itemsReturned;
+//       })
+//       .catch(err => {
+//         return [];
+//       });
+//   });
+// };
 
 export const getTransactions = async role => {
   let allTx = [];
@@ -387,4 +392,4 @@ export const queryBuyers = async queryData => {
       console.log(err.message);
       throw new Error(err.message);
     });
-}
+};
