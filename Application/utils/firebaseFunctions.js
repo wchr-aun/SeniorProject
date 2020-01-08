@@ -23,7 +23,7 @@ export const getSellerItems = async () => {
 
 // Get firebase UserProfile
 export const getUsers = async () => {
-  console.log("getUser(): ", auth.currentUser.uid)
+  console.log("getUser(): ", auth.currentUser.uid);
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
@@ -55,37 +55,29 @@ export const getUsers = async () => {
 
 // Get firebase firestore wasteType
 export const getWasteType = async () => {
-  let wasteTypesList = [];
   return firestore
     .collection("wasteType")
     .get()
     .then(querySnapshot => {
-      const WASTETYPE = [];
+      const WasteTypeList = []; // for storing Plastic, Glass
       querySnapshot.forEach(doc => {
-        let wasteTypeList = doc.data();
-        // const object = {HDPE:{disposal:1,description:2}, PP:{description:1,disposal:3}};
+        let subWasteTypes = doc.data(); //HDPE, PP, PS
         let data = [];
-
-        // console.log("wasteTypeList");
-        // console.log(wasteTypeList);
-        // console.log("wasteType");
-        for (const wasteType in wasteTypeList) {
-          // console.log(wasteType);
-          // //HDPE, PP, PS
-          let property = {};
-          for (const wasteTypeInfo in wasteTypeList[wasteType]) {
-            //console.log(wasteTypeInfo) //interate over prop in {disposal:1, description:2} --> 'disposal', 'description'
-            property = {
-              ...property,
-              [wasteTypeInfo]: wasteTypeList[wasteType][wasteTypeInfo]
+        /* Make data compatible with sectionList component */
+        for (const subWasteType in subWasteTypes) {
+          let properties = {};
+          for (const subWasteTypeProp in subWasteTypes[subWasteType]) {
+            properties = {
+              ...properties,
+              [subWasteTypeProp]: subWasteTypes[subWasteType][subWasteTypeProp]
             };
           }
-          data.push({ value: wasteType, ...property });
+          data.push({ value: subWasteType, ...properties });
         }
 
-        WASTETYPE.push({ value: doc.id, data });
+        WasteTypeList.push({ value: doc.id, data });
       });
-      return WASTETYPE;
+      return WasteTypeList;
     });
 };
 
