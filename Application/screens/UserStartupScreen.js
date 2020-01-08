@@ -3,12 +3,14 @@ import { View, AsyncStorage } from "react-native";
 import firebaseUtil from "../firebase";
 import { useDispatch } from "react-redux";
 import * as authAction from "../store/actions/authAction";
+import { verifyNotificationsPermissions } from "../utils/permissions"
 
 export default UserStartupScreen = props => {
   const dispatch = useDispatch();
   console.log("startup");
 
   useEffect(() => {
+    verifyNotificationsPermissions()
     firebaseUtil.auth().onIdTokenChanged(user => {
       if (user != null) {
         dispatch(authAction.signin()).then(() => {

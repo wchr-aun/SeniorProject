@@ -3,13 +3,13 @@ import { View, Button, Image, Text, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import Colors from "../constants/Colors";
-import { Permission } from "../utils/permissions";
+import { verifyCameraPermissions } from "../utils/permissions";
 
 const ImgPicker = props => {
   const [pickedImage, setPickedImage] = useState();
 
   const takeImageHandler = async () => {
-    const hasPermission = await Permission.verifyCameraPermissions();
+    const hasPermission = await verifyCameraPermissions();
     if (!hasPermission) {
       return;
     }

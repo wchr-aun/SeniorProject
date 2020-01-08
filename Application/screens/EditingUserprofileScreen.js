@@ -118,7 +118,7 @@ export default EditingUserprofileScreen = props => {
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
       photoURL: userProfile.photoURL,
-      phoneNo: userProfile.phoneNo.replace("+66", "0")
+      phoneNo: userProfile.phoneNo ? userProfile.phoneNo.replace("+66", "0") : userProfile.phoneNo
     },
     inputValidities: {
       name: true,
@@ -159,16 +159,6 @@ export default EditingUserprofileScreen = props => {
       setError("");
     }
   }, [error]);
-
-  const getCurrentLocationHandler = useCallback(async () => {
-    let sellerAddrResult = await getCurrentLocation();
-    // set all addr form valid
-    dispatchFormState({
-      type: "CHOOSE_CURRENT_TIME",
-      prestateIsCur: isCurrentAddr
-    });
-    setSellerAddr({ ...sellerAddrResult });
-  }, [isCurrentAddr]);
 
   // Search map from user input form
   const searchMapHandler = async () => {
