@@ -9,18 +9,33 @@ export class AllUserTrash {
 }
 
 export class Wastes {
-  constructor() {
+  constructor(firebaseObj) {
     this.length = 0
     this.obj = {}
+    firebaseObj = firebaseObj || []
+    for (type in firebaseObj) {
+      for (subtype in firebaseObj[type]) {
+        if (this[type] == undefined) {
+          this[type] = {}
+          this.obj[type] = {}
+        }
+        this[type][subtype] = firebaseObj[type][subtype]
+        this.obj[type][subtype] = firebaseObj[type][subtype]
+        this.length += 1
+      }
+    }
   }
   addWaste(type, subtype, amount) {
-    if (this[type] == undefined) {
-      this[type] = {}
-      this.obj[type] = {}
+    if (amount == 0) this.removeWaste(type, subtype)
+    else {
+      if (this[type] == undefined) {
+        this[type] = {}
+        this.obj[type] = {}
+      }
+      this[type][subtype] = amount
+      this.obj[type][subtype] = amount
+      this.length += 1
     }
-    this[type][subtype] = amount
-    this.obj[type][subtype] = amount
-    this.length += 1
   }
   removeWaste(type, subtype) {
     if (this[type] != undefined) {
