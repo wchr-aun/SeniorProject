@@ -202,8 +202,8 @@ export default EditBuyerInfomationScreen = props => {
                 </View>
               );
             }}
-            renderSectionHeader={({ section: { value } }) => {
-              return <ThaiTitleText>{value}</ThaiTitleText>;
+            renderSectionHeader={({ section: { type } }) => {
+              return <ThaiTitleText>{type}</ThaiTitleText>;
             }}
           />
         </View>

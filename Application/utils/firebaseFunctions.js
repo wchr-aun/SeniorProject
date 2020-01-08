@@ -60,31 +60,19 @@ export const getAllWasteType = async () => {
     .where("type", "==", "plastic")
     .get()
     .then(querySnapshot => {
-      const WasteListSectionFormat = []; // for storing Plastic, Glass
+      let WasteListSectionFormat = []; // for storing Plastic, Glass
+      let data = [];
+
       querySnapshot.forEach(doc => {
-        let subWasteTypes = doc.data();
-        let data = [];
-        console.log("From firebaseFunction");
-        console.log(subWasteTypes);
-        console.log(doc.id);
+        let subWasteTypesInfo = doc.data(); //get dis,desc,type, ...next PP
+        data.push({ ...subWasteTypesInfo, value: doc.id });
       });
+      WasteListSectionFormat.push({ type: "plastic", data: data });
+      console.log(WasteListSectionFormat);
+
       return WasteListSectionFormat;
     });
 };
-
-// /* Make data compatible with sectionList component */
-// for (const subWasteType in subWasteTypes) {
-//   let properties = {};
-//   for (const subWasteTypeProp in subWasteTypes[subWasteType]) {
-//     properties = {
-//       ...properties,
-//       [subWasteTypeProp]: subWasteTypes[subWasteType][subWasteTypeProp]
-//     };
-//   }
-//   data.push({ value: subWasteType, ...properties });
-// }
-// // sectionList format
-// WasteListSectionFormat.push({ value: doc.id, data });
 
 // // Get firebase UserProfile
 // export const getWasteTypeDetail = async wasteTypeId => {
