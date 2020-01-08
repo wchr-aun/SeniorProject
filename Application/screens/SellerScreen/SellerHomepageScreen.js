@@ -20,7 +20,6 @@ import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import * as authAction from "../../store/actions/authAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
@@ -52,17 +51,15 @@ export default SellerHomepageScreen = props => {
   const userProfile = useSelector(state => state.user.userProfile);
   const userRole = useSelector(state => state.user.userRole);
   useEffect(() => {
-    console.log(userProfile);
     setIsLoading(true);
     if (userProfile.uid) setIsLoading(false);
   }, [userProfile]);
 
   const dispatch = useDispatch();
   // Get transactions for initially
-  console.log("SellerHomepage ------- user role");
-  console.log(userRole);
   useEffect(() => {
     try {
+      dispatch(wasteType);
       dispatch(transactionAction.fetchTransaction(userRole));
     } catch (err) {
       setError(err.message);

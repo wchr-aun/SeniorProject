@@ -36,6 +36,13 @@ const formatTime = date => {
   return date.toLocaleTimeString() + " น.";
 };
 
+const getWasteDetailFromSubtype = (subWasteType, payload) => {
+  console.log("---> subWasteType");
+  console.log(subWasteType);
+  console.log("---> payload");
+  console.log(payload);
+};
+
 const getTransactionList = async role => {
   let allTx = [];
   for (let i = 0; i < 6; i++) {
