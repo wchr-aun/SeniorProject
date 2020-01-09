@@ -56,17 +56,26 @@ export const getSellerItems = async () => {
 
 // Get all wasteType in system to be query in future
 export const getAllWasteType = async () => {
-  let wasteListSectionFormat = []
-  firestore
+  let wasteListSectionFormat = [];
+  return firestore
     .collection("wasteType")
     .get()
     .then(querySnapshot => {
-      let data = [];
+      // loop type obj
       querySnapshot.forEach(doc => {
-        data.push({ ...doc.data()});
+        let data = [];
+        let type = "";
+        type = doc.id;
+        subtypesData = doc.data();
+        // loop through subtype obj
+        for (let subtypeData in subtypesData) {
+          data.push({ [subtypeData]: { ...subtypesData[subtypeData] } });
+        }
+        wasteListSectionFormat.push({ type, data });
       });
-      wasteListSectionFormat.push({ type: [doc.id], data });
-    })
+      console.log(wasteListSectionFormat);
+      return wasteListSectionFormat;
+    });
 };
 
 export const getTransactions = async role => {

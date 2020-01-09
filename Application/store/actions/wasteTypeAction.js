@@ -1,8 +1,10 @@
 import { getAllWasteType } from "../../utils/firebaseFunctions";
+import { Wastes } from "../../models/AllUserTrash";
 
 export const FETCH_WASTETYPE = "FETCH_WASTETYPE";
 
 //example purchaseList
+// this buyer purchaseList
 const purchaseList = {
   plastic: {
     PP: 12,
@@ -12,22 +14,20 @@ const purchaseList = {
     PVC: 17
   },
   glass: {
-    Red: 4,
-    Green: 2
+    redGlass: 4,
+    greenGlass: 2
   }
 };
 
 export const fetchWasteType = () => {
   return async dispatch => {
-    let allWasteTypeList = [];
     // wasteType
-    allWasteTypeList = await getAllWasteType();
+    wasteListSectionFormat = await getAllWasteType();
 
     dispatch({
       type: FETCH_WASTETYPE,
-      WasteListSectionFormat: allWasteTypeList.WasteListSectionFormat,
-      WasteList: allWasteTypeList.WasteList,
-      purchaseList: purchaseList
+      wasteListSectionFormat,
+      purchaseList: new Wastes(purchaseList).getObject()
     });
   };
 };
