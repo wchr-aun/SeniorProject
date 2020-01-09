@@ -1,5 +1,6 @@
 import firebaseUtil from "../firebase";
 import { Notifications } from "expo";
+import { Wastes } from "../models/AllUserTrash";
 
 const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
@@ -55,34 +56,26 @@ export const getSellerItems = async () => {
 
 // Get all wasteType in system to be query in future
 export const getAllWasteType = async () => {
-  const types = ["plastic", "glass", "paper", "danger"];
-  const promises = [];
-  const WasteListSectionFormat = []; // for storing Plastic, Glass
-  const WasteList = {}; // for storing obj
-
-  for (let type of types) {
-    promises.push(
-      firestore
-        .collection("wasteType")
-        .where("type", "==", type)
-        .get()
-        .then(querySnapshot => {
-          let data = [];
-          querySnapshot.forEach(doc => {
-            let subWasteTypesInfo = doc.data();
-            data.push({ ...subWasteTypesInfo, value: doc.id });
-          });
-          WasteListSectionFormat.push({ type: type, data: data });
-          WasteList[type] = data;
-        })
-    );
-  }
-  return Promise.all(promises).then(() => {
-    return {
-      WasteListSectionFormat: [...WasteListSectionFormat],
-      WasteList: WasteList
-    };
-  });
+  let wasteListSectionFormat = [];
+  return firestore
+    .collection("wasteType")
+    .get()
+    .then(querySnapshot => {
+      // loop type obj
+      querySnapshot.forEach(doc => {
+        let data = [];
+        let type = "";
+        type = doc.id;
+        subtypesData = doc.data();
+        // loop through subtype obj
+        for (let subtypeData in subtypesData) {
+          data.push({ [subtypeData]: { ...subtypesData[subtypeData] } });
+        }
+        wasteListSectionFormat.push({ type, data });
+      });
+      console.log(wasteListSectionFormat);
+      return wasteListSectionFormat;
+    });
 };
 
 export const getTransactions = async role => {
@@ -139,23 +132,6 @@ export const getFavBuyers = async () => {
           });
       });
       return buyersInfo;
-    })
-    .catch(err => {
-      throw new error(err.message);
-    });
-};
-
-export const searchBuyers = async (condition, orderBy) => {
-  return firestore
-    .collection("buyerList")
-    .orderBy(condition || "purchaseList", orderBy)
-    .get()
-    .then(querySnapshot => {
-      let buyers = [];
-      querySnapshot.forEach(doc => {
-        buyers.push({ id: doc.id, wastePriceInfo: doc.data() });
-      });
-      return buyers;
     })
     .catch(err => {
       throw new error(err.message);

@@ -45,7 +45,7 @@ const trashsModifyingReducer = (state, action) => {
 
   switch (action.type) {
     case SET_WASTE:
-      console.log("!!!!!!!!!!!!!!!! SET WASTE local Reducer Run"); //updating
+      // set sellerItems
       let sellerItemsOld = [];
       [...action.sellerItemsNew].forEach((item, index) => {
         sellerItemsOld.push({
@@ -62,7 +62,6 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsOld
       };
     case ADD_WASTE:
-      console.log("!!!!!!!!!!!!!!!! ADD_WASTE local Reducer Run");
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
       )[0];
@@ -75,7 +74,6 @@ const trashsModifyingReducer = (state, action) => {
           : (updatedItem.UI_diff = updatedItem.amount);
         updatedItem.UI_disabledMinus = false;
       } else {
-        console.log(" !!!!!!!!!!!!!!!! ADD_WASTE_NEW_TYPE");
         updatedSellerItems.push({
           amount: action.amount,
           wasteDescription: action.wasteDescription
@@ -87,14 +85,12 @@ const trashsModifyingReducer = (state, action) => {
           updatedSellerItems: false
         });
       }
-
       updatedSellerItems[targetIndex] = updatedItem;
       return {
         ...state,
         sellerItemsNew: [...updatedSellerItems]
       };
     case MINUS_WASTE:
-      console.log("!!!!!!!!!!!!!!!! MINUS_TRASH local Reducer Run");
       // change or add
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
@@ -114,7 +110,6 @@ const trashsModifyingReducer = (state, action) => {
       };
     case EDIT_WASTE:
       // edit from text-input
-      console.log("!!!!!!!!!!!!!!!! EDIT_TRASH local Reducer Run");
       updatedItem = updatedSellerItems.filter(
         item => item.wasteType === action.wasteType
       )[0];
@@ -124,7 +119,6 @@ const trashsModifyingReducer = (state, action) => {
         ? updatedItem.amount - state.sellerItemsOld[targetIndex].amount
         : updatedItem.amount;
       updatedSellerItems[targetIndex] = updatedItem;
-      console.log(updatedItem);
       return {
         ...state,
         sellerItemsNew: updatedSellerItems
@@ -162,7 +156,7 @@ const ShowAllUserTrashScreen = props => {
     return state.sellerItems.sellerItems;
   });
   const wasteTypesRedux = useSelector(state => {
-    return state.waste.wasteTypes;
+    return state.waste.WasteList;
   });
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(

@@ -22,24 +22,31 @@ const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
 const SET_PURCHASELIST = "SET_PURCHASELIST";
 
 const buyerWasteReducer = (state, action) => {
+  let purchaseList = state.purchaseList;
+  console.log("Reducer Listen");
+  console.log(action);
+  console.log("purchaseList Listen");
+  console.log(purchaseList);
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHASELSIT Reducer - run");
       return {
         ...state,
-        purchaseList: { ...action.purchaseList }
+        purchaseList: action.purchaseList
       }; //not work initially
     case EDIT_PURCHASELIST:
-      console.log("---> EDIT ---> action");
+      console.log("purchaseListObj.getValueBySubtype(" + action.subtypeIndex);
+      console.log(purchaseList.getValueBySubtype(action.subtypeIndex));
+
+      purchaseList.addWaste(
+        action.majortype,
+        action.subtypeIndex,
+        action.price ? action.price : 0
+      );
       return {
         ...state,
-        purchaseList: {
-          ...state.purchaseList,
-          [action.index]: parseInt(action.value, 10)
-        }
+        purchaseList
       };
-    case UPDATE_PURCHASELIST:
-      return state;
     default:
       return state;
   }
@@ -53,35 +60,51 @@ export default EditBuyerInfomationScreen = props => {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const WasteListSectionFormat = useSelector(
-    state => state.waste.WasteListSectionFormat
+  const wasteListSectionFormat = useSelector(
+    state => state.waste.wasteListSectionFormat
   ); //why its not update. ?
   const purchaseList = useSelector(state => state.waste.purchaseList); //not have
+  const buyerUserInfo = useSelector(state => state.user.userProfile);
   const [isEditingMode, setIsEditingMode] = useState(false);
 
-  const [buyerWasteState, dispatchBuyerWaste] = useReducer(buyerWasteReducer, {
-    purchaseList: {}
-  });
+  const [buyerWasteState, dispatchBuyerWaste] = useReducer(
+    buyerWasteReducer,
+    {}
+  );
 
   const toggleModeHandler = () => {
+    console.log("toggle");
+    console.log(isEditingMode);
     if (isEditingMode) {
       // done edit
+      let description = "temp";
+
+      dispatch(
+        wasteTypeAction.updatePurchaseList(
+          buyerWasteState.purchaseList.getObject(),
+          description,
+          buyerUserInfo.addr
+        )
+      );
       setIsEditingMode(false);
-      dispatch({ type: UPDATE_PURCHASELIST });
     } else {
       // start to edit
       setIsEditingMode(true);
     }
   };
 
-  const editPriceHandler = (text, index) => {
-    console.log("Edit Price");
-    console.log(text);
-    dispatchBuyerWaste({ type: EDIT_PURCHASELIST, index, value: text });
+  const editPriceHandler = (majortype, subtypeIndex, price) => {
+    dispatchBuyerWaste({
+      type: EDIT_PURCHASELIST,
+      majortype,
+      subtypeIndex,
+      price
+    });
   };
 
   // if redux update, local redux update
   useEffect(() => {
+    console.log("purchaseList");
     dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
   }, [purchaseList]);
 
@@ -120,10 +143,27 @@ export default EditBuyerInfomationScreen = props => {
           }}
         >
           <SectionList
-            sections={WasteListSectionFormat}
+            sections={wasteListSectionFormat}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
-            renderItem={({ item }) => {
+            renderItem={({ item, section: { type } }) => {
+              let subtypeIndex = Object.keys(item)[0];
+              let subtypeName = item[Object.keys(item)[0]].name;
+
+              // Set price
+              let price = "";
+              if (purchaseList[type]) {
+                if (purchaseList[type][subtypeIndex]) {
+                  price = Object.keys(buyerWasteState.purchaseList).length
+                    ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
+                    : purchaseList[type][Object.keys(item)[0]];
+                } else {
+                  price = "ยังไม่กำหนดราคา";
+                }
+              } else {
+                price = "ยังไม่กำหนดราคา";
+              }
+
               return (
                 <View
                   style={{
@@ -147,9 +187,8 @@ export default EditBuyerInfomationScreen = props => {
                     }}
                   >
                     <View style={{ width: "20%" }}>
-                      <ThaiText>{item.value}</ThaiText>
+                      <ThaiText>{subtypeName}</ThaiText>
                     </View>
-
                     <View
                       style={{
                         width: "60%",
@@ -164,15 +203,15 @@ export default EditBuyerInfomationScreen = props => {
                         }}
                       >
                         {!isEditingMode ? (
-                          <ThaiText>
-                            {purchaseList[item.value]["price"].toString()}
-                          </ThaiText>
+                          <ThaiText>{(price ? price : 0).toString()}</ThaiText> // show price
                         ) : (
                           <TextInput
-                            value={purchaseList[item.value]["price"].toString()}
-                            onChangeText={text =>
-                              editPriceHandler(text, item.value)
-                            }
+                            value={(price ? price : 0).toString()}
+                            clearTextOnFocus={true}
+                            selectTextOnFocus={true}
+                            onChangeText={price => {
+                              editPriceHandler(type, subtypeIndex, price);
+                            }}
                             keyboardType="numeric"
                           />
                         )}
@@ -183,14 +222,12 @@ export default EditBuyerInfomationScreen = props => {
                       <View style={{ width: "20%" }}>
                         <TouchableWithoutFeedback
                           onPress={() => {
-                            dispatchBuyerWaste();
+                            console.log("check click");
                           }}
                         >
                           <MaterialIcons
                             name={
-                              purchaseList[item.value]["selected"] === 1
-                                ? "check-box"
-                                : "check-box-outline-blank"
+                              price ? "check-box" : "check-box-outline-blank"
                             }
                             size={15}
                             color={Colors.primary_variant}

@@ -1,7 +1,7 @@
 import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { Platform, Dimensions } from "react-native";
+import { Platform } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
@@ -13,7 +13,7 @@ import UserSigninScreen from "../screens/UserSigninScreen";
 import UserSignupScreen from "../screens/UserSignupScreen";
 import ConfigAccountScreen from "../screens/ConfigAccountScreen";
 
-import ShowAllUserTrashScreen from "../screens/SellerScreen/ShowAllUserTrashScreen";
+import ShowSellerItemsScreen from "../screens/SellerScreen/ShowSellerItemsScreen";
 import OptionTrashCheckScreen from "../screens/SellerScreen/OptionTrashCheck";
 import SellingTransactionScreen from "../screens/SellerScreen/SellingTransactionScreen";
 import SellerHomepageScreen from "../screens/SellerScreen/SellerHomepageScreen";
@@ -28,7 +28,6 @@ import EditBuyerInfomationScreen from "../screens/BuyerScreen/EditBuyerInfomatio
 import AppVariableSetting from "../constants/AppVariableSetting";
 import UIScreenTemplate from "../screens/UIScreenTemplate";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 
 // ************************************* Seller ***********************************
 // for UserHomepageScreen
@@ -52,10 +51,10 @@ SellerhomepageNavigator.navigationOptions = ({ navigation }) => {
   };
 };
 
-const ShowAllUserTrashNavigator = createStackNavigator(
+const ShowSellerItemsNavigator = createStackNavigator(
   {
     ShowAllUserTrashScreen: {
-      screen: ShowAllUserTrashScreen
+      screen: ShowSellerItemsScreen
     },
     // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
     SellingTrashScreen: {
@@ -73,7 +72,7 @@ const ShowAllUserTrashNavigator = createStackNavigator(
 );
 
 // Hiding bottom tabbar
-ShowAllUserTrashNavigator.navigationOptions = ({ navigation }) => {
+ShowSellerItemsNavigator.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -111,7 +110,7 @@ const SellerBottomTabConfig = {
     }
   },
   AllTrash: {
-    screen: ShowAllUserTrashNavigator,
+    screen: ShowSellerItemsNavigator,
     navigationOptions: {
       tabBarLabel: "ขยะที่สะสมอยู่",
       tabBarIcon: tabInfo => {
