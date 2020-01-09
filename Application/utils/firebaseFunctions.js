@@ -1,5 +1,6 @@
 import firebaseUtil from "../firebase";
 import { Notifications } from "expo";
+import { Wastes } from "../models/AllUserTrash";
 
 const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
@@ -67,16 +68,24 @@ export const getAllWasteType = async () => {
         .where("type", "==", type)
         .get()
         .then(querySnapshot => {
+          // require for sectionList component
           let data = [];
           querySnapshot.forEach(doc => {
             let subWasteTypesInfo = doc.data();
-            data.push({ ...subWasteTypesInfo, value: doc.id });
+            data.push({ [doc.id]: { ...subWasteTypesInfo, value: doc.id } });
           });
           WasteListSectionFormat.push({ type: type, data: data });
+
+          // For using in future
           WasteList[type] = data;
+          console.log("Test WasteList");
+          console.log(WasteList);
+          tmp = new Wastes(WasteList);
+          console.log(tmp.getObject());
         })
     );
   }
+
   return Promise.all(promises).then(() => {
     return {
       WasteListSectionFormat: [...WasteListSectionFormat],
