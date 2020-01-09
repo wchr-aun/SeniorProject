@@ -56,42 +56,17 @@ export const getSellerItems = async () => {
 
 // Get all wasteType in system to be query in future
 export const getAllWasteType = async () => {
-  const types = ["plastic", "glass", "paper", "danger"];
-  const promises = [];
-  const WasteListSectionFormat = []; // for storing Plastic, Glass
-  const WasteList = {}; // for storing obj
-
-  for (let type of types) {
-    promises.push(
-      firestore
-        .collection("wasteType")
-        .where("type", "==", type)
-        .get()
-        .then(querySnapshot => {
-          // require for sectionList component
-          let data = [];
-          querySnapshot.forEach(doc => {
-            let subWasteTypesInfo = doc.data();
-            data.push({ [doc.id]: { ...subWasteTypesInfo, value: doc.id } });
-          });
-          WasteListSectionFormat.push({ type: type, data: data });
-
-          // For using in future
-          WasteList[type] = data;
-          console.log("Test WasteList");
-          console.log(WasteList);
-          tmp = new Wastes(WasteList);
-          console.log(tmp.getObject());
-        })
-    );
-  }
-
-  return Promise.all(promises).then(() => {
-    return {
-      WasteListSectionFormat: [...WasteListSectionFormat],
-      WasteList: WasteList
-    };
-  });
+  let wasteListSectionFormat = []
+  firestore
+    .collection("wasteType")
+    .get()
+    .then(querySnapshot => {
+      let data = [];
+      querySnapshot.forEach(doc => {
+        data.push({ ...doc.data()});
+      });
+      wasteListSectionFormat.push({ type: [doc.id], data });
+    })
 };
 
 export const getTransactions = async role => {

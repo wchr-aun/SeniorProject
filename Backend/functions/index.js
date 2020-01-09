@@ -54,9 +54,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
 
 exports.addWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    let items = []
-    data.items.forEach(item => { items.push({wasteType: item.wasteType, amount: Number(item.amount)}) })
-    return sellerDB.doc(context.auth.uid).set({ items }, {merge: true}).then(() => {
+    return sellerDB.doc(context.auth.uid).set({ items: data.items }, {merge: true}).then(() => {
       return true
     }).catch(err => {
       console.log("Error has occurred in addWaste() while setting the document " + context.auth.uid)
@@ -69,7 +67,7 @@ exports.addWaste = functions.https.onCall((data, context) => {
 
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    let items = data.items
+    let saleList = data.items
     let buyer = data.buyer || ""
     let addr = data.addr.readable
     let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
@@ -77,15 +75,19 @@ exports.sellWaste = functions.https.onCall((data, context) => {
     if (txType == 0 || txType == 1) {
       return sellerDB.doc(context.auth.uid).get().then(doc => {
         if (doc.exists) {
-          let newItems = []
-          for(let i = 0; i < doc.data().items.length; i++) {
-            for(let j = 0; j < items.length; j++) {
-              if (items[j].wasteType == doc.data().items[i].wasteType) {
-                if (items[j].amount < doc.data().items[i].amount)
-                  newItems.push({wasteType: items[j].wasteType, amount: doc.data().items[i].amount - items[j].amount})
-                else if (items[j].amount == doc.data().items[i].amount) continue
+          let newItems = {}
+          newItems.length = 0
+          for(let type in doc.data().items) {
+            for(let subtype in doc.data().items[type]) {
+              if (type != "length")
+                if (newItems[type] == undefined)
+                  newItems[type] = {}
+                if (doc.data().items[type][subtype] > saleList[type][subtype].amount) {
+                  newItems[type][subtype] = doc.data().items[type][subtype] - saleList[type][subtype].amount
+                  newItems.length++
+                }
+                else if (doc.data().items[type][subtype] == saleList[type][subtype].amount) continue
                 else return {errorMessage: "Item's amount doesn't match"}
-              }
             }
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
@@ -93,7 +95,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               txType,
               buyer,
               seller: context.auth.uid,
-              items,
+              saleList,
               addr,
               addr_geopoint,
               createTimestamp: new Date(),
