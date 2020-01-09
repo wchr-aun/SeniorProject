@@ -23,6 +23,8 @@ const SET_PURCHASELIST = "SET_PURCHASELIST";
 
 const buyerWasteReducer = (state, action) => {
   let purchaseListObj = state.purchaseList;
+  console.log("Reducer Listen");
+  console.log(action);
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHASELSIT Reducer - run");
@@ -74,8 +76,8 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  const editPriceHandler = (type, subtype, price) => {
-    dispatchBuyerWaste({ type: EDIT_PURCHASELIST, type, subtype, price });
+  const editPriceHandler = (majortype, subtype, price) => {
+    dispatchBuyerWaste({ type: EDIT_PURCHASELIST, majortype, subtype, price });
   };
 
   // if redux update, local redux update
@@ -124,7 +126,6 @@ export default EditBuyerInfomationScreen = props => {
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item, section: { type } }) => {
               let subtypeName = item[Object.keys(item)[0]].name;
-              console.log(buyerWasteState.purchaseList);
               let price = Object.keys(buyerWasteState.purchaseList).length
                 ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
                 : purchaseList[type][Object.keys(item)[0]];
@@ -172,9 +173,9 @@ export default EditBuyerInfomationScreen = props => {
                         ) : (
                           <TextInput
                             value={price.toString()}
-                            onChangeText={price =>
-                              editPriceHandler(type, subtypeName, price)
-                            }
+                            onChangeText={price => {
+                              editPriceHandler(type, subtypeName, price);
+                            }}
                             keyboardType="numeric"
                           />
                         )}
@@ -185,7 +186,7 @@ export default EditBuyerInfomationScreen = props => {
                       <View style={{ width: "20%" }}>
                         <TouchableWithoutFeedback
                           onPress={() => {
-                            dispatchBuyerWaste();
+                            console.log("check click");
                           }}
                         >
                           <MaterialIcons
