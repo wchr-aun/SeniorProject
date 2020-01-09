@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         wasteListSectionFormat: [...action.wasteListSectionFormat],
-        purchaseList: { ...action.purchaseList }
+        purchaseList: action.purchaseList
       };
     case CHANGE_ROLE:
       return initialState;

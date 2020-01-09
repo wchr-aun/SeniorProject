@@ -27,7 +27,7 @@ export const fetchWasteType = () => {
     dispatch({
       type: FETCH_WASTETYPE,
       wasteListSectionFormat,
-      purchaseList: new Wastes(purchaseList).getObject()
+      purchaseList: new Wastes(purchaseList)
     });
   };
 };

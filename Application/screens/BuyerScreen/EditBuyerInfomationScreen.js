@@ -22,7 +22,7 @@ const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
 const SET_PURCHASELIST = "SET_PURCHASELIST";
 
 const buyerWasteReducer = (state, action) => {
-  let purchaseListObj = state.purchaseList;
+  let purchaseList = state.purchaseList;
   console.log("Reducer Listen");
   console.log(action);
   switch (action.type) {
@@ -33,13 +33,20 @@ const buyerWasteReducer = (state, action) => {
         purchaseList: action.purchaseList
       }; //not work initially
     case EDIT_PURCHASELIST:
-      console.log("purchaseListObj.getValueBySubtype(action.subtypeName)");
-      console.log(purchaseListObj.getValueBySubtype(action.subtypeName));
+      console.log("purchaseListObj.getValueBySubtype(" + action.subtypeIndex);
+      console.log(purchaseList.getValueBySubtype(action.subtypeIndex));
+
+      purchaseList.addWaste(
+        action.majortype,
+        action.subtypeIndex,
+        action.price ? action.price : 0
+      );
       return {
         ...state,
         purchaseList
       };
     case UPDATE_PURCHASELIST:
+      console.log("Update");
       return state;
     default:
       return state;
@@ -76,8 +83,13 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  const editPriceHandler = (majortype, subtype, price) => {
-    dispatchBuyerWaste({ type: EDIT_PURCHASELIST, majortype, subtype, price });
+  const editPriceHandler = (majortype, subtypeIndex, price) => {
+    dispatchBuyerWaste({
+      type: EDIT_PURCHASELIST,
+      majortype,
+      subtypeIndex,
+      price
+    });
   };
 
   // if redux update, local redux update
@@ -125,6 +137,8 @@ export default EditBuyerInfomationScreen = props => {
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item, section: { type } }) => {
+              let subtypeIndex = Object.keys(item)[0];
+              console.log(subtypeIndex);
               let subtypeName = item[Object.keys(item)[0]].name;
               let price = Object.keys(buyerWasteState.purchaseList).length
                 ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
@@ -169,12 +183,12 @@ export default EditBuyerInfomationScreen = props => {
                         }}
                       >
                         {!isEditingMode ? (
-                          <ThaiText>{price.toString()}</ThaiText> // show price
+                          <ThaiText>{(price ? price : 0).toString()}</ThaiText> // show price
                         ) : (
                           <TextInput
-                            value={price.toString()}
+                            value={(price ? price : 0).toString()}
                             onChangeText={price => {
-                              editPriceHandler(type, subtypeName, price);
+                              editPriceHandler(type, subtypeIndex, price);
                             }}
                             keyboardType="numeric"
                           />

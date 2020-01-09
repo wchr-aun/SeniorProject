@@ -25,7 +25,7 @@ export class Wastes {
     }
   }
   addWaste(type, subtype, value) {
-    if (value == 0) this.removeWaste(type, subtype);
+    if (value == 0) this._removeWaste(type, subtype);
     else {
       if (this[type] == undefined) {
         this[type] = {};
@@ -50,7 +50,7 @@ export class Wastes {
   getValueBySubtype(subtype) {
     for (let type in this._obj) {
       if (this[type][subtype] != undefined)
-        return {type, value: this[type][subtype]}
+        return { type, value: this[type][subtype] };
     }
     return false;
   }
