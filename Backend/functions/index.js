@@ -79,16 +79,14 @@ exports.sellWaste = functions.https.onCall((data, context) => {
           newItems.length = 0
           for(let type in doc.data().items) {
             for(let subtype in doc.data().items[type]) {
-              if (type != "length") {
-                if (newItems[type] == undefined)
-                  newItems[type] = {}
-                if (doc.data().items[type][subtype] > saleList[type][subtype].amount) {
-                  newItems[type][subtype] = doc.data().items[type][subtype] - saleList[type][subtype].amount
-                  newItems.length++
-                }
-                else if (doc.data().items[type][subtype] == saleList[type][subtype].amount) continue
-                else return {errorMessage: "Item's amount doesn't match"}
+              if (newItems[type] == undefined)
+                newItems[type] = {}
+              if (doc.data().items[type][subtype] > saleList[type][subtype].amount) {
+                newItems[type][subtype] = doc.data().items[type][subtype] - saleList[type][subtype].amount
+                newItems.length++
               }
+              else if (doc.data().items[type][subtype] == saleList[type][subtype].amount) continue
+              else return {errorMessage: "Item's amount doesn't match"}
             }
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
@@ -147,19 +145,41 @@ exports.toggleSearch = functions.https.onCall((data, context) => {
 exports.changeTxStatus = functions.https.onCall((data, context) => {
   if (context.auth != null){
     return txDB.doc(data.txID).get().then(doc => {
-      if (doc.data().txStatus < data.status && doc.data().txStatus != 4) {
+      if (
+        doc.data().txStatus < data.status &&
+        doc.data().txStatus != 3 &&
+        data.status > 0 &&
+        data.status < 5 &&
+        (doc.data().buyer == "" ||
+        doc.data().buyer == context.auth.uid)
+      ) {
         if (doc.data().txType == 0) {
-          if (data.status != 4 && data.status != 5) {
+          if (data.status < 3 && data.status != 1) {
             return txDB.doc(data.txID).update({
               txStatus: data.status
             }).then(() => {
-              const meesage = getTitleAndBody({
-                uid: context.auth.uid,
+              return {
                 txType: doc.data().txType,
-                txStatus: data.status,
-                date: doc.data().assignedTime
-              })
-              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
+                date: doc.data().chosenTime,
+                seller: doc.data().seller
+              }
+            }).catch(err => {
+              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
+              console.log(err)
+              return {errorMessage: err.message}
+            })
+          }
+          else if (data.status == 1) {
+            return txDB.doc(data.txID).update({
+              txStatus: data.status,
+              chosenTime: data.chosenTime,
+              buyer: context.auth.uid
+            }).then(() => {
+              return {
+                txType: doc.data().txType,
+                date: data.chosenTime,
+                seller: doc.data().seller
+              }
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
@@ -172,56 +192,6 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               completedTime: new Date()
             }).then(() => {
               return true
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
-          }
-        }
-        else if (doc.data().txType == 1) {
-          if (doc.data().txStatus == 0) {
-            return txDB.doc(data.txID).set({
-              txStatus: data.status,
-              buyer: context.auth.uid,
-              items: data.items
-            }, { merge: true }).then(() => {
-              const meesage = getTitleAndBody({
-                uid: context.auth.uid,
-                txType: doc.data().txType,
-                txStatus: data.status,
-                date: doc.data().assignedTime
-              })
-              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
-          }
-          else if (doc.data().txStatus == 4 || doc.data().txStatus == 5) {
-            return txDB.doc(data.txID).set({
-              txStatus: data.status,
-              completedTime: new Date()
-            }, { merge: true }).then(() => {
-              return true
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
-          }
-          else {
-            return txDB.doc(data.txID).update({
-              txStatus: data.status
-            }).then(() => {
-              const meesage = getTitleAndBody({
-                uid: context.auth.uid,
-                txType: doc.data().txType,
-                txStatus: data.status,
-                date: doc.data().assignedTime
-              })
-              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
@@ -232,6 +202,20 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
         else return {errorMessage: "The transaction format is incorrect"}
       }
       else return {errorMessage: "The transaction is already completed"}
+    }).then(msg => {
+      if (msg.errorMessage == null) {
+        if (msg == true) return true
+        else {
+          const meesage = getTitleAndBody({
+            uid: context.auth.uid,
+            txType: msg.txType,
+            txStatus: data.status,
+            date: msg.chosenTime
+          })
+          return sendNotification(msg.seller, meesage.title, meesage.body).then(result => { return result })
+        }
+      }
+      else return msg
     })
   }
   else return {errorMessage: "The request is denied because of authetication"}
@@ -329,13 +313,12 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
         buyerList[lastestArray].totalPrice = 0
         buyerList[lastestArray].unavailableTypes = []
         for (type in wasteType)
-          if (type != "length")
-            for (subtype in wasteType[type]) {
-              if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
-                buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
-              else
-                buyerList[lastestArray].unavailableTypes.push(subtype)
-            }
+          for (subtype in wasteType[type]) {
+            if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
+              buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
+            else
+              buyerList[lastestArray].unavailableTypes.push(subtype)
+          }
         if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
           buyerList.pop()
         else
@@ -367,10 +350,9 @@ exports.querySellers = functions.https.onCall((data,context) => {
         const lastestArray = txList.push(seller) - 1
         txList[lastestArray].unavailableTypes = []
         for (type in saleList)
-          if (type != "length")
-            for (subtype in saleList[type])
-              if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
-                txList[lastestArray].unavailableTypes.push(subtype)
+          for (subtype in saleList[type])
+            if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
+              txList[lastestArray].unavailableTypes.push(subtype)
         if (txList[lastestArray].unavailableTypes.length == saleList.length)
           txList.pop()
         else
@@ -399,7 +381,6 @@ const getTitleAndBody = (data) => {
   const title = [
     "คำร้องขอในบริเวณของคุณ",
     "คำร้องขอถึงคุณ",
-    "คำขอเลื่อนเวลา",
     "ผู้ซื้อตอบตกลงคำร้องขอ",
     "วันนี้คุณมีนัดซื้อ-ขายขยะ",
     "ผู้ซื้อกำลังเดินทางมา"
@@ -407,7 +388,6 @@ const getTitleAndBody = (data) => {
   const body = [
     uid + " ต้องการขายขยะ",
     uid + " ต้องการขายขยะให้คุณ",
-    uid + " ต้องการนัดเวลาใหม่",
     uid + " จะเดินทางมาในอีก " + days + " วัน",
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + "น.",
     uid + " กำลังเดินทางมาหาคุณ"

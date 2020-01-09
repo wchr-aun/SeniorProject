@@ -7,6 +7,9 @@
     </div>
     <div class="navbar-end">
       <div class="navbar-item">
+        <a class="navbar-item" href="/annotate">
+          Annotate
+        </a>
         <a class="navbar-item" href="/about">
           About
         </a>
