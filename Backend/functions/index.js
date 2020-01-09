@@ -19,6 +19,7 @@ const txDB = firestore.collection('transactions')
 
 const geo = geofirex.init(admin)
 const geoBuyers = geo.query(buyerDB)
+const geoSellers = geo.query(txDB.where("txStatus", "==", 0).where("txType", "==", 1))
 
 exports.createAccount = functions.https.onCall((data, context) => {
   let name = data.name
@@ -35,7 +36,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addr_geopoint: {latitude: Number(data.addr.latitude), longitude: Number(data.addr.longitude)},
+      addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).catch(err => {
       console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
@@ -69,8 +70,9 @@ exports.addWaste = functions.https.onCall((data, context) => {
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
     let items = data.items
-    let buyer = data.buyer
-    let addr = data.addr
+    let buyer = data.buyer || ""
+    let addr = data.addr.readable
+    let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
     let txType = data.txType
     if (txType == 0 || txType == 1) {
       return sellerDB.doc(context.auth.uid).get().then(doc => {
@@ -93,14 +95,16 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               seller: context.auth.uid,
               items,
               addr,
+              addr_geopoint,
               createTimestamp: new Date(),
               assignedTime: new Date(data.assignedTime) || "TBA",
               txStatus: 0
             }).then(() => {
-              let title = ""
-              let body = ""
-              (title, body) = getTitleAndBody({uid: context.auth.uid, txType, txStatus: 0})
-              return sendNotification(context.auth.uid, title, body).then(result => { return result })
+              const message = getTitleAndBody({uid: context.auth.uid, txType, txStatus: 0})
+              if (txType == 0)
+                return sendNotification(buyer, message.title, message.body).then(result => { return result })
+              else 
+              return quickSellingNotification(addr_geopoint, message.title, message.body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in sellWaste() while adding a transaction")
               console.log(err)
@@ -268,7 +272,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
       name,
       surname,
       addr,
-      addr_geopoint: {latitude: Number(data.addr.latitude), longitude: Number(data.addr.longitude)}
+      addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude)
     }).then(() => {
       auth.updateUser(context.auth.uid, {
         phoneNumber: data.phoneNo,
@@ -316,8 +320,8 @@ exports.removeNotificationToken = functions.https.onCall((data,context) => {
 })
 
 exports.queryBuyers = functions.https.onCall((data,context) => {
-  if (context.auth == null) {
-    const center = geo.point(data.addr_geopoint.latitude, data.addr_geopoint.longitude)
+  if (context.auth != null) {
+    const center = geo.point(data.addr.latitude, data.addr.longitude)
     const radius = data.distance
     const query = geoBuyers.within(center, radius, "addr_geopoint")
     let buyerList = []
@@ -328,15 +332,17 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
         buyerList[lastestArray].totalPrice = 0
         buyerList[lastestArray].unavailableTypes = []
         for (type in wasteType) {
-          if (buyerList[lastestArray].purchaseList[type] != undefined) 
-            buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type] * wasteType[type]
-          else
-            buyerList[lastestArray].unavailableTypes.push(type)
+          for (subtype in wasteType[type]) {
+            if (buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
+              buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
+            else
+              buyerList[lastestArray].unavailableTypes.push(subtype)
+          }
         }
-        if (buyerList[lastestArray].unavailableTypes.length == Object.keys(wasteType).length)
+        if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
           buyerList.pop()
         else
-          buyerList[lastestArray].sorting = (Object.keys(wasteType).length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
+          buyerList[lastestArray].sorting = (wasteType.length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
           buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
       })
       buyerList.sort((a, b) => {
@@ -344,38 +350,84 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
       })
       return buyerList
     }).catch(err => {
-      console.log("Error has occurred in queryBuyers() while querying")
+      console.log("Error has occurred in queryBuyers() while geo querying")
       console.log(err)
       return {errorMessage: err.message}
     })
   }
+  else return {errorMessage: "The request is denied because of authetication"}
+})
+
+exports.querySellers = functions.https.onCall((data,context) => {
+  if (context.auth != null) {
+    const purchaseList = data.purchaseList
+    let txList = []
+    const center = geo.point(data.addr.latitude, data.addr.longitude)
+    const radius = data.distance
+    const query = geoSellers.within(center, radius, "addr_geopoint")
+    return geofirex.get(query).then(querySnapshot => {
+      querySnapshot.forEach(seller => {
+        const lastestArray = txList.push(seller) - 1
+        txList[lastestArray].unavailableTypes = []
+        for (type in wasteType) {
+          for (subtype in wasteType[type]) {
+            if (txList[lastestArray].purchaseList[type][subtype] == undefined)
+            txList[lastestArray].unavailableTypes.push(subtype)
+          }
+        }
+        if (txList[lastestArray].unavailableTypes.length == wasteType.length)
+          txList.pop()
+      })
+      return txList
+    }).catch(err => {
+      console.log("Error has occurred in querySellers() while geo querying")
+      console.log(err)
+      return {errorMessage: err.message}
+    })
+  }
+  else return {errorMessage: "The request is denied because of authetication"}
 })
 
 const getTitleAndBody = (data) => {
   const uid = data.uid
-  const days = data.days || ""
+  const days = Math.floor((data.date - new Date()) / 86400000) || ""
+  const hour = new Date(data.date).getHours()
+  const min = new Date(data.date).getMinutes()
   const index = (data.txType + 1) % 2 + data.txStatus
   const title = [
+    "คำร้องขอในบริเวณของคุณ",
     "คำร้องขอถึงคุณ",
-    "คำร้องขอในบริเววณของคุณ",
     "คำขอเลื่อนเวลา",
     "ผู้ซื้อตอบตกลงคำร้องขอ",
     "วันนี้คุณมีนัดซื้อ-ขายขยะ",
     "ผู้ซื้อกำลังเดินทางมา"
   ]
   const body = [
-    uid + " ต้องการขายขยะให้คุณ",
     uid + " ต้องการขายขยะ",
+    uid + " ต้องการขายขยะให้คุณ",
     uid + " ต้องการนัดเวลาใหม่",
-    uid + " เดินทางมาในอีก " + days + " วัน",
-    uid + " จะเดินทางมาถึงเวลาประมาณ",
+    uid + " จะเดินทางมาในอีก " + days + " วัน",
+    uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + "น.",
     uid + " กำลังเดินทางมาหาคุณ"
   ]
-  return (title[index], body[index])
+  return {title: title[index], body: body[index]}
+}
+
+const quickSellingNotification = async (center, title, body) => {
+  const query = geoBuyers.within(center, 5, "addr_geopoint")
+  return geofirex.get(query).then(querySnapshot => {
+    querySnapshot.forEach(buyer => {
+      return sendNotification(buyer.id, title, body)
+    })
+  }).catch(err => {
+    console.log("Error has occurred in quickSellingNotification() while geo querying")
+    console.log(err)
+    return {errorMessage: err.message}
+  })
 }
 
 const sendNotification = async (uid, title, body) => {
-  return usersDB.doc(uid).get(doc => {
+  return usersDB.doc(uid).get().then(doc => {
     if (doc.exists) return doc.data().notificationToken
     else return {errorMessage: "The document doesn't exist"}
   }).then(tokens => {
