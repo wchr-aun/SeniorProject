@@ -369,13 +369,13 @@ exports.querySellers = functions.https.onCall((data,context) => {
       querySnapshot.forEach(seller => {
         const lastestArray = txList.push(seller) - 1
         txList[lastestArray].unavailableTypes = []
-        for (type in wasteType) {
-          for (subtype in wasteType[type]) {
+        for (type in purchaseList) {
+          for (subtype in purchaseList[type]) {
             if (txList[lastestArray].purchaseList[type][subtype] == undefined)
             txList[lastestArray].unavailableTypes.push(subtype)
           }
         }
-        if (txList[lastestArray].unavailableTypes.length == wasteType.length)
+        if (txList[lastestArray].unavailableTypes.length == purchaseList.length)
           txList.pop()
       })
       return txList
@@ -391,8 +391,8 @@ exports.querySellers = functions.https.onCall((data,context) => {
 const getTitleAndBody = (data) => {
   const uid = data.uid
   const days = Math.floor((data.date - new Date()) / 86400000) || ""
-  const hour = new Date(data.date).getHours()
-  const min = new Date(data.date).getMinutes()
+  const hour = new Date(data.date).getHours() || ""
+  const min = new Date(data.date).getMinutes() || ""
   const index = (data.txType + 1) % 2 + data.txStatus
   const title = [
     "คำร้องขอในบริเวณของคุณ",
