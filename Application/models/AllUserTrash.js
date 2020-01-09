@@ -9,30 +9,30 @@ export class AllUserTrash {
 }
 
 export class Wastes {
-  constructor(firebaseObj) {
+  constructor(obj) {
     this.length = 0;
     this._obj = {};
-    for (let type in firebaseObj) {
-      for (let subtype in firebaseObj[type]) {
+    for (let type in obj) {
+      for (let subtype in obj[type]) {
         if (this[type] == undefined) {
           this[type] = {};
           this._obj[type] = {};
         }
-        this[type][subtype] = firebaseObj[type][subtype];
-        this._obj[type][subtype] = firebaseObj[type][subtype];
+        this[type][subtype] = obj[type][subtype];
+        this._obj[type][subtype] = obj[type][subtype];
         this.length += 1;
       }
     }
   }
-  addWaste(type, subtype, amount) {
-    if (amount == 0) this.removeWaste(type, subtype);
+  addWaste(type, subtype, value) {
+    if (value == 0) this.removeWaste(type, subtype);
     else {
       if (this[type] == undefined) {
         this[type] = {};
         this._obj[type] = {};
       }
-      this[type][subtype] = amount;
-      this._obj[type][subtype] = amount;
+      this[type][subtype] = value;
+      this._obj[type][subtype] = value;
       this.length += 1;
     }
   }
@@ -50,7 +50,7 @@ export class Wastes {
   getValueBySubtype(subtype) {
     for (let type in this._obj) {
       if (this[type][subtype] != undefined)
-        return {type, amount: this[type][subtype]}
+        return {type, value: this[type][subtype]}
     }
     return false;
   }
