@@ -6,3 +6,8 @@
 4. ตอน Get user address มีการเปลี่ยน property
 5. ดัก จำนวน ขยะที่ขาย / ราคา ให้ไม่มากเกินไป
 6. permission recheck
+7. purchaseList --> {
+    plastic: {}
+    glass: {}
+    length: 6
+} *** เมื่อมีการกด + - เพิ่ม purchaseList.length ++

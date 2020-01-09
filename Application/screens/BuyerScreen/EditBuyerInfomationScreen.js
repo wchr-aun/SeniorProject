@@ -123,7 +123,9 @@ export default EditBuyerInfomationScreen = props => {
             sections={WasteListSectionFormat}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
-            renderItem={({ item }) => {
+            renderItem={({ item, section: { type } }) => {
+              console.log("WasteListSectionFormat");
+              console.log(WasteListSectionFormat);
               return (
                 <View
                   style={{
@@ -165,11 +167,11 @@ export default EditBuyerInfomationScreen = props => {
                       >
                         {!isEditingMode ? (
                           <ThaiText>
-                            {purchaseList[item.value]["price"].toString()}
+                            {purchaseList[type][item.value].toString()}
                           </ThaiText>
                         ) : (
                           <TextInput
-                            value={purchaseList[item.value]["price"].toString()}
+                            value={purchaseList[type][item.value].toString()}
                             onChangeText={text =>
                               editPriceHandler(text, item.value)
                             }
@@ -188,7 +190,7 @@ export default EditBuyerInfomationScreen = props => {
                         >
                           <MaterialIcons
                             name={
-                              purchaseList[item.value]["selected"] === 1
+                              purchaseList[type][item.value]
                                 ? "check-box"
                                 : "check-box-outline-blank"
                             }
