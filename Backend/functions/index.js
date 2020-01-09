@@ -54,7 +54,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
 
 exports.addWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    return sellerDB.doc(context.auth.uid).set({ items: data.items }, {merge: true}).then(() => {
+    return sellerDB.doc(context.auth.uid).set({ items: data.items }).then(() => {
       return true
     }).catch(err => {
       console.log("Error has occurred in addWaste() while setting the document " + context.auth.uid)
@@ -67,7 +67,7 @@ exports.addWaste = functions.https.onCall((data, context) => {
 
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    let saleList = data.items
+    let saleList = data.saleList
     let buyer = data.buyer || ""
     let addr = data.addr.readable
     let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
@@ -79,7 +79,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
           newItems.length = 0
           for(let type in doc.data().items) {
             for(let subtype in doc.data().items[type]) {
-              if (type != "length")
+              if (type != "length") {
                 if (newItems[type] == undefined)
                   newItems[type] = {}
                 if (doc.data().items[type][subtype] > saleList[type][subtype].amount) {
@@ -88,6 +88,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
                 }
                 else if (doc.data().items[type][subtype] == saleList[type][subtype].amount) continue
                 else return {errorMessage: "Item's amount doesn't match"}
+              }
             }
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
@@ -132,7 +133,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
 
 exports.toggleSearch = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    return usersDB.doc(context.auth.uid).update({enableSearch: data.toggleSearch}).then(() => {
+    return buyerDB.doc(context.auth.uid).update({enableSearch: data.toggleSearch}).then(() => {
       return true
     }).catch(err => {
       console.log("Error has occurred in toggleSearch() while updating the document " + context.auth.uid)
@@ -152,15 +153,13 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return txDB.doc(data.txID).update({
               txStatus: data.status
             }).then(() => {
-              let title = ""
-              let body = ""
-              (title, body) = getTitleAndBody({
+              const meesage = getTitleAndBody({
                 uid: context.auth.uid,
                 txType: doc.data().txType,
                 txStatus: data.status,
                 date: doc.data().assignedTime
               })
-              return sendNotification(doc.data().seller, title, body).then(result => { return result })
+              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
@@ -187,15 +186,13 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               buyer: context.auth.uid,
               items: data.items
             }, { merge: true }).then(() => {
-              let title = ""
-              let body = ""
-              (title, body) = getTitleAndBody({
+              const meesage = getTitleAndBody({
                 uid: context.auth.uid,
                 txType: doc.data().txType,
                 txStatus: data.status,
                 date: doc.data().assignedTime
               })
-              return sendNotification(doc.data().seller, title, body).then(result => { return result })
+              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while setting the document " + data.txID)
               console.log(err)
@@ -218,15 +215,13 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return txDB.doc(data.txID).update({
               txStatus: data.status
             }).then(() => {
-              let title = ""
-              let body = ""
-              (title, body) = getTitleAndBody({
+              const meesage = getTitleAndBody({
                 uid: context.auth.uid,
                 txType: doc.data().txType,
                 txStatus: data.status,
                 date: doc.data().assignedTime
               })
-              return sendNotification(doc.data().seller, title, body).then(result => { return result })
+              return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => { return result })
             }).catch(err => {
               console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
               console.log(err)
@@ -333,14 +328,14 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
         const lastestArray = buyerList.push(buyer) - 1
         buyerList[lastestArray].totalPrice = 0
         buyerList[lastestArray].unavailableTypes = []
-        for (type in wasteType) {
-          for (subtype in wasteType[type]) {
-            if (buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
-              buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
-            else
-              buyerList[lastestArray].unavailableTypes.push(subtype)
-          }
-        }
+        for (type in wasteType)
+          if (type != "length")
+            for (subtype in wasteType[type]) {
+              if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
+                buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
+              else
+                buyerList[lastestArray].unavailableTypes.push(subtype)
+            }
         if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
           buyerList.pop()
         else
@@ -362,7 +357,7 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
 
 exports.querySellers = functions.https.onCall((data,context) => {
   if (context.auth != null) {
-    const purchaseList = data.purchaseList
+    const saleList = data.saleList
     let txList = []
     const center = geo.point(data.addr.latitude, data.addr.longitude)
     const radius = data.distance
@@ -371,14 +366,19 @@ exports.querySellers = functions.https.onCall((data,context) => {
       querySnapshot.forEach(seller => {
         const lastestArray = txList.push(seller) - 1
         txList[lastestArray].unavailableTypes = []
-        for (type in purchaseList) {
-          for (subtype in purchaseList[type]) {
-            if (txList[lastestArray].purchaseList[type][subtype] == undefined)
-            txList[lastestArray].unavailableTypes.push(subtype)
-          }
-        }
-        if (txList[lastestArray].unavailableTypes.length == purchaseList.length)
+        for (type in saleList)
+          if (type != "length")
+            for (subtype in saleList[type])
+              if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
+                txList[lastestArray].unavailableTypes.push(subtype)
+        if (txList[lastestArray].unavailableTypes.length == saleList.length)
           txList.pop()
+        else
+          txList[lastestArray].sorting = (saleList.length - txList[lastestArray].unavailableTypes.length) * 100 +
+          (radius - txList[lastestArray].hitMetadata.distance)
+      })
+      txList.sort((a, b) => {
+        return b.sorting - a.sorting
       })
       return txList
     }).catch(err => {
@@ -415,7 +415,7 @@ const getTitleAndBody = (data) => {
   return {title: title[index], body: body[index]}
 }
 
-const quickSellingNotification = async (center, title, body) => {
+const quickSellingNotification = (center, title, body) => {
   const query = geoBuyers.within(center, 5, "addr_geopoint")
   return geofirex.get(query).then(querySnapshot => {
     querySnapshot.forEach(buyer => {
@@ -428,7 +428,7 @@ const quickSellingNotification = async (center, title, body) => {
   })
 }
 
-const sendNotification = async (uid, title, body) => {
+const sendNotification = (uid, title, body) => {
   return usersDB.doc(uid).get().then(doc => {
     if (doc.exists) return doc.data().notificationToken
     else return {errorMessage: "The document doesn't exist"}

@@ -1,0 +1,42 @@
+[debug] [2020-01-09T11:41:33.923Z] ----------------------------------------------------------------------
+[debug] [2020-01-09T11:41:33.926Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\anaun\AppData\Local\Yarn\Data\global\node_modules\firebase-tools\lib\bin\firebase.js serve --only functions
+[debug] [2020-01-09T11:41:33.926Z] CLI Version:   6.2.2
+[debug] [2020-01-09T11:41:33.926Z] Platform:      win32
+[debug] [2020-01-09T11:41:33.926Z] Node Version:  v12.9.0
+[debug] [2020-01-09T11:41:33.927Z] Time:          Thu Jan 09 2020 18:41:33 GMT+0700 (Indochina Time)
+[debug] [2020-01-09T11:41:33.927Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2020-01-09T11:41:33.939Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-01-09T11:41:33.939Z] > authorizing via signed-in user
+[debug] [2020-01-09T11:41:33.939Z] [iam] checking project senior-project-83de1 for permissions ["firebase.projects.get"]
+[debug] [2020-01-09T11:41:33.941Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-01-09T11:41:33.941Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-01-09T11:41:34.163Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-09T11:41:34.170Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/senior-project-83de1:testIamPermissions  
+
+[debug] [2020-01-09T11:41:35.623Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-09T11:41:35.624Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/senior-project-83de1  
+ 
+[debug] [2020-01-09T11:41:36.969Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\github\SeniorProject\Backend'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2020-01-09T11:41:37.718Z] Fetching environment
+[debug] [2020-01-09T11:41:37.720Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/917485098032:getServerAppConfig  
+ 
+[debug] [2020-01-09T11:41:38.119Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-09T11:41:38.119Z] Starting @google-cloud/functions-emulator
+[debug] [2020-01-09T11:41:39.641Z] Parsing function triggers
+[info] +  functions: createAccount: http://localhost:5000/senior-project-83de1/us-central1/createAccount
+[info] +  functions: addWaste: http://localhost:5000/senior-project-83de1/us-central1/addWaste
+[info] +  functions: sellWaste: http://localhost:5000/senior-project-83de1/us-central1/sellWaste
+[info] +  functions: changeTxStatus: http://localhost:5000/senior-project-83de1/us-central1/changeTxStatus
+[info] +  functions: toggleSearch: http://localhost:5000/senior-project-83de1/us-central1/toggleSearch
+[info] +  functions: editBuyerInfo: http://localhost:5000/senior-project-83de1/us-central1/editBuyerInfo
+[info] +  functions: editUserInfo: http://localhost:5000/senior-project-83de1/us-central1/editUserInfo
+[info] +  functions: updateNotificationToken: http://localhost:5000/senior-project-83de1/us-central1/updateNotificationToken
+[info] +  functions: removeNotificationToken: http://localhost:5000/senior-project-83de1/us-central1/removeNotificationToken
+[info] +  functions: queryBuyers: http://localhost:5000/senior-project-83de1/us-central1/queryBuyers
+[info] +  functions: querySellers: http://localhost:5000/senior-project-83de1/us-central1/querySellers
