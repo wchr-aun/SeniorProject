@@ -50,7 +50,7 @@ export class Wastes {
   getValueBySubtype(subtype) {
     for (let type in this._obj) {
       if (this[type][subtype] != undefined)
-        return { path: type + "/" + subtype, amount: this[type][subtype] };
+        return {type, amount: this[type][subtype]}
     }
     return false;
   }
