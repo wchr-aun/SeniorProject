@@ -25,6 +25,8 @@ const buyerWasteReducer = (state, action) => {
   let purchaseList = state.purchaseList;
   console.log("Reducer Listen");
   console.log(action);
+  console.log("purchaseList Listen");
+  console.log(purchaseList);
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHASELSIT Reducer - run");
@@ -45,9 +47,6 @@ const buyerWasteReducer = (state, action) => {
         ...state,
         purchaseList
       };
-    case UPDATE_PURCHASELIST:
-      console.log("Update");
-      return state;
     default:
       return state;
   }
@@ -65,6 +64,7 @@ export default EditBuyerInfomationScreen = props => {
     state => state.waste.wasteListSectionFormat
   ); //why its not update. ?
   const purchaseList = useSelector(state => state.waste.purchaseList); //not have
+  const buyerUserInfo = useSelector(state => state.user.userProfile);
   const [isEditingMode, setIsEditingMode] = useState(false);
 
   const [buyerWasteState, dispatchBuyerWaste] = useReducer(
@@ -73,10 +73,20 @@ export default EditBuyerInfomationScreen = props => {
   );
 
   const toggleModeHandler = () => {
+    console.log("toggle");
+    console.log(isEditingMode);
     if (isEditingMode) {
       // done edit
+      let description = "temp";
+
+      dispatch(
+        wasteTypeAction.updatePurchaseList(
+          buyerWasteState.purchaseList.getObject(),
+          description,
+          buyerUserInfo.addr
+        )
+      );
       setIsEditingMode(false);
-      dispatch({ type: UPDATE_PURCHASELIST });
     } else {
       // start to edit
       setIsEditingMode(true);
@@ -138,11 +148,21 @@ export default EditBuyerInfomationScreen = props => {
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item, section: { type } }) => {
               let subtypeIndex = Object.keys(item)[0];
-              console.log(subtypeIndex);
               let subtypeName = item[Object.keys(item)[0]].name;
-              let price = Object.keys(buyerWasteState.purchaseList).length
-                ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
-                : purchaseList[type][Object.keys(item)[0]];
+
+              // Set price
+              let price = "";
+              if (purchaseList[type]) {
+                if (purchaseList[type][subtypeIndex]) {
+                  price = Object.keys(buyerWasteState.purchaseList).length
+                    ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
+                    : purchaseList[type][Object.keys(item)[0]];
+                } else {
+                  price = "ยังไม่กำหนดราคา";
+                }
+              } else {
+                price = "ยังไม่กำหนดราคา";
+              }
 
               return (
                 <View
@@ -187,6 +207,8 @@ export default EditBuyerInfomationScreen = props => {
                         ) : (
                           <TextInput
                             value={(price ? price : 0).toString()}
+                            clearTextOnFocus={true}
+                            selectTextOnFocus={true}
                             onChangeText={price => {
                               editPriceHandler(type, subtypeIndex, price);
                             }}

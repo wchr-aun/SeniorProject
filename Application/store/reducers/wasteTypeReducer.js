@@ -1,4 +1,7 @@
-import { FETCH_WASTETYPE } from "../actions/wasteTypeAction";
+import {
+  FETCH_WASTETYPE,
+  UPDATE_PURCHASELIST
+} from "../actions/wasteTypeAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
   wasteListSectionFormat: [],
@@ -12,6 +15,11 @@ export default (state = initialState, action) => {
         ...state,
         wasteListSectionFormat: [...action.wasteListSectionFormat],
         purchaseList: action.purchaseList
+      };
+    case UPDATE_PURCHASELIST:
+      return {
+        ...state
+        // add something
       };
     case CHANGE_ROLE:
       return initialState;
