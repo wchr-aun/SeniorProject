@@ -47,6 +47,9 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
+      console.log(action);
+      console.log(sellerItems._count[action.majortype][action.subtype]);
+
       sellerItems.editValue(action.majortype, action.subtype, action.addAmount);
       return {
         ...state
@@ -61,7 +64,13 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      sellerItems.editValue(action.majortype, action.subtype, action.value);
+      console.log("EDIT");
+      console.log(action);
+      sellerItems.editValue(
+        action.majortype,
+        action.subtype,
+        action.value - sellerItems[action.majortype][action.subtype]
+      );
       return {
         ...state
       };
@@ -141,6 +150,8 @@ const ShowAllUserTrashScreen = props => {
   // If redux-data is ready, it will be passed to this local reducer
   useEffect(() => {
     if (sellerItems) {
+      console.log("sellerItems");
+      console.log(sellerItems);
       dispatchAmountTrashsState({
         type: SET_LOCAL_SELLERITEMS,
         sellerItems,
@@ -151,7 +162,7 @@ const ShowAllUserTrashScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
 
   // error alert handling
   const [error, setError] = useState("");
@@ -254,7 +265,10 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
-              console.log(item);
+              // console.log(item);
+              // console.log("------------ wasteTypes[item.type]");
+              // console.log(wasteTypes[item.type][item.subtype]["disposal"]);
+
               return (
                 <TrashCard
                   imgUrl={
@@ -262,14 +276,18 @@ const ShowAllUserTrashScreen = props => {
                   }
                   type={item.type}
                   subtype={item.subtype}
-                  wasteDisposal={wasteTypes[item.type][item.subtype].disposal}
+                  wasteDisposal={
+                    wasteTypes[item.type][item.subtype]["disposal"]
+                  }
                   wasteDescription={
-                    wasteTypes[item.type][item.subtype].description
+                    wasteTypes[item.type][item.subtype]["description"]
                   }
-                  amountShowing={
-                    item.amount + sellerItems.count[item.type][item.subtype]
-                  }
-                  amountAdjust={sellerItems.count[item.type][item.subtype]}
+                  // amountShowing={
+                  //   item.amount + sellerItems._count[item.type][item.subtype]
+                  // }
+                  // amountAdjust={sellerItems._count[item.type][item.subtype]}
+                  changeAmount={sellerItems._count[item.type][item.subtype]}
+                  oldAmount={item.amount}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
