@@ -41,14 +41,14 @@ const AmountOfTrash = props => {
             textAlign: "center",
             fontSize: wp("7%"),
             color:
-              isNaN(props.amountAdjust) || props.amountAdjust === 0
+              isNaN(props.changeAmount) || props.changeAmount === 0
                 ? "black"
-                : props.amountAdjust > 0
+                : props.changeAmount > 0
                 ? "green"
                 : Colors.error
           }}
         >
-          {props.amountShowing.toString()}
+          {props.changeAmount.toString()}
         </Text>
       </View>
     </View>
@@ -69,9 +69,9 @@ const AdjustAmountOfTrash = props => {
           selectTextOnFocus={true}
           keyboardType="numeric"
           onChangeText={props.onEdit}
-          value={(isNaN(props.amountAdjust)
-            ? "-"
-            : props.amountAdjust
+          value={(props.oldAmount + props.changeAmount < 0
+            ? 0
+            : props.oldAmount + props.changeAmount
           ).toString()}
           style={{ textAlign: "center" }}
         />
@@ -119,8 +119,10 @@ export default TrashCard = props => {
           style={{ borderWidth: 1, borderColor: "black" }}
         />
         <AmountOfTrash
-          amountShowing={props.amountShowing}
-          amountAdjust={props.amountAdjust}
+          // amountShowing={props.amountShowing}
+          // amountAdjust={props.amountAdjust}
+          changeAmount={props.changeAmount}
+          oldAmount={props.oldAmount}
         />
       </View>
 
@@ -156,8 +158,10 @@ export default TrashCard = props => {
             style={{ alignSelf: "center", alignItems: "center" }}
             subtype={props.subtype}
             majortype={props.majortype}
-            amountShowing={props.amountShowing}
-            amountAdjust={props.amountAdjust}
+            // amountShowing={props.amountShowing}
+            // amountAdjust={props.amountAdjust}
+            changeAmount={props.changeAmount}
+            oldAmount={props.oldAmount}
             onIncrease={props.onIncrease}
             onDecrease={props.onDecrease}
             onEdit={props.onEdit}

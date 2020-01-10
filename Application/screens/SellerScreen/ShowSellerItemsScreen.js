@@ -47,6 +47,9 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
+      console.log(action);
+      console.log(sellerItems._count[action.majortype][action.subtype]);
+
       sellerItems.editValue(action.majortype, action.subtype, action.addAmount);
       return {
         ...state
@@ -273,10 +276,12 @@ const ShowAllUserTrashScreen = props => {
                   wasteDescription={
                     wasteTypes[item.type][item.subtype]["description"]
                   }
-                  amountShowing={
-                    item.amount + sellerItems._count[item.type][item.subtype]
-                  }
-                  amountAdjust={sellerItems._count[item.type][item.subtype]}
+                  // amountShowing={
+                  //   item.amount + sellerItems._count[item.type][item.subtype]
+                  // }
+                  // amountAdjust={sellerItems._count[item.type][item.subtype]}
+                  changeAmount={sellerItems._count[item.type][item.subtype]}
+                  oldAmount={item.amount}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }

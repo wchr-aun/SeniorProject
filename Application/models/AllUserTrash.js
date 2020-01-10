@@ -22,7 +22,7 @@ export class Wastes {
         }
         this[type][subtype] = obj[type][subtype];
         this._obj[type][subtype] = obj[type][subtype];
-        this._count[type][subtype] = obj[type][subtype];
+        this._count[type][subtype] = 0;
         this.length += 1;
       }
     }
@@ -44,8 +44,7 @@ export class Wastes {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
           this.length += 1;
-        }
-        else if (this[type][subtype] == undefined) {
+        } else if (this[type][subtype] == undefined) {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
           this.length += 1;
@@ -66,8 +65,7 @@ export class Wastes {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
           this.length += 1;
-        }
-        else if (this[type][subtype] == undefined) {
+        } else if (this[type][subtype] == undefined) {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
           this.length += 1;
