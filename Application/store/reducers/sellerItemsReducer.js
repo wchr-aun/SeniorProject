@@ -19,7 +19,6 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case SET_SELLERITEMS:
       console.log("SET_SELLERITEMS Redux Reducer Run");
-      console.log(action);
       return {
         ...state,
         sellerItems: action.sellerItems,

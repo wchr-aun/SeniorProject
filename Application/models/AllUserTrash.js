@@ -64,8 +64,7 @@ export class Wastes {
           this._obj[type] = {};
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
-        }
-        else if (this[type][subtype] == undefined) {
+        } else if (this[type][subtype] == undefined) {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
         }
@@ -107,9 +106,9 @@ export class Wastes {
   getFlatListFormat() {
     // loop through "Plastic", "Glass"
     let data = [];
-    for (let type in this) {
+    for (let type in this._obj) {
       // loop through "HDPE", "PP"
-      for (let subtype in this[type]) {
+      for (let subtype in this._obj[type]) {
         // console.log(subtype);
         data.push({ type, subtype, amount: this[type][subtype] });
       }
@@ -122,12 +121,13 @@ export class Wastes {
     let data = [];
     let sectionListFormat = [];
     for (let type in this._obj) {
-      // loop through "HDPE", "PP"
-      for (let subtype in this._obj[type]) {
-        // console.log(subtype);
-        data.push({ type, subtype, amount: this._obj[type][subtype] });
-      }
-      sectionListFormat.push({ type, data });
+      console.log(this._obj[type]);
+      // // loop through "HDPE", "PP"
+      // for (let subtype in this._obj[type]) {
+      //   // console.log(subtype);
+      //   data.push({ type, subtype, amount: this._obj[type][subtype] });
+      // }
+      // sectionListFormat.push({ type, data });
     }
     return sectionListFormat;
   }

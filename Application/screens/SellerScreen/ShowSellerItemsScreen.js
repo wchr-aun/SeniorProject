@@ -47,11 +47,7 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
-      sellerItems.editValue(
-        action.majortype,
-        action.subtype,
-        action.addAmount + sellerItems[action.majortype][action.subtype]
-      );
+      sellerItems.editValue(action.majortype, action.subtype, action.addAmount);
       return {
         ...state
       };
@@ -59,7 +55,7 @@ const trashsModifyingReducer = (state, action) => {
       sellerItems.editValue(
         action.majortype,
         action.subtype,
-        -action.minusAmount + sellerItems[action.majortype][action.subtype]
+        -action.minusAmount
       );
       return {
         ...state
@@ -128,6 +124,11 @@ const ShowAllUserTrashScreen = props => {
   const wasteTypes = useSelector(state => {
     return state.wasteType.wasteTypes;
   });
+
+  useEffect(() => {
+    console.log("WasteType Ready");
+    console.log(wasteTypes);
+  }, [wasteTypes]);
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
@@ -199,30 +200,30 @@ const ShowAllUserTrashScreen = props => {
     );
   }
 
-  if (modalVisible) {
-    return (
-      <ModalShowSellerItemsScreen
-        setModalVisible={setModalVisible}
-        data={wasteTypesRedux}
-        modalVisible={modalVisible}
-        addNewWasteHandler={(
-          wasteType,
-          wasteDescription,
-          wasteDisposal,
-          amount
-        ) => {
-          dispatchAmountTrashsState({
-            type: ADD_WASTE,
-            wasteType,
-            wasteDescription,
-            wasteDisposal,
-            amount
-          });
-          setModalVisible(false);
-        }}
-      />
-    );
-  }
+  // if (modalVisible) {
+  //   return (
+  //     <ModalShowSellerItemsScreen
+  //       setModalVisible={setModalVisible}
+  //       data={wasteTypesRedux}
+  //       modalVisible={modalVisible}
+  //       addNewWasteHandler={(
+  //         wasteType,
+  //         wasteDescription,
+  //         wasteDisposal,
+  //         amount
+  //       ) => {
+  //         dispatchAmountTrashsState({
+  //           type: ADD_WASTE,
+  //           wasteType,
+  //           wasteDescription,
+  //           wasteDisposal,
+  //           amount
+  //         });
+  //         setModalVisible(false);
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -253,6 +254,7 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
+              console.log(item);
               return (
                 <TrashCard
                   imgUrl={
@@ -265,13 +267,9 @@ const ShowAllUserTrashScreen = props => {
                     wasteTypes[item.type][item.subtype].description
                   }
                   amountShowing={
-                    item.amount +
-                    sellerItems.getCountValueBySubtype(item.type, item.subtype)
+                    item.amount + sellerItems.count[item.type][item.subtype]
                   }
-                  amountAdjust={sellerItems.getCountValueBySubtype(
-                    item.type,
-                    item.subtype
-                  )}
+                  amountAdjust={sellerItems.count[item.type][item.subtype]}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
