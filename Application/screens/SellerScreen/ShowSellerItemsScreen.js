@@ -47,37 +47,38 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
-      console.log("ADD_SELLERITEMS_AMOUNT Run");
       sellerItems.editCount(
         action.majortype,
         action.subtype,
-        1 + sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
+        action.addAmount +
+          sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
       );
       return {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
-      console.log("MINUS_SELLERITEMS_AMOUNT Run");
-      sellerItems.decreaseCount(action.majortype, action.subtype, 1);
+      sellerItems.editCount(
+        action.majortype,
+        action.subtype,
+        -action.minusAmount +
+          sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
+      );
       return {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      console.log("EDIT_SELLERITEMS_AMOUNT Run");
       sellerItems.editCount(action.majortype, action.subtype, action.value);
       return {
         ...state
       };
-    case CANCEL:
-      return {
-        ...state
-      };
     case UPDATE_LOCAL_SELLERITEMS:
-      // sellerItems.confirm();
-      // console.log(sellerItems);
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
+      };
+    case CANCEL:
+      return {
+        ...state
       };
     default:
       return { ...state };
@@ -200,30 +201,30 @@ const ShowAllUserTrashScreen = props => {
     );
   }
 
-  // if (modalVisible) {
-  //   return (
-  //     <ModalShowSellerItemsScreen
-  //       setModalVisible={setModalVisible}
-  //       data={wasteTypesRedux}
-  //       modalVisible={modalVisible}
-  //       addNewWasteHandler={(
-  //         wasteType,
-  //         wasteDescription,
-  //         wasteDisposal,
-  //         amount
-  //       ) => {
-  //         dispatchAmountTrashsState({
-  //           type: ADD_WASTE,
-  //           wasteType,
-  //           wasteDescription,
-  //           wasteDisposal,
-  //           amount
-  //         });
-  //         setModalVisible(false);
-  //       }}
-  //     />
-  //   );
-  // }
+  if (modalVisible) {
+    return (
+      <ModalShowSellerItemsScreen
+        setModalVisible={setModalVisible}
+        data={wasteTypesRedux}
+        modalVisible={modalVisible}
+        addNewWasteHandler={(
+          wasteType,
+          wasteDescription,
+          wasteDisposal,
+          amount
+        ) => {
+          dispatchAmountTrashsState({
+            type: ADD_WASTE,
+            wasteType,
+            wasteDescription,
+            wasteDisposal,
+            amount
+          });
+          setModalVisible(false);
+        }}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>

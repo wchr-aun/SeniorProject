@@ -119,4 +119,38 @@ export class Wastes {
     }
     return data;
   }
+
+  getSectionListFormat() {
+    // loop through "Plastic", "Glass"
+    let data = [];
+    let sectionListFormat = [];
+    for (let type in this._obj) {
+      // loop through "HDPE", "PP"
+      for (let subtype in this._obj[type]) {
+        // console.log(subtype);
+        data.push({ type, subtype, amount: this._obj[type][subtype] });
+      }
+      sectionListFormat.push({ type, data });
+    }
+    return sectionListFormat;
+  }
 }
+
+// const DATA = [
+//   {
+//     title: 'Main dishes',
+//     data: ['Pizza', 'Burger', 'Risotto'],
+//   },
+//   {
+//     title: 'Sides',
+//     data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
+//   },
+//   {
+//     title: 'Drinks',
+//     data: ['Water', 'Coke', 'Beer'],
+//   },
+//   {
+//     title: 'Desserts',
+//     data: ['Cheese Cake', 'Ice Cream'],
+//   },
+// ];
