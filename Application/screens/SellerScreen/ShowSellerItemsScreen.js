@@ -34,58 +34,51 @@ const MINUS_SELLERITEMS_AMOUNT = "MINUS_SELLERITEMS_AMOUNT";
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const EDIT_SELLERITEMS_AMOUNT = "EDIT_SELLERITEMS_AMOUNT";
 const CANCEL = "CANCEL";
+const UPDATE_LOCAL_SELLERITEMS = "UPDATE_LOCAL_SELLERITEMS";
 
 const trashsModifyingReducer = (state, action) => {
-  let sellerItems = { ...state.sellerItems };
-  let sellerItemsFlatListFormat = [...state.sellerItemsFlatListFormat];
+  let sellerItems = state.sellerItems;
 
   switch (action.type) {
     case SET_LOCAL_SELLERITEMS:
       return {
         ...state,
-        sellerItems: { ...action.sellerItems },
+        sellerItems: action.sellerItems,
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
       console.log("ADD_SELLERITEMS_AMOUNT Run");
-      snapshotItem = sellerItemsFlatListFormat.filter(
-        item => item.subtype === action.subtype
-      )[0];
-      console.log("--- snapshotItem ---");
-      console.log(snapshotItem);
-      console.log(action);
+      sellerItems.editCount(
+        action.majortype,
+        action.subtype,
+        1 + sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
+      );
       return {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
       console.log("MINUS_SELLERITEMS_AMOUNT Run");
-      snapshotItem = sellerItemsFlatListFormat.filter(
-        item => item.subtype === action.subtype
-      )[0];
-      console.log("--- snapshotItem ---");
-      console.log(snapshotItem);
-      console.log(action);
+      sellerItems.decreaseCount(action.majortype, action.subtype, 1);
       return {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
       console.log("EDIT_SELLERITEMS_AMOUNT Run");
-      snapshotItem = sellerItemsFlatListFormat.filter(
-        item => item.subtype === action.subtype
-      )[0];
-      console.log("--- snapshotItem ---");
-      console.log(snapshotItem);
-      console.log(action);
+      sellerItems.editCount(action.majortype, action.subtype, action.value);
       return {
         ...state
       };
     case CANCEL:
-      // return {
-      //   ...state,
-      //   sellerItemsNew: JSON.parse(JSON.stringify(state.sellerItemsOld))
-      // };
       return {
         ...state
+      };
+    case UPDATE_LOCAL_SELLERITEMS:
+      sellerItems.confirm();
+      console.log(sellerItems);
+
+      return {
+        ...state,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
       };
     default:
       return { ...state };
@@ -181,11 +174,12 @@ const ShowAllUserTrashScreen = props => {
 
     // update new wasteData on local redux
     dispatchAmountTrashsState({
-      type: SET_LOCAL_SELLERITEMS,
-      sellerItems: [...trashsState.sellerItems]
+      type: UPDATE_LOCAL_SELLERITEMS
     });
-    // update new wasteData on redux
-    await dispatch(sellerItemsAction.setUserWaste(trashsState.sellerItems));
+    // // update new wasteData on redux
+    // await dispatch(
+    //   sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
+    // );
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -271,9 +265,14 @@ const ShowAllUserTrashScreen = props => {
                   wasteDescription={
                     wasteTypes[item.type][item.subtype].description
                   }
-                  amount={item.amount}
-                  UI_diff={item.UI_diff}
-                  UI_disabledMinus={item.UI_disabledMinus}
+                  amountShowing={
+                    item.amount +
+                    sellerItems.getCountValueBySubtype(item.type, item.subtype)
+                  }
+                  amountAdjust={sellerItems.getCountValueBySubtype(
+                    item.type,
+                    item.subtype
+                  )}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }

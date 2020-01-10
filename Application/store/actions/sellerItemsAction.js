@@ -28,17 +28,18 @@ export const fetchSellerItems = () => {
   };
 };
 
-export const setUserWaste = sellerItems => {
+export const updateSellerItems = sellerItems => {
   return async dispatch => {
     // update new wastesData on firebase
     try {
       await addWaste({
-        items: sellerItems
+        items: sellerItems.getObject()
       });
       // set new wastesData
       dispatch({
         type: SET_SELLERITEMS,
-        sellerItems: [...sellerItems]
+        sellerItems,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
       });
     } catch (err) {
       throw new Error(err.message);

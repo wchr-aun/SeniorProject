@@ -41,14 +41,14 @@ const AmountOfTrash = props => {
             textAlign: "center",
             fontSize: wp("7%"),
             color:
-              isNaN(props.UI_diff) || props.UI_diff === 0
+              isNaN(props.amountAdjust) || props.amountAdjust === 0
                 ? "black"
-                : props.UI_diff > 0
+                : props.amountAdjust > 0
                 ? "green"
                 : Colors.error
           }}
         >
-          {props.amount.toString()}
+          {props.amountShowing.toString()}
         </Text>
       </View>
     </View>
@@ -66,11 +66,15 @@ const AdjustAmountOfTrash = props => {
       </TouchableWithoutFeedback>
       <View style={{ width: 30 }}>
         <TextInput
+          selectTextOnFocus={true}
           keyboardType="numeric"
           onChangeText={props.onEdit}
-          value={(props.amount > 0 ? props.amount : 0).toString()}
+          value={(isNaN(props.amountAdjust)
+            ? "-"
+            : props.amountAdjust
+          ).toString()}
           style={{ textAlign: "center" }}
-        ></TextInput>
+        />
       </View>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
@@ -114,7 +118,10 @@ export default TrashCard = props => {
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
-        <AmountOfTrash amount={props.amount} UI_diff={props.UI_diff} />
+        <AmountOfTrash
+          amountShowing={props.amountShowing}
+          amountAdjust={props.amountAdjust}
+        />
       </View>
 
       <View
@@ -149,7 +156,8 @@ export default TrashCard = props => {
             style={{ alignSelf: "center", alignItems: "center" }}
             subtype={props.subtype}
             majortype={props.majortype}
-            amount={props.amount}
+            amountShowing={props.amountShowing}
+            amountAdjust={props.amountAdjust}
             onIncrease={props.onIncrease}
             onDecrease={props.onDecrease}
             onEdit={props.onEdit}

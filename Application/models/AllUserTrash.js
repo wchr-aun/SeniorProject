@@ -12,6 +12,7 @@ export class Wastes {
   constructor(obj) {
     this.length = 0;
     this._obj = {};
+    this.counts = {};
     for (let type in obj) {
       for (let subtype in obj[type]) {
         if (this[type] == undefined) {
@@ -21,9 +22,56 @@ export class Wastes {
         this[type][subtype] = obj[type][subtype];
         this._obj[type][subtype] = obj[type][subtype];
         this.length += 1;
+
+        if (this.counts[type] == undefined) {
+          this.counts[type] = {};
+        }
+        this.counts[type][subtype] = 0;
       }
     }
   }
+
+  editCount(type, subtype, value) {
+    console.log("increase method run");
+    if (this[type] == undefined) {
+      this[type] = {};
+    }
+    this.counts[type][subtype] = value;
+  }
+
+  decreaseCount(type, subtype, value) {
+    console.log("decrease method run");
+    if (this[type] == undefined) {
+      this[type] = {};
+    }
+    this.counts[type][subtype] -= value;
+  }
+
+  getCountValueBySubtype(type, subtype) {
+    // for (let type in this._obj) {
+    if (this[type][subtype] != undefined) return this.counts[type][subtype];
+    else return 0;
+  }
+
+  confirm() {
+    // update value
+    this.length = 0;
+    for (let type in this._obj) {
+      // if new type occur
+      if (this[type] == undefined) {
+        this[type] = {};
+      }
+      for (let subtype in this._obj[type]) {
+        this[type][subtype] += this.counts[type][subtype];
+        this._obj[type][subtype] += this.counts[type][subtype];
+        this.length += 1;
+
+        // clear all count --> 0
+        this.counts[type][subtype] = 0;
+      }
+    }
+  }
+
   addWaste(type, subtype, value) {
     if (value == 0) this._removeWaste(type, subtype);
     else {
