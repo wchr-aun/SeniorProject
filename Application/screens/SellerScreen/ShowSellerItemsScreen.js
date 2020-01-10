@@ -64,7 +64,13 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      sellerItems.editValue(action.majortype, action.subtype, action.value);
+      console.log("EDIT");
+      console.log(action);
+      sellerItems.editValue(
+        action.majortype,
+        action.subtype,
+        action.value - sellerItems[action.majortype][action.subtype]
+      );
       return {
         ...state
       };
@@ -156,7 +162,7 @@ const ShowAllUserTrashScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
 
   // error alert handling
   const [error, setError] = useState("");

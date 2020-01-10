@@ -69,7 +69,7 @@ const AdjustAmountOfTrash = props => {
           selectTextOnFocus={true}
           keyboardType="numeric"
           onChangeText={props.onEdit}
-          value={(props.oldAmount + props.changeAmount < 0
+          value={(props.oldAmount + props.changeAmount <= 0
             ? 0
             : props.oldAmount + props.changeAmount
           ).toString()}
