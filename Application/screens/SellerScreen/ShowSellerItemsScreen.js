@@ -141,6 +141,8 @@ const ShowAllUserTrashScreen = props => {
   // If redux-data is ready, it will be passed to this local reducer
   useEffect(() => {
     if (sellerItems) {
+      console.log("sellerItems");
+      console.log(sellerItems);
       dispatchAmountTrashsState({
         type: SET_LOCAL_SELLERITEMS,
         sellerItems,
@@ -254,7 +256,10 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
-              console.log(item);
+              // console.log(item);
+              // console.log("------------ wasteTypes[item.type]");
+              // console.log(wasteTypes[item.type][item.subtype]["disposal"]);
+
               return (
                 <TrashCard
                   imgUrl={
@@ -262,14 +267,16 @@ const ShowAllUserTrashScreen = props => {
                   }
                   type={item.type}
                   subtype={item.subtype}
-                  wasteDisposal={wasteTypes[item.type][item.subtype].disposal}
+                  wasteDisposal={
+                    wasteTypes[item.type][item.subtype]["disposal"]
+                  }
                   wasteDescription={
-                    wasteTypes[item.type][item.subtype].description
+                    wasteTypes[item.type][item.subtype]["description"]
                   }
                   amountShowing={
-                    item.amount + sellerItems.count[item.type][item.subtype]
+                    item.amount + sellerItems._count[item.type][item.subtype]
                   }
-                  amountAdjust={sellerItems.count[item.type][item.subtype]}
+                  amountAdjust={sellerItems._count[item.type][item.subtype]}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
