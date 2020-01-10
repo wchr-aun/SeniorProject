@@ -143,79 +143,55 @@ exports.toggleSearch = functions.https.onCall((data, context) => {
 })
 
 exports.changeTxStatus = functions.https.onCall((data, context) => {
-  if (context.auth != null){
-    return txDB.doc(data.txID).get().then(doc => {
-      if (
-        doc.data().txStatus < data.status &&
-        doc.data().txStatus != 3 &&
-        data.status > 0 &&
-        data.status < 5 &&
-        (doc.data().buyer == "" ||
-        doc.data().buyer == context.auth.uid)
-      ) {
-        if (doc.data().txType == 0) {
-          if (data.status < 3 && data.status != 1) {
-            return txDB.doc(data.txID).update({
-              txStatus: data.status
-            }).then(() => {
-              return {
-                txType: doc.data().txType,
-                date: doc.data().chosenTime,
-                seller: doc.data().seller
-              }
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
-          }
-          else if (data.status == 1) {
-            return txDB.doc(data.txID).update({
-              txStatus: data.status,
-              chosenTime: data.chosenTime,
-              buyer: context.auth.uid
-            }).then(() => {
-              return {
-                txType: doc.data().txType,
-                date: data.chosenTime,
-                seller: doc.data().seller
-              }
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
-          }
-          else {
-            return txDB.doc(data.txID).update({
-              txStatus: data.status,
-              completedTime: new Date()
-            }).then(() => {
+  if (context.auth != null) {
+    return firestore.runTransaction(transaction => {
+      return transaction.get(txDB.doc(data.txID)).then(doc => {
+        if (doc.data().assignedTime[data.chosenTime].toMillis() < new Date())
+          return {errorMessage: "The time you chose has already been passed"}
+
+        const meesage = getTitleAndBody({
+          uid: context.auth.uid,
+          txType: doc.data().txType,
+          txStatus: data.status,
+          date: doc.data().assignedTime[data.chosenTime]
+        })
+        return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => {
+          if (result.errorMessage != null) return {errorMessage: result.errorMessage}
+
+          if (doc.data().txStatus >= data.status)
+            return {errorMessage: "The transaction has already passed the state"}
+          else if (data.status < 1 || data.status > 4)
+            return {errorMessage: "The transaction status is incorrect"}
+          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid)
+            return {errorMessage: "The transaction has already been changed"}
+          else if (doc.data().seller == context.auth.uid)
+            return {errorMessage: "You cannot complete your own selling transaction"}
+          else if (doc.data().txStatus >= 3)
+            return {errorMessage: "The transaction has already closed"}
+          
+          if (doc.data().txType == 0 || doc.data().txType == 1) {
+            if (data.status < 3 && data.status != 1)
+              transaction.update(txDB.doc(data.txID), { txStatus: data.status })
+            else if (data.status == 1)
+              transaction.update(txDB.doc(data.txID), {
+                txStatus: data.status,
+                chosenTime: doc.data().assignedTime[data.chosenTime],
+                buyer: context.auth.uid
+              })
+            else
+              transaction.update(txDB.doc(data.txID), {
+                txStatus: data.status,
+                completedTime: new Date()
+              })
               return true
-            }).catch(err => {
-              console.log("Error has occurred in changeTxStatus() while updating the document " + data.txID)
-              console.log(err)
-              return {errorMessage: err.message}
-            })
           }
-        }
-        else return {errorMessage: "The transaction format is incorrect"}
-      }
-      else return {errorMessage: "The transaction is already completed"}
-    }).then(msg => {
-      if (msg.errorMessage == null) {
-        if (msg == true) return true
-        else {
-          const meesage = getTitleAndBody({
-            uid: context.auth.uid,
-            txType: msg.txType,
-            txStatus: data.status,
-            date: msg.chosenTime
-          })
-          return sendNotification(msg.seller, meesage.title, meesage.body).then(result => { return result })
-        }
-      }
-      else return msg
+          else return {errorMessage: "The transaction format is incorrect"}
+        })
+      })
+    }).catch(err => {
+      console.log("Error has occurred in changeTxStatus() while updating transaction " + context.auth.uid)
+      console.log(err)
+      return {errorMessage: err.message}
     })
   }
   else return {errorMessage: "The request is denied because of authetication"}
@@ -236,7 +212,7 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     }).then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in editBuyerInfo() while updating the document " + context.auth.id)
+      console.log("Error has occurred in editBuyerInfo() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -249,7 +225,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     let name = data.name
     let surname = data.surname
     let addr = data.addr.readable
-    return usersDB.doc(context.auth.id).update({
+    return usersDB.doc(context.auth.uid).update({
       name,
       surname,
       addr,
@@ -260,7 +236,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
         photoURL: data.photoURL
       })
     }).catch(err => {
-      console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.id)
+      console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -276,7 +252,7 @@ exports.updateNotificationToken = functions.https.onCall((data,context) => {
     .then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.id)
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -292,7 +268,7 @@ exports.removeNotificationToken = functions.https.onCall((data,context) => {
     .then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.id)
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -373,10 +349,12 @@ exports.querySellers = functions.https.onCall((data,context) => {
 })
 
 const getTitleAndBody = (data) => {
+  const milis = data.date.toMillis()
+  const days = ((milis - (milis + 25200000) % 86400000) - (new Date() - (new Date() + 25200000) % 86400000)) / 86400000
   const uid = data.uid
-  const days = Math.floor((data.date - new Date()) / 86400000) || ""
-  const hour = new Date(data.date).getHours() || ""
-  const min = new Date(data.date).getMinutes() || ""
+  const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
+  const hour = new Date(milis).getHours() || ""
+  const min = new Date(milis).getMinutes() || ""
   const index = (data.txType + 1) % 2 + data.txStatus
   const title = [
     "คำร้องขอในบริเวณของคุณ",
@@ -388,8 +366,8 @@ const getTitleAndBody = (data) => {
   const body = [
     uid + " ต้องการขายขยะ",
     uid + " ต้องการขายขยะให้คุณ",
-    uid + " จะเดินทางมาในอีก " + days + " วัน",
-    uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + "น.",
+    uid + " จะเดินทางมาใน" + daysLeft,
+    uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
     uid + " กำลังเดินทางมาหาคุณ"
   ]
   return {title: title[index], body: body[index]}
@@ -411,9 +389,9 @@ const quickSellingNotification = (center, title, body) => {
 const sendNotification = (uid, title, body) => {
   return usersDB.doc(uid).get().then(doc => {
     if (doc.exists) return doc.data().notificationToken
-    else return {errorMessage: "The document doesn't exist"}
+    else throw "Seller doesn't exist"
   }).then(tokens => {
-    if (tokens.err == null) {
+    if (tokens.errorMessage == null) {
       tokens.forEach(token => {
         fetch("https://exp.host/--/api/v2/push/send", {
           method: 'POST',
@@ -432,11 +410,11 @@ const sendNotification = (uid, title, body) => {
       })
       return true
     }
-    else return {errorMessage: "The document doesn't exist"}
+    else return {errorMessage: "Notification won't get to the buyer"}
   }).catch(err => {
     console.log("Error has occurred in sendNotification()")
     console.log(err)
-    return {errorMessage: "There is something wrong in firestore functions. Please wait for the fix!"}
+    return {errorMessage: err}
   })
 }
 

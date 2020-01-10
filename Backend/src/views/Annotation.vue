@@ -7,7 +7,7 @@
     <div>x : {{x}}</div>
     <div>y : {{y}}</div>
     <button @click = "saveBox" class="btn success">SAVE</button>
-    <select ref="dropdown"v-model="selected">
+    <select ref="dropdown" v-model="selected">
       <option disabled value="">Please select one</option>
       <option>A</option>
       <option>B</option>
