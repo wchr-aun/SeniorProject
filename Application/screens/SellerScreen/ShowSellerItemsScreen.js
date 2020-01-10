@@ -80,6 +80,7 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
       };
     case CANCEL:
+      sellerItems.clearValue();
       return {
         ...state
       };
