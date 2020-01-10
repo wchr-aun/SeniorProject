@@ -18,103 +18,37 @@ const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
 const MINUS_AMOUNT_FORSELL = "MINUS_AMOUNT_FORSELL";
 const EDIT_AMOUNT_FORSELL = "EDIT_AMOUNT_FORSELL";
-const SET_WASTE = "SET_WASTE";
+const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 
 const trashSellingReducer = (state, action) => {
-  let sellerItems = [...state.sellerItems];
-  let sellerItem = "";
-  let targetIndex = "";
+  let sellerItems = state.sellerItems;
 
   switch (action.type) {
-    case SET_WASTE:
-      console.log("SET WASTE local Reducer Run");
-      const updatedSellerItems = [...action.sellerItems];
-      updatedSellerItems.forEach((item, index) => {
-        updatedSellerItems[index].amountForSell = 0;
-        updatedSellerItems[index].UI_PlusDisabled = false; //because initially, amountForSell equal to
-        updatedSellerItems[index].UI_MinusDisabled = false;
-      });
+    case SET_LOCAL_SELLERITEMS:
       return {
         ...state,
-        sellerItems: [...action.sellerItems]
+        sellerItems: action.sellerItems,
+        sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case SELECT_ITEM:
       console.log("action.preIsSelected");
-      console.log(action.preIsSelected);
-      sellerItem = sellerItems.filter(
-        item => item.wasteType === action.wasteType
-      )[0];
-
-      if (action.preIsSelected) {
-        sellerItem.amountForSell = 0;
-        sellerItem.UI_PlusDisabled = false;
-        sellerItem.UI_PlusDisabled = false;
-      } else {
-        sellerItem.amountForSell = sellerItem.amount;
-        sellerItem.UI_PlusDisabled = true;
-      }
-
       return {
-        ...state,
-        sellerItems: [...sellerItems]
+        ...state
       };
-
     case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
-      sellerItem = sellerItems.filter(
-        item => item.wasteType === action.wasteType
-      )[0];
-
-      // add + 1 to amount for selling
-      sellerItem.amountForSell = sellerItem.amountForSell + 1;
-      sellerItem.UI_MinusDisabled = false;
-
-      // if amountForSell = amount, plus btn can't be press
-      if (sellerItem.amountForSell === sellerItem.amount)
-        sellerItem.UI_PlusDisabled = true;
-
       return {
-        ...state,
-        sellerItems: sellerItems
+        ...state
       };
     case MINUS_AMOUNT_FORSELL:
       console.log("MINUS_WASTE local Reducer Run");
-      sellerItem = sellerItems.filter(
-        item => item.wasteType === action.wasteType
-      )[0];
-
-      // add + 1 to amount for selling
-      sellerItem.amountForSell = sellerItem.amountForSell - 1;
-      sellerItem.UI_PlusDisabled = false;
-
-      // if amountForSell = amount, plus btn can't be press
-      if (sellerItem.amountForSell - 1 === -1)
-        //if amount for sell --> 0
-        sellerItem.UI_MinusDisabled = true;
       return {
-        ...state,
-        sellerItems: sellerItems
+        ...state
       };
     case EDIT_AMOUNT_FORSELL:
-      // edit from text-input
       console.log("EDIT_AMOUNT_FORSELL local Reducer Run");
-      sellerItem = sellerItems.filter(
-        item => item.wasteType === action.wasteType
-      )[0];
-
-      if (action.value <= sellerItem.amount)
-        sellerItem.amountForSell = action.value;
-      else sellerItem.amountForSell = sellerItem.amount;
-
-      sellerItem.UI_MinusDisabled =
-        sellerItem.amountForSell - 1 === -1 ? true : false;
-
-      sellerItem.UI_PlusDisabled =
-        sellerItem.amountForSell === sellerItem.amount ? true : false;
-
       return {
-        ...state,
-        sellerItems: [...sellerItems]
+        ...state
       };
   }
   return state;
@@ -133,29 +67,36 @@ export default SellingTrashScreen = props => {
   });
 
   // Get data from redux
-  // Get User
-  // const userProfile = useSelector(state => {
-  //   return state.user.userProfile;
-  // });
   // Get User trash
-  const userTrashsFromRedux = useSelector(reducers => {
-    return reducers.sellerItems.sellerItems;
+  // Get sellerItems and wasteTyp from redux
+  const sellerItems = useSelector(state => {
+    return state.sellerItems.sellerItems;
+  });
+  const sellerItemsFlatListFormat = useSelector(state => {
+    return state.sellerItems.sellerItemsFlatListFormat;
+  });
+  const wasteTypes = useSelector(state => {
+    return state.wasteType.wasteTypes; //obj format
   });
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashSellingReducer,
     {
-      sellerItems: []
+      sellerItems: {},
+      sellerItemsFlatListFormat: []
     }
   );
 
-  // initially, get data from redux and store it to local redux
+  // If redux-data is ready, it will be passed to this local reducer
   useEffect(() => {
-    dispatchAmountTrashsState({
-      type: SET_WASTE,
-      sellerItems: userTrashsFromRedux
-    });
-  }, [userTrashsFromRedux, dispatchAmountTrashsState]);
+    if (sellerItems) {
+      dispatchAmountTrashsState({
+        type: SET_LOCAL_SELLERITEMS,
+        sellerItems,
+        sellerItemsFlatListFormat
+      });
+    }
+  }, [sellerItems]);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   // Callback fn
@@ -166,14 +107,6 @@ export default SellingTrashScreen = props => {
   }, [dispatch, setIsRefreshing]);
 
   const dispatch = useDispatch();
-
-  // When redux updated, this local redux also be updated
-  useEffect(() => {
-    dispatchAmountTrashsState({
-      type: SET_WASTE,
-      sellerItems: [...userTrashsFromRedux]
-    });
-  }, [userTrashsFromRedux]);
 
   return (
     <View

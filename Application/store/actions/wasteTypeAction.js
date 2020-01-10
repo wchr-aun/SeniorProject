@@ -10,7 +10,7 @@ export const fetchWasteType = () => {
 
     dispatch({
       type: FETCH_WASTETYPE,
-      wasteTypes: new Wastes(wasteTypes)
+      wasteTypes: wasteTypes
     });
   };
 };

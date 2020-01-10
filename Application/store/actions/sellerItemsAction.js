@@ -32,6 +32,8 @@ export const updateSellerItems = sellerItems => {
   return async dispatch => {
     // update new wastesData on firebase
     try {
+      console.log("sellerItemsAction -- updatedSellerItems -- ");
+      console.log(sellerItems);
       await addWaste({
         items: sellerItems.getObject()
       });

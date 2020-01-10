@@ -47,38 +47,32 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
-      console.log("ADD_SELLERITEMS_AMOUNT Run");
-      sellerItems.editCount(
-        action.majortype,
-        action.subtype,
-        1 + sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
-      );
+      sellerItems.editValue(action.majortype, action.subtype, action.addAmount);
       return {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
-      console.log("MINUS_SELLERITEMS_AMOUNT Run");
-      sellerItems.decreaseCount(action.majortype, action.subtype, 1);
+      sellerItems.editValue(
+        action.majortype,
+        action.subtype,
+        -action.minusAmount
+      );
       return {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      console.log("EDIT_SELLERITEMS_AMOUNT Run");
-      sellerItems.editCount(action.majortype, action.subtype, action.value);
-      return {
-        ...state
-      };
-    case CANCEL:
+      sellerItems.editValue(action.majortype, action.subtype, action.value);
       return {
         ...state
       };
     case UPDATE_LOCAL_SELLERITEMS:
-      sellerItems.confirm();
-      console.log(sellerItems);
-
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
+      };
+    case CANCEL:
+      return {
+        ...state
       };
     default:
       return { ...state };
@@ -131,6 +125,11 @@ const ShowAllUserTrashScreen = props => {
     return state.wasteType.wasteTypes;
   });
 
+  useEffect(() => {
+    console.log("WasteType Ready");
+    console.log(wasteTypes);
+  }, [wasteTypes]);
+
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
     {
@@ -172,14 +171,15 @@ const ShowAllUserTrashScreen = props => {
     setEditingMode(false);
     setIsRefreshing(true);
 
+    trashsState.sellerItems.confirmValue();
     // update new wasteData on local redux
     dispatchAmountTrashsState({
       type: UPDATE_LOCAL_SELLERITEMS
     });
-    // // update new wasteData on redux
-    // await dispatch(
-    //   sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
-    // );
+    // update new wasteData on redux
+    await dispatch(
+      sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
+    );
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -254,6 +254,7 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
+              console.log(item);
               return (
                 <TrashCard
                   imgUrl={
@@ -266,13 +267,9 @@ const ShowAllUserTrashScreen = props => {
                     wasteTypes[item.type][item.subtype].description
                   }
                   amountShowing={
-                    item.amount +
-                    sellerItems.getCountValueBySubtype(item.type, item.subtype)
+                    item.amount + sellerItems.count[item.type][item.subtype]
                   }
-                  amountAdjust={sellerItems.getCountValueBySubtype(
-                    item.type,
-                    item.subtype
-                  )}
+                  amountAdjust={sellerItems.count[item.type][item.subtype]}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
