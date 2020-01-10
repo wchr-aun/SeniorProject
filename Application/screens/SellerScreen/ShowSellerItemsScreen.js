@@ -47,27 +47,25 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
-      sellerItems.editCount(
+      sellerItems.editValue(
         action.majortype,
         action.subtype,
-        action.addAmount +
-          sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
+        action.addAmount + sellerItems[action.majortype][action.subtype]
       );
       return {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
-      sellerItems.editCount(
+      sellerItems.editValue(
         action.majortype,
         action.subtype,
-        -action.minusAmount +
-          sellerItems.getCountValueBySubtype(action.majortype, action.subtype)
+        -action.minusAmount + sellerItems[action.majortype][action.subtype]
       );
       return {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      sellerItems.editCount(action.majortype, action.subtype, action.value);
+      sellerItems.editValue(action.majortype, action.subtype, action.value);
       return {
         ...state
       };
@@ -172,7 +170,7 @@ const ShowAllUserTrashScreen = props => {
     setEditingMode(false);
     setIsRefreshing(true);
 
-    trashsState.sellerItems.confirm();
+    trashsState.sellerItems.confirmValue();
     // update new wasteData on local redux
     dispatchAmountTrashsState({
       type: UPDATE_LOCAL_SELLERITEMS

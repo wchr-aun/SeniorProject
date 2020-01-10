@@ -29,8 +29,8 @@ export class Wastes {
     if (this._count[type] == undefined) {
       this._count[type] = {};
       this._count[type][subtype] = 0;
-    }
-    else if (this._count[type][subtype] == undefined) this._count[type][subtype] = 0;
+    } else if (this._count[type][subtype] == undefined)
+      this._count[type][subtype] = 0;
     this._count[type][subtype] += value;
   }
   confirmValue() {
@@ -106,22 +106,3 @@ export class Wastes {
     return sectionListFormat;
   }
 }
-
-// const DATA = [
-//   {
-//     title: 'Main dishes',
-//     data: ['Pizza', 'Burger', 'Risotto'],
-//   },
-//   {
-//     title: 'Sides',
-//     data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
-//   },
-//   {
-//     title: 'Drinks',
-//     data: ['Water', 'Coke', 'Beer'],
-//   },
-//   {
-//     title: 'Desserts',
-//     data: ['Cheese Cake', 'Ice Cream'],
-//   },
-// ];
