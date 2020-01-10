@@ -29,7 +29,7 @@ const AmountOfTrash = props => {
       }}
     >
       <View>
-        <ThaiText style={{ fontSize: 8 }}>จำนวน</ThaiText>
+        <ThaiText style={{ fontSize: 8 }}>เปลี่ยนแปลง</ThaiText>
       </View>
       <View
         style={{

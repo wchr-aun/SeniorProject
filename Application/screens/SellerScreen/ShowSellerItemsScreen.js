@@ -47,10 +47,11 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_SELLERITEMS_AMOUNT:
-      console.log(action);
-      console.log(sellerItems._count[action.majortype][action.subtype]);
-
-      sellerItems.editValue(action.majortype, action.subtype, action.addAmount);
+      sellerItems.incrementalValue(
+        action.majortype,
+        action.subtype,
+        action.addAmount
+      );
       return {
         ...state
       };

@@ -142,7 +142,7 @@ export default BuyerHomepageScreen = props => {
                 </TouchableWithoutFeedback>
               </View>
 
-              <FlatList
+              {/* <FlatList
                 data={transactions}
                 keyExtractor={item => item.txId}
                 renderItem={itemData => (
@@ -163,7 +163,7 @@ export default BuyerHomepageScreen = props => {
                     }}
                   />
                 )}
-              />
+              /> */}
             </View>
           </>
         )}
