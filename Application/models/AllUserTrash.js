@@ -56,6 +56,25 @@ export class Wastes {
       this.length += 1;
     }
   }
+  addWasteObj(obj) {
+    for (let type in obj) {
+      for (let subtype in obj[type]) {
+        if (this[type] == undefined) {
+          this[type] = {};
+          this._obj[type] = {};
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+        }
+        else if (this[type][subtype] == undefined) {
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+        }
+        this[type][subtype] += obj[type][subtype];
+        this._obj[type][subtype] += obj[type][subtype];
+        this.length += 1;
+      }
+    }
+  }
   _removeWaste(type, subtype) {
     if (this[type] != undefined) {
       delete this[type][subtype];
@@ -68,9 +87,16 @@ export class Wastes {
     }
   }
   getValueBySubtype(subtype) {
-    for (let type in this._obj) {
+    for (let type in this) {
       if (this[type][subtype] != undefined)
         return { type, value: this[type][subtype] };
+    }
+    return false;
+  }
+  getCountBySubtype(subtype) {
+    for (let type in this._count) {
+      if (this._count[type][subtype] != undefined)
+        return { type, value: this._count[type][subtype] };
     }
     return false;
   }
