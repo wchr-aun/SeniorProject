@@ -1,57 +1,20 @@
-import {
-  FETCH_WASTETYPE,
-  UPDATE_PURCHASELIST
-} from "../actions/wasteTypeAction";
-import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
+import { FETCH_WASTETYPE } from "../actions/wasteTypeAction";
+import { LOGOUT } from "../actions/authAction";
+
 initialState = {
-  wasteListSectionFormat: [],
-  purchaseList: {}
+  wasteTypes: []
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_WASTETYPE:
+      console.log("FETCH_WASTETYPE Redux Run");
       return {
         ...state,
-        wasteListSectionFormat: [...action.wasteListSectionFormat],
-        purchaseList: action.purchaseList
+        wasteTypes: action.wasteTypes
       };
-    case UPDATE_PURCHASELIST:
-      return {
-        ...state
-        // add something
-      };
-    case CHANGE_ROLE:
-      return initialState;
     case LOGOUT:
       return initialState;
   }
   return state;
 };
-
-// purchaseList: {
-//   PP: {selected: 1, price: 12},
-//   HDPE: 8.5,
-//   PS: 4.5,
-//   PETE: 7,
-//   PVC: 17,
-//   Red: 4,
-//   Green: 2
-// }
-
-/*
-    array[
-      {
-        value: 'Plastic',
-        data: [{
-          value: 'HDPE',
-          disposal: 'abc'
-          description: 'xyz'
-        },{
-          value: 'PP',
-          disposal: 'abc'
-          description: 'xyz'
-        }
-      }
-    ]
-  */

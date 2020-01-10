@@ -1,12 +1,13 @@
 import {
-  getSellerList,
+  getSellerItems,
   addWaste,
   searchBuyers,
   sellWaste
 } from "../../utils/firebaseFunctions";
+import { Wastes } from "../../models/AllUserTrash";
 
 // export const FETCH_SELLER_ITEMS = "FETCH_SELLER_ITEMS";
-export const SET_WASTE = "SET_WASTE";
+export const SET_SELLERITEMS = "SET_SELLERITEMS";
 export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 export const GET_BUYER_LIST = "GET_BUYER_LIST";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
@@ -14,12 +15,12 @@ export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
 
 export const fetchSellerItems = () => {
   return async dispatch => {
-    let sellerItems = [];
     try {
-      sellerItems = await getSellerItems();
+      let sellerItems = new Wastes(await getSellerItems());
       dispatch({
-        type: SET_WASTE,
-        sellerItems: [...sellerItems]
+        type: SET_SELLERITEMS,
+        sellerItems: sellerItems,
+        sellerItemsFlatListFormat: [...sellerItems.getFlatListFormat()]
       });
     } catch (err) {
       throw new Error(err.message);
@@ -36,7 +37,7 @@ export const setUserWaste = sellerItems => {
       });
       // set new wastesData
       dispatch({
-        type: SET_WASTE,
+        type: SET_SELLERITEMS,
         sellerItems: [...sellerItems]
       });
     } catch (err) {

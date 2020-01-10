@@ -20,10 +20,6 @@ import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 
-const ADD_WASTE = "ADD_WASTE";
-const MINUS_WASTE = "MINUS_WASTE";
-const EDIT_WASTE = "EDIT_WASTE";
-
 const AmountOfTrash = props => {
   return (
     <View
@@ -64,43 +60,21 @@ const AdjustAmountOfTrash = props => {
     <View style={{ ...props.style, flexDirection: "row" }}>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
-        onPress={
-          !props.UI_disabledMinus
-            ? () => {
-                props.dispatchAmountTrashsState({
-                  type: MINUS_WASTE,
-                  wasteType: props.wasteType,
-                  amount: 1
-                });
-              }
-            : null
-        }
+        onPress={props.onDecrease}
       >
         <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
       <View style={{ width: 30 }}>
         <TextInput
           keyboardType="numeric"
-          onChangeText={text => {
-            props.dispatchAmountTrashsState({
-              type: EDIT_WASTE,
-              wasteType: props.wasteType,
-              value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
-            });
-          }}
+          onChangeText={props.onEdit}
           value={(props.amount > 0 ? props.amount : 0).toString()}
           style={{ textAlign: "center" }}
         ></TextInput>
       </View>
       <TouchableWithoutFeedback
         style={styles.plusAndMinusCircle}
-        onPress={() => {
-          props.dispatchAmountTrashsState({
-            type: ADD_WASTE,
-            wasteType: props.wasteType,
-            amount: 1
-          });
-        }}
+        onPress={props.onIncrease}
       >
         <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
       </TouchableWithoutFeedback>
@@ -156,30 +130,9 @@ export default TrashCard = props => {
         {/* Trash Name */}
         <View style={{ width: "80%", height: "20%", backgroundColor: "red" }}>
           <ThaiTitleText style={styles.trashName}>
-            {props.wasteType}
+            {props.subtype}
           </ThaiTitleText>
         </View>
-        {/* Check - UnCheck */}
-        {!props.sellingMode ? null : (
-          <TouchableWithoutFeedback
-            style={{
-              width: "30%",
-              height: "100%",
-              alignSelf: "flex-end"
-            }}
-            onPress={() => {
-              setIsSelected(previousState => !previousState);
-              // put the amouth of this trash into state
-              props.dispatchAmountTrashsState(props.selectedHandler());
-            }}
-          >
-            <MaterialIcons
-              name={isSelected ? "check-box" : "check-box-outline-blank"}
-              size={20}
-              color={Colors.primary}
-            />
-          </TouchableWithoutFeedback>
-        )}
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
           <ThaiText style={styles.trashDisposal}>
@@ -193,12 +146,14 @@ export default TrashCard = props => {
         </View>
         {!props.editingMode && !isSelected ? null : (
           <AdjustAmountOfTrash
-            wasteType={props.wasteType}
-            amount={props.amount}
-            dispatchAmountTrashsState={props.dispatchAmountTrashsState}
-            UI_disabledMinus={props.UI_disabledMinus}
-            UI_diff={props.UI_diff}
             style={{ alignSelf: "center", alignItems: "center" }}
+            subtype={props.subtype}
+            majortype={props.majortype}
+            amount={props.amount}
+            onIncrease={props.onIncrease}
+            onDecrease={props.onDecrease}
+            onEdit={props.onEdit}
+            UI_diff={props.UI_diff}
           />
         )}
       </View>

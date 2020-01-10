@@ -5,8 +5,6 @@ export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
 
 export const fetchTransaction = role => {
   return async dispatch => {
-    console.log("fetchTransaction --- transactionAction");
-    console.log(role);
     try {
       let transactionMode = await getTransactions(role);
       dispatch({ type: FETCH_TRANSACTION, transactionMode });

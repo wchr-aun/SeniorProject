@@ -10,11 +10,12 @@ import { Provider } from "react-redux";
 import authReducer from "./store/reducers/authReducer";
 import sellerItemsReducer from "./store/reducers/sellerItemsReducer";
 import transactionReducer from "./store/reducers/transactionReducer";
-import wasteTypeReducer from "./store/reducers/wasteTypeReducer";
+import buyerReducer from "./store/reducers/buyerReducer";
 
 import ImportedFonts from "./constants/ImportedFonts.js";
 // Ignore warning timer
 import "./utils/jsTimerFix";
+import wasteTypeReducer from "./store/reducers/wasteTypeReducer";
 YellowBox.ignoreWarnings(["Setting a timer"]);
 
 // --- App'sFont Set-up --- //
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   user: authReducer,
   sellerItems: sellerItemsReducer,
   transactions: transactionReducer,
-  waste: wasteTypeReducer
+  buyerInfo: buyerReducer,
+  wasteType: wasteTypeReducer
 });
 const store = createStore(
   rootReducer,

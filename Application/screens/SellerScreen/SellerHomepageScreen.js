@@ -20,22 +20,13 @@ import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 import libary from "../../utils/libary";
 
 export default SellerHomepageScreen = props => {
-  // ************************** For UI Testing, not relate to this project *************************
-  const [goToUITestingScreen, setGoToUITestingScreen] = useState(0);
-  useEffect(() => {
-    if (goToUITestingScreen === 10) {
-      console.log("Go to UI template");
-      props.navigation.navigate("UIScreenTemplate");
-    } else console.log("homepage");
-  }, [goToUITestingScreen]);
-
   // Loading effect
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,7 +50,6 @@ export default SellerHomepageScreen = props => {
   // Get transactions for initially
   useEffect(() => {
     try {
-      dispatch(wasteType);
       dispatch(transactionAction.fetchTransaction(userRole));
     } catch (err) {
       setError(err.message);
@@ -149,12 +139,12 @@ export default SellerHomepageScreen = props => {
                 </TouchableWithoutFeedback>
               </View>
 
-              <FlatList
+              {/* <FlatList
                 data={transactions}
                 keyExtractor={item => item.txId}
                 renderItem={itemData => (
                   <SellTransactionCard
-                    amountOfType={itemData.item.detail.items.length}
+                    // amountOfType={itemData.item.detail.items.length}
                     imgUrl={
                       "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
                     }
@@ -170,7 +160,7 @@ export default SellerHomepageScreen = props => {
                     }}
                   />
                 )}
-              />
+              /> */}
             </View>
           </>
         )}

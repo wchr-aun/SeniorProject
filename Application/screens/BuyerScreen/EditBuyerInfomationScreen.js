@@ -8,7 +8,7 @@ import {
 } from "react-native-responsive-screen";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import * as wasteTypeAction from "../../store/actions/wasteTypeAction";
+import * as buyerAction from "../../store/actions/buyerAction";
 
 import ThaiTitleText from "../../components/ThaiTitleText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -18,26 +18,19 @@ import ThaiText from "../../components/ThaiText";
 import CustomButton from "../../components/UI/CustomButton";
 
 const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
-const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
 const SET_PURCHASELIST = "SET_PURCHASELIST";
 
 const buyerWasteReducer = (state, action) => {
   let purchaseList = state.purchaseList;
-  console.log("Reducer Listen");
-  console.log(action);
-  console.log("purchaseList Listen");
-  console.log(purchaseList);
   switch (action.type) {
     case SET_PURCHASELIST:
-      console.log("SET_PURCHASELSIT Reducer - run");
+      console.log("SET_PURCHAST-LIST");
+      console.log(action.purchaseList);
       return {
         ...state,
         purchaseList: action.purchaseList
       }; //not work initially
     case EDIT_PURCHASELIST:
-      console.log("purchaseListObj.getValueBySubtype(" + action.subtypeIndex);
-      console.log(purchaseList.getValueBySubtype(action.subtypeIndex));
-
       purchaseList.addWaste(
         action.majortype,
         action.subtypeIndex,
@@ -56,14 +49,14 @@ export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(wasteTypeAction.fetchWasteType());
+    dispatch(buyerAction.fetchBuyerInfo());
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
   const wasteListSectionFormat = useSelector(
-    state => state.waste.wasteListSectionFormat
+    state => state.buyerInfo.wasteListSectionFormat
   ); //why its not update. ?
-  const purchaseList = useSelector(state => state.waste.purchaseList); //not have
+  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); //not have
   const buyerUserInfo = useSelector(state => state.user.userProfile);
   const [isEditingMode, setIsEditingMode] = useState(false);
 
@@ -73,14 +66,12 @@ export default EditBuyerInfomationScreen = props => {
   );
 
   const toggleModeHandler = () => {
-    console.log("toggle");
-    console.log(isEditingMode);
     if (isEditingMode) {
       // done edit
       let description = "temp";
 
       dispatch(
-        wasteTypeAction.updatePurchaseList(
+        buyerAction.updatePurchaseList(
           buyerWasteState.purchaseList.getObject(),
           description,
           buyerUserInfo.addr
@@ -104,7 +95,6 @@ export default EditBuyerInfomationScreen = props => {
 
   // if redux update, local redux update
   useEffect(() => {
-    console.log("purchaseList");
     dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
   }, [purchaseList]);
 
@@ -117,11 +107,19 @@ export default EditBuyerInfomationScreen = props => {
           height: hp("100%") - AppVariableSetting.bottomBarHeight
         }}
       >
-        <View style={{ height: "30%", width: "100%", backgroundColor: "red" }}>
+        <View
+          style={{
+            height: "30%",
+            width: "100%",
+            backgroundColor: "red",
+            justifyContent: "flex-end",
+            alignItems: "center"
+          }}
+        >
           <CustomButton
             style={{
               width: "30%",
-              height: "10%",
+              height: "20%",
               marginHorizontal: 5,
               borderRadius: 5,
               borderColor: Colors.primary,
@@ -158,9 +156,12 @@ export default EditBuyerInfomationScreen = props => {
                     ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
                     : purchaseList[type][Object.keys(item)[0]];
                 } else {
+                  console.log("ไม่กำหนดราคา 1 ");
                   price = "ยังไม่กำหนดราคา";
                 }
               } else {
+                console.log("ไม่กำหนดราคา 2 ");
+                console.log(purchaseList);
                 price = "ยังไม่กำหนดราคา";
               }
 

@@ -8,7 +8,6 @@ const auth = firebaseUtil.auth();
 
 // Get firebase UserProfile
 export const getUsers = async () => {
-  console.log("getUser(): ", auth.currentUser.uid);
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
@@ -54,8 +53,27 @@ export const getSellerItems = async () => {
     });
 };
 
-// Get all wasteType in system to be query in future
-export const getAllWasteType = async () => {
+// Get all wasteType in system for quering future.
+export const getWasteType = async () => {
+  return firestore
+    .collection("wasteType")
+    .get()
+    .then(docs => {
+      let wasteType = {};
+      docs.forEach(doc => {
+        wasteType = { ...wasteType, [doc.id]: doc.data() };
+      });
+      return {
+        ...wasteType
+      };
+    })
+    .catch(err => {
+      throw new Error(err.message);
+    });
+};
+
+// Get all wasteType in sectionList format
+export const getSectionListFormatWasteType = async () => {
   let wasteListSectionFormat = [];
   return firestore
     .collection("wasteType")
@@ -73,8 +91,25 @@ export const getAllWasteType = async () => {
         }
         wasteListSectionFormat.push({ type, data });
       });
-      console.log(wasteListSectionFormat);
       return wasteListSectionFormat;
+    });
+};
+
+// Get all wasteType in system to be query in future
+export const getPurchaseList = async () => {
+  return firestore
+    .collection("buyerLists")
+    .doc(auth.currentUser.uid)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        return {
+          ...doc.data().purchaseList
+        };
+      } else throw new Error("The document doesn't exist --- getPurchaseList!");
+    })
+    .catch(err => {
+      throw new Error(err.message);
     });
 };
 

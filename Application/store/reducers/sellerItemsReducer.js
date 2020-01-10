@@ -1,14 +1,15 @@
 import {
   CHOOSEBUYER_SELL,
-  SET_WASTE,
   SET_WASTE_FOR_SELL,
   GET_BUYER_LIST,
-  FETCH_SELLER_ITEMS
+  FETCH_SELLER_ITEMS,
+  SET_SELLERITEMS
 } from "../actions/sellerItemsAction";
 import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
-  sellerItems: [],
+  sellerItems: {},
+  sellerItemsFlatListFormat: [],
   sellerItemsCamera: [],
   itemsForSell: [],
   buyerList: []
@@ -16,22 +17,22 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case SET_WASTE:
-      console.log("SET WASTE Reducer Run");
+    case SET_SELLERITEMS:
+      console.log("SET_SELLERITEMS Redux Reducer Run");
+      console.log(action);
       return {
         ...state,
-        sellerItems: action.sellerItems
+        sellerItems: action.sellerItems,
+        sellerItemsFlatListFormat: action.sellerItemsFlatListFormat
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
-      console.log(action.itemsForSell);
       return {
         ...state,
         itemsForSell: [...action.itemsForSell]
       };
     case CHOOSEBUYER_SELL:
       console.log("CHOOSEBUYER_SELL Reducer Run");
-      console.log(action.transaction.sellerItems);
 
       //************ do remove some existing sellerItems
       return {
@@ -39,7 +40,6 @@ export default function(state = initialState, action) {
       };
     case GET_BUYER_LIST:
       console.log("GET_BUYER_LIST Reducer Run");
-      console.log(action.buyerList);
       return {
         ...state,
         buyerList: [...action.buyerList]

@@ -58,4 +58,17 @@ export class Wastes {
     this._obj.length = this.length;
     return this._obj;
   }
+
+  getFlatListFormat() {
+    // loop through "Plastic", "Glass"
+    let data = [];
+    for (let type in this._obj) {
+      // loop through "HDPE", "PP"
+      for (let subtype in this._obj[type]) {
+        // console.log(subtype);
+        data.push({ type, subtype, amount: this._obj[type][subtype] });
+      }
+    }
+    return data;
+  }
 }

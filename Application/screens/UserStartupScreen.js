@@ -3,6 +3,7 @@ import { View, AsyncStorage } from "react-native";
 import firebaseUtil from "../firebase";
 import { useDispatch } from "react-redux";
 import * as authAction from "../store/actions/authAction";
+import * as buyerAction from "../store/actions/buyerAction";
 import * as wasteTypeAction from "../store/actions/wasteTypeAction";
 import { verifyNotificationsPermissions } from "../utils/permissions";
 

@@ -53,7 +53,7 @@ SellerhomepageNavigator.navigationOptions = ({ navigation }) => {
 
 const ShowSellerItemsNavigator = createStackNavigator(
   {
-    ShowAllUserTrashScreen: {
+    ShowSellerItemsScreen: {
       screen: ShowSellerItemsScreen
     },
     // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
