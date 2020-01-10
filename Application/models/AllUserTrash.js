@@ -37,6 +37,16 @@ export class Wastes {
     this.length = 0;
     for (let type in this._count) {
       for (let subtype in this._count[type]) {
+        if (this[type] == undefined) {
+          this[type] = {};
+          this._obj[type] = {};
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+        }
+        else if (this[type][subtype] == undefined) {
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+        }
         this[type][subtype] += this._count[type][subtype];
         this._obj[type][subtype] += this._count[type][subtype];
         this.length += 1;
