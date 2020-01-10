@@ -34,27 +34,26 @@ export class Wastes {
     this._count[type][subtype] += value;
   }
   confirmValue() {
-    this.length = 0;
     for (let type in this._count) {
       for (let subtype in this._count[type]) {
+        if (this[type] == undefined) {
+          this[type] = {};
+          this._obj[type] = {};
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+          this.length += 1;
+        }
+        else if (this[type][subtype] == undefined) {
+          this[type][subtype] = 0;
+          this._obj[type][subtype] = 0;
+          this.length += 1;
+        }
         this[type][subtype] += this._count[type][subtype];
         this._obj[type][subtype] += this._count[type][subtype];
-        this.length += 1;
+        if (this[type][subtype] <= 0) this._removeWaste(type, subtype);
       }
     }
     this._count = {};
-  }
-  addWaste(type, subtype, value) {
-    if (value == 0) this._removeWaste(type, subtype);
-    else {
-      if (this[type] == undefined) {
-        this[type] = {};
-        this._obj[type] = {};
-      }
-      this[type][subtype] = value;
-      this._obj[type][subtype] = value;
-      this.length += 1;
-    }
   }
   addWasteObj(obj) {
     for (let type in obj) {
