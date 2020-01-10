@@ -33,6 +33,14 @@ export class Wastes {
       this._count[type][subtype] = 0;
     } else if (this._count[type][subtype] == undefined)
       this._count[type][subtype] = 0;
+    this._count[type][subtype] = value;
+  }
+  incrementalValue(type, subtype, value) {
+    if (this._count[type] == undefined) {
+      this._count[type] = {};
+      this._count[type][subtype] = 0;
+    } else if (this._count[type][subtype] == undefined)
+      this._count[type][subtype] = 0;
     this._count[type][subtype] += value;
   }
   confirmValue() {
@@ -58,10 +66,8 @@ export class Wastes {
     }
   }
   clearValue() {
-    for (let type in this) {
-      for (let subtype in this[type]) {
-        if (this[type] == undefined)
-          this._count[type] = {};
+    for (let type in this._count) {
+      for (let subtype in this._count[type]) {
         this._count[type][subtype] = 0;
       }
     }
