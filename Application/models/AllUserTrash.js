@@ -52,9 +52,18 @@ export class Wastes {
         this[type][subtype] += this._count[type][subtype];
         this._obj[type][subtype] += this._count[type][subtype];
         if (this[type][subtype] <= 0) this._removeWaste(type, subtype);
+        this._count[type][subtype] = 0;
       }
     }
-    this._count = {};
+  }
+  clearValue() {
+    for (let type in this) {
+      for (let subtype in this[type]) {
+        if (this[type] == undefined)
+          this._count[type] = {};
+        this._count[type][subtype] = 0;
+      }
+    }
   }
   addWasteObj(obj) {
     for (let type in obj) {
