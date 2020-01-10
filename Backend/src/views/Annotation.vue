@@ -7,7 +7,7 @@
     <div>x : {{x}}</div>
     <div>y : {{y}}</div>
     <button @click = "saveBox" class="btn success">SAVE</button>
-    <select ref="dropdown"v-model="selected">
+    <select ref="dropdown" v-model="selected">
       <option disabled value="">Please select one</option>
       <option>A</option>
       <option>B</option>
@@ -15,7 +15,7 @@
     </select>
     <span>  Selected: {{ selected }}</span>
     <ul id="list_rects">
-      <li v-for="(item, index) in rects">
+      <li v-for="(item, index) in rects" v-bind:key="item">
         {{ index }} - {{ item[4] }} - {{ item.slice(0,4) }}
       </li>
     </ul>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import firebase from '../firebase';
 export default {
   data(){
     return{
@@ -49,13 +50,18 @@ export default {
     vm.canvas.addEventListener('mousedown',vm.mousedown);
     vm.canvas.addEventListener('mousemove',vm.mousemove);
     document.addEventListener('mouseup',vm.mouseup)
-    vm.image_src = require('@/assets/000000.jpg')
-    let img = new Image()
-    img.src = vm.image_src
-    img.onload = function(){
+    // vm.image_src = require('@/assets/000000.jpg')
+    let storageRef = firebase.storage().ref();
+    // vm.image_src = storageRef.child("waste_image/000003.jpg").getMetadata().getDownloadUrl().toString();
+    storageRef.child("waste_images/000002.jpg").getDownloadURL().then(URL => {
+      vm.image_src =  URL
+      let img = new Image()
+      img.src = vm.image_src
+      img.onload = function(){
       vm.canvas.width = this.width/vm.scale
       vm.canvas.height = this.height/vm.scale
     }
+    })
   },
   methods: {
     mousedown: function(e){
