@@ -18,9 +18,11 @@ export class Wastes {
         if (this[type] == undefined) {
           this[type] = {};
           this._obj[type] = {};
+          this._count[type] = {};
         }
         this[type][subtype] = obj[type][subtype];
         this._obj[type][subtype] = obj[type][subtype];
+        this._count[type][subtype] = obj[type][subtype];
         this.length += 1;
       }
     }
@@ -63,14 +65,15 @@ export class Wastes {
           this._obj[type] = {};
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
+          this.length += 1;
         }
         else if (this[type][subtype] == undefined) {
           this[type][subtype] = 0;
           this._obj[type][subtype] = 0;
+          this.length += 1;
         }
         this[type][subtype] += obj[type][subtype];
         this._obj[type][subtype] += obj[type][subtype];
-        this.length += 1;
       }
     }
   }
