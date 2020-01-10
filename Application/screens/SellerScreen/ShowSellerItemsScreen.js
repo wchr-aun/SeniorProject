@@ -73,9 +73,8 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case UPDATE_LOCAL_SELLERITEMS:
-      sellerItems.confirm();
-      console.log(sellerItems);
-
+      // sellerItems.confirm();
+      // console.log(sellerItems);
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
@@ -172,14 +171,15 @@ const ShowAllUserTrashScreen = props => {
     setEditingMode(false);
     setIsRefreshing(true);
 
+    trashsState.sellerItems.confirm();
     // update new wasteData on local redux
     dispatchAmountTrashsState({
       type: UPDATE_LOCAL_SELLERITEMS
     });
-    // // update new wasteData on redux
-    // await dispatch(
-    //   sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
-    // );
+    // update new wasteData on redux
+    await dispatch(
+      sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
+    );
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
