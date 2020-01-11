@@ -56,7 +56,7 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
-      sellerItems.editValue(
+      sellerItems.incrementalValue(
         action.majortype,
         action.subtype,
         -action.minusAmount
@@ -65,8 +65,6 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case EDIT_SELLERITEMS_AMOUNT:
-      console.log("EDIT");
-      console.log(action);
       sellerItems.editValue(
         action.majortype,
         action.subtype,
@@ -137,8 +135,6 @@ const ShowAllUserTrashScreen = props => {
   });
 
   useEffect(() => {
-    console.log("WasteType Ready");
-    console.log(wasteTypes);
   }, [wasteTypes]);
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
@@ -152,8 +148,6 @@ const ShowAllUserTrashScreen = props => {
   // If redux-data is ready, it will be passed to this local reducer
   useEffect(() => {
     if (sellerItems) {
-      console.log("sellerItems");
-      console.log(sellerItems);
       dispatchAmountTrashsState({
         type: SET_LOCAL_SELLERITEMS,
         sellerItems,

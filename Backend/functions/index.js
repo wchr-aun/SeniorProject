@@ -54,10 +54,10 @@ exports.createAccount = functions.https.onCall((data, context) => {
 
 exports.addWaste = functions.https.onCall((data, context) => {
   if (context.auth != null){
-    return sellerDB.doc("anaunz").set({ items: data.items }).then(() => {
+    return sellerDB.doc(context.auth.uid).set({ items: data.items }).then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in addWaste() while setting the document " + "anaunz")
+      console.log("Error has occurred in addWaste() while setting the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -73,7 +73,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
     let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
     let txType = data.txType
     if (txType == 0 || txType == 1) {
-      return sellerDB.doc("anaunz").get().then(doc => {
+      return sellerDB.doc(context.auth.uid).get().then(doc => {
         if (doc.exists) {
           let newItems = {}
           newItems.length = 0
@@ -89,13 +89,13 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               else return {errorMessage: "Item's amount doesn't match"}
             }
           }
-          return sellerDB.doc("anaunz").set({items: newItems}, {merge: true}).then(() => {
+          return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
             let assignedTime = []
             for (time in data.assignedTime) assignedTime.push(new Date(time))
             return txDB.add({
               txType,
               buyer,
-              seller: "anaunz",
+              seller: context.auth.uid,
               saleList,
               addr,
               addr_geopoint,
@@ -104,12 +104,12 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               txStatus: 0
             }).then(() => {
               const message = getTitleAndBody({
-                uid: "anaunz",
+                uid: context.auth.uid,
                 txType,
                 txStatus: 0
               })
               if (txType == 0)
-                return sendNotification("anaunz", message.title, message.body).then(result => { return result })
+                return sendNotification(context.auth.uid, message.title, message.body).then(result => { return result })
               else 
                 return quickSellingNotification(addr_geopoint, message.title, message.body).then(result => { return result })
             }).catch(err => {
@@ -118,14 +118,14 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               return {errorMessage: err.message}
             })
           }).catch(err => {
-            console.log("Error has occurred in sellWaste() while updating the document " + "anaunz")
+            console.log("Error has occurred in sellWaste() while updating the document " + context.auth.uid)
             console.log(err)
             return {errorMessage: err.message}
           })
         }
         else return {errorMessage: "The document doesn't exist"}
       }).catch(err => {
-        console.log("Error has occurred in sellWaste() while getting the document " + "anaunz")
+        console.log("Error has occurred in sellWaste() while getting the document " + context.auth.uid)
         console.log(err)
         return {errorMessage: err.message}
       })
@@ -137,10 +137,10 @@ exports.sellWaste = functions.https.onCall((data, context) => {
 
 exports.toggleSearch = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    return buyerDB.doc("anaunz").update({enableSearch: data.toggleSearch}).then(() => {
+    return buyerDB.doc(context.auth.uid).update({enableSearch: data.toggleSearch}).then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in toggleSearch() while updating the document " + "anaunz")
+      console.log("Error has occurred in toggleSearch() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -156,7 +156,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
           return {errorMessage: "The time you chose has already been passed"}
 
         const meesage = getTitleAndBody({
-          uid: "anaunz",
+          uid: context.auth.uid,
           txType: doc.data().txType,
           txStatus: data.status,
           date: doc.data().assignedTime[data.chosenTime]
@@ -168,9 +168,9 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction has already passed the state"}
           else if (data.status < 1 || data.status > 4)
             return {errorMessage: "The transaction status is incorrect"}
-          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != "anaunz")
+          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
-          else if (doc.data().seller == "anaunz")
+          else if (doc.data().seller == context.auth.uid)
             return {errorMessage: "You cannot complete your own selling transaction"}
           else if (doc.data().txStatus >= 3)
             return {errorMessage: "The transaction has already closed"}
@@ -182,7 +182,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               transaction.update(txDB.doc(data.txID), {
                 txStatus: data.status,
                 chosenTime: doc.data().assignedTime[data.chosenTime],
-                buyer: "anaunz"
+                buyer: context.auth.uid
               })
             else
               transaction.update(txDB.doc(data.txID), {
@@ -195,7 +195,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
         })
       })
     }).catch(err => {
-      console.log("Error has occurred in changeTxStatus() while updating transaction " + "anaunz")
+      console.log("Error has occurred in changeTxStatus() while updating transaction " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -209,7 +209,7 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     let description = data.desc || "default description"
     let addr = data.addr.readable || {}
     let enableSearch = data.enableSearch || false
-    return buyerDB.doc("anaunz").set({
+    return buyerDB.doc(context.auth.uid).set({
       addr,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       purchaseList,
@@ -218,7 +218,7 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     }).then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in editBuyerInfo() while updating the document " + "anaunz")
+      console.log("Error has occurred in editBuyerInfo() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -231,18 +231,18 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     let name = data.name
     let surname = data.surname
     let addr = data.addr.readable
-    return usersDB.doc("anaunz").update({
+    return usersDB.doc(context.auth.uid).update({
       name,
       surname,
       addr,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude)
     }).then(() => {
-      auth.updateUser("anaunz", {
+      auth.updateUser(context.auth.uid, {
         phoneNumber: data.phoneNo,
         photoURL: data.photoURL
       })
     }).catch(err => {
-      console.log("Error has occurred in editUserInfo() while updating the document " + "anaunz")
+      console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -253,12 +253,12 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
 exports.updateNotificationToken = functions.https.onCall((data,context) => {
   if (context.auth != null) {
     return usersDB
-    .doc("anaunz")
+    .doc(context.auth.uid)
     .update({notificationToken: admin.firestore.FieldValue.arrayUnion(data.notificationToken)})
     .then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in updateNotificationToken() while updating the document " + "anaunz")
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -269,12 +269,12 @@ exports.updateNotificationToken = functions.https.onCall((data,context) => {
 exports.removeNotificationToken = functions.https.onCall((data,context) => {
   if (context.auth != null) {
     return usersDB
-    .doc("anaunz")
+    .doc(context.auth.uid)
     .update({notificationToken: admin.firestore.FieldValue.arrayRemove(data.notificationToken)})
     .then(() => {
       return true
     }).catch(err => {
-      console.log("Error has occurred in updateNotificationToken() while updating the document " + "anaunz")
+      console.log("Error has occurred in updateNotificationToken() while updating the document " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
@@ -423,7 +423,7 @@ const sendNotification = (uid, title, body) => {
 }
 
 // exports.quickSelling = functions.https.onCall((data, context) => {
-//   if ("anaunz" != null) {
+//   if (context.auth.uid != null) {
 
 //   }
 //   else return {err: "The request is denied because of authetication"}
