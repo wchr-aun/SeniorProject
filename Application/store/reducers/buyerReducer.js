@@ -1,4 +1,8 @@
-import { FETCH_WASTEBUYER, UPDATE_PURCHASELIST } from "../actions/buyerAction";
+import {
+  FETCH_PURCHASELIST,
+  EDIT_PURCHASELIST,
+  CONFIRM_CHANGE_PURCHASELIST
+} from "../actions/buyerAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
   wasteListSectionFormat: [],
@@ -7,7 +11,7 @@ initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_WASTEBUYER:
+    case FETCH_PURCHASELIST:
       console.log("BUYERINFO _ REDUCER\n\t\t");
       console.log(action.purchaseList);
       return {
@@ -15,7 +19,16 @@ export default (state = initialState, action) => {
         wasteListSectionFormat: [...action.wasteListSectionFormat],
         purchaseList: action.purchaseList
       };
-    case UPDATE_PURCHASELIST:
+    case EDIT_PURCHASELIST:
+      console.log("EDIT_PURCHASELIST - Redux");
+      console.log(action);
+      return {
+        ...state,
+        purchaseList: action.purchaseList
+      };
+    case CONFIRM_CHANGE_PURCHASELIST:
+      console.log("CONFIRM_CHANGE_PURCHASELIST - Redux");
+      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList

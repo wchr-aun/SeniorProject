@@ -124,3 +124,48 @@ export const chooseBuyerSell = (
     }
   };
 };
+
+// Object {
+//   "detail": Object {
+//     "addr": "91 กรุงเทพมหานคร ประเทศไทย 10140",
+//     "addr_geopoint": Object {
+//       "geohash": "w4rmwucv7",
+//       "geopoint": GeoPoint {
+//         "_lat": 13.6500561,
+//         "_long": 100.4945061,
+//       },
+//     },
+//     "assignedTime": Array [
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 946659600,
+//       },
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 978282000,
+//       },
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 980960400,
+//       },
+//     ],
+//     "buyer": "huaweione",
+//     "createTimestamp": Timestamp {
+//       "nanoseconds": 792000000,
+//       "seconds": 1578646010,
+//     },
+//     "saleList": Object {
+//       "length": 1,
+//       "plastic": Object {
+//         "PP": Object {
+//           "amount": 1,
+//           "price": 15,
+//         },
+//       },
+//     },
+//     "seller": "huaweione",
+//     "txStatus": 0,
+//     "txType": 0,
+//   },
+//   "txId": "z4k7tNTMy3s53QztKREe",
+// }
