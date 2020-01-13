@@ -34,7 +34,6 @@ import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 const SellerhomepageNavigator = createStackNavigator(
   {
     SellerHomepageScreen: SellerHomepageScreen,
-    UIScreenTemplate: UIScreenTemplate,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen
   },
   { headerMode: "none" }

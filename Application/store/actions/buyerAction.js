@@ -29,6 +29,11 @@ export const fetchBuyerInfo = () => {
     // wasteType
     wasteListSectionFormat = await getSectionListFormatWasteType();
     purchaseList = await getPurchaseList();
+    console.log("--- fetch buyer info --- wasteListSectionFormat");
+    console.log("_________wasteListSectionFormat");
+    console.log(wasteListSectionFormat);
+    console.log("_________purchaseList");
+    console.log(purchaseList);
 
     dispatch({
       type: FETCH_WASTEBUYER,

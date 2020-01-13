@@ -56,7 +56,7 @@ const trashsModifyingReducer = (state, action) => {
         ...state
       };
     case MINUS_SELLERITEMS_AMOUNT:
-      sellerItems.editValue(
+      sellerItems.incrementalValue(
         action.majortype,
         action.subtype,
         -action.minusAmount
@@ -135,11 +135,6 @@ const ShowAllUserTrashScreen = props => {
   const wasteTypes = useSelector(state => {
     return state.wasteType.wasteTypes;
   });
-
-  useEffect(() => {
-    console.log("WasteType Ready");
-    console.log(wasteTypes);
-  }, [wasteTypes]);
 
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashsModifyingReducer,
@@ -267,10 +262,6 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
-              // console.log(item);
-              // console.log("------------ wasteTypes[item.type]");
-              // console.log(wasteTypes[item.type][item.subtype]["disposal"]);
-
               return (
                 <TrashCard
                   imgUrl={
@@ -284,10 +275,6 @@ const ShowAllUserTrashScreen = props => {
                   wasteDescription={
                     wasteTypes[item.type][item.subtype]["description"]
                   }
-                  // amountShowing={
-                  //   item.amount + sellerItems._count[item.type][item.subtype]
-                  // }
-                  // amountAdjust={sellerItems._count[item.type][item.subtype]}
                   changeAmount={sellerItems._count[item.type][item.subtype]}
                   oldAmount={item.amount}
                   trashAdjustPrice={

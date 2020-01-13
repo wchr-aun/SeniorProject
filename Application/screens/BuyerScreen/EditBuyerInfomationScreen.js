@@ -6,8 +6,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { MaterialIcons } from "@expo/vector-icons";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import * as buyerAction from "../../store/actions/buyerAction";
 
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -25,11 +25,11 @@ const buyerWasteReducer = (state, action) => {
   switch (action.type) {
     case SET_PURCHASELIST:
       console.log("SET_PURCHAST-LIST");
-      console.log(action.purchaseList);
+      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList
-      }; //not work initially
+      };
     case EDIT_PURCHASELIST:
       purchaseList.addWaste(
         action.majortype,
@@ -52,14 +52,22 @@ export default EditBuyerInfomationScreen = props => {
     dispatch(buyerAction.fetchBuyerInfo());
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // ------------- DATA ------------- //
   const wasteListSectionFormat = useSelector(
     state => state.buyerInfo.wasteListSectionFormat
-  ); //why its not update. ?
+  );
   const purchaseList = useSelector(state => state.buyerInfo.purchaseList); //not have
   const buyerUserInfo = useSelector(state => state.user.userProfile);
-  const [isEditingMode, setIsEditingMode] = useState(false);
+  useEffect(() => {
+    setIsLoading(true);
+    if (wasteListSectionFormat && purchaseList && buyerUserInfo) {
+      setIsLoading(false);
+    }
+  }, [wasteListSectionFormat, purchaseList, buyerWasteState]);
 
+  const [isEditingMode, setIsEditingMode] = useState(false);
   const [buyerWasteState, dispatchBuyerWaste] = useReducer(
     buyerWasteReducer,
     {}
@@ -141,104 +149,105 @@ export default EditBuyerInfomationScreen = props => {
           }}
         >
           <SectionList
-            sections={wasteListSectionFormat}
+            sections={wasteListSectionFormat ? wasteListSectionFormat : []}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item, section: { type } }) => {
-              let subtypeIndex = Object.keys(item)[0];
-              let subtypeName = item[Object.keys(item)[0]].name;
+              console.log("item");
+              console.log(item);
+              // let subtypeIndex = Object.keys(item)[0];
+              // let subtypeName = item[Object.keys(item)[0]].name;
 
-              // Set price
-              let price = "";
-              if (purchaseList[type]) {
-                if (purchaseList[type][subtypeIndex]) {
-                  price = Object.keys(buyerWasteState.purchaseList).length
-                    ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
-                    : purchaseList[type][Object.keys(item)[0]];
-                } else {
-                  console.log("ไม่กำหนดราคา 1 ");
-                  price = "ยังไม่กำหนดราคา";
-                }
-              } else {
-                console.log("ไม่กำหนดราคา 2 ");
-                console.log(purchaseList);
-                price = "ยังไม่กำหนดราคา";
-              }
+              // // Set price
+              // let price = "";
+              // if (purchaseList[type]) {
+              //   if (purchaseList[type][subtypeIndex]) {
+              //     price = Object.keys(buyerWasteState.purchaseList).length
+              //       ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
+              //       : purchaseList[type][Object.keys(item)[0]];
+              //   } else {
+              //     console.log("ไม่กำหนดราคา 1 ");
+              //     price = "ยังไม่กำหนดราคา";
+              //   }
+              // } else {
+              //   console.log("ไม่กำหนดราคา 2 ");
+              //   console.log(purchaseList);
+              //   price = "ยังไม่กำหนดราคา";
+              // }
 
-              return (
-                <View
-                  style={{
-                    width: "100%",
-                    height: 50,
-                    borderRadius: 5,
-                    backgroundColor: Colors.on_primary,
-                    padding: 10,
-                    borderBottomColor: Colors.lineSeparate,
-                    borderBottomWidth: 0.75
-                  }}
-                >
-                  {/* Row 1 */}
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "50%",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center"
-                    }}
-                  >
-                    <View style={{ width: "20%" }}>
-                      <ThaiText>{subtypeName}</ThaiText>
-                    </View>
-                    <View
-                      style={{
-                        width: "60%",
-                        flexDirection: "row"
-                      }}
-                    >
-                      <View
-                        style={{
-                          borderWidth: 0.75,
-                          borderColor: Colors.lineSeparate,
-                          width: "50%"
-                        }}
-                      >
-                        {!isEditingMode ? (
-                          <ThaiText>{(price ? price : 0).toString()}</ThaiText> // show price
-                        ) : (
-                          <TextInput
-                            value={(price ? price : 0).toString()}
-                            clearTextOnFocus={true}
-                            selectTextOnFocus={true}
-                            onChangeText={price => {
-                              editPriceHandler(type, subtypeIndex, price);
-                            }}
-                            keyboardType="numeric"
-                          />
-                        )}
-                      </View>
-                      <ThaiText> บาท/ กก.</ThaiText>
-                    </View>
-                    {!isEditingMode ? null : (
-                      <View style={{ width: "20%" }}>
-                        <TouchableWithoutFeedback
-                          onPress={() => {
-                            console.log("check click");
-                          }}
-                        >
-                          <MaterialIcons
-                            name={
-                              price ? "check-box" : "check-box-outline-blank"
-                            }
-                            size={15}
-                            color={Colors.primary_variant}
-                          />
-                        </TouchableWithoutFeedback>
-                      </View>
-                    )}
-                  </View>
-                </View>
-              );
+              // return (
+              //   <View
+              //     style={{
+              //       width: "100%",
+              //       height: 50,
+              //       borderRadius: 5,
+              //       backgroundColor: Colors.on_primary,
+              //       padding: 10,
+              //       borderBottomColor: Colors.lineSeparate,
+              //       borderBottomWidth: 0.75
+              //     }}
+              //   >
+              //     <View
+              //       style={{
+              //         width: "100%",
+              //         height: "50%",
+              //         flexDirection: "row",
+              //         justifyContent: "space-between",
+              //         alignItems: "center"
+              //       }}
+              //     >
+              //       <View style={{ width: "20%" }}>
+              //         <ThaiText>{subtypeName}</ThaiText>
+              //       </View>
+              //       <View
+              //         style={{
+              //           width: "60%",
+              //           flexDirection: "row"
+              //         }}
+              //       >
+              //         <View
+              //           style={{
+              //             borderWidth: 0.75,
+              //             borderColor: Colors.lineSeparate,
+              //             width: "50%"
+              //           }}
+              //         >
+              //           {!isEditingMode ? (
+              //             <ThaiText>{(price ? price : 0).toString()}</ThaiText> // show price
+              //           ) : (
+              //             <TextInput
+              //               value={(price ? price : 0).toString()}
+              //               clearTextOnFocus={true}
+              //               selectTextOnFocus={true}
+              //               onChangeText={price => {
+              //                 editPriceHandler(type, subtypeIndex, price);
+              //               }}
+              //               keyboardType="numeric"
+              //             />
+              //           )}
+              //         </View>
+              //         <ThaiText> บาท/ กก.</ThaiText>
+              //       </View>
+              //       {!isEditingMode ? null : (
+              //         <View style={{ width: "20%" }}>
+              //           <TouchableWithoutFeedback
+              //             onPress={() => {
+              //               console.log("check click");
+              //             }}
+              //           >
+              //             <MaterialIcons
+              //               name={
+              //                 price ? "check-box" : "check-box-outline-blank"
+              //               }
+              //               size={15}
+              //               color={Colors.primary_variant}
+              //             />
+              //           </TouchableWithoutFeedback>
+              //         </View>
+              //       )}
+              //     </View>
+              //   </View>
+              // );
             }}
             renderSectionHeader={({ section: { type } }) => {
               return <ThaiTitleText>{type}</ThaiTitleText>;
