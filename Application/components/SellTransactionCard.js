@@ -57,7 +57,9 @@ export default SellTransactionCard = props => {
           }}
         >
           <View style={{ ...styles.BuyerName }}>
-            <ThaiText style={{ fontSize: 14 }}>{props.userName}</ThaiText>
+            <ThaiText style={{ fontSize: 14 }}>
+              ผู้รับซื้อ {props.userName}
+            </ThaiText>
           </View>
           <View style={styles.lineSeparate} />
           <View

@@ -13,11 +13,20 @@ import { useSelector, useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import ThaiText from "../../components/ThaiText";
+import { updateTxStatus } from "../../utils/firebaseFunctions";
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
+  console.log("tx detail");
   const transactionItem = props.navigation.getParam("transactionItem");
   console.log(transactionItem);
+
+  const cancelHandler = async () => {
+    await updateTxStatus({
+      txID: transactionItem.txId,
+      status: 4
+    });
+  };
 
   return (
     <View style={styles.screen}>
@@ -33,11 +42,15 @@ export default SellingTransactionDetailScreen = props => {
             />
           </View>
           <View>
-            <ThaiText>{transactionItem.buyerName}</ThaiText>
+            <ThaiText>รับที่ {transactionItem.detail.addr}</ThaiText>
+          </View>
+          <View>
+            <ThaiText>ผู้รับซื้อ {transactionItem.detail.buyer}</ThaiText>
           </View>
           <View>
             <ThaiText>{transactionItem.tel}</ThaiText>
           </View>
+          <Button onPress={cancelHandler} title="cancel" />
         </View>
       </View>
     </View>
@@ -54,7 +67,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingTop: Dimensions.get("window").height * 0.05,
-    backgroundColor: Colors.screen
+    backgroundColor: Colors.primary
   },
   infoContainerCard: {
     backgroundColor: Colors.on_primary,

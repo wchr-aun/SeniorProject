@@ -21,6 +21,17 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 
+const TEMP_QUERY_BUYER = {
+  distance: 99,
+  wasteType: {
+    PP: 159
+  },
+  addr_geopoint: {
+    latitude: 13.6487182,
+    longitude: 100.5007269
+  }
+};
+
 export default UserAuthenScreen = props => {
   useEffect(() => {
     console.log("Choose Buyer Screen");
@@ -42,17 +53,28 @@ export default UserAuthenScreen = props => {
   // Callback fn
   const loadBuyer = useCallback(async () => {
     setIsRefreshing(true);
-    await dispatch(sellerItemsAction.getBuyerList());
+    // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
+    await dispatch(
+      sellerItemsAction.getBuyerList({
+        distance: 99,
+        wasteType: {
+          PP: 159
+        },
+        addr: sellerAddr
+      })
+    );
     setIsRefreshing(false);
-  }, [dispatch, setIsRefreshing]);
+  }, [dispatch, setIsRefreshing, sellerAddr]);
 
   // Load sellerItems from firebase and store it to redux "initially"
   useEffect(() => {
     setIsLoading(true);
-    loadBuyer().then(() => {
-      setIsLoading(false);
-    });
-  }, [loadBuyer]);
+    if (sellerAddr) {
+      loadBuyer().then(() => {
+        setIsLoading(false);
+      });
+    }
+  }, [loadBuyer, sellerAddr]);
 
   const [datepickerShow, setDatapickerShow] = useState(false);
   showDateTimePicker = () => {

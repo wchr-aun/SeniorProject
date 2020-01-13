@@ -1,7 +1,7 @@
 import {
   getSellerItems,
   addWaste,
-  searchBuyers,
+  queryBuyers,
   sellWaste
 } from "../../utils/firebaseFunctions";
 import { Wastes } from "../../models/AllUserTrash";
@@ -51,21 +51,28 @@ export const updateSellerItems = sellerItems => {
 
 export const setSellerItemsForSell = sellerItems => {
   return async dispatch => {
-    sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
+    console.log(
+      "---------> SellerItemAction ! setSellerItemsForSell <----------"
+    );
+    console.log(sellerItems);
+    // sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
 
-    return dispatch({
-      type: SET_WASTE_FOR_SELL,
-      itemsForSell: [...sellerItemsForSell]
-    });
-    // After this, should set Redux store minus trash that sell
+    // return dispatch({
+    //   type: SET_WASTE_FOR_SELL,
+    //   itemsForSell: [...sellerItemsForSell]
+    // });
   };
 };
 
-export const getBuyerList = () => {
+export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      let buyerList = await searchBuyers("", "desc");
+      console.log("--- before sellerAction --- BuyerList");
+      console.log(queryData);
+      let buyerList = await queryBuyers(queryData);
+      console.log("--- after sellerAction --- BuyerList");
+      console.log(buyerList);
 
       // dispatch
       dispatch({

@@ -237,15 +237,23 @@ updatedTx = {
 } */
 
 export const updateTxStatus = async updatedTx => {
-  return functions
-    .httpsCallable("changeTxStatus")(updatedTx)
-    .then(result => {
-      if (result.data.errorMessage == null) return true;
-      else throw new Error(result.data.errorMessage);
-    })
-    .catch(err => {
-      throw new Error(err.message);
-    });
+  console.log(updatedTx);
+  return (
+    functions
+      .httpsCallable("changeTxStatus")(updatedTx)
+      .then(result => {
+        if (result.data.errorMessage == null) return true;
+        else throw new Error(result.data.errorMessage);
+      })
+      // when pass this
+      // Object {
+      //   "status": 4,
+      //   "txID": "z4k7tNTMy3s53QztKREe",
+      // } ---> [Unhandled promise rejection: Error: Cannot read property 'toMillis' of undefined]
+      .catch(err => {
+        throw new Error(err.message);
+      })
+  );
 };
 
 /* 

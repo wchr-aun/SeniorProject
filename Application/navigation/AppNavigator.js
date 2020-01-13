@@ -35,7 +35,6 @@ import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 const SellerhomepageNavigator = createStackNavigator(
   {
     SellerHomepageScreen: SellerHomepageScreen,
-    UIScreenTemplate: UIScreenTemplate,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen
   },
   { headerMode: "none" }
@@ -172,6 +171,16 @@ const SellerNavigator =
 
 // **************************** For Buyer ****************************
 
+const BuyerTransactionNavigator = createStackNavigator(
+  {
+    SellingTransactionScreen: {
+      screen: SellingTransactionScreen,
+      navigationOptions: { headerTitle: "การขายขยะ" }
+    }
+  },
+  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+);
+
 // Trash Main
 const BuyerBottomTabConfig = {
   Home: {
@@ -197,7 +206,7 @@ const BuyerBottomTabConfig = {
     }
   },
   buyerTransaction: {
-    screen: EditBuyerInfomationScreen,
+    screen: BuyerTransactionNavigator,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",
       tabBarIcon: tabInfo => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useCallback } from "react";
 import { StyleSheet, View, SectionList, TextInput } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,8 +6,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { MaterialIcons } from "@expo/vector-icons";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import * as buyerAction from "../../store/actions/buyerAction";
 
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -24,12 +24,12 @@ const buyerWasteReducer = (state, action) => {
   let purchaseList = state.purchaseList;
   switch (action.type) {
     case SET_PURCHASELIST:
-      console.log("SET_PURCHAST-LIST");
-      console.log(action.purchaseList);
+      console.log("SET_PURCHASELIST");
+      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList
-      }; //not work initially
+      };
     case EDIT_PURCHASELIST:
       purchaseList.addWaste(
         action.majortype,
@@ -52,18 +52,37 @@ export default EditBuyerInfomationScreen = props => {
     dispatch(buyerAction.fetchBuyerInfo());
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // ------------- DATA ------------- //
   const wasteListSectionFormat = useSelector(
     state => state.buyerInfo.wasteListSectionFormat
-  ); //why its not update. ?
+  );
+
+  // if redux update, local redux update
+  useEffect(() => {
+    reloadPurchaseList();
+  }, [purchaseList]);
+
+  const reloadPurchaseList = useCallback(() => {
+    console.log("#################### purchaseList is ready !");
+    console.log(purchaseList);
+    dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
+  }, [purchaseList, dispatchBuyerWaste]);
+
   const purchaseList = useSelector(state => state.buyerInfo.purchaseList); //not have
   const buyerUserInfo = useSelector(state => state.user.userProfile);
-  const [isEditingMode, setIsEditingMode] = useState(false);
+  useEffect(() => {
+    if (typeof purchaseList != undefined) {
+      // object is already have!
+      dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
+    }
+  }, [wasteListSectionFormat, purchaseList]);
 
-  const [buyerWasteState, dispatchBuyerWaste] = useReducer(
-    buyerWasteReducer,
-    {}
-  );
+  const [isEditingMode, setIsEditingMode] = useState(false);
+  const [buyerWasteState, dispatchBuyerWaste] = useReducer(buyerWasteReducer, {
+    purchaseList: {}
+  });
 
   const toggleModeHandler = () => {
     if (isEditingMode) {
@@ -92,11 +111,6 @@ export default EditBuyerInfomationScreen = props => {
       price
     });
   };
-
-  // if redux update, local redux update
-  useEffect(() => {
-    dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
-  }, [purchaseList]);
 
   return (
     <View>
@@ -141,29 +155,29 @@ export default EditBuyerInfomationScreen = props => {
           }}
         >
           <SectionList
-            sections={wasteListSectionFormat}
+            sections={wasteListSectionFormat ? wasteListSectionFormat : []}
             refreshing={isLoading}
             keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
             renderItem={({ item, section: { type } }) => {
               let subtypeIndex = Object.keys(item)[0];
               let subtypeName = item[Object.keys(item)[0]].name;
 
-              // Set price
-              let price = "";
-              if (purchaseList[type]) {
-                if (purchaseList[type][subtypeIndex]) {
-                  price = Object.keys(buyerWasteState.purchaseList).length
-                    ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
-                    : purchaseList[type][Object.keys(item)[0]];
-                } else {
-                  console.log("ไม่กำหนดราคา 1 ");
-                  price = "ยังไม่กำหนดราคา";
-                }
-              } else {
-                console.log("ไม่กำหนดราคา 2 ");
-                console.log(purchaseList);
-                price = "ยังไม่กำหนดราคา";
-              }
+              // // Set price
+              // let price = "";
+              // if (purchaseList[type]) {
+              //   if (purchaseList[type][subtypeIndex]) {
+              //     price = Object.keys(buyerWasteState.purchaseList).length
+              //       ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
+              //       : purchaseList[type][Object.keys(item)[0]];
+              //   } else {
+              //     console.log("ไม่กำหนดราคา 1 ");
+              //     price = "ยังไม่กำหนดราคา";
+              //   }
+              // } else {
+              //   console.log("ไม่กำหนดราคา 2 ");
+              //   console.log(purchaseList);
+              //   price = "ยังไม่กำหนดราคา";
+              // }
 
               return (
                 <View
@@ -177,7 +191,6 @@ export default EditBuyerInfomationScreen = props => {
                     borderBottomWidth: 0.75
                   }}
                 >
-                  {/* Row 1 */}
                   <View
                     style={{
                       width: "100%",

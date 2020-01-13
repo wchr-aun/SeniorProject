@@ -8,6 +8,8 @@ initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_WASTEBUYER:
+      console.log("BUYERINFO _ REDUCER\n\t\t");
+      console.log(action.purchaseList);
       return {
         ...state,
         wasteListSectionFormat: [...action.wasteListSectionFormat],
