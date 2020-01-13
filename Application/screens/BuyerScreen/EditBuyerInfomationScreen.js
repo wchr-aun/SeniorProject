@@ -60,15 +60,11 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  const editPriceHandler = (majortype, subtypeIndex, price) => {
-    // dispatch({
-    //   type: EDIT_PURCHASELIST,
-    //   majortype,
-    //   subtypeIndex,
-    //   price
-    // });
-
-    dispatch(buyerAction.editPurchaseList(majortype, subtypeIndex, price));
+  const editPurchaseList = (majortype, subtype, price) => {
+    console.log(majortype);
+    console.log(subtype);
+    console.log(price);
+    purchaseList.editValue(majortype, subtype, price);
   };
 
   return (
@@ -125,7 +121,11 @@ export default EditBuyerInfomationScreen = props => {
               let price = "";
               if (purchaseList[type]) {
                 if (purchaseList[type][subtypeIndex]) {
-                  price = purchaseList[type][Object.keys(item)[0]];
+                  if (purchaseList._count[type][subtypeIndex] != 0)
+                    price = purchaseList._count[type][subtypeIndex];
+                  else {
+                    price = purchaseList[type][Object.keys(item)[0]];
+                  }
                 } else {
                   price = "ยังไม่กำหนดราคา";
                 }
@@ -178,7 +178,14 @@ export default EditBuyerInfomationScreen = props => {
                             clearTextOnFocus={true}
                             selectTextOnFocus={true}
                             onChangeText={price => {
-                              editPriceHandler(type, subtypeIndex, price);
+                              dispatch(
+                                buyerAction.editPurchaseList(
+                                  type,
+                                  subtypeIndex,
+                                  price
+                                )
+                              );
+                              // editPurchaseList(type, subtypeIndex, price);
                             }}
                             keyboardType="numeric"
                           />

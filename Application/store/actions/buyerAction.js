@@ -23,7 +23,16 @@ export const fetchBuyerInfo = () => {
   };
 };
 
-export const editPurchaseList = () => {};
+export const editPurchaseList = (type, subtypeIndex, price) => {
+  return async dispatch => {
+    dispatch({
+      type: EDIT_PURCHASELIST,
+      majortype: type,
+      subtype: subtypeIndex,
+      price
+    });
+  };
+};
 
 export const updatePurchaseList = (purchaseList, desc, addr) => {
   return async dispatch => {

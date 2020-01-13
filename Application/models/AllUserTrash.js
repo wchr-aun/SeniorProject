@@ -43,23 +43,26 @@ export class Wastes {
     this._count[type][subtype] = value;
   }
   incrementalValue(type, subtype, value) {
+    console.log("in incremental --");
+    console.log(value);
     this._count[type][subtype] += value;
   }
   confirmValue() {
-    let value
+    let value;
     for (let type in this._count) {
       for (let subtype in this._count[type]) {
         if (this._count[type][subtype] != 0) {
-          if (this[type] == undefined || this[type][subtype] == undefined) value = 0 + this._count[type][subtype]
-          else value = this[type][subtype] + this._count[type][subtype]
+          if (this[type] == undefined || this[type][subtype] == undefined)
+            value = 0 + this._count[type][subtype];
+          else value = this[type][subtype] + this._count[type][subtype];
           this._count[type][subtype] = 0;
-          this.addWaste(type, subtype, value)
+          this.addWaste(type, subtype, value);
         }
       }
     }
   }
   clearValue() {
-    this._count = {}
+    this._count = {};
     for (let type in this)
       for (let subtype in this[type]) {
         if (this._count[type] == undefined) this._count[type] = {};
@@ -108,8 +111,8 @@ export class Wastes {
     return false;
   }
   getObject() {
-    let obj = {}
-    obj.length = 0
+    let obj = {};
+    obj.length = 0;
     for (let type in this) {
       if (type[0] != "_")
         for (let subtype in this[type]) {
@@ -135,8 +138,7 @@ export class Wastes {
     let data = [];
     let sectionListFormat = [];
     for (let type in this) {
-      if (type[0] != "_")
-        console.log(this[type]);
+      if (type[0] != "_") console.log(this[type]);
       // // loop through "HDPE", "PP"
       // for (let subtype in this[type]) {
       //   // console.log(subtype);
