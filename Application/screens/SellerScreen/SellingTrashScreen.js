@@ -122,7 +122,6 @@ export default SellingTrashScreen = props => {
   }, [dispatch, setIsRefreshing]);
 
   const dispatch = useDispatch();
-
   return (
     <View
       style={{

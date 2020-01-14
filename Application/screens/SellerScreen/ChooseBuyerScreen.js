@@ -20,17 +20,7 @@ import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as transactionAction from "../../store/actions/transactionAction";
-
-const TEMP_QUERY_BUYER = {
-  distance: 99,
-  wasteType: {
-    PP: 159
-  },
-  addr_geopoint: {
-    latitude: 13.6487182,
-    longitude: 100.5007269
-  }
-};
+import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 
 export default UserAuthenScreen = props => {
   useEffect(() => {
@@ -75,7 +65,6 @@ export default UserAuthenScreen = props => {
 
   const [datepickerShow, setDatapickerShow] = useState(false);
   showDateTimePicker = () => {
-    // this.setState({ isDateTimePickerVisible: true });
     setDatapickerShow(true);
   };
 
@@ -91,29 +80,41 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(false);
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
   handleDatePicked = async date => {
     console.log("A date has been picked: ", date.getTime());
     hideDateTimePicker();
 
-    console.log("dispatch for chooseBuyerSell");
-    try {
-      await dispatch(
-        sellerItemsAction.chooseBuyerSell(
-          sellerAddr,
-          sellerItemsForSell,
-          buyerName,
-          buyerPriceInfo,
-          date.getTime()
-        )
-      );
+    setModalVisible(true);
 
-      await dispatch(transactionAction.fetchTransaction("seller"));
-      props.navigation.navigate("SellTransaction");
-    } catch (err) {
-      Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
-    }
-    console.log("after dispatch  for chooseBuyerSell");
+    // ---------> FINAL: send to redux
+    // try {
+    //   await dispatch(
+    //     sellerItemsAction.chooseBuyerSell(
+    //       sellerAddr,
+    //       sellerItemsForSell,
+    //       buyerName,
+    //       buyerPriceInfo,
+    //       date.getTime()
+    //     )
+    //   );
+
+    //   await dispatch(transactionAction.fetchTransaction("seller"));
+    //   props.navigation.navigate("SellTransaction");
+    // } catch (err) {
+    //   Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
+    // }
+    // console.log("after dispatch  for chooseBuyerSell");
   };
+
+  if (modalVisible) {
+    return (
+      <ModalShowAssignedTime
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -136,7 +137,7 @@ export default UserAuthenScreen = props => {
           <FlatList
             data={buyerListRedux}
             keyExtractor={item => item.id}
-            renderItem={itemData => (
+            renderItem={({ item }) => (
               <TouchableOpacity
                 style={{
                   width: wp("90%"),
@@ -147,15 +148,10 @@ export default UserAuthenScreen = props => {
                   margin: wp("3.75%"),
                   justifyContent: "center"
                 }}
-                onPress={() =>
-                  buyerSelectHandler(
-                    itemData.item.id,
-                    itemData.item.wastePriceInfo.purchaseList
-                  )
-                }
+                onPress={() => buyerSelectHandler(item.id, item.purchaseList)}
               >
                 <View style={{ alignSelf: "center" }}>
-                  <Text>{itemData.item.id}</Text>
+                  <Text>{item.id}</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -164,7 +160,7 @@ export default UserAuthenScreen = props => {
         <View style={{ width: wp("90%"), height: hp("30") }}>
           {datepickerShow ? (
             <DateTimePicker
-              mode="datetime"
+              mode="date"
               isVisible={datepickerShow}
               onConfirm={handleDatePicked}
               onCancel={hideDateTimePicker}
