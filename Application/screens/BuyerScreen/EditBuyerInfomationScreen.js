@@ -44,6 +44,7 @@ export default EditBuyerInfomationScreen = props => {
 
   const toggleModeHandler = () => {
     if (isEditingMode) {
+      purchaseList.confirmValue();
       // done edit
       let description = "temp";
       dispatch(
@@ -119,12 +120,15 @@ export default EditBuyerInfomationScreen = props => {
 
               // Set price
               let price = "";
+              let isUpdated = false;
               if (purchaseList[type]) {
                 if (purchaseList[type][subtypeIndex]) {
-                  if (purchaseList._count[type][subtypeIndex] != 0)
-                    price = purchaseList._count[type][subtypeIndex];
-                  else {
+                  if (purchaseList._count[type][subtypeIndex] != 0) {
+                    price = purchaseList._count[type][subtypeIndex]; //have an update
+                    isUpdated = true;
+                  } else {
                     price = purchaseList[type][Object.keys(item)[0]];
+                    isUpdated = false;
                   }
                 } else {
                   price = "ยังไม่กำหนดราคา";
@@ -185,9 +189,13 @@ export default EditBuyerInfomationScreen = props => {
                                   price
                                 )
                               );
-                              // editPurchaseList(type, subtypeIndex, price);
                             }}
                             keyboardType="numeric"
+                            style={{
+                              color: isUpdated
+                                ? Colors.primary_variant
+                                : "black"
+                            }}
                           />
                         )}
                       </View>

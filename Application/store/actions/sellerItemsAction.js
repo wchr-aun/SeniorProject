@@ -68,10 +68,10 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      console.log("--- before sellerAction --- BuyerList");
+      console.log("--- queryData before --> queryBuyers(queryData)");
       console.log(queryData);
       let buyerList = await queryBuyers(queryData);
-      console.log("--- after sellerAction --- BuyerList");
+      console.log("--- queryData after sellerAction --- BuyerList");
       console.log(buyerList);
 
       // dispatch

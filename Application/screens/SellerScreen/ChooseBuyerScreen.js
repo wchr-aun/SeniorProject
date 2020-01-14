@@ -56,9 +56,12 @@ export default UserAuthenScreen = props => {
     // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
     await dispatch(
       sellerItemsAction.getBuyerList({
-        distance: 99,
+        distance: 10,
         wasteType: {
-          PP: 159
+          plastic: {
+            PP: 30
+          },
+          length: 1
         },
         addr: sellerAddr
       })
