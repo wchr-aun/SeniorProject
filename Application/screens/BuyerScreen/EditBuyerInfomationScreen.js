@@ -17,39 +17,18 @@ import AppVariableSetting from "../../constants/AppVariableSetting";
 import ThaiText from "../../components/ThaiText";
 import CustomButton from "../../components/UI/CustomButton";
 
-const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
-const SET_PURCHASELIST = "SET_PURCHASELIST";
-
-const buyerWasteReducer = (state, action) => {
-  let purchaseList = state.purchaseList;
-  switch (action.type) {
-    case SET_PURCHASELIST:
-      console.log("SET_PURCHASELIST");
-      console.log(action);
-      return {
-        ...state,
-        purchaseList: action.purchaseList
-      };
-    case EDIT_PURCHASELIST:
-      purchaseList.addWaste(
-        action.majortype,
-        action.subtypeIndex,
-        action.price ? action.price : 0
-      );
-      return {
-        ...state,
-        purchaseList
-      };
-    default:
-      return state;
-  }
-};
-
 export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
+
+  // load data
+  const loadBuyerInfo = async () => {
+    setIsLoading(true);
+    await dispatch(buyerAction.fetchBuyerInfo());
+    setIsLoading(false);
+  };
   useEffect(() => {
-    dispatch(buyerAction.fetchBuyerInfo());
+    loadBuyerInfo();
   }, []);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -58,40 +37,19 @@ export default EditBuyerInfomationScreen = props => {
   const wasteListSectionFormat = useSelector(
     state => state.buyerInfo.wasteListSectionFormat
   );
-
-  // if redux update, local redux update
-  useEffect(() => {
-    reloadPurchaseList();
-  }, [purchaseList]);
-
-  const reloadPurchaseList = useCallback(() => {
-    console.log("#################### purchaseList is ready !");
-    console.log(purchaseList);
-    dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
-  }, [purchaseList, dispatchBuyerWaste]);
-
-  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); //not have
+  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); // sure data is ready
   const buyerUserInfo = useSelector(state => state.user.userProfile);
-  useEffect(() => {
-    if (typeof purchaseList != undefined) {
-      // object is already have!
-      dispatchBuyerWaste({ type: SET_PURCHASELIST, purchaseList });
-    }
-  }, [wasteListSectionFormat, purchaseList]);
 
   const [isEditingMode, setIsEditingMode] = useState(false);
-  const [buyerWasteState, dispatchBuyerWaste] = useReducer(buyerWasteReducer, {
-    purchaseList: {}
-  });
 
   const toggleModeHandler = () => {
     if (isEditingMode) {
+      purchaseList.confirmValue();
       // done edit
       let description = "temp";
-
       dispatch(
         buyerAction.updatePurchaseList(
-          buyerWasteState.purchaseList.getObject(),
+          purchaseList.getObject(),
           description,
           buyerUserInfo.addr
         )
@@ -103,13 +61,11 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  const editPriceHandler = (majortype, subtypeIndex, price) => {
-    dispatchBuyerWaste({
-      type: EDIT_PURCHASELIST,
-      majortype,
-      subtypeIndex,
-      price
-    });
+  const editPurchaseList = (majortype, subtype, price) => {
+    console.log(majortype);
+    console.log(subtype);
+    console.log(price);
+    purchaseList.editValue(majortype, subtype, price);
   };
 
   return (
@@ -162,22 +118,24 @@ export default EditBuyerInfomationScreen = props => {
               let subtypeIndex = Object.keys(item)[0];
               let subtypeName = item[Object.keys(item)[0]].name;
 
-              // // Set price
-              // let price = "";
-              // if (purchaseList[type]) {
-              //   if (purchaseList[type][subtypeIndex]) {
-              //     price = Object.keys(buyerWasteState.purchaseList).length
-              //       ? buyerWasteState.purchaseList[type][Object.keys(item)[0]]
-              //       : purchaseList[type][Object.keys(item)[0]];
-              //   } else {
-              //     console.log("ไม่กำหนดราคา 1 ");
-              //     price = "ยังไม่กำหนดราคา";
-              //   }
-              // } else {
-              //   console.log("ไม่กำหนดราคา 2 ");
-              //   console.log(purchaseList);
-              //   price = "ยังไม่กำหนดราคา";
-              // }
+              // Set price
+              let price = "";
+              let isUpdated = false;
+              if (purchaseList[type]) {
+                if (purchaseList[type][subtypeIndex]) {
+                  if (purchaseList._count[type][subtypeIndex] != 0) {
+                    price = purchaseList._count[type][subtypeIndex]; //have an update
+                    isUpdated = true;
+                  } else {
+                    price = purchaseList[type][Object.keys(item)[0]];
+                    isUpdated = false;
+                  }
+                } else {
+                  price = "ยังไม่กำหนดราคา";
+                }
+              } else {
+                price = "ยังไม่กำหนดราคา";
+              }
 
               return (
                 <View
@@ -224,9 +182,20 @@ export default EditBuyerInfomationScreen = props => {
                             clearTextOnFocus={true}
                             selectTextOnFocus={true}
                             onChangeText={price => {
-                              editPriceHandler(type, subtypeIndex, price);
+                              dispatch(
+                                buyerAction.editPurchaseList(
+                                  type,
+                                  subtypeIndex,
+                                  price
+                                )
+                              );
                             }}
                             keyboardType="numeric"
+                            style={{
+                              color: isUpdated
+                                ? Colors.primary_variant
+                                : "black"
+                            }}
                           />
                         )}
                       </View>

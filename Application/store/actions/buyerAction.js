@@ -5,24 +5,9 @@ import {
 } from "../../utils/firebaseFunctions";
 import { Wastes } from "../../models/AllUserTrash";
 
-export const FETCH_WASTEBUYER = "FETCH_WASTEBUYER";
-export const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
-
-//example purchaseList
-// this buyer purchaseList
-// const purchaseList = {
-//   plastic: {
-//     PP: 12,
-//     HDPE: 8.5,
-//     PS: 4.5,
-//     PETE: 7,
-//     PVC: 17
-//   },
-//   glass: {
-//     redGlass: 4,
-//     greenGlass: 2
-//   }
-// };
+export const FETCH_PURCHASELIST = "FETCH_PURCHASELIST";
+export const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
+export const CONFIRM_CHANGE_PURCHASELIST = "CONFIRM_CHANGE_PURCHASELIST";
 
 export const fetchBuyerInfo = () => {
   return async dispatch => {
@@ -31,9 +16,20 @@ export const fetchBuyerInfo = () => {
     purchaseList = await getPurchaseList();
 
     dispatch({
-      type: FETCH_WASTEBUYER,
+      type: FETCH_PURCHASELIST,
       wasteListSectionFormat,
       purchaseList: new Wastes(purchaseList)
+    });
+  };
+};
+
+export const editPurchaseList = (type, subtypeIndex, price) => {
+  return async dispatch => {
+    dispatch({
+      type: EDIT_PURCHASELIST,
+      majortype: type,
+      subtype: subtypeIndex,
+      price: Number(price)
     });
   };
 };
@@ -59,6 +55,6 @@ buyerInfo = {
       addr
     });
 
-    dispatch({ type: UPDATE_PURCHASELIST, purchaseList });
+    dispatch({ type: EDIT_PURCHASELIST, purchaseList });
   };
 };

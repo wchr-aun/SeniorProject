@@ -1,0 +1,2 @@
+1. Redux Store Update แล้ว View ที่ใช้ Store นั้นจะอัพเดทก็ต่อเมื่อ ตอน Return ในหน้า Reducer นั้น Return ด้วย Clone, Copy เท่านั้น
+    - Clone Object instance -> var clone = Object.assign(Object.create(original), original);

@@ -9,10 +9,13 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
+import { Dropdown } from "react-native-material-dropdown";
 
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import TrashCardForSell from "../../components/TrashCardForSell";
 import TrashCard from "../../components/TrashCard";
+import CustomButton from "../../components/UI/CustomButton";
+import { TextInput } from "react-native-gesture-handler";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
@@ -30,11 +33,6 @@ const trashSellingReducer = (state, action) => {
         sellerItems: action.sellerItems,
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
-    // case SELECT_ITEM:
-    //   console.log("action.preIsSelected");
-    //   return {
-    //     ...state
-    //   };
     case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
       sellerItems.incrementalValue(
@@ -85,6 +83,7 @@ export default SellingTrashScreen = props => {
   // Get data from redux
   // Get User trash
   // Get sellerItems and wasteTyp from redux
+  const [distance, setDistance] = useState("10");
   const sellerItems = useSelector(state => {
     return state.sellerItems.sellerItems;
   });
@@ -123,7 +122,6 @@ export default SellingTrashScreen = props => {
   }, [dispatch, setIsRefreshing]);
 
   const dispatch = useDispatch();
-
   return (
     <View
       style={{
@@ -199,21 +197,43 @@ export default SellingTrashScreen = props => {
               );
             }}
           />
-          <View>
-            <Button
-              title={"Sell"}
-              onPress={() => {
-                console.log(trashsState.sellerItems);
-                dispatch(
-                  sellerItemsAction.setSellerItemsForSell(
-                    trashsState.sellerItems
-                  )
-                );
-                props.navigation.navigate("chooseBuyerForSellScreen");
-              }}
-            ></Button>
-          </View>
         </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "20%",
+          flexDirection: "row",
+          alignItems: "center"
+        }}
+      >
+        <View style={{ width: "40%", height: "100%" }}>
+          <TextInput
+            value={distance}
+            onChangeText={value => {
+              setDistance(value.toString());
+            }}
+            keyboardType="number-pad"
+          />
+        </View>
+
+        <CustomButton
+          style={{ width: "40%" }}
+          btnColor={Colors.primary}
+          onPress={() => {
+            dispatch(
+              sellerItemsAction.setSellerItemsForSell(trashsState.sellerItems)
+            );
+            props.navigation.navigate({
+              routeName: "chooseBuyerForSellScreen",
+              params: { distance }
+            });
+          }}
+          btnTitleColor={Colors.on_primary}
+          btnTitleFontSize={14}
+        >
+          ขายขยะ
+        </CustomButton>
       </View>
     </View>
   );

@@ -49,18 +49,20 @@ export const updateSellerItems = sellerItems => {
   };
 };
 
-export const setSellerItemsForSell = sellerItems => {
+export const setSellerItemsForSell = sellerItemsForSell => {
   return async dispatch => {
-    console.log(
-      "---------> SellerItemAction ! setSellerItemsForSell <----------"
-    );
-    console.log(sellerItems);
-    // sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
+    console.log("---------> setSellerItemsForSell Action <----------");
+    console.log(sellerItemsForSell);
 
-    // return dispatch({
-    //   type: SET_WASTE_FOR_SELL,
-    //   itemsForSell: [...sellerItemsForSell]
-    // });
+    let sellerItemsForSellCloned = Object.assign(
+      Object.create(sellerItemsForSell),
+      sellerItemsForSell
+    );
+
+    return dispatch({
+      type: SET_WASTE_FOR_SELL,
+      sellerItemsForSell: sellerItemsForSellCloned.getObject()
+    });
   };
 };
 
@@ -68,10 +70,10 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      console.log("--- before sellerAction --- BuyerList");
+      console.log("--- queryData before --> queryBuyers(queryData)");
       console.log(queryData);
       let buyerList = await queryBuyers(queryData);
-      console.log("--- after sellerAction --- BuyerList");
+      console.log("--- queryData after sellerAction --- BuyerList");
       console.log(buyerList);
 
       // dispatch
@@ -124,3 +126,48 @@ export const chooseBuyerSell = (
     }
   };
 };
+
+// Object {
+//   "detail": Object {
+//     "addr": "91 กรุงเทพมหานคร ประเทศไทย 10140",
+//     "addr_geopoint": Object {
+//       "geohash": "w4rmwucv7",
+//       "geopoint": GeoPoint {
+//         "_lat": 13.6500561,
+//         "_long": 100.4945061,
+//       },
+//     },
+//     "assignedTime": Array [
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 946659600,
+//       },
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 978282000,
+//       },
+//       Timestamp {
+//         "nanoseconds": 0,
+//         "seconds": 980960400,
+//       },
+//     ],
+//     "buyer": "huaweione",
+//     "createTimestamp": Timestamp {
+//       "nanoseconds": 792000000,
+//       "seconds": 1578646010,
+//     },
+//     "saleList": Object {
+//       "length": 1,
+//       "plastic": Object {
+//         "PP": Object {
+//           "amount": 1,
+//           "price": 15,
+//         },
+//       },
+//     },
+//     "seller": "huaweione",
+//     "txStatus": 0,
+//     "txType": 0,
+//   },
+//   "txId": "z4k7tNTMy3s53QztKREe",
+// }

@@ -37,24 +37,19 @@ export default SellingTransactionScreen = props => {
         }}
       >
         <FlatList
-          // data={SELLINGTRANSACTION}
           data={transactions}
           keyExtractor={item => item.txId}
-          renderItem={itemData => (
+          renderItem={({ item }) => (
             <SellTransactionCard
-              amountOfType={itemData.item.detail.items.length}
+              amountOfType={item.detail.saleList.length}
               imgUrl={
                 "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
               }
-              userName={itemData.item.detail.buyer}
-              meetDate={libary.formatDate(
-                itemData.item.detail.assignedTime.toDate()
-              )}
-              meetTime={libary.formatTime(
-                itemData.item.detail.assignedTime.toDate()
-              )}
+              userName={item.detail.buyer}
+              // meetDate={libary.formatDate(item.detail.assignedTime.toDate())}
+              // meetTime={libary.formatTime(item.detail.assignedTime.toDate())}
               onPress={() => {
-                selectedHandler(itemData.item);
+                selectedHandler(item);
               }}
             />
           )}
