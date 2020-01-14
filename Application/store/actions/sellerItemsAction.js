@@ -49,18 +49,20 @@ export const updateSellerItems = sellerItems => {
   };
 };
 
-export const setSellerItemsForSell = sellerItems => {
+export const setSellerItemsForSell = sellerItemsForSell => {
   return async dispatch => {
-    console.log(
-      "---------> SellerItemAction ! setSellerItemsForSell <----------"
-    );
-    console.log(sellerItems);
-    // sellerItemsForSell = sellerItems.filter(item => item.amountForSell > 0);
+    console.log("---------> setSellerItemsForSell Action <----------");
+    console.log(sellerItemsForSell);
 
-    // return dispatch({
-    //   type: SET_WASTE_FOR_SELL,
-    //   itemsForSell: [...sellerItemsForSell]
-    // });
+    let sellerItemsForSellCloned = Object.assign(
+      Object.create(sellerItemsForSell),
+      sellerItemsForSell
+    );
+
+    return dispatch({
+      type: SET_WASTE_FOR_SELL,
+      sellerItemsForSell: sellerItemsForSellCloned.getObject()
+    });
   };
 };
 

@@ -38,11 +38,10 @@ export default UserAuthenScreen = props => {
   }, []);
 
   // required data for sending an transaction
-  const sellerItemsForSell = useSelector(
-    state => state.sellerItems.itemsForSell
-  );
   const sellerAddr = useSelector(state => state.user.userProfile.addr);
-
+  const sellerItemsForSell = useSelector(
+    state => state.sellerItems.sellerItemsForSell
+  );
   const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
 
   // trash user snapshot
@@ -56,13 +55,8 @@ export default UserAuthenScreen = props => {
     // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
     await dispatch(
       sellerItemsAction.getBuyerList({
-        distance: 10,
-        wasteType: {
-          plastic: {
-            PP: 30
-          },
-          length: 1
-        },
+        distance: parseInt(props.navigation.getParam("distance"), 10),
+        wasteType: sellerItemsForSell,
         addr: sellerAddr
       })
     );
@@ -72,7 +66,7 @@ export default UserAuthenScreen = props => {
   // Load sellerItems from firebase and store it to redux "initially"
   useEffect(() => {
     setIsLoading(true);
-    if (sellerAddr) {
+    if (sellerAddr && sellerItemsForSell) {
       loadBuyer().then(() => {
         setIsLoading(false);
       });

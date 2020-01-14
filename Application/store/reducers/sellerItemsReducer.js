@@ -9,9 +9,9 @@ import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
   sellerItems: {},
+  sellerItemsForSell: {},
   sellerItemsFlatListFormat: [],
   sellerItemsCamera: [],
-  itemsForSell: [],
   buyerList: []
 };
 
@@ -26,9 +26,10 @@ export default function(state = initialState, action) {
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
+      console.log(action);
       return {
         ...state,
-        itemsForSell: [...action.itemsForSell]
+        sellerItemsForSell: action.sellerItemsForSell
       };
     case CHOOSEBUYER_SELL:
       console.log("CHOOSEBUYER_SELL Reducer Run");
