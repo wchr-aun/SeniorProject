@@ -161,24 +161,28 @@ export default UserAuthenScreen = props => {
           <FlatList
             data={buyerListRedux}
             keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={{
-                  width: wp("90%"),
-                  height: hp("15%"),
-                  backgroundColor: Colors.screen,
-                  alignSelf: "center",
-                  borderRadius: 10,
-                  margin: wp("3.75%"),
-                  justifyContent: "center"
-                }}
-                onPress={() => buyerSelectHandler(item.id, item.purchaseList)}
-              >
-                <View style={{ alignSelf: "center" }}>
-                  <Text>{item.id}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
+            renderItem={({ item }) => {
+              console.log("Buyer Info");
+              console.log(item);
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: wp("90%"),
+                    height: hp("15%"),
+                    backgroundColor: Colors.screen,
+                    alignSelf: "center",
+                    borderRadius: 10,
+                    margin: wp("3.75%"),
+                    justifyContent: "center"
+                  }}
+                  onPress={() => buyerSelectHandler(item.id, item.purchaseList)}
+                >
+                  <View style={{ alignSelf: "center" }}>
+                    <Text>{item.id}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
           />
         </View>
         <View style={{ width: wp("90%"), height: hp("30") }}>

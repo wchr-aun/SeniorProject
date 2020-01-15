@@ -19,15 +19,16 @@ import ThaiText from "./ThaiText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default ModalShowSellersItemsScreen = props => {
-  const [wasteType, setWasteType] = useState();
-  const [wasteDescription, setWasteDescription] = useState();
-  const [wasteDisposal, setWasteDisposal] = useState();
+  console.log("props.wasteTypeDropdownFormat");
+  console.log(props.wasteTypeDropdownFormat);
+  const [majorType, setMajorType] = useState();
+  const [subType, setSubType] = useState();
   const [amount, setAmount] = useState();
 
-  const onDropdownChangeHandler = wasteType => {
-    setWasteType(wasteType);
+  const onDropdownSelectMajorType = majorType => {
+    setMajorType(majorType);
 
-    let wasteItem = props.data.filter(item => item.value === wasteType)[0];
+    let wasteItem = props.data.filter(item => item.value === majorType)[0];
     console.log(wasteItem);
     setWasteDescription(wasteItem.info.description);
     setWasteDisposal(wasteItem.info.disposal);
@@ -35,7 +36,7 @@ export default ModalShowSellersItemsScreen = props => {
 
   const addWasteHandler = () => {
     props.addNewWasteHandler(
-      wasteType,
+      majorType,
       wasteDescription,
       wasteDisposal,
       parseInt(amount, 10)
@@ -74,7 +75,6 @@ export default ModalShowSellersItemsScreen = props => {
           <View
             style={{
               justifyContent: "space-around",
-              flexDirection: "row",
               width: "100%",
               height: "30%",
               alignItems: "center"
@@ -83,9 +83,18 @@ export default ModalShowSellersItemsScreen = props => {
             <View style={{ width: "40%", height: wp("10%") }}>
               <Dropdown
                 label="Waste Type"
-                data={props.data}
+                data={props.wasteTypeDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
                 onChangeText={thisValue => {
-                  onDropdownChangeHandler(thisValue);
+                  onDropdownSelectMajorType(thisValue);
+                }}
+              />
+            </View>
+            <View style={{ width: "40%", height: wp("10%") }}>
+              <Dropdown
+                label="Waste Type"
+                data={props.wasteTypeDropdownFormat[0].subTypes}
+                onChangeText={thisValue => {
+                  onDropdownSelectMajorType(thisValue);
                 }}
               />
             </View>

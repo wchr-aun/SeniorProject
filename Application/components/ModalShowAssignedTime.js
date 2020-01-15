@@ -49,7 +49,7 @@ const assignedTimeReducer = (state, action) => {
           dateTmp.setMinutes(item.minute);
           dateTmp.setSeconds(0);
           dateTmp.setMilliseconds(0);
-          selectedTimes.push(dateTmp);
+          selectedTimes.push(dateTmp.getTime());
         }
       });
       return {
