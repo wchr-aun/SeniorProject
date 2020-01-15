@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -19,28 +19,33 @@ import ThaiText from "./ThaiText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default ModalShowSellersItemsScreen = props => {
-  console.log("props.wasteTypeDropdownFormat");
-  console.log(props.wasteTypeDropdownFormat);
-  const [majorType, setMajorType] = useState();
   const [subType, setSubType] = useState();
   const [amount, setAmount] = useState();
 
-  const onDropdownSelectMajorType = majorType => {
-    setMajorType(majorType);
+  const [majorType, setMajorType] = useState(
+    props.wasteTypeDropdownFormat[0].value
+  );
+  const [subTypes, setSubTypes] = useState(
+    props.wasteTypeDropdownFormat[0].subTypes
+  );
+  const getSubTypeFromMajorType = majorType => {
+    let focusItem = props.wasteTypeDropdownFormat.filter(
+      item => item.value === majorType
+    )[0]; //get subtype
+    setSubTypes(focusItem.subTypes);
+  };
 
-    let wasteItem = props.data.filter(item => item.value === majorType)[0];
-    console.log(wasteItem);
-    setWasteDescription(wasteItem.info.description);
-    setWasteDisposal(wasteItem.info.disposal);
+  const onDropdownSelectMajorType = majorType => {
+    getSubTypeFromMajorType(majorType);
+    setMajorType(majorType);
+  };
+
+  const onDropdownSelectSubType = subType => {
+    setSubType(subType);
   };
 
   const addWasteHandler = () => {
-    props.addNewWasteHandler(
-      majorType,
-      wasteDescription,
-      wasteDisposal,
-      parseInt(amount, 10)
-    );
+    props.addNewWasteHandler(majorType, subType, parseInt(amount, 10));
     props.setModalVisible(false);
   };
 
@@ -92,9 +97,9 @@ export default ModalShowSellersItemsScreen = props => {
             <View style={{ width: "40%", height: wp("10%") }}>
               <Dropdown
                 label="Waste Type"
-                data={props.wasteTypeDropdownFormat[0].subTypes}
+                data={subTypes}
                 onChangeText={thisValue => {
-                  onDropdownSelectMajorType(thisValue);
+                  onDropdownSelectSubType(thisValue);
                 }}
               />
             </View>

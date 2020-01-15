@@ -64,10 +64,10 @@ export const getWasteType = async () => {
 
       docs.forEach(doc => {
         wasteType = { ...wasteType, [doc.id]: doc.data() };
-        let subtypes = [];
+        let subTypes = [];
         for (let subType in doc.data()) {
           //PP, HDPE,
-          subtypes.push({ value: subType });
+          subTypes.push({ value: subType });
         }
         wasteTypeDropdownFormat.push({ value: doc.id, subTypes: subTypes });
       });
