@@ -132,20 +132,4 @@ export class Wastes {
     }
     return data;
   }
-
-  getSectionListFormat() {
-    // loop through "Plastic", "Glass"
-    let data = [];
-    let sectionListFormat = [];
-    for (let type in this) {
-      if (type[0] != "_") console.log(this[type]);
-      // // loop through "HDPE", "PP"
-      // for (let subtype in this[type]) {
-      //   // console.log(subtype);
-      //   data.push({ type, subtype, amount: this[type][subtype] });
-      // }
-      // sectionListFormat.push({ type, data });
-    }
-    return sectionListFormat;
-  }
 }

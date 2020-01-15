@@ -95,24 +95,27 @@ export const chooseBuyerSell = (
   assignedTime
 ) => {
   return async dispatch => {
-    // Map buyer price into an transaction
-    let updatedItems = [];
-    sellerItems.forEach((item, index) => {
-      updatedItems.push({
-        amount: item.amountForSell,
-        wasteType: item.wasteType,
-        price: buyerPriceInfo[item.wasteType]
-      });
-    });
-
+    console.log("price info");
+    console.log(buyerPriceInfo);
+    // // sellerItems in itemsFormat
+    // for(let type in sellerItems){
+    //   if(type != 'length'){
+    //     for(let subtype in sellerItems[type]){
+    //       console.log(subtype) //PP
+    //       sellerItems[type][subtype] = {amount: sellerItems[type][subtype], price: }
+    //     }
+    //   }
+    // }
     // do async task
     let transaction = {
-      items: updatedItems,
+      saleList: sellerItems,
       addr: sellAddr,
       buyer: buyerName,
       txType: 0,
       assignedTime: assignedTime
     };
+    console.log("___ In chooseBuyerSell __ Action");
+    console.log(transaction);
 
     try {
       await sellWaste(transaction);

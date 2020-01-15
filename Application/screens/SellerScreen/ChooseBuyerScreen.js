@@ -80,38 +80,62 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(false);
   };
 
+  const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
+  const [selectedTimes, setSelectedTimes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  handleDatePicked = async date => {
-    console.log("A date has been picked: ", date.getTime());
+  handleDatePicked = date => {
+    setDate(date);
     hideDateTimePicker();
-
     setModalVisible(true);
-
-    // ---------> FINAL: send to redux
-    // try {
-    //   await dispatch(
-    //     sellerItemsAction.chooseBuyerSell(
-    //       sellerAddr,
-    //       sellerItemsForSell,
-    //       buyerName,
-    //       buyerPriceInfo,
-    //       date.getTime()
-    //     )
-    //   );
-
-    //   await dispatch(transactionAction.fetchTransaction("seller"));
-    //   props.navigation.navigate("SellTransaction");
-    // } catch (err) {
-    //   Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
-    // }
-    // console.log("after dispatch  for chooseBuyerSell");
   };
+
+  const submitSellRequest = useCallback(async () => {
+    // ---------> FINAL: send to redux
+    try {
+      await dispatch(
+        sellerItemsAction.chooseBuyerSell(
+          sellerAddr,
+          sellerItemsForSell,
+          buyerName,
+          buyerPriceInfo,
+          selectedTimes
+        )
+      );
+
+      await dispatch(transactionAction.fetchTransaction("seller"));
+      props.navigation.navigate("SellTransaction");
+    } catch (err) {
+      Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
+    }
+    console.log("after dispatch  for chooseBuyerSell");
+  }, [
+    dispatch,
+    sellerAddr,
+    sellerItemsForSell,
+    buyerName,
+    buyerPriceInfo,
+    selectedTimes
+  ]);
+
+  // When 'assignedTime.selectedTimes' show it
+  useEffect(() => {
+    if (
+      sellerAddr &&
+      sellerItemsForSell.length &&
+      buyerName &&
+      buyerPriceInfo &&
+      selectedTimes.length
+    )
+      submitSellRequest();
+  }, [selectedTimes]);
 
   if (modalVisible) {
     return (
       <ModalShowAssignedTime
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
+        date={date}
+        setSelectedTimes={setSelectedTimes}
       />
     );
   }
