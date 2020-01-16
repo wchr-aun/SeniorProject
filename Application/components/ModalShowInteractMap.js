@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
-  Dimensions,
   Button,
   Modal,
-  Text,
-  TextInput,
   Alert
 } from "react-native";
 import Colors from "../constants/Colors";
@@ -63,15 +60,6 @@ export default ModalShowInteractMap = props => {
     props.setModalVisible(false);
   };
 
-  // let markerCoordinates;
-
-  // if (selectedLocation) {
-  //   markerCoordinates = {
-  //     latitude: selectedLocation.lat,
-  //     longitude: selectedLocation.lng
-  //   };
-  // }
-
   return (
     <Modal
       animationType="slide"
@@ -84,15 +72,14 @@ export default ModalShowInteractMap = props => {
     >
       <View
         style={{
-          width: wp("95%"),
-          height: hp("100%"),
-          paddingHorizontal: wp("3%")
+          width: wp("100%"),
+          height: hp("100%")
         }}
       >
         <View
           style={{
             width: "100%",
-            height: "80%",
+            height: "85%",
             alignSelf: "center",
             paddingTop: getStatusBarHeight()
           }}
@@ -128,15 +115,6 @@ export default ModalShowInteractMap = props => {
           </View>
         </View>
       </View>
-
-      {/* <View style={{ width: wp("30%"), height: hp("10%") }}>
-        <Button
-          title="Zoom"
-          onPress={() => {
-            
-          }}
-        />
-      </View> */}
     </Modal>
   );
 };

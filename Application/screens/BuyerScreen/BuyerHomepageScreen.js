@@ -42,7 +42,6 @@ export default BuyerHomepageScreen = props => {
   const transactions = useSelector(state => state.transactions.transactions);
 
   useEffect(() => {
-    console.log(userProfile);
     setIsLoading(true);
     if (userProfile.uid) setIsLoading(false);
   }, [userProfile]);

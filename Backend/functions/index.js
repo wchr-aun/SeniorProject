@@ -66,7 +66,7 @@ exports.addWaste = functions.https.onCall((data, context) => {
 })
 
 exports.sellWaste = functions.https.onCall((data, context) => {
-  if (context.auth == null) {
+  if (context.auth != null) {
     let saleList = data.saleList
     let buyer = (data.txStatus == 0) ? data.buyer : ""
     let addr = data.addr.readable

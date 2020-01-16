@@ -13,20 +13,19 @@ export default UserStartupScreen = props => {
   console.log("startup");
 
   useEffect(() => {
-    console.time("Startup");
     verifyNotificationsPermissions();
-    firebaseUtil.auth().onIdTokenChanged(user => {
+    firebaseUtil.auth().onAuthStateChanged(user => {
       if (user != null) {
         dispatch(authAction.signin())
           .then(dispatch(wasteTypeAction.fetchWasteType()))
           .then(() => {
             AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
               dispatch(authAction.setUserRole(config_role));
-              console.timeEnd("Startup");
               if (config_role == "seller")
                 props.navigation.navigate("SellerNavigator");
               else if (config_role == "buyer") {
-                props.navigation.navigate("BuyerNavigator"); // wait for buyer screen
+                // props.navigation.navigate("BuyerNavigator"); // wait for buyer screen
+                props.navigation.navigate("PathOptimization")
               } else props.navigation.navigate("ConfigAccountScreen");
             });
           });
