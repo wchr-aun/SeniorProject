@@ -16,16 +16,14 @@ export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
 export const fetchSellerItems = () => {
   return async dispatch => {
     try {
-      let sellerItems = new Wastes(await getSellerItems());
-      let sellerItemsForSellCloned = Object.assign(
-        Object.create(sellerItems),
-        sellerItems
-      );
+      let result = await getSellerItems();
+      let sellerItems = new Wastes(result);
+      let sellerItemsForSell = new Wastes(result);
 
       dispatch({
         type: SET_SELLERITEMS,
-        sellerItems: sellerItems,
-        sellerItemsForSell: sellerItemsForSellCloned,
+        sellerItems,
+        sellerItemsForSell,
         sellerItemsFlatListFormat: [...sellerItems.getFlatListFormat()]
       });
     } catch (err) {
@@ -37,9 +35,12 @@ export const fetchSellerItems = () => {
 export const updateSellerItems = sellerItems => {
   return async dispatch => {
     // update new wastesData on firebase
+    let sellerItemsForSell = Object.assign(
+      Object.create(sellerItems),
+      sellerItems
+    );
+
     try {
-      console.log("sellerItemsAction -- updatedSellerItems -- ");
-      console.log(sellerItems);
       await addWaste({
         items: sellerItems.getObject()
       });
@@ -47,6 +48,7 @@ export const updateSellerItems = sellerItems => {
       dispatch({
         type: SET_SELLERITEMS,
         sellerItems,
+        sellerItemsForSell,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
       });
     } catch (err) {
@@ -57,17 +59,9 @@ export const updateSellerItems = sellerItems => {
 
 export const setSellerItemsForSell = sellerItemsForSell => {
   return async dispatch => {
-    console.log("---------> setSellerItemsForSell Action <----------");
-    console.log(sellerItemsForSell);
-
-    let sellerItemsForSellCloned = Object.assign(
-      Object.create(sellerItemsForSell),
-      sellerItemsForSell
-    );
-
     return dispatch({
       type: SET_WASTE_FOR_SELL,
-      sellerItemsForSell: sellerItemsForSellCloned.getObject()
+      sellerItemsForSell
     });
   };
 };
@@ -76,11 +70,7 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      console.log("--- queryData before --> queryBuyers(queryData)");
-      console.log(queryData);
       let buyerList = await queryBuyers(queryData);
-      console.log("--- queryData after sellerAction --- BuyerList");
-      console.log(buyerList);
 
       // dispatch
       dispatch({
@@ -102,23 +92,29 @@ export const chooseBuyerSell = (
 ) => {
   return async dispatch => {
     let saleList = {};
-    // sellerItems in itemsFormat
+    console.log("sellerItems");
+    console.log(sellerItems);
     for (let type in sellerItems) {
       if (type != "length") {
         for (let subtype in sellerItems[type]) {
-          console.log(subtype); //PP
           if (saleList[type] == undefined) {
             saleList[type] = {};
           }
-          saleList[type][subtype] = {
-            amount: sellerItems[type][subtype],
-            price: buyerPriceInfo[type][subtype]
-          };
+          if (
+            !(
+              buyerPriceInfo[type] == undefined ||
+              buyerPriceInfo[type][subtype] == undefined
+            )
+          ) {
+            saleList[type][subtype] = {
+              amount: sellerItems[type][subtype],
+              price: buyerPriceInfo[type][subtype]
+            };
+          }
         }
       }
     }
     saleList["length"] = sellerItems["length"];
-    console.log(saleList);
     // do async task
     let transaction = {
       saleList: saleList,
