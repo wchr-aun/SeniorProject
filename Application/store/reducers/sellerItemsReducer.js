@@ -19,7 +19,6 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case SET_SELLERITEMS:
       console.log("SET_SELLERITEMS Redux Reducer Run");
-      console.log(action);
       return {
         ...state,
         sellerItems: action.sellerItems,
@@ -28,10 +27,32 @@ export default function(state = initialState, action) {
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
-      console.log(action);
+      let sellerItemsForSellCloned = Object.assign(
+        Object.create(action.sellerItemsForSell),
+        action.sellerItemsForSell
+      );
+      let sellerItemsCloned = Object.assign(
+        Object.create(state.sellerItems),
+        state.sellerItems
+      );
+      // reduce sellerItems
+      for (let type in sellerItemsForSellCloned) {
+        if (type !== "_count" && type !== "length") {
+          // got object
+          for (let subtype in sellerItemsForSellCloned[type]) {
+            sellerItemsCloned.incrementalValue(
+              type,
+              subtype,
+              -sellerItemsForSellCloned[type][subtype]
+            );
+          }
+        }
+      }
+      sellerItemsCloned.confirmValue();
       return {
         ...state,
-        sellerItemsForSell: action.sellerItemsForSell
+        sellerItemsForSell: sellerItemsForSellCloned,
+        sellerItems: sellerItemsCloned
       };
     case CHOOSEBUYER_SELL:
       console.log("CHOOSEBUYER_SELL Reducer Run");

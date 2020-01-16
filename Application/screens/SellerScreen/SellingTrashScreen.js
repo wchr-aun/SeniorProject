@@ -29,9 +29,13 @@ const trashSellingReducer = (state, action) => {
 
   switch (action.type) {
     case SET_LOCAL_SELLERITEMS:
+      let sellerItemsCloned = Object.assign(
+        Object.create(action.sellerItemsForSell),
+        action.sellerItemsForSell
+      );
       return {
         ...state,
-        sellerItemsForSell: action.sellerItemsForSell,
+        sellerItemsForSell: sellerItemsCloned,
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_AMOUNT_FORSELL:
@@ -85,6 +89,9 @@ export default SellingTrashScreen = props => {
   // Get User trash
   // Get sellerItems and wasteTyp from redux
   const [distance, setDistance] = useState("10");
+  const sellerItems = useSelector(state => {
+    return state.sellerItems.sellerItems;
+  });
   const sellerItemsForSell = useSelector(state => {
     return state.sellerItems.sellerItemsForSell;
   });
@@ -94,12 +101,11 @@ export default SellingTrashScreen = props => {
   const wasteTypes = useSelector(state => {
     return state.wasteType.wasteTypes;
   });
-
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashSellingReducer,
     {
-      sellerItemsForSell: sellerItemsForSell,
-      sellerItemsFlatListFormat: sellerItemsFlatListFormat //becuase these are already loaded in showAllSellerTrash
+      sellerItemsForSell,
+      sellerItemsFlatListFormat //becuase these are already loaded in showAllSellerTrash
     }
   );
 
@@ -110,6 +116,17 @@ export default SellingTrashScreen = props => {
     await dispatch(sellerItemsAction.fetchSellerItems());
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
+
+  const setSellerItemsForSell = useCallback(() => {
+    trashsState.sellerItemsForSell.confirmValue();
+    dispatch(
+      sellerItemsAction.setSellerItemsForSell(trashsState.sellerItemsForSell)
+    );
+    props.navigation.navigate({
+      routeName: "chooseBuyerForSellScreen",
+      params: { distance }
+    });
+  }, [trashsState.sellerItemsForSell, distance, dispatch]);
 
   // If redux-data is ready, it will be passed to this local reducer
   useEffect(() => {
@@ -164,7 +181,9 @@ export default SellingTrashScreen = props => {
                     wasteTypes[item.type][item.subtype]["description"]
                   }
                   changeAmount={
-                    sellerItemsForSell._count[item.type][item.subtype]
+                    trashsState.sellerItemsForSell._count[item.type][
+                      item.subtype
+                    ]
                   }
                   oldAmount={item.amount}
                   trashAdjustPrice={
@@ -225,17 +244,7 @@ export default SellingTrashScreen = props => {
         <CustomButton
           style={{ width: "40%", height: "100%" }}
           btnColor={Colors.primary}
-          onPress={() => {
-            dispatch(
-              sellerItemsAction.setSellerItemsForSell(
-                trashsState.sellerItemsForSell
-              )
-            );
-            props.navigation.navigate({
-              routeName: "chooseBuyerForSellScreen",
-              params: { distance }
-            });
-          }}
+          onPress={setSellerItemsForSell}
           btnTitleColor={Colors.on_primary}
           btnTitleFontSize={14}
         >

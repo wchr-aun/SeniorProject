@@ -107,7 +107,6 @@ export default UserAuthenScreen = props => {
     } catch (err) {
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
     }
-    console.log("after dispatch  for chooseBuyerSell");
   }, [
     dispatch,
     sellerAddr,
@@ -162,8 +161,6 @@ export default UserAuthenScreen = props => {
             data={buyerListRedux}
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
-              console.log("Buyer Info");
-              console.log(item);
               return (
                 <TouchableOpacity
                   style={{
