@@ -68,11 +68,6 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  useEffect(() => {
-    console.log("purchaseList change");
-    console.log(purchaseList);
-  }, [purchaseList]);
-
   return (
     <View>
       <CustomStatusBar />
@@ -129,7 +124,6 @@ export default EditBuyerInfomationScreen = props => {
               let price = 0;
               let isUpdated = false;
               let isDefinedPrice = false;
-
               if (purchaseList[type]) {
                 if (purchaseList[type][subtypeIndex]) {
                   if (purchaseList._count[type][subtypeIndex] != 0) {
@@ -148,9 +142,6 @@ export default EditBuyerInfomationScreen = props => {
               } else {
                 isDefinedPrice = false;
               }
-
-              console.log(isDefinedPrice);
-              console.log(item);
 
               return (
                 <View
@@ -195,7 +186,7 @@ export default EditBuyerInfomationScreen = props => {
                           </ThaiText> // show price
                         ) : (
                           <TextInput
-                            value={(isDefinedPrice ? price : 0).toString()}
+                            placeholder={price.toString()}
                             clearTextOnFocus={true}
                             selectTextOnFocus={true}
                             onChangeText={price => {

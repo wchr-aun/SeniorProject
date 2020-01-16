@@ -20,16 +20,10 @@ export default (state = initialState, action) => {
         purchaseList: action.purchaseList
       };
     case EDIT_PURCHASELIST:
-      console.log("EDIT_PURCHASELIST - Redux");
-      let purchaseClone = Object.assign(
-        Object.create(purchaseList),
-        purchaseList
-      ); // react-redux not re-render when update state by the state itself
-      purchaseClone.addWaste(action.majortype, action.subtype, action.price);
-
+      purchaseList.editValue(action.majortype, action.subtype, action.price);
       return {
         ...state,
-        purchaseList: purchaseClone // if not usd {...} format, redux isn't force react app to re-render component so that the result in the page that use this redux-variable will be same.
+        purchaseList // if not usd {...} format, redux isn't force react app to re-render component so that the result in the page that use this redux-variable will be same.
       };
     case CONFIRM_CHANGE_PURCHASELIST:
       console.log("CONFIRM_CHANGE_PURCHASELIST - Redux");

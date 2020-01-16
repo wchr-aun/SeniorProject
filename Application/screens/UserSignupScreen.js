@@ -67,11 +67,11 @@ const formReducer = (state, action) => {
         ...state,
         inputValidities: {
           ...state.inputValidities,
-          shallowAddr: !action.prestateIsCur,
-          subdistrict: !action.prestateIsCur,
-          district: !action.prestateIsCur,
-          province: !action.prestateIsCur,
-          postalCode: !action.prestateIsCur
+          shallowAddr: action.prestateIsCur,
+          subdistrict: action.prestateIsCur,
+          district: action.prestateIsCur,
+          province: action.prestateIsCur,
+          postalCode: action.prestateIsCur
         }
       };
   }

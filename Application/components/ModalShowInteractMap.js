@@ -79,9 +79,7 @@ export default ModalShowInteractMap = props => {
         <View
           style={{
             width: "100%",
-            height: "85%",
-            alignSelf: "center",
-            paddingTop: getStatusBarHeight()
+            height: "85%"
           }}
         >
           <MapView
