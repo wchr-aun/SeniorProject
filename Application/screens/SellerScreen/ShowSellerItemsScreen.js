@@ -30,6 +30,7 @@ import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 import CustomButton from "../../components/UI/CustomButton";
 
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
+const ADD_NEW_SELLERITEMS_AMOUNT = "ADD_NEW_SELLERITEMS_AMOUNT";
 const MINUS_SELLERITEMS_AMOUNT = "MINUS_SELLERITEMS_AMOUNT";
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const EDIT_SELLERITEMS_AMOUNT = "EDIT_SELLERITEMS_AMOUNT";
@@ -54,6 +55,20 @@ const trashsModifyingReducer = (state, action) => {
       );
       return {
         ...state
+      };
+    case ADD_NEW_SELLERITEMS_AMOUNT:
+      let addedSellerItem = {
+        [action.majortype]: {
+          [action.subtype]: action.addAmount
+        }
+      };
+
+      sellerItems.addWasteObj(addedSellerItem);
+      console.log("sellerItems");
+      console.log(sellerItems);
+      return {
+        ...state,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
       };
     case MINUS_SELLERITEMS_AMOUNT:
       sellerItems.incrementalValue(
@@ -215,12 +230,11 @@ const ShowAllUserTrashScreen = props => {
         modalVisible={modalVisible}
         addNewWasteHandler={(majortype, subtype, addAmount) => {
           dispatchAmountTrashsState({
-            type: ADD_WASTE,
+            type: ADD_NEW_SELLERITEMS_AMOUNT,
             majortype,
             subtype,
             addAmount
           });
-          setModalVisible(false);
         }}
       />
     );
