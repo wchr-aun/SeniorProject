@@ -21,6 +21,7 @@ export default (state = initialState, action) => {
       };
     case EDIT_PURCHASELIST:
       console.log("EDIT_PURCHASELIST - Redux");
+      console.log(action);
       let purchaseClone = Object.assign(
         Object.create(purchaseList),
         purchaseList

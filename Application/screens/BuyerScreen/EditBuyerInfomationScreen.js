@@ -136,21 +136,17 @@ export default EditBuyerInfomationScreen = props => {
                     //have an update
                     price = purchaseList._count[type][subtypeIndex];
                     isUpdated = true;
-                    isDefinedPrice = true;
                   } else {
                     price = purchaseList[type][Object.keys(item)[0]];
                     isUpdated = false;
-                    isDefinedPrice = true;
                   }
+                  isDefinedPrice = true;
                 } else {
                   isDefinedPrice = false;
                 }
               } else {
                 isDefinedPrice = false;
               }
-
-              console.log(isDefinedPrice);
-              console.log(item);
 
               return (
                 <View
