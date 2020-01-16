@@ -2,7 +2,8 @@ import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  Alert
+  Alert,
+  FlatList
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -69,6 +70,32 @@ export default UserSignupScreen = props => {
 
   return (
     <View>
+      <View style={{ width: "100%", height: hp("60%s") }}>
+        {/* <FlatList
+          data={}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={{
+                  width: wp("90%"),
+                  height: hp("15%"),
+                  backgroundColor: Colors.screen,
+                  alignSelf: "center",
+                  borderRadius: 10,
+                  margin: wp("3.75%"),
+                  justifyContent: "center"
+                }}
+                onPress={() => buyerSelectHandler(item.id, item.purchaseList)}
+              >
+                <View style={{ alignSelf: "center" }}>
+                  <Text>{item.id}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        /> */}
+      </View>
       <CustomButton
         disable={currentAddr}
         style={{
