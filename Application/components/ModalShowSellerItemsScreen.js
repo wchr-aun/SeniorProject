@@ -21,7 +21,6 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 export default ModalShowSellersItemsScreen = props => {
   const [subType, setSubType] = useState();
   const [amount, setAmount] = useState();
-
   const [majorType, setMajorType] = useState(
     props.wasteTypeDropdownFormat[0].value
   );
@@ -38,6 +37,7 @@ export default ModalShowSellersItemsScreen = props => {
   const onDropdownSelectMajorType = majorType => {
     getSubTypeFromMajorType(majorType);
     setMajorType(majorType);
+    setSubType("");
   };
 
   const onDropdownSelectSubType = subType => {
@@ -87,7 +87,8 @@ export default ModalShowSellersItemsScreen = props => {
           >
             <View style={{ width: "40%", height: wp("10%") }}>
               <Dropdown
-                label="Waste Type"
+                label="ประเภท"
+                value={majorType}
                 data={props.wasteTypeDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
                 onChangeText={thisValue => {
                   onDropdownSelectMajorType(thisValue);
@@ -96,7 +97,8 @@ export default ModalShowSellersItemsScreen = props => {
             </View>
             <View style={{ width: "40%", height: wp("10%") }}>
               <Dropdown
-                label="Waste Type"
+                label="ชนิดขยะ"
+                value={subType}
                 data={subTypes}
                 onChangeText={thisValue => {
                   onDropdownSelectSubType(thisValue);

@@ -69,18 +69,44 @@ export class Wastes {
         this._count[type][subtype] = 0;
       }
   }
+  // addWasteObj(obj) { // For backup
+  //   for (let type in obj) {
+  //     for (let subtype in obj[type]) {
+  //       if (this[type] == undefined) {
+  //         this[type] = {};
+  //         this[type][subtype] = 0;
+
+  //         this.length += 1;
+  //       } else if (this[type][subtype] == undefined) {
+  //         this[type][subtype] = 0;
+  //         this.length += 1;
+  //       }
+  //       this[type][subtype] += obj[type][subtype];
+  //     }
+  //   }
+  // }
+
+  // need to added to _count for showing an dif
   addWasteObj(obj) {
     for (let type in obj) {
       for (let subtype in obj[type]) {
         if (this[type] == undefined) {
+          // for showing dif
+          this._count[type] = {};
+          this._count[type][subtype] = 0;
+          // for render new flatList format item
           this[type] = {};
           this[type][subtype] = 0;
+
           this.length += 1;
         } else if (this[type][subtype] == undefined) {
+          // for showing dif
+          this._count[type][subtype] = 0;
+          // for render new flatList format item
           this[type][subtype] = 0;
           this.length += 1;
         }
-        this[type][subtype] += obj[type][subtype];
+        this._count[type][subtype] += obj[type][subtype];
       }
     }
   }
