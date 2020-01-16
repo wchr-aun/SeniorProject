@@ -106,7 +106,7 @@ const ShowAllUserTrashScreen = props => {
   // trash user snapshot
   const dispatch = useDispatch();
   // Callback fn
-  const loadSellerItems = useCallback(async () => {
+  const refreshSellerItems = useCallback(async () => {
     setIsRefreshing(true);
     await dispatch(sellerItemsAction.fetchSellerItems());
     setIsRefreshing(false);
@@ -115,13 +115,13 @@ const ShowAllUserTrashScreen = props => {
   // Load sellerItems and wasteType from firebase and store it to redux "initially"
   useEffect(() => {
     setIsLoading(true);
-    loadSellerItems()
+    refreshSellerItems()
       .then(() => setIsLoading(false))
       .catch(err => {
         setIsLoading(false);
         setError(err.message);
       });
-  }, [loadSellerItems]);
+  }, [refreshSellerItems]);
 
   // Get sellerItems and wasteTyp from redux
   const sellerItems = useSelector(state => {
@@ -129,6 +129,9 @@ const ShowAllUserTrashScreen = props => {
   });
   const sellerItemsFlatListFormat = useSelector(state => {
     return state.sellerItems.sellerItemsFlatListFormat;
+  });
+  const wasteTypeDropdownFormat = useSelector(state => {
+    return state.wasteType.wasteTypeDropdownFormat;
   });
   const wasteTypes = useSelector(state => {
     return state.wasteType.wasteTypes;
@@ -155,7 +158,7 @@ const ShowAllUserTrashScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  // const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // error alert handling
   const [error, setError] = useState("");
@@ -204,30 +207,24 @@ const ShowAllUserTrashScreen = props => {
     );
   }
 
-  // if (modalVisible) {
-  //   return (
-  //     <ModalShowSellerItemsScreen
-  //       setModalVisible={setModalVisible}
-  //       data={wasteTypesRedux}
-  //       modalVisible={modalVisible}
-  //       addNewWasteHandler={(
-  //         wasteType,
-  //         wasteDescription,
-  //         wasteDisposal,
-  //         amount
-  //       ) => {
-  //         dispatchAmountTrashsState({
-  //           type: ADD_WASTE,
-  //           wasteType,
-  //           wasteDescription,
-  //           wasteDisposal,
-  //           amount
-  //         });
-  //         setModalVisible(false);
-  //       }}
-  //     />
-  //   );
-  // }
+  if (modalVisible) {
+    return (
+      <ModalShowSellerItemsScreen
+        setModalVisible={setModalVisible}
+        wasteTypeDropdownFormat={wasteTypeDropdownFormat}
+        modalVisible={modalVisible}
+        addNewWasteHandler={(majortype, subtype, addAmount) => {
+          dispatchAmountTrashsState({
+            type: ADD_WASTE,
+            majortype,
+            subtype,
+            addAmount
+          });
+          setModalVisible(false);
+        }}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -252,7 +249,7 @@ const ShowAllUserTrashScreen = props => {
           <FlatList
             data={trashsState.sellerItemsFlatListFormat}
             refreshing={isRefreshing}
-            onRefresh={loadSellerItems}
+            onRefresh={refreshSellerItems}
             style={{
               flex: 1
             }}

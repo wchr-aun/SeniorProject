@@ -16,6 +16,7 @@ import TrashCardForSell from "../../components/TrashCardForSell";
 import TrashCard from "../../components/TrashCard";
 import CustomButton from "../../components/UI/CustomButton";
 import { TextInput } from "react-native-gesture-handler";
+import ThaiText from "../../components/ThaiText";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
@@ -24,18 +25,18 @@ const EDIT_AMOUNT_FORSELL = "EDIT_AMOUNT_FORSELL";
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 
 const trashSellingReducer = (state, action) => {
-  let sellerItems = state.sellerItems;
+  let sellerItemsForSell = state.sellerItemsForSell;
 
   switch (action.type) {
     case SET_LOCAL_SELLERITEMS:
       return {
         ...state,
-        sellerItems: action.sellerItems,
+        sellerItemsForSell: action.sellerItemsForSell,
         sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
       };
     case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
-      sellerItems.incrementalValue(
+      sellerItemsForSell.incrementalValue(
         action.majortype,
         action.subtype,
         action.addAmount
@@ -45,7 +46,7 @@ const trashSellingReducer = (state, action) => {
       };
     case MINUS_AMOUNT_FORSELL:
       console.log("MINUS_WASTE local Reducer Run");
-      sellerItems.incrementalValue(
+      sellerItemsForSell.incrementalValue(
         action.majortype,
         action.subtype,
         -action.minusAmount
@@ -55,10 +56,10 @@ const trashSellingReducer = (state, action) => {
       };
     case EDIT_AMOUNT_FORSELL:
       console.log("EDIT_AMOUNT_FORSELL local Reducer Run");
-      sellerItems.editValue(
+      sellerItemsForSell.editValue(
         action.majortype,
         action.subtype,
-        action.value - sellerItems[action.majortype][action.subtype]
+        action.value - sellerItemsForSell[action.majortype][action.subtype]
       );
       return {
         ...state
@@ -84,8 +85,8 @@ export default SellingTrashScreen = props => {
   // Get User trash
   // Get sellerItems and wasteTyp from redux
   const [distance, setDistance] = useState("10");
-  const sellerItems = useSelector(state => {
-    return state.sellerItems.sellerItems;
+  const sellerItemsForSell = useSelector(state => {
+    return state.sellerItems.sellerItemsForSell;
   });
   const sellerItemsFlatListFormat = useSelector(state => {
     return state.sellerItems.sellerItemsFlatListFormat;
@@ -97,29 +98,29 @@ export default SellingTrashScreen = props => {
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashSellingReducer,
     {
-      sellerItems: {},
-      sellerItemsFlatListFormat: []
+      sellerItemsForSell: sellerItemsForSell,
+      sellerItemsFlatListFormat: sellerItemsFlatListFormat //becuase these are already loaded in showAllSellerTrash
     }
   );
 
-  // If redux-data is ready, it will be passed to this local reducer
-  useEffect(() => {
-    if (sellerItems) {
-      dispatchAmountTrashsState({
-        type: SET_LOCAL_SELLERITEMS,
-        sellerItems,
-        sellerItemsFlatListFormat
-      });
-    }
-  }, [sellerItems]);
-
   const [isRefreshing, setIsRefreshing] = useState(false);
   // Callback fn
-  const loadSellerItems = useCallback(async () => {
+  const refreshSellerItems = useCallback(async () => {
     setIsRefreshing(true);
     await dispatch(sellerItemsAction.fetchSellerItems());
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
+
+  // If redux-data is ready, it will be passed to this local reducer
+  useEffect(() => {
+    if (sellerItemsForSell && sellerItemsFlatListFormat.length) {
+      dispatchAmountTrashsState({
+        type: SET_LOCAL_SELLERITEMS,
+        sellerItemsForSell,
+        sellerItemsFlatListFormat
+      });
+    }
+  }, [sellerItemsForSell, sellerItemsFlatListFormat]);
 
   const dispatch = useDispatch();
   return (
@@ -134,7 +135,7 @@ export default SellingTrashScreen = props => {
         style={{
           ...styles.allTrashContainer,
           width: "100%",
-          height: "80%",
+          height: "90%",
           padding: 10,
           alignItems: "center"
         }}
@@ -143,7 +144,7 @@ export default SellingTrashScreen = props => {
           <FlatList
             data={trashsState.sellerItemsFlatListFormat}
             refreshing={isRefreshing}
-            onRefresh={loadSellerItems}
+            onRefresh={refreshSellerItems}
             style={{
               flex: 1
             }}
@@ -162,7 +163,9 @@ export default SellingTrashScreen = props => {
                   wasteDescription={
                     wasteTypes[item.type][item.subtype]["description"]
                   }
-                  changeAmount={sellerItems._count[item.type][item.subtype]}
+                  changeAmount={
+                    sellerItemsForSell._count[item.type][item.subtype]
+                  }
                   oldAmount={item.amount}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
@@ -202,12 +205,14 @@ export default SellingTrashScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "20%",
+          height: "10%",
           flexDirection: "row",
+          justifyContent: "space-around",
           alignItems: "center"
         }}
       >
-        <View style={{ width: "40%", height: "100%" }}>
+        <View style={{ width: "40%", height: "100%", backgroundColor: "red" }}>
+          <ThaiText>ค้นในระยะ </ThaiText>
           <TextInput
             value={distance}
             onChangeText={value => {
@@ -218,11 +223,13 @@ export default SellingTrashScreen = props => {
         </View>
 
         <CustomButton
-          style={{ width: "40%" }}
+          style={{ width: "40%", height: "100%" }}
           btnColor={Colors.primary}
           onPress={() => {
             dispatch(
-              sellerItemsAction.setSellerItemsForSell(trashsState.sellerItems)
+              sellerItemsAction.setSellerItemsForSell(
+                trashsState.sellerItemsForSell
+              )
             );
             props.navigation.navigate({
               routeName: "chooseBuyerForSellScreen",
@@ -232,7 +239,7 @@ export default SellingTrashScreen = props => {
           btnTitleColor={Colors.on_primary}
           btnTitleFontSize={14}
         >
-          ขายขยะ
+          ค้นหาผู้รับซื้อขยะ
         </CustomButton>
       </View>
     </View>

@@ -17,9 +17,15 @@ export const fetchSellerItems = () => {
   return async dispatch => {
     try {
       let sellerItems = new Wastes(await getSellerItems());
+      let sellerItemsForSellCloned = Object.assign(
+        Object.create(sellerItems),
+        sellerItems
+      );
+
       dispatch({
         type: SET_SELLERITEMS,
         sellerItems: sellerItems,
+        sellerItemsForSell: sellerItemsForSellCloned,
         sellerItemsFlatListFormat: [...sellerItems.getFlatListFormat()]
       });
     } catch (err) {
@@ -95,24 +101,34 @@ export const chooseBuyerSell = (
   assignedTime
 ) => {
   return async dispatch => {
-    // Map buyer price into an transaction
-    let updatedItems = [];
-    sellerItems.forEach((item, index) => {
-      updatedItems.push({
-        amount: item.amountForSell,
-        wasteType: item.wasteType,
-        price: buyerPriceInfo[item.wasteType]
-      });
-    });
-
+    let saleList = {};
+    // sellerItems in itemsFormat
+    for (let type in sellerItems) {
+      if (type != "length") {
+        for (let subtype in sellerItems[type]) {
+          console.log(subtype); //PP
+          if (saleList[type] == undefined) {
+            saleList[type] = {};
+          }
+          saleList[type][subtype] = {
+            amount: sellerItems[type][subtype],
+            price: buyerPriceInfo[type][subtype]
+          };
+        }
+      }
+    }
+    saleList["length"] = sellerItems["length"];
+    console.log(saleList);
     // do async task
     let transaction = {
-      items: updatedItems,
+      saleList: saleList,
       addr: sellAddr,
       buyer: buyerName,
       txType: 0,
       assignedTime: assignedTime
     };
+    console.log("___ In chooseBuyerSell __ Action");
+    console.log(transaction);
 
     try {
       await sellWaste(transaction);

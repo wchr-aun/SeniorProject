@@ -11,7 +11,8 @@ export default (state = initialState, action) => {
       console.log("FETCH_WASTETYPE Redux Run");
       return {
         ...state,
-        wasteTypes: action.wasteTypes
+        wasteTypes: action.wasteTypes,
+        wasteTypeDropdownFormat: action.wasteTypeDropdownFormat
       };
     case LOGOUT:
       return initialState;

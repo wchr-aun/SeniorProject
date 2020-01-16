@@ -60,11 +60,20 @@ export const getWasteType = async () => {
     .get()
     .then(docs => {
       let wasteType = {};
+      let wasteTypeDropdownFormat = []; //for dropdown value
+
       docs.forEach(doc => {
         wasteType = { ...wasteType, [doc.id]: doc.data() };
+        let subTypes = [];
+        for (let subType in doc.data()) {
+          //PP, HDPE,
+          subTypes.push({ value: subType });
+        }
+        wasteTypeDropdownFormat.push({ value: doc.id, subTypes: subTypes });
       });
       return {
-        ...wasteType
+        wasteTypes: { ...wasteType },
+        wasteTypeDropdownFormat
       };
     })
     .catch(err => {
