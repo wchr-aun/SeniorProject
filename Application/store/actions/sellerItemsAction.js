@@ -91,21 +91,22 @@ export const chooseBuyerSell = (
   assignedTime
 ) => {
   return async dispatch => {
+    // sell only sellerItem that buyer have
     let saleList = {};
-    console.log("sellerItems");
-    console.log(sellerItems);
+    saleList["length"] = 0;
     for (let type in sellerItems) {
-      if (type != "length") {
+      if (type != "length" && type != "_count") {
         for (let subtype in sellerItems[type]) {
-          if (saleList[type] == undefined) {
-            saleList[type] = {};
-          }
           if (
             !(
               buyerPriceInfo[type] == undefined ||
               buyerPriceInfo[type][subtype] == undefined
             )
           ) {
+            if (saleList[type] == undefined) {
+              saleList[type] = {};
+            }
+            saleList["length"] += 1;
             saleList[type][subtype] = {
               amount: sellerItems[type][subtype],
               price: buyerPriceInfo[type][subtype]
@@ -114,24 +115,23 @@ export const chooseBuyerSell = (
         }
       }
     }
-    saleList["length"] = sellerItems["length"];
     // do async task
-    let transaction = {
-      saleList: saleList,
+    let sellRequest = {
+      saleList,
       addr: sellAddr,
       buyer: buyerName,
       txType: 0,
       assignedTime: assignedTime
     };
-    console.log("___ In chooseBuyerSell __ Action");
-    console.log(transaction);
+    console.log("___ In chooseBuyerSell __ Action -- sellRequest");
+    console.log(sellRequest);
 
     try {
-      await sellWaste(transaction);
+      await sellWaste(sellRequest);
       // update redux store
       dispatch({
         type: CHOOSEBUYER_SELL,
-        transaction
+        transaction: sellRequest
       });
     } catch (err) {
       throw new Error(err.message);
