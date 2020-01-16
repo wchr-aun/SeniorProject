@@ -64,8 +64,6 @@ const trashsModifyingReducer = (state, action) => {
       };
 
       sellerItems.addWasteObj(addedSellerItem);
-      console.log("sellerItems");
-      console.log(sellerItems);
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat()

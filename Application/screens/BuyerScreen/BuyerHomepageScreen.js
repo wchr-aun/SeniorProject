@@ -42,7 +42,6 @@ export default BuyerHomepageScreen = props => {
   const transactions = useSelector(state => state.transactions.transactions);
 
   useEffect(() => {
-    console.log(userProfile);
     setIsLoading(true);
     if (userProfile.uid) setIsLoading(false);
   }, [userProfile]);
@@ -146,8 +145,6 @@ export default BuyerHomepageScreen = props => {
                 data={transactions}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
-                  console.log("item");
-                  console.log(item);
                   return (
                     <SellTransactionCard
                       amountOfType={item.detail.saleList.length}

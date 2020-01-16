@@ -173,8 +173,8 @@ const SellerNavigator =
 
 const BuyerTransactionNavigator = createStackNavigator(
   {
-    SellingTransactionScreen: {
-      screen: SellingTransactionScreen,
+    PathOptimization: {
+      screen: PathOptimization,
       navigationOptions: { headerTitle: "การขายขยะ" }
     }
   },

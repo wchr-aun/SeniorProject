@@ -23,7 +23,6 @@ export const getUsers = async () => {
             latitude: doc.data().addr_geopoint.latitude,
             longitude: doc.data().addr_geopoint.longitude
           },
-          enableSearch: doc.data().enableSearch,
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
           photoURL:
@@ -218,12 +217,7 @@ export const createAccount = async user => {
     .httpsCallable("createAccount")(user)
     .then(result => {
       if (result.data.errorMessage == null) {
-        return firebaseUtil
-          .auth()
-          .signInWithEmailAndPassword(user.email, user.password)
-          .catch(err => {
-            throw new Error(err);
-          });
+        return true
       } else throw new Error(result.data.errorMessage);
     })
     .catch(err => {

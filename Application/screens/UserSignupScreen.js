@@ -7,9 +7,7 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Alert,
-  TouchableOpacity,
-  Button,
-  Platform
+  TouchableOpacity
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,7 +19,7 @@ import {
 
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
-import { createAccount } from "../utils/firebaseFunctions";
+import { createAccount, editBuyerInfo } from "../utils/firebaseFunctions";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
@@ -133,11 +131,7 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
-    console.log("formState");
-    console.log(formState);
-
     setIsLoading(true);
-    console.log(formState);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
       setIsLoading(false);
@@ -171,8 +165,10 @@ export default UserSignupScreen = props => {
             firebaseUtil
               .auth()
               .signInWithEmailAndPassword(user.email, user.password)
-              .then(userCredential => {
-                props.navigation.navigate("StartupScreen");
+              .then(() => {
+                editBuyerInfo({addr: user.addr, enableSearch: false}).then(() => {
+                  props.navigation.navigate("ConfigAccountScreen");
+                })
               });
           })
           .catch(err => {

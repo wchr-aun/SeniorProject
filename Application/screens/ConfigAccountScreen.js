@@ -23,20 +23,9 @@ export default ConfigAccountScreen = props => {
   const addr = useSelector(state => state.user.userProfile.addr)
 
   const configHandler = role => {
-    toggleSearch(switchSearch)
-      .then(async () => {
-        dispatch(authAction.changeRole(role)).then(() => {
-          if (role == "buyer")
-            editBuyerInfo({addr: addr, enableSearch: true}).then(() => {
-              props.navigation.navigate("StartupScreen");
-            })
-          else
-            props.navigation.navigate("StartupScreen");
-        })
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    dispatch(authAction.changeRole(role)).then(() => {
+      props.navigation.navigate("StartupScreen");
+    })
   };
 
   return (
