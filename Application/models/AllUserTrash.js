@@ -43,8 +43,6 @@ export class Wastes {
     this._count[type][subtype] = value;
   }
   incrementalValue(type, subtype, value) {
-    console.log("in incremental --");
-    console.log(value);
     this._count[type][subtype] += value;
   }
   confirmValue() {

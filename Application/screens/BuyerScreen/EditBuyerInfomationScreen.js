@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useReducer, useCallback } from "react";
-import { StyleSheet, View, SectionList, TextInput } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SectionList,
+  TextInput,
+  KeyboardAvoidingView
+} from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -44,9 +50,10 @@ export default EditBuyerInfomationScreen = props => {
 
   const toggleModeHandler = () => {
     if (isEditingMode) {
-      purchaseList.confirmValue();
       // done edit
       let description = "temp";
+      purchaseList.confirmValue();
+
       dispatch(
         buyerAction.updatePurchaseList(
           purchaseList.getObject(),
@@ -61,21 +68,21 @@ export default EditBuyerInfomationScreen = props => {
     }
   };
 
-  const editPurchaseList = (majortype, subtype, price) => {
-    console.log(majortype);
-    console.log(subtype);
-    console.log(price);
-    purchaseList.editValue(majortype, subtype, price);
-  };
+  useEffect(() => {
+    console.log("purchaseList change");
+    console.log(purchaseList);
+  }, [purchaseList]);
 
   return (
     <View>
       <CustomStatusBar />
-      <View
+      <KeyboardAvoidingView
         style={{
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight
         }}
+        behavior="padding"
+        keyboardVerticalOffset={100}
       >
         <View
           style={{
@@ -118,24 +125,32 @@ export default EditBuyerInfomationScreen = props => {
               let subtypeIndex = Object.keys(item)[0];
               let subtypeName = item[Object.keys(item)[0]].name;
 
-              // Set price
-              let price = "";
+              // Set price for showing
+              let price = 0;
               let isUpdated = false;
+              let isDefinedPrice = false;
+
               if (purchaseList[type]) {
                 if (purchaseList[type][subtypeIndex]) {
                   if (purchaseList._count[type][subtypeIndex] != 0) {
-                    price = purchaseList._count[type][subtypeIndex]; //have an update
+                    //have an update
+                    price = purchaseList._count[type][subtypeIndex];
                     isUpdated = true;
+                    isDefinedPrice = true;
                   } else {
                     price = purchaseList[type][Object.keys(item)[0]];
                     isUpdated = false;
+                    isDefinedPrice = true;
                   }
                 } else {
-                  price = "ยังไม่กำหนดราคา";
+                  isDefinedPrice = false;
                 }
               } else {
-                price = "ยังไม่กำหนดราคา";
+                isDefinedPrice = false;
               }
+
+              console.log(isDefinedPrice);
+              console.log(item);
 
               return (
                 <View
@@ -175,10 +190,12 @@ export default EditBuyerInfomationScreen = props => {
                         }}
                       >
                         {!isEditingMode ? (
-                          <ThaiText>{(price ? price : 0).toString()}</ThaiText> // show price
+                          <ThaiText>
+                            {(isDefinedPrice ? price : 0).toString()}
+                          </ThaiText> // show price
                         ) : (
                           <TextInput
-                            value={(price ? price : 0).toString()}
+                            value={(isDefinedPrice ? price : 0).toString()}
                             clearTextOnFocus={true}
                             selectTextOnFocus={true}
                             onChangeText={price => {
@@ -227,7 +244,7 @@ export default EditBuyerInfomationScreen = props => {
             }}
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

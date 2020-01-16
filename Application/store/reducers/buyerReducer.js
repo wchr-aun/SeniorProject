@@ -21,12 +21,11 @@ export default (state = initialState, action) => {
       };
     case EDIT_PURCHASELIST:
       console.log("EDIT_PURCHASELIST - Redux");
-
-      purchaseList.editValue(action.majortype, action.subtype, action.price);
       let purchaseClone = Object.assign(
         Object.create(purchaseList),
         purchaseList
       ); // react-redux not re-render when update state by the state itself
+      purchaseClone.addWaste(action.majortype, action.subtype, action.price);
 
       return {
         ...state,
@@ -34,7 +33,6 @@ export default (state = initialState, action) => {
       };
     case CONFIRM_CHANGE_PURCHASELIST:
       console.log("CONFIRM_CHANGE_PURCHASELIST - Redux");
-      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList

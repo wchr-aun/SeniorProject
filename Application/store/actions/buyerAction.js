@@ -29,7 +29,7 @@ export const editPurchaseList = (type, subtypeIndex, price) => {
       type: EDIT_PURCHASELIST,
       majortype: type,
       subtype: subtypeIndex,
-      price: Number(price)
+      price: parseInt(price, 10)
     });
   };
 };
