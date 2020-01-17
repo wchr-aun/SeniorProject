@@ -95,12 +95,13 @@ export const chooseBuyerSell = (
     let saleList = {};
     saleList["length"] = 0;
     for (let type in sellerItems) {
-      if (type != "length" && type != "_count") {
+      if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
           if (
             !(
               buyerPriceInfo[type] == undefined ||
-              buyerPriceInfo[type][subtype] == undefined
+              buyerPriceInfo[type][subtype] == undefined ||
+              sellerItems._selected[type][subtype] == false
             )
           ) {
             if (saleList[type] == undefined) {
