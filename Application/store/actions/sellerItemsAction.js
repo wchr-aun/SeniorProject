@@ -131,7 +131,7 @@ export const chooseBuyerSell = (
       // update redux store
       dispatch({
         type: CHOOSEBUYER_SELL,
-        transaction: sellRequest
+        sellRequest
       });
     } catch (err) {
       throw new Error(err.message);

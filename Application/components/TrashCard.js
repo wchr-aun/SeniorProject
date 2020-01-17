@@ -58,12 +58,16 @@ const AmountOfTrash = props => {
 const AdjustAmountOfTrash = props => {
   return (
     <View style={{ ...props.style, flexDirection: "row" }}>
-      <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircle}
-        onPress={props.onDecrease}
-      >
-        <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
-      </TouchableWithoutFeedback>
+      <View style={styles.plusAndMinusCircle}>
+        {!props.selected ? null : (
+          <TouchableWithoutFeedback
+            // style={styles.plusAndMinusCircle}
+            onPress={props.onDecrease}
+          >
+            <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
       <View style={{ width: 30 }}>
         <TextInput
           selectTextOnFocus={true}
@@ -76,20 +80,21 @@ const AdjustAmountOfTrash = props => {
           style={{ textAlign: "center" }}
         />
       </View>
-      <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircle}
-        onPress={props.onIncrease}
-      >
-        <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
-      </TouchableWithoutFeedback>
+      <View style={styles.plusAndMinusCircle}>
+        {!props.selected ? null : (
+          <TouchableWithoutFeedback
+            // style={styles.plusAndMinusCircle}
+            onPress={props.onIncrease}
+          >
+            <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
     </View>
   );
 };
 
 export default TrashCard = props => {
-  // Selected Trasition
-  const [isSelected, setIsSelected] = useState(false);
-
   return (
     <View
       style={{
@@ -119,8 +124,6 @@ export default TrashCard = props => {
           style={{ borderWidth: 1, borderColor: "black" }}
         />
         <AmountOfTrash
-          // amountShowing={props.amountShowing}
-          // amountAdjust={props.amountAdjust}
           changeAmount={props.changeAmount}
           oldAmount={props.oldAmount}
         />
@@ -137,10 +140,34 @@ export default TrashCard = props => {
         }}
       >
         {/* Trash Name */}
-        <View style={{ width: "80%", height: "20%", backgroundColor: "red" }}>
-          <ThaiTitleText style={styles.trashName}>
-            {props.subtype}
-          </ThaiTitleText>
+        <View
+          style={{
+            width: "100%",
+            height: "20%",
+            backgroundColor: "red",
+            flexDirection: "row"
+          }}
+        >
+          <View style={{ width: "80%", height: "100%" }}>
+            <ThaiTitleText style={styles.trashName}>
+              {props.subtype}
+            </ThaiTitleText>
+          </View>
+          {!props.sellingMode ? null : (
+            <TouchableWithoutFeedback
+              style={{
+                width: "20%",
+                height: "100%"
+              }}
+              onPress={props.onSelected}
+            >
+              <MaterialIcons
+                name={props.selected ? "check-box" : "check-box-outline-blank"}
+                size={20}
+                color={Colors.primary}
+              />
+            </TouchableWithoutFeedback>
+          )}
         </View>
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
@@ -153,19 +180,19 @@ export default TrashCard = props => {
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
         </View>
-        {!props.editingMode && !isSelected ? null : (
+        {!props.editingMode ? null : (
           <AdjustAmountOfTrash
             style={{ alignSelf: "center", alignItems: "center" }}
             subtype={props.subtype}
             majortype={props.majortype}
-            // amountShowing={props.amountShowing}
-            // amountAdjust={props.amountAdjust}
             changeAmount={props.changeAmount}
             oldAmount={props.oldAmount}
             onIncrease={props.onIncrease}
             onDecrease={props.onDecrease}
             onEdit={props.onEdit}
             UI_diff={props.UI_diff}
+            selected={props.selected}
+            sellingMode={props.sellingMode}
           />
         )}
       </View>
