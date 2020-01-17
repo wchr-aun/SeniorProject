@@ -59,7 +59,7 @@ const AdjustAmountOfTrash = props => {
   return (
     <View style={{ ...props.style, flexDirection: "row" }}>
       <View style={styles.plusAndMinusCircle}>
-        {!props.selected ? null : (
+        {!props.selected && !props.editingMode ? null : (
           <TouchableWithoutFeedback
             // style={styles.plusAndMinusCircle}
             onPress={props.onDecrease}
@@ -81,7 +81,7 @@ const AdjustAmountOfTrash = props => {
         />
       </View>
       <View style={styles.plusAndMinusCircle}>
-        {!props.selected ? null : (
+        {!props.selected && !props.editingMode ? null : (
           <TouchableWithoutFeedback
             // style={styles.plusAndMinusCircle}
             onPress={props.onIncrease}
@@ -153,21 +153,6 @@ export default TrashCard = props => {
               {props.subtype}
             </ThaiTitleText>
           </View>
-          {!props.sellingMode ? null : (
-            <TouchableWithoutFeedback
-              style={{
-                width: "20%",
-                height: "100%"
-              }}
-              onPress={props.onSelected}
-            >
-              <MaterialIcons
-                name={props.selected ? "check-box" : "check-box-outline-blank"}
-                size={20}
-                color={Colors.primary}
-              />
-            </TouchableWithoutFeedback>
-          )}
         </View>
         <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
@@ -192,7 +177,7 @@ export default TrashCard = props => {
             onEdit={props.onEdit}
             UI_diff={props.UI_diff}
             selected={props.selected}
-            sellingMode={props.sellingMode}
+            editingMode={props.editingMode}
           />
         )}
       </View>

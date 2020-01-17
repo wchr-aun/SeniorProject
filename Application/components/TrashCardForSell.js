@@ -13,16 +13,12 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import ThaiTitleText from "./ThaiTitleText";
 import ThaiText from "./ThaiText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
-
-const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
-const MINUS_AMOUNT_FORSELL = "MINUS_AMOUNT_FORSELL";
-const EDIT_AMOUNT_FORSELL = "EDIT_AMOUNT_FORSELL";
-const SELECT_ITEM = "SELECT_ITEM";
 
 const AmountOfTrash = props => {
   return (
@@ -33,7 +29,7 @@ const AmountOfTrash = props => {
       }}
     >
       <View>
-        <ThaiText style={{ fontSize: 8 }}>เหลือ</ThaiText>
+        <ThaiText style={{ fontSize: 8 }}>เปลี่ยนแปลง</ThaiText>
       </View>
       <View
         style={{
@@ -44,10 +40,15 @@ const AmountOfTrash = props => {
           style={{
             textAlign: "center",
             fontSize: wp("7%"),
-            color: "green"
+            color:
+              isNaN(props.changeAmount) || props.changeAmount === 0
+                ? "black"
+                : props.changeAmount > 0
+                ? "green"
+                : Colors.error
           }}
         >
-          {(props.amount - props.amountForSell).toString()}
+          {props.changeAmount.toString()}
         </Text>
       </View>
     </View>
@@ -55,61 +56,39 @@ const AmountOfTrash = props => {
 };
 
 const AdjustAmountOfTrash = props => {
-  console.log(props);
   return (
     <View style={{ ...props.style, flexDirection: "row" }}>
-      <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircle}
-        onPress={
-          !props.UI_MinusDisabled
-            ? () => {
-                props.dispatchAmountTrashsState({
-                  type: MINUS_AMOUNT_FORSELL,
-                  wasteType: props.wasteType,
-                  amount: 1
-                });
-              }
-            : null
-        }
-      >
-        <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
-      </TouchableWithoutFeedback>
+      <View style={styles.plusAndMinusCircle}>
+        {!props.selected ? null : (
+          <TouchableWithoutFeedback onPress={props.onDecrease}>
+            <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
       <View style={{ width: 30 }}>
         <TextInput
+          selectTextOnFocus={true}
           keyboardType="numeric"
-          onChangeText={text => {
-            props.dispatchAmountTrashsState({
-              type: EDIT_AMOUNT_FORSELL,
-              wasteType: props.wasteType,
-              value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
-            });
-          }}
-          value={(props.amountForSell ? props.amountForSell : 0).toString()}
+          onChangeText={props.onEdit}
+          value={(props.oldAmount + props.changeAmount <= 0
+            ? 0
+            : props.oldAmount + props.changeAmount
+          ).toString()}
           style={{ textAlign: "center" }}
-        ></TextInput>
+        />
       </View>
-      <TouchableWithoutFeedback
-        style={styles.plusAndMinusCircle}
-        onPress={() =>
-          !props.UI_PlusDisabled
-            ? props.dispatchAmountTrashsState({
-                type: ADD_AMOUNT_FORSELL,
-                wasteType: props.wasteType,
-                amount: 1
-              })
-            : null
-        }
-      >
-        <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
-      </TouchableWithoutFeedback>
+      <View style={styles.plusAndMinusCircle}>
+        {!props.selected ? null : (
+          <TouchableWithoutFeedback onPress={props.onIncrease}>
+            <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
     </View>
   );
 };
 
 export default TrashCardForSell = props => {
-  // Selected Trasition
-  const [isSelected, setIsSelected] = useState(false);
-
   return (
     <View
       style={{
@@ -139,8 +118,8 @@ export default TrashCardForSell = props => {
           style={{ borderWidth: 1, borderColor: "black" }}
         />
         <AmountOfTrash
-          amount={props.amount}
-          amountForSell={props.amountForSell}
+          changeAmount={props.changeAmount}
+          oldAmount={props.oldAmount}
         />
       </View>
 
@@ -155,35 +134,34 @@ export default TrashCardForSell = props => {
         }}
       >
         {/* Trash Name */}
-        <View style={{ width: "80%", height: "20%", backgroundColor: "red" }}>
-          <ThaiTitleText style={styles.trashName}>
-            {props.wasteType}
-          </ThaiTitleText>
-        </View>
-        {/* Check - UnCheck */}
-        <TouchableWithoutFeedback
+        <View
           style={{
-            width: "30%",
-            height: "100%",
-            alignSelf: "flex-end"
-          }}
-          onPress={() => {
-            setIsSelected(previousState => !previousState);
-            // put the amouth of this trash into state
-            props.dispatchAmountTrashsState({
-              type: SELECT_ITEM,
-              preIsSelected: isSelected, //bacause it not immediatly change after setIsSelected
-              wasteType: props.wasteType
-            });
+            width: "100%",
+            height: "20%",
+            backgroundColor: "red",
+            flexDirection: "row"
           }}
         >
-          <MaterialIcons
-            name={isSelected ? "check-box" : "check-box-outline-blank"}
-            size={20}
-            color={Colors.primary}
-          />
-        </TouchableWithoutFeedback>
-        {/* <View style={styles.descriptionRow}>
+          <View style={{ width: "80%", height: "100%" }}>
+            <ThaiTitleText style={styles.trashName}>
+              {props.subtype}
+            </ThaiTitleText>
+          </View>
+          <TouchableWithoutFeedback
+            style={{
+              width: "20%",
+              height: "100%"
+            }}
+            onPress={props.onSelected}
+          >
+            <MaterialIcons
+              name={props.selected ? "check-box" : "check-box-outline-blank"}
+              size={20}
+              color={Colors.primary}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+        <View style={styles.descriptionRow}>
           <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
           <ThaiText style={styles.trashDisposal}>
             {props.wasteDisposal}
@@ -193,16 +171,19 @@ export default TrashCardForSell = props => {
           <ThaiText style={styles.trashAdjustPrice}>
             {props.trashAdjustPrice} บ./กก.
           </ThaiText>
-        </View> */}
-        {!isSelected ? null : (
+        </View>
+        {!props.selected ? null : (
           <AdjustAmountOfTrash
-            wasteType={props.wasteType}
-            amount={props.amount}
-            amountForSell={props.amountForSell}
-            dispatchAmountTrashsState={props.dispatchAmountTrashsState}
-            UI_MinusDisabled={props.UI_MinusDisabled}
-            UI_PlusDisabled={props.UI_PlusDisabled}
             style={{ alignSelf: "center", alignItems: "center" }}
+            subtype={props.subtype}
+            majortype={props.majortype}
+            changeAmount={props.changeAmount}
+            oldAmount={props.oldAmount}
+            onIncrease={props.onIncrease}
+            onDecrease={props.onDecrease}
+            onEdit={props.onEdit}
+            UI_diff={props.UI_diff}
+            selected={props.selected}
           />
         )}
       </View>
