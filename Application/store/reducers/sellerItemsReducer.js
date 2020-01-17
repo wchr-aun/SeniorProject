@@ -57,6 +57,7 @@ export default function(state = initialState, action) {
         }
       }
       console.log("sellerItem After sell --- sellerItemsReducer");
+      console.log(sellerItemsCloned);
       //************ do remove some existing sellerItems
       return {
         ...state,

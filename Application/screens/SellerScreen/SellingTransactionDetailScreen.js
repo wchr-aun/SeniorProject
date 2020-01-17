@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import ThaiText from "../../components/ThaiText";
 import { updateTxStatus } from "../../utils/firebaseFunctions";
+import CustomButton from "../../components/UI/CustomButton";
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
@@ -26,6 +27,10 @@ export default SellingTransactionDetailScreen = props => {
       txID: transactionItem.txId,
       status: 4
     });
+  };
+
+  const backHandler = () => {
+    props.navigation.goBack();
   };
 
   return (
@@ -51,6 +56,7 @@ export default SellingTransactionDetailScreen = props => {
             <ThaiText>{transactionItem.tel}</ThaiText>
           </View>
           <Button onPress={cancelHandler} title="cancel" />
+          <Button onPress={backHandler} title="ย้อนกลับ" />
         </View>
       </View>
     </View>

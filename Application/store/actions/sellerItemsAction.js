@@ -97,6 +97,13 @@ export const chooseBuyerSell = (
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
+          console.log(sellerItems[type][subtype]);
+          console.log(sellerItems._selected[type][subtype]);
+          console.log(
+            buyerPriceInfo[type] == undefined ||
+              buyerPriceInfo[type][subtype] == undefined ||
+              sellerItems._selected[type][subtype] == false
+          );
           if (
             !(
               buyerPriceInfo[type] == undefined ||
