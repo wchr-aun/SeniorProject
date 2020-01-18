@@ -251,8 +251,7 @@ export default UserSignupScreen = props => {
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
-        latitude={addrCord.latitude}
-        longitude={addrCord.longitude}
+        origin={{latitude: addrCord.latitude, longitude: addrCord.longitude}}
         setSellerAddr={setSellerAddr}
         addrReadable={addrReadable}
       />

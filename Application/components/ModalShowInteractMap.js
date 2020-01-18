@@ -12,6 +12,8 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import MapView, { Marker } from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
+import { GOOGLE_API_KEY } from "react-native-dotenv";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const ASPECT_RATIO = wp("100%") / hp("100%");
@@ -25,17 +27,19 @@ export default ModalShowInteractMap = props => {
   });
   const [selectedLocation, setSelectedLocation] = useState();
   const [markerCoordinates, setMarkerCoordinates] = useState({
-    latitude: props.latitude,
-    longitude: props.longitude
+    latitude: props.origin.latitude,
+    longitude: props.origin.longitude
   });
+
+  const isPathOptimize = props.pathOptimize ? true : false
 
   const mapRegion = {
     latitude: markerCoordinates.latitude
       ? markerCoordinates.latitude
-      : props.latitude,
+      : props.origin.latitude,
     longitude: markerCoordinates.longitude
       ? markerCoordinates.longitude
-      : props.longitude,
+      : props.origin.longitude,
     latitudeDelta: zoomCord.latitudeDelta,
     longitudeDelta: zoomCord.longitudeDelta
   };
@@ -87,9 +91,17 @@ export default ModalShowInteractMap = props => {
             region={mapRegion}
             onPress={selectLocationHandler}
           >
-            {markerCoordinates && (
-              <Marker title="Picked Location" coordinate={markerCoordinates} />
-            )}
+            {
+              isPathOptimize ?
+              <MapViewDirections
+                origin = {markerCoordinates}
+                destination = {{latitude: props.destination.latitude, longitude: props.destination.longitude}}
+                apikey = {GOOGLE_API_KEY}
+                strokeWidth = {3}
+                strokeColor = "hotpink"
+              /> :
+              (<Marker coordinate={markerCoordinates} />)
+            }
           </MapView>
         </View>
         <View style={{ width: "100%", height: "10%", flexDirection: "row" }}>

@@ -13,14 +13,18 @@ export default UserStartupScreen = props => {
   console.log("startup");
 
   useEffect(() => {
+    console.time("Startup-Verification")
     verifyNotificationsPermissions();
     firebaseUtil.auth().onAuthStateChanged(user => {
+      console.timeEnd("Startup-Verification")
+      console.time("Startup-Navigate")
       if (user != null) {
         dispatch(authAction.signin())
           .then(dispatch(wasteTypeAction.fetchWasteType()))
           .then(() => {
             AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
               dispatch(authAction.setUserRole(config_role));
+              console.timeEnd("Startup-Navigate")
               if (config_role == "seller")
                 props.navigation.navigate("SellerNavigator");
               else if (config_role == "buyer") {
@@ -29,7 +33,10 @@ export default UserStartupScreen = props => {
               } else props.navigation.navigate("ConfigAccountScreen");
             });
           });
-      } else props.navigation.navigate("UserAuthenNavigator");
+      } else {
+        console.timeEnd("Startup-Navigate")
+        props.navigation.navigate("UserAuthenNavigator")
+      };
     });
   }, []);
 

@@ -60,8 +60,9 @@ export default UserSignupScreen = props => {
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
-        latitude={addrCord.latitude}
-        longitude={addrCord.longitude}
+        origin={{latitude: addrCord.latitude, longitude: addrCord.longitude}}
+        destination={{latitude: 13.6487268, longitude: 100.5007013}}
+        pathOptimize={true}
         setSellerAddr={setSellerAddr}
         addrReadable={addrReadable}
       />
@@ -117,11 +118,3 @@ export default UserSignupScreen = props => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});

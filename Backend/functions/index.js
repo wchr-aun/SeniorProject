@@ -68,7 +68,7 @@ exports.addWaste = functions.https.onCall((data, context) => {
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null) {
     let saleList = data.saleList
-    let buyer = (data.txStatus == 0) ? data.buyer : ""
+    let buyer = (data.txType == 0) ? data.buyer : ""
     let addr = data.addr.readable
     let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
     let txType = data.txType
@@ -291,21 +291,23 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
     const wasteType = data.wasteType
     return geofirex.get(query).then(querySnapshot => {
       querySnapshot.forEach(buyer => {
-        const lastestArray = buyerList.push(buyer) - 1
-        buyerList[lastestArray].totalPrice = 0
-        buyerList[lastestArray].unavailableTypes = []
-        for (type in wasteType)
-          for (subtype in wasteType[type]) {
-            if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
-              buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
-            else
-              buyerList[lastestArray].unavailableTypes.push(subtype)
-          }
-        if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
-          buyerList.pop()
-        else
-          buyerList[lastestArray].sorting = (wasteType.length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
-          buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
+        if (buyer.id != context.auth.id && buyer.enableSearch) {
+          const lastestArray = buyerList.push(buyer) - 1
+          buyerList[lastestArray].totalPrice = 0
+          buyerList[lastestArray].unavailableTypes = []
+          for (type in wasteType)
+            for (subtype in wasteType[type]) {
+              if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
+                buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
+              else
+                buyerList[lastestArray].unavailableTypes.push(subtype)
+            }
+          if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
+            buyerList.pop()
+          else
+            buyerList[lastestArray].sorting = (wasteType.length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
+            buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
+        }
       })
       buyerList.sort((a, b) => {
         return b.sorting - a.sorting
@@ -329,17 +331,19 @@ exports.querySellers = functions.https.onCall((data,context) => {
     const query = geoSellers.within(center, radius, "addr_geopoint")
     return geofirex.get(query).then(querySnapshot => {
       querySnapshot.forEach(seller => {
-        const lastestArray = txList.push(seller) - 1
-        txList[lastestArray].unavailableTypes = []
-        for (type in saleList)
-          for (subtype in saleList[type])
-            if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
-              txList[lastestArray].unavailableTypes.push(subtype)
-        if (txList[lastestArray].unavailableTypes.length == saleList.length)
-          txList.pop()
-        else
-          txList[lastestArray].sorting = (saleList.length - txList[lastestArray].unavailableTypes.length) * 100 +
-          (radius - txList[lastestArray].hitMetadata.distance)
+        if (seller.id != context.auth.id) {
+          const lastestArray = txList.push(seller) - 1
+          txList[lastestArray].unavailableTypes = []
+          for (type in saleList)
+            for (subtype in saleList[type])
+              if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
+                txList[lastestArray].unavailableTypes.push(subtype)
+          if (txList[lastestArray].unavailableTypes.length == saleList.length)
+            txList.pop()
+          else
+            txList[lastestArray].sorting = (saleList.length - txList[lastestArray].unavailableTypes.length) * 100 +
+            (radius - txList[lastestArray].hitMetadata.distance)
+        }
       })
       txList.sort((a, b) => {
         return b.sorting - a.sorting
