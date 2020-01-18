@@ -102,7 +102,7 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 const ShowAllUserTrashScreen = props => {
-  // For back behavior
+  // For back behavior + auto refresh
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (editingMode) {
@@ -110,8 +110,14 @@ const ShowAllUserTrashScreen = props => {
         return true; //Prevent go back to homepage
       }
     });
+    const willFocusSub = props.navigation.addListener(
+      "willFocus",
+      refreshSellerItems
+    );
+
     return () => {
       BackHandler.removeEventListener();
+      willFocusSub.remove();
     };
   });
 

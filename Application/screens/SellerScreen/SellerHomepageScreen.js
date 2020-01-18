@@ -25,6 +25,7 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import * as transactionAction from "../../store/actions/transactionAction";
 
 import libary from "../../utils/libary";
+import { Wastes } from "../../models/AllUserTrash";
 
 export default SellerHomepageScreen = props => {
   // Loading effect
@@ -62,7 +63,7 @@ export default SellerHomepageScreen = props => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
       params: {
-        transactionItem: transactionItem
+        transactionItem
       }
     });
   };
@@ -151,6 +152,7 @@ export default SellerHomepageScreen = props => {
                       }
                       txStatus={item.detail.txStatus}
                       userName={item.detail.buyer}
+                      meetDateTime={item.detail.assignedTime}
                       // meetDate={libary.formatDate(
                       //   item.detail.assignedTime.toDate()
                       // )}

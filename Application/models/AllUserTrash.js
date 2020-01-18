@@ -12,18 +12,28 @@ export class Wastes {
   constructor(obj) {
     this.length = 0;
     this._count = {};
+    this._selected = {};
     for (let type in obj) {
       for (let subtype in obj[type]) {
         if (this[type] == undefined) {
           this[type] = {};
           this._count[type] = {};
+          this._selected[type] = {};
         }
         this[type][subtype] = obj[type][subtype];
         this._count[type][subtype] = 0;
+        this._selected[type][subtype] = false;
         this.length += 1;
       }
     }
   }
+  selectedToggle(type, subtype) {
+    console.log("AllUserTrash --- _selected");
+    console.log(this._selected[type][subtype]);
+    this._selected[type][subtype] = !this._selected[type][subtype];
+    console.log(this._selected[type][subtype]);
+  }
+
   addWaste(type, subtype, value) {
     if (value <= 0) this._removeWaste(type, subtype);
     else {

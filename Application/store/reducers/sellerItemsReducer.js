@@ -31,35 +31,37 @@ export default function(state = initialState, action) {
         Object.create(action.sellerItemsForSell),
         action.sellerItemsForSell
       );
+      sellerItemsForSellCloned.confirmValue();
+      console.log(sellerItemsForSellCloned);
+      return {
+        ...state,
+        sellerItemsForSell: sellerItemsForSellCloned
+      };
+    case CHOOSEBUYER_SELL:
+      console.log("CHOOSEBUYER_SELL Reducer Run");
       let sellerItemsCloned = Object.assign(
         Object.create(state.sellerItems),
         state.sellerItems
       );
       // reduce sellerItems
-      for (let type in sellerItemsForSellCloned) {
+      for (let type in action.sellRequest["saleList"]) {
         if (type !== "_count" && type !== "length") {
           // got object
-          for (let subtype in sellerItemsForSellCloned[type]) {
+          for (let subtype in action.sellRequest[type]) {
             sellerItemsCloned.incrementalValue(
               type,
               subtype,
-              -sellerItemsForSellCloned[type][subtype]
+              -action.sellRequest["saleList"][type][subtype]
             );
           }
         }
       }
-      sellerItemsCloned.confirmValue();
-      return {
-        ...state,
-        sellerItemsForSell: sellerItemsForSellCloned,
-        sellerItems: sellerItemsCloned
-      };
-    case CHOOSEBUYER_SELL:
-      console.log("CHOOSEBUYER_SELL Reducer Run");
-
+      console.log("sellerItem After sell --- sellerItemsReducer");
+      console.log(sellerItemsCloned);
       //************ do remove some existing sellerItems
       return {
-        ...state
+        ...state,
+        sellerItems: sellerItemsCloned
       };
     case GET_BUYER_LIST:
       console.log("GET_BUYER_LIST Reducer Run");
