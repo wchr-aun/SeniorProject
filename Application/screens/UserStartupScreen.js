@@ -10,13 +10,12 @@ import 'react-native-console-time-polyfill';
 
 export default UserStartupScreen = props => {
   const dispatch = useDispatch();
-  console.log("startup");
 
   useEffect(() => {
-    console.time("Startup-Verification")
+    console.log("startup");
     verifyNotificationsPermissions();
     firebaseUtil.auth().onAuthStateChanged(user => {
-      console.timeEnd("Startup-Verification")
+      console.log("startup-afterOnAuth");
       console.time("Startup-Navigate")
       if (user != null) {
         dispatch(authAction.signin())
@@ -25,6 +24,7 @@ export default UserStartupScreen = props => {
             AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
               dispatch(authAction.setUserRole(config_role));
               console.timeEnd("Startup-Navigate")
+              console.log("startup-beforeNavigate");
               if (config_role == "seller")
                 props.navigation.navigate("SellerNavigator");
               else if (config_role == "buyer") {
@@ -35,6 +35,7 @@ export default UserStartupScreen = props => {
           });
       } else {
         console.timeEnd("Startup-Navigate")
+        console.log("startup-beforeNavigatetoLogin");
         props.navigation.navigate("UserAuthenNavigator")
       };
     });

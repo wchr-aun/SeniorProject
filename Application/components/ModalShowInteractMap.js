@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -31,6 +31,13 @@ export default ModalShowInteractMap = props => {
     longitude: props.origin.longitude
   });
 
+  useEffect(() => {
+    setSelectedLocation({
+      lat: props.origin.latitude,
+      lng: props.origin.longitude
+    })
+  }, [])
+
   const isPathOptimize = props.pathOptimize ? true : false
 
   const mapRegion = {
@@ -56,6 +63,7 @@ export default ModalShowInteractMap = props => {
   };
 
   const confirmLocationHandler = () => {
+    console.log(selectedLocation)
     props.setSellerAddr({
       latitude: selectedLocation.lat,
       longitude: selectedLocation.lng,

@@ -270,19 +270,9 @@ export default EditingUserprofileScreen = props => {
 
   // For User signout
   const dispatch = useDispatch();
-  const signOutHandler = async () => {
+  const signOutHandler = () => {
     setIsLoading(true);
-    let result = await dispatch(authAction.signout());
-
-    /* Maybe clear redux storing in the ram
-    Look at this thread, might be useful, probably:
-    https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store */
-
-    if (result) props.navigation.navigate("StartupScreen");
-    else {
-      setIsLoading(false);
-      /* Make an alert or something, I don't know. */
-    }
+    dispatch(authAction.signout());
   };
 
   return (

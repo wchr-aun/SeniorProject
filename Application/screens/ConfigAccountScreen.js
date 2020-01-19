@@ -24,7 +24,10 @@ export default ConfigAccountScreen = props => {
 
   const configHandler = role => {
     dispatch(authAction.changeRole(role)).then(() => {
-      props.navigation.navigate("StartupScreen");
+      if (role == "seller")
+        props.navigation.navigate("SellerNavigator");
+      else
+        props.navigation.navigate("BuyerNavigator");
     })
   };
 
