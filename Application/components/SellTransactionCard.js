@@ -77,7 +77,14 @@ export default SellTransactionCard = props => {
           </View>
           <View style={{ ...styles.description }}>
             <View style={{ width: "50%" }}>
-              <ThaiText style={{ fontSize: 14 }}>{props.meetTime}</ThaiText>
+              <ThaiText
+                style={{
+                  fontSize: 8,
+                  color: libary.getColorTxStatus(props.txStatus)
+                }}
+              >
+                {libary.getReadableTxStatus(props.txStatus)}
+              </ThaiText>
             </View>
             <View style={{ width: "50%" }}>
               <ThaiText style={{ fontSize: 14 }}>{props.meetDate}</ThaiText>

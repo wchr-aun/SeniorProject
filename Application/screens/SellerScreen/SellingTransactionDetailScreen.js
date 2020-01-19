@@ -43,8 +43,10 @@ export default SellingTransactionDetailScreen = props => {
   return (
     <View style={styles.screen}>
       <View style={styles.infoContainerCard}>
-        <View style={styles.userInfo}>
-          <View style={{ ...styles.imgContainer }}>
+        <View style={{ height: "50%", width: "100%" }}>
+          <View
+            style={{ width: "20%", height: "50%", maxHeight: 150, padding: 5 }}
+          >
             <Image
               source={{
                 uri: transactionItem.imgUrl
@@ -53,65 +55,96 @@ export default SellingTransactionDetailScreen = props => {
               resizeMode="center"
             />
           </View>
-          <View>
-            <ThaiText>รับที่ {transactionItem.detail.addr}</ThaiText>
-          </View>
-          <View>
-            <ThaiText>ผู้รับซื้อ {transactionItem.detail.buyer}</ThaiText>
-          </View>
-          <View>
+          <View style={{ width: "100%", height: "50%" }}>
+            <ThaiText>
+              <ThaiTitleText style={{ fontSize: 12 }}>สถานะ: </ThaiTitleText>
+              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
+            </ThaiText>
+            <ThaiText>
+              <ThaiTitleText style={{ fontSize: 12 }}>
+                ผู้รับซื้อ:{" "}
+              </ThaiTitleText>
+              {transactionItem.detail.buyer}
+            </ThaiText>
+            <ThaiText>
+              <ThaiTitleText style={{ fontSize: 12 }}>
+                สถานที่รับขยะ:{" "}
+              </ThaiTitleText>
+              {transactionItem.detail.addr}
+            </ThaiText>
             <ThaiText>{transactionItem.tel}</ThaiText>
           </View>
-          <Button onPress={cancelHandler} title="cancel" />
+        </View>
+        <View style={{ width: "100%", height: "5%" }}>
+          <ThaiTitleText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiTitleText>
+        </View>
+        <View style={{ width: "100%", height: "15%", backgroundColor: "red" }}>
+          <FlatList
+            data={transactionItem.detail.assignedTime}
+            keyExtractor={item =>
+              libary.formatDate(item.toDate()) +
+              libary.formatTime(item.toDate())
+            }
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
+                <View style={{ height: 50, padding: 3, alignSelf: "center" }}>
+                  <ThaiText>
+                    {libary.formatDate(item.toDate()) +
+                      " " +
+                      libary.formatTime(item.toDate())}
+                  </ThaiText>
+                </View>
+              );
+            }}
+          />
+        </View>
+        <View style={{ width: "100%", height: "5%" }}>
+          <ThaiTitleText style={{ fontSize: 12 }}>
+            ประเภทขยะที่ขาย
+          </ThaiTitleText>
+        </View>
+        <View
+          style={{ width: "100%", height: "15%", backgroundColor: "yellow" }}
+        >
+          <FlatList
+            data={saleList}
+            keyExtractor={item => item.subtype}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              console.log(saleList);
+              return (
+                <View
+                  style={{
+                    height: 50,
+                    padding: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <View style={{ width: "50%", height: "100%" }}>
+                    <ThaiText>{item.type + " " + item.subtype}</ThaiText>
+                  </View>
+                  <View style={{ width: "50%", height: "100%" }}>
+                    <ThaiText>{"จำนวน " + item.amount.amount}</ThaiText>
+                  </View>
+                </View>
+              );
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            height: "10%",
+            maxHeight: 50,
+            width: "100%",
+            justifyContent: "space-around",
+            alignItems: "center"
+          }}
+        >
+          <Button onPress={cancelHandler} title="ยกเลิก" />
           <Button onPress={backHandler} title="ย้อนกลับ" />
-          <View
-            style={{ width: "100%", height: "30%", backgroundColor: "red" }}
-          >
-            <FlatList
-              data={transactionItem.detail.assignedTime}
-              keyExtractor={item => item.toDate()}
-              style={{ flex: 1 }}
-              renderItem={({ item }) => {
-                console.log(
-                  libary.formatDate(item.toDate()) +
-                    " " +
-                    libary.formatTime(item.toDate())
-                );
-                return (
-                  <View style={{ height: 50 }}>
-                    <Text>
-                      {libary.formatDate(item.toDate()) +
-                        " " +
-                        libary.formatTime(item.toDate())}
-                    </Text>
-                  </View>
-                );
-              }}
-            />
-          </View>
-          <View
-            style={{ width: "100%", height: "30%", backgroundColor: "yellow" }}
-          >
-            <FlatList
-              data={saleList}
-              keyExtractor={item => item.subtype}
-              style={{ flex: 1 }}
-              renderItem={({ item }) => {
-                console.log(saleList);
-                return (
-                  <View style={{ height: 50 }}>
-                    <Text>
-                      {item.type +
-                        " " +
-                        item.subtype +
-                        " " +
-                        item.amount.amount}
-                    </Text>
-                  </View>
-                );
-              }}
-            />
-          </View>
         </View>
       </View>
     </View>
@@ -140,14 +173,6 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     alignItems: "center"
-  },
-  imgContainer: {
-    width: "20%",
-    height: "30%",
-    padding: 5
-    // borderRadius: 500,
-    // overflow: "hidden",
-    // backgroundColor: "red"
   },
   userImg: {
     width: "100%",
