@@ -9,5 +9,21 @@ export default {
   lineSeparate: "#cccccc",
   error: "#8c0b04",
   linearGradient: ["#2abf9d", "#0084ff"],
-  linearGradientB: ["#2abfbf", "#3797f0"]
+  linearGradientB: ["#2abfbf", "#3797f0"],
+  // txStatus
+  txStatus: {
+    zero: "#fcba03",
+    one: "#fc2803",
+    two: "#fc5603",
+    three: "#a9fc03",
+    four: "#B3B3B3 ",
+    five: "#90B37B "
+  }
 };
+//   Transaction Status
+// 0 - เพิ่งสร้าง
+// 1 - ถูกปฏิเสธ แบบมีเงื่อนไข
+// 2 - รอทราบวัน
+// 3 - buyer กำลังไปรับ
+// 4 - Cancel
+// 5 - Complete เสร็จสมบูรณ์
