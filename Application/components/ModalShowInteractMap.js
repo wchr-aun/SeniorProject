@@ -101,13 +101,17 @@ export default ModalShowInteractMap = props => {
           >
             {
               isPathOptimize ?
-              <MapViewDirections
-                origin = {markerCoordinates}
-                destination = {{latitude: props.destination.latitude, longitude: props.destination.longitude}}
-                apikey = {GOOGLE_API_KEY}
-                strokeWidth = {3}
-                strokeColor = "hotpink"
-              /> :
+              <>
+                <MapViewDirections
+                  origin = {markerCoordinates}
+                  destination = {{latitude: props.destination.latitude, longitude: props.destination.longitude}}
+                  apikey = {GOOGLE_API_KEY}
+                  strokeWidth = {3}
+                  strokeColor = "hotpink"
+                />
+                <Marker coordinate={markerCoordinates} />
+                <Marker coordinate={{latitude: props.destination.latitude, longitude: props.destination.longitude}} />
+              </> :
               (<Marker coordinate={markerCoordinates} />)
             }
           </MapView>
