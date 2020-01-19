@@ -59,8 +59,7 @@ const BuyerChoice = props => {
                     ? `ไม่รับซื้อ`
                     : props.purchaseList[item.type][item.subtype] == undefined
                     ? `ไม่รับซื้อ`
-                    : `จำนวน ${item.amount} ราคารับซื้อ 
-                      = ${item.amount *
+                    : `จำนวน ${item.amount} ราคารับซื้อ = ${item.amount *
                         props.purchaseList[item.type][item.subtype]}`}
                 </ThaiText>
               </View>
