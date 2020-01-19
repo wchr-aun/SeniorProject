@@ -47,35 +47,21 @@ const BuyerChoice = props => {
           data={props.sellerItemsForSell.getFlatListFormat(false)}
           keyExtractor={item => item.type + item.subtype}
           renderItem={({ item }) => {
-            console.log(item);
-            let isItemExist =
-              props.purchaseList[item.type] == undefined
-                ? 0
-                : props.purchaseList[item.type][item.subtype]
-                ? 0
-                : props.purchaseList[item.type][item.subtype];
-            let earning =
-              isItemExist == 0
-                ? 0
-                : item.amount * props.purchaseList[item.type][item.subtype];
-            if (isItemExist != 0) {
-              console.log("--- check props.purchaseList");
-              console.log(props.purchaseList);
-              console.log(item);
-              console.log(item.type);
-              console.log(item.subtype);
-              console.log(props.purchaseList[item.type][item.subtype]);
-            }
-
             return (
-              <View style={{ height: 30, backgroundColor: "red" }}>
+              <View
+                style={{ height: 30, width: "100%", backgroundColor: "red" }}
+              >
                 <ThaiText>
-                  <ThaiTitleText>{item.subtype}</ThaiTitleText>
-                  {isItemExist == 0
+                  <ThaiTitleText style={{ fontSize: 10 }}>
+                    {item.subtype}
+                  </ThaiTitleText>
+                  {props.purchaseList[item.type] == undefined
                     ? `ไม่รับซื้อ`
-                    : `จำนวน ${item.amount} ราคารับซื้อ ${
-                        props.purchaseList[item.type][item.subtype]
-                      } = ${earning}`}
+                    : props.purchaseList[item.type][item.subtype] == undefined
+                    ? `ไม่รับซื้อ`
+                    : `จำนวน ${item.amount} ราคารับซื้อ 
+                      = ${item.amount *
+                        props.purchaseList[item.type][item.subtype]}`}
                 </ThaiText>
               </View>
             );
