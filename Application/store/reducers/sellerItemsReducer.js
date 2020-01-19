@@ -32,7 +32,6 @@ export default function(state = initialState, action) {
         action.sellerItemsForSell
       );
       sellerItemsForSellCloned.confirmValue();
-      console.log(sellerItemsForSellCloned);
       return {
         ...state,
         sellerItemsForSell: sellerItemsForSellCloned
@@ -56,8 +55,6 @@ export default function(state = initialState, action) {
           }
         }
       }
-      console.log("sellerItem After sell --- sellerItemsReducer");
-      console.log(sellerItemsCloned);
       //************ do remove some existing sellerItems
       return {
         ...state,

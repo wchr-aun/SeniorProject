@@ -66,7 +66,7 @@ const trashsModifyingReducer = (state, action) => {
       sellerItems.addWasteObj(addedSellerItem);
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       };
     case MINUS_SELLERITEMS_AMOUNT:
       sellerItems.incrementalValue(
@@ -89,7 +89,7 @@ const trashsModifyingReducer = (state, action) => {
     case UPDATE_LOCAL_SELLERITEMS:
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       };
     case CANCEL:
       sellerItems.clearValue();

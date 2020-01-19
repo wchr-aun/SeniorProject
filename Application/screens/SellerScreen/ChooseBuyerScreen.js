@@ -21,11 +21,91 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
+import ThaiText from "../../components/ThaiText";
+import ThaiTitleText from "../../components/ThaiTitleText";
+
+const BuyerChoice = props => {
+  return (
+    <TouchableOpacity
+      style={{
+        width: wp("90%"),
+        height: hp("15%"),
+        backgroundColor: Colors.screen,
+        alignSelf: "center",
+        borderRadius: 10,
+        margin: wp("3.75%"),
+        justifyContent: "center"
+      }}
+      onPress={props.onSelected}
+    >
+      <View style={{ alignSelf: "center", height: "30%", width: "100%" }}>
+        <Text>{props.buyerName}</Text>
+      </View>
+      <View style={{ height: "70%", width: "100%", backgroundColor: "red" }}>
+        <FlatList
+          style={{ flex: 1 }}
+          data={props.sellerItemsForSell.getFlatListFormat(false)}
+          keyExtractor={item => item.type + item.subtype}
+          renderItem={({ item }) => {
+            console.log(item);
+            let isItemExist =
+              props.purchaseList[item.type] == undefined
+                ? 0
+                : props.purchaseList[item.type][item.subtype]
+                ? 0
+                : props.purchaseList[item.type][item.subtype];
+            let earning =
+              isItemExist == 0
+                ? 0
+                : item.amount * props.purchaseList[item.type][item.subtype];
+            if (isItemExist != 0) {
+              console.log("--- check props.purchaseList");
+              console.log(props.purchaseList);
+              console.log(item);
+              console.log(item.type);
+              console.log(item.subtype);
+              console.log(props.purchaseList[item.type][item.subtype]);
+            }
+
+            return (
+              <View style={{ height: 30, backgroundColor: "red" }}>
+                <ThaiText>
+                  <ThaiTitleText>{item.subtype}</ThaiTitleText>
+                  {isItemExist == 0
+                    ? `ไม่รับซื้อ`
+                    : `จำนวน ${item.amount} ราคารับซื้อ ${
+                        props.purchaseList[item.type][item.subtype]
+                      } = ${earning}`}
+                </ThaiText>
+              </View>
+            );
+          }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default UserAuthenScreen = props => {
   useEffect(() => {
     console.log("Choose Buyer Screen");
   }, []);
+
+  // For back behavior + auto refresh
+  useEffect(() => {
+    // BackHandler.addEventListener("hardwareBackPress", () => {
+    //   if (editingMode) {
+    //     setEditingMode(false);
+    //     return true; //Prevent go back to homepage
+    //   }
+    // });
+    const willFocusSub = props.navigation.addListener("willFocus", loadBuyer);
+
+    return () => {
+      // BackHandler.removeEventListener();
+      willFocusSub.remove();
+    };
+  });
 
   // required data for sending an transaction
   const sellerAddr = useSelector(state => state.user.userProfile.addr);
@@ -63,11 +143,6 @@ export default UserAuthenScreen = props => {
     }
   }, [loadBuyer, sellerAddr]);
 
-  const [datepickerShow, setDatapickerShow] = useState(false);
-  showDateTimePicker = () => {
-    setDatapickerShow(true);
-  };
-
   const [buyerName, setBuyerName] = useState("");
   const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
   buyerSelectHandler = (buyerName, buyerPriceInfo) => {
@@ -76,13 +151,16 @@ export default UserAuthenScreen = props => {
     setDatapickerShow(true);
   };
 
+  // date picker
+  const [datepickerShow, setDatapickerShow] = useState(false);
+  showDateTimePicker = () => {
+    setDatapickerShow(true);
+  };
   hideDateTimePicker = () => {
     setDatapickerShow(false);
   };
-
   const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
   const [selectedTimes, setSelectedTimes] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
   handleDatePicked = date => {
     setDate(date);
     hideDateTimePicker();
@@ -102,7 +180,7 @@ export default UserAuthenScreen = props => {
         )
       );
 
-      await dispatch(transactionAction.fetchTransaction("seller"));
+      // await dispatch(transactionAction.fetchTransaction("seller"));
       props.navigation.navigate("SellTransaction");
     } catch (err) {
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
@@ -128,6 +206,7 @@ export default UserAuthenScreen = props => {
       submitSellRequest();
   }, [selectedTimes]);
 
+  const [modalVisible, setModalVisible] = useState(false);
   if (modalVisible) {
     return (
       <ModalShowAssignedTime
@@ -156,28 +235,22 @@ export default UserAuthenScreen = props => {
           borderRadius: 10
         }}
       >
-        <View style={{ width: "100%", height: hp("60%s") }}>
+        <View style={{ width: "100%", height: hp("60%") }}>
           <FlatList
             data={buyerListRedux}
             keyExtractor={item => item.id}
+            onRefresh={loadBuyer}
+            refreshing={isRefreshing}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity
-                  style={{
-                    width: wp("90%"),
-                    height: hp("15%"),
-                    backgroundColor: Colors.screen,
-                    alignSelf: "center",
-                    borderRadius: 10,
-                    margin: wp("3.75%"),
-                    justifyContent: "center"
-                  }}
-                  onPress={() => buyerSelectHandler(item.id, item.purchaseList)}
-                >
-                  <View style={{ alignSelf: "center" }}>
-                    <Text>{item.id}</Text>
-                  </View>
-                </TouchableOpacity>
+                <BuyerChoice
+                  sellerItemsForSell={sellerItemsForSell}
+                  onSelected={() =>
+                    buyerSelectHandler(item.id, item.purchaseList)
+                  }
+                  buyerName={item.id}
+                  purchaseList={item.purchaseList}
+                />
               );
             }}
           />
@@ -198,7 +271,7 @@ export default UserAuthenScreen = props => {
 };
 
 UserAuthenScreen.navigationOptions = {
-  headerTitle: "UserAuthenScreen"
+  headerTitle: "เลือกผู้รับซื้อขยะ"
 };
 
 const styles = StyleSheet.create({

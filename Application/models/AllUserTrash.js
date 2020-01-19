@@ -28,10 +28,7 @@ export class Wastes {
     }
   }
   selectedToggle(type, subtype) {
-    console.log("AllUserTrash --- _selected");
-    console.log(this._selected[type][subtype]);
     this._selected[type][subtype] = !this._selected[type][subtype];
-    console.log(this._selected[type][subtype]);
   }
 
   addWaste(type, subtype, value) {
@@ -157,12 +154,16 @@ export class Wastes {
     }
     return obj;
   }
-  getFlatListFormat() {
+  getFlatListFormat(isGetAll) {
     let data = [];
     for (let type in this) {
       if (type[0] != "_")
-        for (let subtype in this[type])
-          data.push({ type, subtype, amount: this[type][subtype] });
+        for (let subtype in this[type]) {
+          if (isGetAll || this._selected[type][subtype] == true) {
+            // selected mode and this item isn't not select
+            data.push({ type, subtype, amount: this[type][subtype] });
+          }
+        }
     }
     return data;
   }

@@ -60,9 +60,7 @@ const trashSellingReducer = (state, action) => {
       };
     case SELECT_ITEM:
       console.log("SELECT_ITEM local Reducer Run");
-      console.log(action);
       sellerItemsForSell.selectedToggle(action.majortype, action.subtype);
-      console.log(sellerItemsForSell);
       return {
         ...state
       };

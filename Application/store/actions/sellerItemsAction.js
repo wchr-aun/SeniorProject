@@ -24,7 +24,7 @@ export const fetchSellerItems = () => {
         type: SET_SELLERITEMS,
         sellerItems,
         sellerItemsForSell,
-        sellerItemsFlatListFormat: [...sellerItems.getFlatListFormat()]
+        sellerItemsFlatListFormat: [...sellerItems.getFlatListFormat(true)]
       });
     } catch (err) {
       throw new Error(err.message);
@@ -49,7 +49,7 @@ export const updateSellerItems = sellerItems => {
         type: SET_SELLERITEMS,
         sellerItems,
         sellerItemsForSell,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat()
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       });
     } catch (err) {
       throw new Error(err.message);
@@ -97,13 +97,6 @@ export const chooseBuyerSell = (
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
-          console.log(sellerItems[type][subtype]);
-          console.log(sellerItems._selected[type][subtype]);
-          console.log(
-            buyerPriceInfo[type] == undefined ||
-              buyerPriceInfo[type][subtype] == undefined ||
-              sellerItems._selected[type][subtype] == false
-          );
           if (
             !(
               buyerPriceInfo[type] == undefined ||
@@ -131,8 +124,6 @@ export const chooseBuyerSell = (
       txType: 0,
       assignedTime: assignedTime
     };
-    console.log("___ In chooseBuyerSell __ Action -- sellRequest");
-    console.log(sellRequest);
 
     try {
       await sellWaste(sellRequest);

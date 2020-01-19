@@ -26,7 +26,7 @@ export default SellingTransactionDetailScreen = props => {
   console.log(transactionItem);
 
   const [saleList, setSetList] = useState(
-    new Wastes(transactionItem.detail.saleList).getFlatListFormat()
+    new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
 
   const cancelHandler = async () => {
