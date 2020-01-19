@@ -95,22 +95,10 @@ export default UserAuthenScreen = props => {
       : sha256("sha256");
 
     // do async task
-    firebaseUtil
+    await firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        updateNotificationToken()
-          .then(result => {
-            console.log("getting in")
-            if (result) {
-              props.navigation.navigate("StartupScreen");
-            }
-          })
-          .catch(err => {
-            setIsLoading(false);
-            setError(err.message);
-          });
-      })
+      .then(updateNotificationToken())
       .catch(err => {
         setIsLoading(false);
         setError(err.message);

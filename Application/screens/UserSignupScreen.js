@@ -32,12 +32,12 @@ import firebaseUtil from "../firebase";
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
+  const updatedValues = {
+    ...state.inputValues,
+    [action.inputIdentifier]: action.value
+  };
   switch (action.type) {
     case FORM_INPUT_UPDATE:
-      const updatedValues = {
-        ...state.inputValues,
-        [action.inputIdentifier]: action.value
-      };
       const updatedValidities = {
         ...state.inputValidities,
         [action.inputIdentifier]: action.isValid
@@ -67,11 +67,11 @@ const formReducer = (state, action) => {
         ...state,
         inputValidities: {
           ...state.inputValidities,
-          shallowAddr: action.prestateIsCur,
-          subdistrict: action.prestateIsCur,
-          district: action.prestateIsCur,
-          province: action.prestateIsCur,
-          postalCode: action.prestateIsCur
+          shallowAddr: action.prestateIsCur || Boolean(updatedValues["shallowAddr"]),
+          subdistrict: action.prestateIsCur || Boolean(updatedValues["subdistrict"]),
+          district: action.prestateIsCur || Boolean(updatedValues["district"]),
+          province: action.prestateIsCur || Boolean(updatedValues["province"]),
+          postalCode: action.prestateIsCur || Boolean(updatedValues["postalCode"])
         }
       };
   }
@@ -82,6 +82,10 @@ export default UserSignupScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentAddr, setCurrentAddr] = useState(false);
+  const [addrModalVisible, setAddrModalVisible] = useState(false);
+  const [addrReadable, setAddrReadable] = useState("");
+  const [addrCord, setAddrCord] = useState("");
+  const [sellerAddr, setSellerAddr] = useState("");
 
   // 'formState (state snapshot) will be updated when state changed
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -193,11 +197,6 @@ export default UserSignupScreen = props => {
     },
     [dispatchFormState]
   );
-
-  const [addrModalVisible, setAddrModalVisible] = useState(false);
-  const [addrReadable, setAddrReadable] = useState("");
-  const [addrCord, setAddrCord] = useState("");
-  const [sellerAddr, setSellerAddr] = useState(""); // really used
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
