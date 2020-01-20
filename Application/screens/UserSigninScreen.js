@@ -98,7 +98,7 @@ export default UserAuthenScreen = props => {
     await firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(updateNotificationToken())
+      .then(() => {updateNotificationToken()})
       .catch(err => {
         setIsLoading(false);
         setError(err.message);
