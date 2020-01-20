@@ -8,9 +8,10 @@ initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_TRANSACTION:
+      // console.log(action.transactions);
       return {
         ...state,
-        transactions: [...action.transactionMode[0]]
+        transactions: [...action.transactions]
       };
     case CHANGE_ROLE:
       return initialState;

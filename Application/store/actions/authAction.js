@@ -40,23 +40,24 @@ export const setUserRole = role => {
 export const signout = () => {
   return async dispatch => {
     // do async task
-    return verifyNotificationsPermissions().then(notiPermission => {
-      if (notiPermission)
-        removeNotificationToken()
-          .catch(err => {
+    console.log("signout");
+    return verifyNotificationsPermissions()
+      .then(notiPermission => {
+        if (notiPermission)
+          removeNotificationToken().catch(err => {
             console.log(err.message);
           });
-      firebaseUtil
-        .auth()
-        .signOut()
-        .then(() => {
-          dispatch({ type: LOGOUT });
-        })
-      return true
-    })
-    .catch(err => {
-      console.log(err.message);
-    });
+        firebaseUtil
+          .auth()
+          .signOut()
+          .then(() => {
+            dispatch({ type: LOGOUT });
+          });
+        return true;
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
   };
 };
 

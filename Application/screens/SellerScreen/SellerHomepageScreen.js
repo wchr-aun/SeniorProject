@@ -141,7 +141,7 @@ export default SellerHomepageScreen = props => {
               </View>
 
               <FlatList
-                data={transactions}
+                data={transactions ? transactions[0] : []}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
                   return (

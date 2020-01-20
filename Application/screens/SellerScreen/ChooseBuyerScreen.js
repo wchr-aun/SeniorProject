@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Text,
   FlatList,
   TouchableOpacity
 } from "react-native";
@@ -19,7 +18,6 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
-import * as transactionAction from "../../store/actions/transactionAction";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiText from "../../components/ThaiText";
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -38,10 +36,17 @@ const BuyerChoice = props => {
       }}
       onPress={props.onSelected}
     >
-      <View style={{ alignSelf: "center", height: "30%", width: "100%" }}>
-        <Text>{props.buyerName}</Text>
+      <View
+        style={{
+          alignSelf: "center",
+          height: "30%",
+          width: "100%",
+          padding: 5
+        }}
+      >
+        <ThaiText>{`ผู้รับซื้อ ${props.buyerName}`}</ThaiText>
       </View>
-      <View style={{ height: "70%", width: "100%", backgroundColor: "red" }}>
+      <View style={{ height: "70%", width: "100%" }}>
         <FlatList
           style={{ flex: 1 }}
           data={props.sellerItemsForSell.getFlatListFormat(false)}
@@ -49,17 +54,25 @@ const BuyerChoice = props => {
           renderItem={({ item }) => {
             return (
               <View
-                style={{ height: 30, width: "100%", backgroundColor: "red" }}
+                style={{
+                  height: 30,
+                  width: "100%",
+                  padding: 5,
+                  backgroundColor: Colors.screen,
+                  borderRadius: 5
+                }}
               >
                 <ThaiText>
                   <ThaiTitleText style={{ fontSize: 10 }}>
                     {item.subtype}
                   </ThaiTitleText>
                   {props.purchaseList[item.type] == undefined
-                    ? `ไม่รับซื้อ`
+                    ? ` ไม่รับซื้อ `
                     : props.purchaseList[item.type][item.subtype] == undefined
-                    ? `ไม่รับซื้อ`
-                    : `จำนวน ${item.amount} ราคารับซื้อ = ${item.amount *
+                    ? ` ไม่รับซื้อ `
+                    : ` จำนวน ${item.amount} ราคารับซื้อ ${
+                        props.purchaseList[item.type][item.subtype]
+                      } = ${item.amount *
                         props.purchaseList[item.type][item.subtype]}`}
                 </ThaiText>
               </View>

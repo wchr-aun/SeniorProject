@@ -102,6 +102,9 @@ export class Wastes {
           // for render new flatList format item
           this[type] = {};
           this[type][subtype] = 0;
+          // for selecting
+          this._selected[type] = {};
+          this._selected[type][subtype] = false;
 
           this.length += 1;
         } else if (this[type][subtype] == undefined) {
@@ -109,6 +112,8 @@ export class Wastes {
           this._count[type][subtype] = 0;
           // for render new flatList format item
           this[type][subtype] = 0;
+          // for selecting
+          this._selected[type][subtype] = false;
           this.length += 1;
         }
         this._count[type][subtype] += obj[type][subtype];

@@ -32,6 +32,7 @@ export default SellingTransactionDetailScreen = props => {
   const cancelHandler = async () => {
     await updateTxStatus({
       txID: transactionItem.txId,
+      // chosenTime: 0,
       status: 4
     });
   };
