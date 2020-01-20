@@ -9,7 +9,6 @@ initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_TRANSACTION:
-      // console.log(action.transactions);
       return {
         ...state,
         transactions: [...action.transactions]

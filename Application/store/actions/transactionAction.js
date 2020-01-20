@@ -20,10 +20,10 @@ export const fetchTransactionForPathOp = () => {
   return async dispatch => {
     try {
       let transactionMode = await getTodayTxForPathOp();
-      dispatch({ type: FETCH_TRANSACTION, transactionMode });
+      dispatch({ type: FETCH_TODAY_TRANSACTION, transactionMode });
     } catch (err) {
       console.log(err.message);
-      dispatch({ type: FETCH_TRANSACTION, transactionMode: [] });
+      dispatch({ type: FETCH_TODAY_TRANSACTION, transactionMode: [] });
       throw new Error(err.message);
     }
   };
