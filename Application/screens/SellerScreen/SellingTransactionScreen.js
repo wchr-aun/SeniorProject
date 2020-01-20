@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, FlatList, View, Text } from "react-native";
+import { StyleSheet, FlatList, View, Text, SectionList } from "react-native";
 import { useSelector } from "react-redux";
 
 import {
@@ -18,6 +18,19 @@ import ThaiText from "../../components/ThaiText";
 export default SellingTransactionScreen = props => {
   // Get transactions for initially
   const transactions = useSelector(state => state.transactions.transactions);
+  const transactionsSectionListFormat = useSelector(
+    state => state.transactions.transactionsSectionListFormat
+  );
+
+  // For looking into transaction detail
+  const selectedHandler = transactionItem => {
+    props.navigation.navigate({
+      routeName: "SellingTransactionDetailScreen",
+      params: {
+        transactionItem
+      }
+    });
+  };
 
   return (
     <View
@@ -29,16 +42,19 @@ export default SellingTransactionScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "70%",
+          height: "100%",
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,
           backgroundColor: Colors.primary_variant
         }}
       >
-        <FlatList
-          data={transactions}
-          keyExtractor={item => item.txId}
+        <SectionList
+          sections={transactionsSectionListFormat}
+          keyExtractor={(item, index) => item + index}
+          renderSectionHeader={({ section: { transactionMode } }) => {
+            return <Text>{transactionMode}</Text>;
+          }}
           renderItem={({ item }) => (
             <SellTransactionCard
               amountOfType={item.detail.saleList.length}
@@ -54,17 +70,6 @@ export default SellingTransactionScreen = props => {
             />
           )}
         />
-      </View>
-      <View
-        style={{
-          width: "100%",
-          height: "30%",
-          paddingBottom: getStatusBarHeight()
-        }}
-      >
-        <View>
-          <ThaiText>สำหรับใส่ Transaction [3,1,0]</ThaiText>
-        </View>
       </View>
     </View>
   );

@@ -16,8 +16,8 @@ export default {
     one: "#fc2803",
     two: "#fc5603",
     three: "#a9fc03",
-    four: "#B3B3B3 ",
-    five: "#90B37B "
+    four: "#B3B3B3",
+    five: "#90B37B"
   }
 };
 //   Transaction Status
