@@ -38,8 +38,6 @@ export default BuyerHomepageScreen = props => {
   // Get user profile
   const userProfile = useSelector(state => state.user.userProfile);
   const userRole = useSelector(state => state.user.userRole);
-  // Get transaction
-  const transactions = useSelector(state => state.transactions.transactions);
 
   useEffect(() => {
     setIsLoading(true);
@@ -47,7 +45,6 @@ export default BuyerHomepageScreen = props => {
   }, [userProfile]);
 
   const dispatch = useDispatch();
-
   // Get transactions for initially
   useEffect(() => {
     try {
@@ -58,6 +55,7 @@ export default BuyerHomepageScreen = props => {
     }
     setIsLoading(false);
   }, []);
+  const transactions = useSelector(state => state.transactions.transactions);
 
   // // For looking into transaction detail
   // const selectedHandler = transactionItem => {
@@ -142,7 +140,7 @@ export default BuyerHomepageScreen = props => {
               </View>
 
               <FlatList
-                data={transactions}
+                data={transactions[0]}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
                   return (
