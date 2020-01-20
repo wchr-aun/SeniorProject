@@ -28,8 +28,7 @@ export default UserStartupScreen = props => {
               if (config_role == "seller")
                 props.navigation.navigate("SellerNavigator");
               else if (config_role == "buyer") {
-                // props.navigation.navigate("BuyerNavigator"); // wait for buyer screen
-                props.navigation.navigate("PathOptimization")
+                props.navigation.navigate("BuyerNavigator");
               } else props.navigation.navigate("ConfigAccountScreen");
             });
           });

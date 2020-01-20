@@ -149,6 +149,26 @@ export const getTransactions = async role => {
   });
 };
 
+export const getTodayTxForPathOp = async () => {
+  const timeNow = new Date(new Date() - new Date() % 86400000 - 25200000)
+  return firestore
+    .collection("transactions")
+    .where("buyer", "==", auth.currentUser.uid)
+    .where("txStatus", "==", 2)
+    .where("chosenTime", ">", timeNow)
+    .get()
+    .then(querySnapshot => {
+      let tx = [];
+      querySnapshot.forEach(doc => {
+        tx.push({ txId: doc.id, detail: doc.data() });
+      });
+      return tx;
+    })
+    .catch(err => {
+      throw new error(err.message);
+    })
+};
+
 export const getFavBuyers = async () => {
   return firestore
     .collection("users")

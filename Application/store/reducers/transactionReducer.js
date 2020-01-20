@@ -1,8 +1,9 @@
-import { FETCH_TRANSACTION } from "../actions/transactionAction";
+import { FETCH_TRANSACTION, FETCH_TODAY_TRANSACTION } from "../actions/transactionAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 
 initialState = {
-  transactions: []
+  transactions: [],
+  todayTx: []
 };
 
 export default (state = initialState, action) => {
@@ -12,6 +13,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         transactions: [...action.transactions]
+      };
+    case FETCH_TODAY_TRANSACTION:
+      return {
+        ...state,
+        todayTx: [...action.transactionMode]
       };
     case CHANGE_ROLE:
       return initialState;

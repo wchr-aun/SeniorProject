@@ -9,9 +9,9 @@
     <button @click = "saveBox" class="btn success">SAVE</button>
     <select ref="dropdown" v-model="selected">
       <option disabled value="">Please select one</option>
-      <option>A</option>
-      <option>B</option>
-      <option>C</option>
+      <option>PP</option>
+      <option>PET</option>
+      <option>HDPE</option>
     </select>
     <span>  Selected: {{ selected }}</span>
     <ul id="list_rects">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import firebase from '../firebase';
+import firebase from 'firebase';
 export default {
   data(){
     return{
@@ -52,8 +52,9 @@ export default {
     document.addEventListener('mouseup',vm.mouseup)
     // vm.image_src = require('@/assets/000000.jpg')
     let storageRef = firebase.storage().ref();
-    // vm.image_src = storageRef.child("waste_image/000003.jpg").getMetadata().getDownloadUrl().toString();
+
     storageRef.child("waste_images/000002.jpg").getDownloadURL().then(URL => {
+      console.log(URL)
       vm.image_src =  URL
       let img = new Image()
       img.src = vm.image_src

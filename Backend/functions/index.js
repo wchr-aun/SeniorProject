@@ -109,7 +109,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
                 txStatus: 0
               })
               if (txType == 0)
-                return sendNotification(context.auth.uid, message.title, message.body).then(result => { return result })
+                return sendNotification(buyer, message.title, message.body).then(result => { return result })
               else 
                 return quickSellingNotification(addr_geopoint, message.title, message.body).then(result => { return result })
             }).catch(err => {
@@ -152,7 +152,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
   if (context.auth != null) {
     return firestore.runTransaction(transaction => {
       return transaction.get(txDB.doc(data.txID)).then(doc => {
-        if (doc.data().assignedTime[data.chosenTime].toMillis() < new Date())
+        if (data.status == 1 && doc.data().assignedTime[data.chosenTime].toMillis() < new Date())
           return {errorMessage: "The time you chose has already been passed"}
 
         const meesage = getTitleAndBody({
@@ -170,26 +170,38 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction status is incorrect"}
           else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
-          else if (doc.data().seller == context.auth.uid)
+          else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4)
             return {errorMessage: "You cannot complete your own selling transaction"}
           else if (doc.data().txStatus >= 3)
             return {errorMessage: "The transaction has already closed"}
           
           if (doc.data().txType == 0 || doc.data().txType == 1) {
-            if (data.status < 3 && data.status != 1)
-              transaction.update(txDB.doc(data.txID), { txStatus: data.status })
-            else if (data.status == 1)
-              transaction.update(txDB.doc(data.txID), {
-                txStatus: data.status,
-                chosenTime: doc.data().assignedTime[data.chosenTime],
-                buyer: context.auth.uid
-              })
-            else
-              transaction.update(txDB.doc(data.txID), {
-                txStatus: data.status,
-                completedTime: new Date()
-              })
-              return true
+            switch (data.status) {
+              case 1:
+                transaction.update(txDB.doc(data.txID), {
+                  txStatus: data.status,
+                  assignedTime: data.assignedTime,
+                  buyer: context.auth.uid
+                })
+                break
+              case 2:
+                transaction.update(txDB.doc(data.txID), {
+                  txStatus: data.status,
+                  chosenTime: doc.data().assignedTime[data.chosenTime],
+                  buyer: doc.data().buyer || context.auth.uid
+                })
+                break
+              case 3:
+                transaction.update(txDB.doc(data.txID), { txStatus: data.status })
+                break
+              default:
+                transaction.update(txDB.doc(data.txID), {
+                  txStatus: data.status,
+                  completedTime: new Date()
+                })
+                break
+            }
+            return true
           }
           else return {errorMessage: "The transaction format is incorrect"}
         })
@@ -360,7 +372,7 @@ exports.querySellers = functions.https.onCall((data,context) => {
 
 const getTitleAndBody = (data) => {
   const milis = data.date == undefined ? 0 : data.date.toMillis()
-  const days = ((milis - milis % 86400000 + 25200000) - (new Date() - new Date() % 86400000 + 25200000)) / 86400000
+  const days = ((milis - milis % 86400000) - (new Date() - new Date() % 86400000)) / 86400000
   const uid = data.uid
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
   const hour = new Date(milis).getHours() || ""
