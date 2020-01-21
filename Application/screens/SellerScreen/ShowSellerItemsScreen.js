@@ -291,6 +291,13 @@ const ShowAllUserTrashScreen = props => {
                     trashsState.sellerItems._count[item.type][item.subtype]
                   }
                   oldAmount={item.amount}
+                  editingValue={(item.amount +
+                    trashsState.sellerItems._count[item.type][item.subtype] <=
+                  0
+                    ? 0
+                    : item.amount +
+                      trashsState.sellerItems._count[item.type][item.subtype]
+                  ).toString()}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }

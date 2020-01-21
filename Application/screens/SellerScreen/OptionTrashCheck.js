@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
 import ImagePicker from "../../components/ImagePicker";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,14 +73,14 @@ export default OptionTrashCheck = props => {
                   wasteDescription={
                     wasteTypesDB[item.type][item.subtype]["description"]
                   }
-                  changeAmount={
-                    trashsState.sellerItems._count[item.type][item.subtype]
-                  }
+                  // changeAmount={
+                  //   trashsState.sellerItems._count[item.type][item.subtype]
+                  // }
                   oldAmount={item.amount}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
-                  editingMode={editingMode}
+                  editingMode={true}
                   onIncrease={() =>
                     dispatchAmountTrashsState({
                       type: ADD_SELLERITEMS_AMOUNT,

@@ -48,7 +48,7 @@ const AmountOfTrash = props => {
                 : Colors.error
           }}
         >
-          {props.changeAmount.toString()}
+          {props.changeAmount ? props.changeAmount.toString() : 0}
         </Text>
       </View>
     </View>
@@ -73,10 +73,11 @@ const AdjustAmountOfTrash = props => {
           selectTextOnFocus={true}
           keyboardType="numeric"
           onChangeText={props.onEdit}
-          value={(props.oldAmount + props.changeAmount <= 0
-            ? 0
-            : props.oldAmount + props.changeAmount
-          ).toString()}
+          // value={(props.oldAmount + props.changeAmount <= 0
+          //   ? 0
+          //   : props.oldAmount + props.changeAmount
+          // ).toString()}
+          value={props.editingValue}
           style={{ textAlign: "center" }}
         />
       </View>
@@ -170,14 +171,15 @@ export default TrashCard = props => {
             style={{ alignSelf: "center", alignItems: "center" }}
             subtype={props.subtype}
             majortype={props.majortype}
-            changeAmount={props.changeAmount}
-            oldAmount={props.oldAmount}
             onIncrease={props.onIncrease}
             onDecrease={props.onDecrease}
             onEdit={props.onEdit}
             UI_diff={props.UI_diff}
             selected={props.selected}
             editingMode={props.editingMode}
+            editingValue={props.editingValue}
+            changeAmount={props.changeAmount}
+            oldAmount={props.oldAmount}
           />
         )}
       </View>
