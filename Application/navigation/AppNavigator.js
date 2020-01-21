@@ -88,13 +88,13 @@ SellingTransactionNavigator = createStackNavigator(
       screen: SellingTransactionScreen,
       navigationOptions: { headerTitle: "การขายขยะ" }
     },
-    // SellingTransactionDetailScreen: {
-    //   screen: SellingTransactionDetailScreen,
-    //   navigationOptions: { headerTitle: "รายละเอียด" }
-    // },
+    SellingTransactionDetailScreen: {
+      screen: SellingTransactionDetailScreen,
+      navigationOptions: { headerTitle: "รายละเอียด" }
+    },
     chooseBuyerForSellScreen: ChooseBuyerScreen
   },
-  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+  { headerMode: "none" }
 );
 
 // Trash Main

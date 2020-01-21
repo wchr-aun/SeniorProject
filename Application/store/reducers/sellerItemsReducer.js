@@ -5,6 +5,7 @@ import {
   FETCH_SELLER_ITEMS,
   SET_SELLERITEMS
 } from "../actions/sellerItemsAction";
+import { GET_PREDICTION } from "../actions/imageAction";
 import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
@@ -24,6 +25,43 @@ export default function(state = initialState, action) {
         sellerItems: action.sellerItems,
         sellerItemsForSell: action.sellerItemsForSell,
         sellerItemsFlatListFormat: action.sellerItemsFlatListFormat
+      };
+    case GET_PREDICTION:
+      console.log("GET_PREDICTION");
+
+      let foundedSubtype = [];
+      let sellerItemsFromCamera = [];
+      action.results.forEach((item, index) => {
+        if (foundedSubtype.includes(item.class)) {
+          // already pushed
+          let targetIndex = sellerItemsFromCamera.indexOf(
+            sellerItemsFromCamera.filter(
+              waste => waste.subtype === item.class
+            )[0]
+          );
+          sellerItemsFromCamera[targetIndex].amount += 1;
+        } else {
+          // not pushed yet
+
+          // find type by subtype
+          let majortype = "";
+          for (let type in action.wasteTypesDB) {
+            if (action.wasteTypesDB[type][item.class] != undefined)
+              majortype = type;
+          }
+
+          sellerItemsFromCamera.push({
+            subtype: item.class,
+            amount: 1,
+            type: majortype
+          });
+          foundedSubtype.push(item.class);
+        }
+      });
+      console.log(sellerItemsFromCamera);
+      return {
+        ...state,
+        sellerItemsCamera: [...sellerItemsFromCamera]
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");

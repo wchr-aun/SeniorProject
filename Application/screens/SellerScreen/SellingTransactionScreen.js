@@ -36,7 +36,11 @@ export default SellingTransactionScreen = props => {
     <View
       style={{
         width: wp("100%"),
-        height: hp("100%") - AppVariableSetting.bottomBarHeight - Header.HEIGHT
+        height:
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight +
+          getStatusBarHeight(),
+        paddingTop: getStatusBarHeight()
       }}
     >
       <View

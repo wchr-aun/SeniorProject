@@ -1,6 +1,7 @@
 import {
   FETCH_TRANSACTION,
-  FETCH_TODAY_TRANSACTION
+  FETCH_TODAY_TRANSACTION,
+  CHANGE_TRANSACTION_STATUS
 } from "../actions/transactionAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 
@@ -23,6 +24,10 @@ export default (state = initialState, action) => {
         ...state,
         todayTx: [...action.transactionMode]
       };
+    case CHANGE_TRANSACTION_STATUS:
+      console.log("CHANGE_TRANSACTION_STATUS");
+      console.log(action);
+      return { ...state };
     case CHANGE_ROLE:
       return initialState;
     case LOGOUT:

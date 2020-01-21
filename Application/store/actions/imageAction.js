@@ -1,10 +1,12 @@
 import * as FileSystem from "expo-file-system";
 
-export const GET_PREDICTION = "GET_PREDICTION";
 export const SET_PLACES = "SET_PLACES";
-const PERDICT_LINK = "http://776a44a1.ngrok.io/predict";
+export const GET_PREDICTION = "GET_PREDICTION";
+export const ADD_SELLERITEMS_BYCAMERA = "ADD_SELLERITEMS_BYCAMERA";
 
-export const getPrediction = image => {
+const PERDICT_LINK = "http://c433f137.ngrok.io/predict";
+
+export const getPrediction = (image, wasteTypesDB) => {
   return async dispatch => {
     console.log("getPrediction is called");
     console.log(image.width + " " + image.height);
@@ -39,19 +41,58 @@ export const getPrediction = image => {
     console.log("formData, typeof image.base64");
     console.log(typeof image.base64);
 
-    // send an image
-    fetch(PERDICT_LINK, {
-      method: "POST",
-      headers: {
-        // "content-type": "multipart/form-data"
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ photo: image.base64 })
-    })
-      .then(res => {
-        return res.json();
-      })
-      .then(res => console.log(res))
-      .catch(error => console.log(error));
+    //tmp
+    dispatch({
+      type: GET_PREDICTION,
+      results: [
+        {
+          class: "PETE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        },
+        {
+          class: "PETE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        },
+        {
+          class: "HDPE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        }
+      ],
+      wasteTypesDB
+    });
+
+    // // send an image
+    // fetch(PERDICT_LINK, {
+    //   method: "POST",
+    //   headers: {
+    //     // "content-type": "multipart/form-data"
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ photo: image.base64 })
+    // })
+    //   .then(res => {
+    //     return res.json();
+    //   })
+    //   .then(res => {
+    //     console.log(res);
+    //     dispatch({
+    //       type: ADD_SELLERITEMS_BYCAMERA,
+    //       result: res.results
+    //     });
+    //     return res;
+    //   })
+    //   .catch(error => console.log(error));
   };
 };

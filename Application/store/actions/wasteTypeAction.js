@@ -8,7 +8,7 @@ export const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
 
 export const fetchWasteType = () => {
   return async dispatch => {
-    let result = await getWasteType()
+    let result = await getWasteType();
     dispatch({
       type: FETCH_WASTETYPE,
       wasteTypes: result.wasteTypes,
