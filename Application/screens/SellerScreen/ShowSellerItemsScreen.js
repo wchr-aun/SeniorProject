@@ -70,9 +70,7 @@ const trashsModifyingReducer = (state, action) => {
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       };
     case ADD_NEW_SELLERITEMSCAMERA_AMOUNT:
-      console.log(sellerItems);
       sellerItems.addWasteObj(action.sellerItemsCameraObj);
-      console.log(sellerItems);
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
@@ -190,7 +188,11 @@ const ShowAllUserTrashScreen = props => {
   // // If the data sent from optionTrashCheck screen
   // const
   useEffect(() => {
-    if (Object.keys(trashsState.sellerItems).length) {
+    if (
+      Object.keys(trashsState.sellerItems).length &&
+      Object.keys(sellerItemsCameraObj).length
+    ) {
+      setEditingMode(true);
       dispatchAmountTrashsState({
         type: ADD_NEW_SELLERITEMSCAMERA_AMOUNT,
         sellerItemsCameraObj
@@ -233,6 +235,8 @@ const ShowAllUserTrashScreen = props => {
     await dispatch(
       sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
     );
+    // clear input data in sellerItemsCamera
+    dispatch(sellerItemsAction.clearSellerItemsCamera());
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -382,6 +386,7 @@ const ShowAllUserTrashScreen = props => {
                 onPress={() => {
                   setEditingMode(false);
                   dispatchAmountTrashsState({ type: "CANCEL" });
+                  dispatch(sellerItemsAction.clearSellerItemsCamera());
                 }}
                 btnTitleColor={Colors.on_primary}
                 btnTitleFontSize={14}

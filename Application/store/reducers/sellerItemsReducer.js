@@ -3,7 +3,8 @@ import {
   SET_WASTE_FOR_SELL,
   GET_BUYER_LIST,
   FETCH_SELLER_ITEMS,
-  SET_SELLERITEMS
+  SET_SELLERITEMS,
+  CLEAR_SELLERITEMSCAMERA
 } from "../actions/sellerItemsAction";
 import {
   GET_PREDICTION,
@@ -80,7 +81,11 @@ export default function(state = initialState, action) {
         ...state,
         sellerItemsCameraObj: action.sellerItemsCameraObj
       };
-
+    case CLEAR_SELLERITEMSCAMERA:
+      return {
+        ...state,
+        sellerItemsCameraObj: {}
+      };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
       let sellerItemsForSellCloned = Object.assign(
