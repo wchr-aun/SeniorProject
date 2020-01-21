@@ -5,7 +5,10 @@ import {
   FETCH_SELLER_ITEMS,
   SET_SELLERITEMS
 } from "../actions/sellerItemsAction";
-import { GET_PREDICTION } from "../actions/imageAction";
+import {
+  GET_PREDICTION,
+  CONFIRM_SELLERITEMSCAMERA
+} from "../actions/imageAction";
 import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
@@ -13,6 +16,7 @@ const initialState = {
   sellerItemsForSell: {},
   sellerItemsFlatListFormat: [],
   sellerItemsCamera: [],
+  sellerItemsCameraObj: {},
   buyerList: []
 };
 
@@ -31,6 +35,7 @@ export default function(state = initialState, action) {
 
       let foundedSubtype = [];
       let sellerItemsFromCamera = [];
+      let sellerItemsCameraObj = {};
       action.results.forEach((item, index) => {
         if (foundedSubtype.includes(item.class)) {
           // already pushed
@@ -40,29 +45,42 @@ export default function(state = initialState, action) {
             )[0]
           );
           sellerItemsFromCamera[targetIndex].amount += 1;
+          sellerItemsCameraObj[sellerItemsFromCamera[targetIndex].type][
+            item.class
+          ] += 1;
         } else {
           // not pushed yet
-
-          // find type by subtype
           let majortype = "";
           for (let type in action.wasteTypesDB) {
             if (action.wasteTypesDB[type][item.class] != undefined)
               majortype = type;
           }
-
+          // array for showing on FlatList
           sellerItemsFromCamera.push({
             subtype: item.class,
             amount: 1,
             type: majortype
           });
+          // obj
+          if (sellerItemsCameraObj[majortype] == undefined) {
+            sellerItemsCameraObj[majortype] = {};
+          }
+          sellerItemsCameraObj[majortype][item.class] = 1;
           foundedSubtype.push(item.class);
         }
       });
-      console.log(sellerItemsFromCamera);
       return {
         ...state,
-        sellerItemsCamera: [...sellerItemsFromCamera]
+        sellerItemsCamera: [...sellerItemsFromCamera],
+        sellerItemsCameraObj: sellerItemsCameraObj
       };
+    case CONFIRM_SELLERITEMSCAMERA:
+      console.log("CONFIRM_CAMERA Reducer Run");
+      return {
+        ...state,
+        sellerItemsCameraObj: action.sellerItemsCameraObj
+      };
+
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
       let sellerItemsForSellCloned = Object.assign(

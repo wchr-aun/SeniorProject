@@ -4,7 +4,18 @@ export const SET_PLACES = "SET_PLACES";
 export const GET_PREDICTION = "GET_PREDICTION";
 export const ADD_SELLERITEMS_BYCAMERA = "ADD_SELLERITEMS_BYCAMERA";
 
+export const CONFIRM_SELLERITEMSCAMERA = "CONFIRM_SELLERITEMSCAMERA";
+
 const PERDICT_LINK = "http://c433f137.ngrok.io/predict";
+
+export const confirmSellerItemsCamera = sellerItemsCameraObj => {
+  return async dispatch => {
+    console.log("confirmSellerItemsCamera");
+    console.log(sellerItemsCameraObj);
+
+    dispatch({ type: CONFIRM_SELLERITEMSCAMERA, sellerItemsCameraObj });
+  };
+};
 
 export const getPrediction = (image, wasteTypesDB) => {
   return async dispatch => {
