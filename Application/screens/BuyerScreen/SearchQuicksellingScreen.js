@@ -15,7 +15,7 @@ import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
 import ThaiText from "../../components/ThaiText";
 
-export default SellingTransactionScreen = props => {
+export default SearchQuicksellingScreen = props => {
   // Get transactions for initially
   const transactionsSectionListFormat = useSelector(
     state => state.transactions.transactionsSectionListFormat
@@ -24,7 +24,7 @@ export default SellingTransactionScreen = props => {
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "SellingTransactionDetailScreen",
+      routeName: "BuyingTransactionDetailScreen",
       params: {
         transactionItem
       }

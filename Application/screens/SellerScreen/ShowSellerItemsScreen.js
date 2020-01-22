@@ -186,7 +186,6 @@ const ShowAllUserTrashScreen = props => {
   }, [sellerItems]);
 
   // // If the data sent from optionTrashCheck screen
-  // const
   useEffect(() => {
     if (
       Object.keys(trashsState.sellerItems).length &&

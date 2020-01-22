@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, FlatList, View, Text, SectionList } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   widthPercentageToDP as wp,
@@ -9,14 +9,24 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
 import ThaiText from "../../components/ThaiText";
 
-export default SellingTransactionScreen = props => {
+export default BuyingTransactionScreen = props => {
   // Get transactions for initially
+  const dispatch = useDispatch();
+  const userRole = useSelector(state => state.user.userRole);
+  useEffect(() => {
+    try {
+      dispatch(transactionAction.fetchTransaction(userRole));
+    } catch (err) {
+      setError(err.message);
+    }
+  }, []);
   const transactionsSectionListFormat = useSelector(
     state => state.transactions.transactionsSectionListFormat
   );
@@ -24,7 +34,7 @@ export default SellingTransactionScreen = props => {
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "SellingTransactionDetailScreen",
+      routeName: "BuyingTransactionDetailScreen",
       params: {
         transactionItem
       }
