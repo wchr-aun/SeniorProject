@@ -38,7 +38,7 @@ export const setUserRole = role => {
 };
 
 export const signout = () => {
-  return async dispatch => {
+  return dispatch => {
     return removeNotificationToken()
       .then(() => {
         return firebaseUtil
