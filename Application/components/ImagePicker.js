@@ -1,52 +1,18 @@
-import React, { useState } from "react";
-import { View, Button, Image, Text, StyleSheet, Alert } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as ImageManipulator from "expo-image-manipulator";
+import React from "react";
+import { View, Image, Text, StyleSheet } from "react-native";
+
 import Colors from "../constants/Colors";
-import { verifyCameraPermissions } from "../utils/permissions";
 
 const ImgPicker = props => {
-  const [pickedImage, setPickedImage] = useState();
-
-  const takeImageHandler = async () => {
-    const hasPermission = await verifyCameraPermissions();
-    if (!hasPermission) {
-      return;
-    }
-    const image = await ImagePicker.launchCameraAsync({
-      // allowsEditing: true,
-      aspect: [16, 9],
-      quality: 0.5,
-      base64: true
-    });
-
-    let resized =
-      image.height > image.width
-        ? { resize: { width: 600 } }
-        : { resize: { height: 600 } };
-    const resizedImage = await ImageManipulator.manipulateAsync(
-      image.uri,
-      [resized],
-      { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-    );
-    setPickedImage(resizedImage);
-    props.onImageTaken(resizedImage);
-  };
-
   return (
-    <View style={styles.imagePicker}>
+    <View style={{ ...styles.imagePicker, ...props.style }}>
       <View style={styles.imagePreview}>
-        {!pickedImage ? (
+        {!props.pickedImage ? (
           <Text>No image picked yet.</Text>
         ) : (
-          <Image style={styles.image} source={{ uri: pickedImage.uri }} />
+          <Image style={styles.image} source={{ uri: props.pickedImage.uri }} />
         )}
       </View>
-      <Button
-        title="Take Image"
-        color={Colors.primary}
-        onPress={takeImageHandler}
-      />
     </View>
   );
 };
@@ -57,7 +23,7 @@ const styles = StyleSheet.create({
   },
   imagePreview: {
     width: "100%",
-    height: 200,
+    height: "100%",
     marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",

@@ -42,7 +42,7 @@ export default UserSignupScreen = props => {
       setError(err.message);
     }
   }, []);
-  const transactions = useSelector(state => state.transactions.transactions);
+  const transactions = useSelector(state => state.transactions.todayTx);
 
   useEffect(() => {
     if (error) {
@@ -82,7 +82,7 @@ export default UserSignupScreen = props => {
     <View>
       <View style={{ width: "100%", height: hp("60%s") }}>
         <FlatList
-          data={transactions}
+          data={transactions ? transactions : []}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
             return (

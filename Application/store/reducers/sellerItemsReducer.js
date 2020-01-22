@@ -3,8 +3,13 @@ import {
   SET_WASTE_FOR_SELL,
   GET_BUYER_LIST,
   FETCH_SELLER_ITEMS,
-  SET_SELLERITEMS
+  SET_SELLERITEMS,
+  CLEAR_SELLERITEMSCAMERA
 } from "../actions/sellerItemsAction";
+import {
+  GET_PREDICTION,
+  CONFIRM_SELLERITEMSCAMERA
+} from "../actions/imageAction";
 import { LOGOUT } from "../actions/authAction";
 
 const initialState = {
@@ -12,6 +17,7 @@ const initialState = {
   sellerItemsForSell: {},
   sellerItemsFlatListFormat: [],
   sellerItemsCamera: [],
+  sellerItemsCameraObj: {},
   buyerList: []
 };
 
@@ -24,6 +30,61 @@ export default function(state = initialState, action) {
         sellerItems: action.sellerItems,
         sellerItemsForSell: action.sellerItemsForSell,
         sellerItemsFlatListFormat: action.sellerItemsFlatListFormat
+      };
+    case GET_PREDICTION:
+      console.log("GET_PREDICTION");
+
+      let foundedSubtype = [];
+      let sellerItemsFromCamera = [];
+      let sellerItemsCameraObj = {};
+      action.results.forEach((item, index) => {
+        if (foundedSubtype.includes(item.class)) {
+          // already pushed
+          let targetIndex = sellerItemsFromCamera.indexOf(
+            sellerItemsFromCamera.filter(
+              waste => waste.subtype === item.class
+            )[0]
+          );
+          sellerItemsFromCamera[targetIndex].amount += 1;
+          sellerItemsCameraObj[sellerItemsFromCamera[targetIndex].type][
+            item.class
+          ] += 1;
+        } else {
+          // not pushed yet
+          let majortype = "";
+          for (let type in action.wasteTypesDB) {
+            if (action.wasteTypesDB[type][item.class] != undefined)
+              majortype = type;
+          }
+          // array for showing on FlatList
+          sellerItemsFromCamera.push({
+            subtype: item.class,
+            amount: 1,
+            type: majortype
+          });
+          // obj
+          if (sellerItemsCameraObj[majortype] == undefined) {
+            sellerItemsCameraObj[majortype] = {};
+          }
+          sellerItemsCameraObj[majortype][item.class] = 1;
+          foundedSubtype.push(item.class);
+        }
+      });
+      return {
+        ...state,
+        sellerItemsCamera: [...sellerItemsFromCamera],
+        sellerItemsCameraObj: sellerItemsCameraObj
+      };
+    case CONFIRM_SELLERITEMSCAMERA:
+      console.log("CONFIRM_CAMERA Reducer Run");
+      return {
+        ...state,
+        sellerItemsCameraObj: action.sellerItemsCameraObj
+      };
+    case CLEAR_SELLERITEMSCAMERA:
+      return {
+        ...state,
+        sellerItemsCameraObj: {}
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");

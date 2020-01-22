@@ -140,7 +140,7 @@ export default BuyerHomepageScreen = props => {
               </View>
 
               <FlatList
-                data={transactions[0]}
+                data={transactions ? transactions[0] : []}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
                   return (

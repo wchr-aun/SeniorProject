@@ -23,7 +23,7 @@ import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 
 import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
 import EditBuyerInfomationScreen from "../screens/BuyerScreen/EditBuyerInfomationScreen";
-import PathOptimization from "../screens/BuyerScreen/PathOptimizationScreen"
+import PathOptimization from "../screens/BuyerScreen/PathOptimizationScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
@@ -94,7 +94,7 @@ SellingTransactionNavigator = createStackNavigator(
     },
     chooseBuyerForSellScreen: ChooseBuyerScreen
   },
-  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+  { headerMode: "none" }
 );
 
 // Trash Main

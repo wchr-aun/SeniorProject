@@ -12,6 +12,7 @@ export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 export const GET_BUYER_LIST = "GET_BUYER_LIST";
 export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
 export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
+export const CLEAR_SELLERITEMSCAMERA = "CLEAR_SELLERITEMSCAMERA";
 
 export const fetchSellerItems = () => {
   return async dispatch => {
@@ -54,6 +55,12 @@ export const updateSellerItems = sellerItems => {
     } catch (err) {
       throw new Error(err.message);
     }
+  };
+};
+
+export const clearSellerItemsCamera = () => {
+  return async dispatch => {
+    return dispatch({ type: CLEAR_SELLERITEMSCAMERA });
   };
 };
 

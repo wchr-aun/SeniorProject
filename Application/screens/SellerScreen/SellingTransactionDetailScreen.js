@@ -14,27 +14,29 @@ import { useSelector, useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
 import ThaiTitleText from "../../components/ThaiTitleText";
 import ThaiText from "../../components/ThaiText";
-import { updateTxStatus } from "../../utils/firebaseFunctions";
+
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
-  console.log("tx detail");
   const transactionItem = props.navigation.getParam("transactionItem");
-  console.log(transactionItem);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
 
+  const dispatch = useDispatch();
   const cancelHandler = async () => {
-    await updateTxStatus({
-      txID: transactionItem.txId,
-      // chosenTime: 0,
-      status: 4
-    });
+    dispatch(
+      transactionAction.changeTransactionStatus({
+        txID: transactionItem.txId,
+        oldStatus: transactionItem.detail.txStatus, //for query
+        newStatus: 4
+      })
+    );
   };
 
   const backHandler = () => {
@@ -113,7 +115,6 @@ export default SellingTransactionDetailScreen = props => {
             keyExtractor={item => item.subtype}
             style={{ flex: 1 }}
             renderItem={({ item }) => {
-              console.log(saleList);
               return (
                 <View
                   style={{

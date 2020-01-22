@@ -31,6 +31,7 @@ import CustomButton from "../../components/UI/CustomButton";
 
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
 const ADD_NEW_SELLERITEMS_AMOUNT = "ADD_NEW_SELLERITEMS_AMOUNT";
+const ADD_NEW_SELLERITEMSCAMERA_AMOUNT = "ADD_NEW_SELLERITEMSCAMERA_AMOUNT";
 const MINUS_SELLERITEMS_AMOUNT = "MINUS_SELLERITEMS_AMOUNT";
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const EDIT_SELLERITEMS_AMOUNT = "EDIT_SELLERITEMS_AMOUNT";
@@ -64,6 +65,12 @@ const trashsModifyingReducer = (state, action) => {
       };
 
       sellerItems.addWasteObj(addedSellerItem);
+      return {
+        ...state,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
+      };
+    case ADD_NEW_SELLERITEMSCAMERA_AMOUNT:
+      sellerItems.addWasteObj(action.sellerItemsCameraObj);
       return {
         ...state,
         sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
@@ -146,6 +153,9 @@ const ShowAllUserTrashScreen = props => {
   const sellerItems = useSelector(state => {
     return state.sellerItems.sellerItems;
   });
+  const sellerItemsCameraObj = useSelector(state => {
+    return state.sellerItems.sellerItemsCameraObj;
+  });
   const sellerItemsFlatListFormat = useSelector(state => {
     return state.sellerItems.sellerItemsFlatListFormat;
   });
@@ -174,6 +184,25 @@ const ShowAllUserTrashScreen = props => {
       });
     }
   }, [sellerItems]);
+
+  // // If the data sent from optionTrashCheck screen
+  // const
+  useEffect(() => {
+    if (
+      Object.keys(trashsState.sellerItems).length &&
+      Object.keys(sellerItemsCameraObj).length
+    ) {
+      setEditingMode(true);
+      dispatchAmountTrashsState({
+        type: ADD_NEW_SELLERITEMSCAMERA_AMOUNT,
+        sellerItemsCameraObj
+      });
+    }
+  }, [
+    sellerItemsCameraObj,
+    trashsState.sellerItems,
+    dispatchAmountTrashsState
+  ]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -206,6 +235,8 @@ const ShowAllUserTrashScreen = props => {
     await dispatch(
       sellerItemsAction.updateSellerItems(trashsState.sellerItems) //getObject will be run in sellerItemsAction instead
     );
+    // clear input data in sellerItemsCamera
+    dispatch(sellerItemsAction.clearSellerItemsCamera());
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -291,6 +322,13 @@ const ShowAllUserTrashScreen = props => {
                     trashsState.sellerItems._count[item.type][item.subtype]
                   }
                   oldAmount={item.amount}
+                  editingValue={(item.amount +
+                    trashsState.sellerItems._count[item.type][item.subtype] <=
+                  0
+                    ? 0
+                    : item.amount +
+                      trashsState.sellerItems._count[item.type][item.subtype]
+                  ).toString()}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
                   }
@@ -348,6 +386,7 @@ const ShowAllUserTrashScreen = props => {
                 onPress={() => {
                   setEditingMode(false);
                   dispatchAmountTrashsState({ type: "CANCEL" });
+                  dispatch(sellerItemsAction.clearSellerItemsCamera());
                 }}
                 btnTitleColor={Colors.on_primary}
                 btnTitleFontSize={14}
