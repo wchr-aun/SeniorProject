@@ -23,6 +23,7 @@ import * as transactionAction from "../../store/actions/transactionAction";
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
+  const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -37,6 +38,8 @@ export default SellingTransactionDetailScreen = props => {
         newStatus: 4
       })
     );
+    await dispatch(transactionAction.fetchTransaction(userRole));
+    props.navigation.goBack();
   };
 
   const backHandler = () => {

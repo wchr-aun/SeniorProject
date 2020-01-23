@@ -20,6 +20,7 @@ export default SellingTransactionScreen = props => {
   const transactionsSectionListFormat = useSelector(
     state => state.transactions.transactionsSectionListFormat
   );
+  const userRole = useSelector(state => state.user.userRole);
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
@@ -61,10 +62,10 @@ export default SellingTransactionScreen = props => {
           renderItem={({ item }) => (
             <SellTransactionCard
               amountOfType={item.detail.saleList.length}
-              imgUrl={
-                "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
-              }
+              imgUrl={""}
               userName={item.detail.buyer}
+              userRole={userRole}
+              txType={item.detail.txType}
               txStatus={item.detail.txStatus}
               meetDate={libary.formatDate(item.detail.assignedTime[0].toDate())}
               onPress={() => {

@@ -89,17 +89,15 @@ const BuyerChoice = props => {
 };
 
 export default ChooseBuyerScreen = props => {
+  useEffect(() => {
+    console.log("Choose Buyer Screen");
+  }, []);
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
   );
 
-  useEffect(() => {
-    console.log("Choose Buyer Screen");
-  }, []);
-
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
-      console.log("navigate to ");
       props.navigation.navigate("ShowSellerItemsScreen");
     }
   };

@@ -46,7 +46,7 @@ export default SellTransactionCard = props => {
         }}
       >
         <ImageCircle
-          imgUrl={props.imgUrl}
+          imgUrl={props.imgUrl ? props.imgUrl : "assets/img/questionmark.png"}
           avariableWidth={wp("20%")}
           style={{ marginHorizontal: wp("3%") }}
         />
@@ -59,7 +59,7 @@ export default SellTransactionCard = props => {
           <View style={{ ...styles.BuyerName }}>
             <ThaiText style={{ fontSize: 14 }}>
               {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
-              {props.userName}
+              {props.userName ? props.userName : "ยังไม่ระบุ"}
             </ThaiText>
           </View>
           <View style={styles.lineSeparate} />
