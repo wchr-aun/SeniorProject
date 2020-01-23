@@ -117,14 +117,14 @@ const ShowAllUserTrashScreen = props => {
         return true; //Prevent go back to homepage
       }
     });
-    const willFocusSub = props.navigation.addListener(
-      "willFocus",
-      refreshSellerItems
-    );
+    // const willFocusSub = props.navigation.addListener(
+    //   "willFocus",
+    //   refreshSellerItems
+    // );
 
     return () => {
       BackHandler.removeEventListener();
-      willFocusSub.remove();
+      // willFocusSub.remove();
     };
   });
 
@@ -318,15 +318,21 @@ const ShowAllUserTrashScreen = props => {
                     wasteTypes[item.type][item.subtype]["description"]
                   }
                   changeAmount={
-                    trashsState.sellerItems._count[item.type][item.subtype]
+                    trashsState.sellerItems._count[item.type]
+                      ? trashsState.sellerItems._count[item.type][item.subtype]
+                      : 0
                   }
                   oldAmount={item.amount}
-                  editingValue={(item.amount +
-                    trashsState.sellerItems._count[item.type][item.subtype] <=
-                  0
-                    ? 0
-                    : item.amount +
-                      trashsState.sellerItems._count[item.type][item.subtype]
+                  editingValue={(trashsState.sellerItems._count[item.type]
+                    ? item.amount +
+                        trashsState.sellerItems._count[item.type][
+                          item.subtype
+                        ] <=
+                      0
+                      ? 0
+                      : item.amount +
+                        trashsState.sellerItems._count[item.type][item.subtype]
+                    : 0
                   ).toString()}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"

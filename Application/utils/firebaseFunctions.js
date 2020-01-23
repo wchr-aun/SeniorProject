@@ -20,8 +20,8 @@ export const getUsers = async () => {
           surname: doc.data().surname,
           addr: {
             readable: doc.data().addr,
-            latitude: doc.data().addr_geopoint.geopoint.latitude,
-            longitude: doc.data().addr_geopoint.geopoint.longitude
+            latitude: doc.data().addr_geopoint.latitude,
+            longitude: doc.data().addr_geopoint.longitude
           },
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
@@ -150,7 +150,7 @@ export const getTransactions = async role => {
 };
 
 export const getTodayTxForPathOp = async () => {
-  const timeNow = new Date(new Date() - new Date() % 86400000 - 25200000)
+  const timeNow = new Date(new Date() - (new Date() % 86400000) - 25200000);
   return firestore
     .collection("transactions")
     .where("buyer", "==", auth.currentUser.uid)
@@ -166,7 +166,7 @@ export const getTodayTxForPathOp = async () => {
     })
     .catch(err => {
       throw new error(err.message);
-    })
+    });
 };
 
 export const getFavBuyers = async () => {

@@ -20,7 +20,7 @@ import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
 
-export default SellingTransactionDetailScreen = props => {
+export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
 
@@ -29,7 +29,17 @@ export default SellingTransactionDetailScreen = props => {
   );
 
   const dispatch = useDispatch();
-  const cancelHandler = async () => {
+  const cancelHandler = () => {
+    dispatch(
+      transactionAction.changeTransactionStatus({
+        txID: transactionItem.txId,
+        oldStatus: transactionItem.detail.txStatus, //for query
+        newStatus: 4
+      })
+    );
+  };
+
+  const acceptHandler = () => {
     dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,

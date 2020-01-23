@@ -58,7 +58,8 @@ export default SellTransactionCard = props => {
         >
           <View style={{ ...styles.BuyerName }}>
             <ThaiText style={{ fontSize: 14 }}>
-              ผู้รับซื้อ {props.userName}
+              {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
+              {props.userName}
             </ThaiText>
           </View>
           <View style={styles.lineSeparate} />

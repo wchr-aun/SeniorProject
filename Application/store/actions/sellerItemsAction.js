@@ -10,7 +10,7 @@ import { Wastes } from "../../models/AllUserTrash";
 export const SET_SELLERITEMS = "SET_SELLERITEMS";
 export const SET_WASTE_FOR_SELL = "SET_WASTE_FOR_SELL";
 export const GET_BUYER_LIST = "GET_BUYER_LIST";
-export const CHOOSEBUYER_SELL = "CHOOSEBUYER_SELL";
+export const SELLED_SELLERITEMS = "SELLED_SELLERITEMS";
 export const SET_FROM_CAMERA = "SET_FROM_CAMERA";
 export const CLEAR_SELLERITEMSCAMERA = "CLEAR_SELLERITEMSCAMERA";
 
@@ -90,12 +90,13 @@ export const getBuyerList = queryData => {
   };
 };
 
-export const chooseBuyerSell = (
+export const sellRequest = (
   sellAddr,
   sellerItems,
   buyerName,
   buyerPriceInfo,
-  assignedTime
+  assignedTime,
+  sellMode
 ) => {
   return async dispatch => {
     // sell only sellerItem that buyer have
@@ -104,7 +105,16 @@ export const chooseBuyerSell = (
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
-          if (
+          // chooseBuyer sell
+          if (sellMode === 1) {
+            if (saleList[type] == undefined) {
+              saleList[type] = {};
+            }
+            saleList["length"] += 1;
+            saleList[type][subtype] = {
+              amount: sellerItems[type][subtype]
+            };
+          } else if (
             !(
               buyerPriceInfo[type] == undefined ||
               buyerPriceInfo[type][subtype] == undefined ||
@@ -123,20 +133,23 @@ export const chooseBuyerSell = (
         }
       }
     }
+
     // do async task
     let sellRequest = {
       saleList,
       addr: sellAddr,
-      buyer: buyerName,
-      txType: 0,
+      buyer: sellMode === 0 ? buyerName : "",
+      txType: sellMode,
       assignedTime: assignedTime
     };
 
+    console.log("sellRequest");
+    console.log(sellRequest);
     try {
       await sellWaste(sellRequest);
       // update redux store
       dispatch({
-        type: CHOOSEBUYER_SELL,
+        type: SELLED_SELLERITEMS,
         sellRequest
       });
     } catch (err) {

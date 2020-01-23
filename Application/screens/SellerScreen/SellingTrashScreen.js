@@ -95,9 +95,6 @@ export default SellingTrashScreen = props => {
   // Get User trash
   // Get sellerItems and wasteTyp from redux
   const [distance, setDistance] = useState("10");
-  const sellerItems = useSelector(state => {
-    return state.sellerItems.sellerItems;
-  });
   const sellerItemsForSell = useSelector(state => {
     return state.sellerItems.sellerItemsForSell;
   });
