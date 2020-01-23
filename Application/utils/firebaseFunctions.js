@@ -20,8 +20,8 @@ export const getUsers = async () => {
           surname: doc.data().surname,
           addr: {
             readable: doc.data().addr,
-            latitude: doc.data().addr_geopoint.latitude,
-            longitude: doc.data().addr_geopoint.longitude
+            latitude: doc.data().addr_geopoint.geopoint._lat,
+            longitude: doc.data().addr_geopoint.geopoint._long
           },
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
@@ -345,6 +345,7 @@ buyerInfo = {
 } */
 
 export const editBuyerInfo = async buyerInfo => {
+  console.log(buyerInfo);
   return functions
     .httpsCallable("editBuyerInfo")(buyerInfo)
     .then(result => {

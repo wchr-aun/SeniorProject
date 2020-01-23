@@ -56,7 +56,7 @@ export default EditBuyerInfomationScreen = props => {
 
       dispatch(
         buyerAction.updatePurchaseList(
-          purchaseList.getObject(),
+          purchaseList,
           description,
           buyerUserInfo.addr
         )

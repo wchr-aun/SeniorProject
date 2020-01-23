@@ -50,11 +50,11 @@ buyerInfo = {
   }
 } */
     await editBuyerInfo({
-      purchaseList,
+      purchaseList: purchaseList.getObject(),
       desc,
       addr
     });
 
-    dispatch({ type: EDIT_PURCHASELIST, purchaseList });
+    dispatch({ type: CONFIRM_CHANGE_PURCHASELIST, purchaseList });
   };
 };
