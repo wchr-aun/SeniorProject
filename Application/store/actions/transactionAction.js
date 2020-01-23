@@ -11,8 +11,10 @@ export const CHANGE_TRANSACTION_STATUS = "CHANGE_TRANSACTION_STATUS";
 
 export const fetchTransaction = role => {
   return async dispatch => {
+    console.log("fetch ------- !!");
     try {
       let transactions = await getTransactions(role);
+      console.log(transactions);
       let transactionsSectionListFormat = [];
       let transactionsQuick = [];
       // create sectionList transactions
@@ -20,7 +22,7 @@ export const fetchTransaction = role => {
         let data = [];
         transactionMode.forEach((transaction, index) => {
           data.push(transaction);
-
+          console.log(transaction.detail);
           // for quick transaction
           if (
             transaction.detail.txStatus === 0 &&
@@ -35,6 +37,7 @@ export const fetchTransaction = role => {
           data
         });
       });
+      console.log(transactionsQuick);
       dispatch({
         type: FETCH_TRANSACTION,
         transactions,

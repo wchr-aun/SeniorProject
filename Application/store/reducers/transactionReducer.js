@@ -15,12 +15,14 @@ export default (state = initialState, action) => {
   let updatedTransactions = [];
   switch (action.type) {
     case FETCH_TRANSACTION:
+      console.log("FETCH_TRANSACTION");
       return {
         ...state,
         transactions: [...action.transactions],
         transactionsSectionListFormat: [...action.transactionsSectionListFormat]
       };
     case FETCH_TODAY_TRANSACTION:
+      console.log("FETCH_TODAY_TRANSACTION");
       return {
         ...state,
         todayTx: [...action.transactionMode]
@@ -41,10 +43,6 @@ export default (state = initialState, action) => {
 
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
-      console.log("--- updatedTransactions[oldStatusIndex]");
-      console.log(updatedTransactions[oldStatusIndex]);
-      console.log("--- updatedTransactions[newStatusIndex]");
-      console.log(updatedTransactions[newStatusIndex]);
 
       return { ...state, transactions: updatedTransactions };
     case CHANGE_ROLE:
