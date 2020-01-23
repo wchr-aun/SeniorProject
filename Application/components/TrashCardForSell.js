@@ -48,7 +48,7 @@ const AmountOfTrash = props => {
                 : Colors.error
           }}
         >
-          {props.changeAmount.toString()}
+          {props.changeAmount ? props.changeAmount.toString() : 0}
         </Text>
       </View>
     </View>

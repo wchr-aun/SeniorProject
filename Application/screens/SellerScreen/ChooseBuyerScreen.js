@@ -15,6 +15,7 @@ import {
 } from "react-native-responsive-screen";
 import { useSelector, useDispatch } from "react-redux";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { NavigationEvents } from "react-navigation";
 import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
@@ -91,26 +92,17 @@ export default ChooseBuyerScreen = props => {
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
   );
-  useEffect(() => {
-    console.log("isOperationCompleted change -- useSelector in chooseBuyer");
-    console.log(isOperationCompleted);
-    if (isOperationCompleted === true) {
-      console.log("navigate to ");
-      props.navigation.navigate("ShowSellerItemsScreen");
-    }
-  }, [isOperationCompleted]);
+
   useEffect(() => {
     console.log("Choose Buyer Screen");
   }, []);
 
-  // For back behavior + auto refresh
-  useEffect(() => {
-    const willFocusSub = props.navigation.addListener("willFocus", loadBuyer);
-
-    return () => {
-      willFocusSub.remove();
-    };
-  });
+  const checkIsOperationCompleted = () => {
+    if (isOperationCompleted === true) {
+      console.log("navigate to ");
+      props.navigation.navigate("ShowSellerItemsScreen");
+    }
+  };
 
   // required data for sending an transaction
   const sellerAddr = useSelector(state => state.user.userProfile.addr);
@@ -195,7 +187,6 @@ export default ChooseBuyerScreen = props => {
         )
       );
 
-      dispatch(navigationBehaviorAction.finishOperation());
       await dispatch(transactionAction.fetchTransaction("seller"));
       props.navigation.navigate("SellTransaction");
     } catch (err) {
@@ -250,6 +241,7 @@ export default ChooseBuyerScreen = props => {
         flex: 1
       }}
     >
+      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <View
         style={{
           paddingTop: getStatusBarHeight(),
