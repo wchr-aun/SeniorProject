@@ -199,7 +199,7 @@ export default EditBuyerInfomationScreen = props => {
                             }}
                             keyboardType="numeric"
                             style={{
-                              color: isUpdated
+                              color: !isUpdated
                                 ? Colors.primary_variant
                                 : "black"
                             }}

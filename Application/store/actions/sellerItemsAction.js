@@ -102,11 +102,16 @@ export const sellRequest = (
     // sell only sellerItem that buyer have
     let saleList = {};
     saleList["length"] = 0;
+    console.log("sellerItems");
+    console.log(sellerItems);
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
           // chooseBuyer sell
-          if (sellMode === 1) {
+          if (
+            sellMode === 1 &&
+            !sellerItems._selected[type][subtype] == false
+          ) {
             if (saleList[type] == undefined) {
               saleList[type] = {};
             }
