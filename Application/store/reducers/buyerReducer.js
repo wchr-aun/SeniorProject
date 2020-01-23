@@ -20,10 +20,13 @@ export default (state = initialState, action) => {
         purchaseList: action.purchaseList
       };
     case EDIT_PURCHASELIST:
-      console.log("purchaseList -- before edit");
-      console.log(purchaseList);
-      purchaseList.editValue(action.majortype, action.subtype, action.price);
-      console.log("purchaseList -- after edit");
+      console.log("EDIT_PURCHASELIST - Redux");
+      console.log(action);
+      purchaseList.editValue(
+        action.majortype,
+        action.subtype,
+        action.price - purchaseList[action.majortype][action.subtype]
+      );
       console.log(purchaseList);
       return {
         ...state,
@@ -31,6 +34,7 @@ export default (state = initialState, action) => {
       };
     case CONFIRM_CHANGE_PURCHASELIST:
       console.log("CONFIRM_CHANGE_PURCHASELIST - Redux");
+      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList

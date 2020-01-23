@@ -208,7 +208,7 @@ export default EditBuyerInfomationScreen = props => {
                       </View>
                       <ThaiText> บาท/ กก.</ThaiText>
                     </View>
-                    {!isEditingMode ? null : (
+                    {/* {!isEditingMode ? null : (
                       <View style={{ width: "20%" }}>
                         <TouchableWithoutFeedback
                           onPress={() => {
@@ -224,7 +224,7 @@ export default EditBuyerInfomationScreen = props => {
                           />
                         </TouchableWithoutFeedback>
                       </View>
-                    )}
+                    )} */}
                   </View>
                 </View>
               );
