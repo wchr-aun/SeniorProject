@@ -31,7 +31,7 @@ export default SellingTransactionDetailScreen = props => {
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
-    dispatch(
+    await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
