@@ -190,14 +190,18 @@ export default SellingTrashScreen = props => {
                       wasteTypes[item.type][item.subtype]["description"]
                     }
                     selected={
-                      trashsState.sellerItemsForSell._selected[item.type][
-                        item.subtype
-                      ]
+                      trashsState.sellerItemsForSell._selected[item.type]
+                        ? trashsState.sellerItemsForSell._selected[item.type][
+                            item.subtype
+                          ]
+                        : false
                     }
                     changeAmount={
-                      trashsState.sellerItemsForSell._count[item.type][
-                        item.subtype
-                      ]
+                      trashsState.sellerItemsForSell._count[item.type]
+                        ? trashsState.sellerItemsForSell._count[item.type][
+                            item.subtype
+                          ]
+                        : 0
                     }
                     oldAmount={item.amount}
                     trashAdjustPrice={

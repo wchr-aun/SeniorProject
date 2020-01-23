@@ -60,7 +60,6 @@ const ShowSellerItemsNavigator = createStackNavigator(
     ShowSellerItemsScreen: {
       screen: ShowSellerItemsScreen
     },
-    // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
     SellingTrashScreen: {
       screen: SellingTrashScreen,
       navigationOptions: { headerTitle: "ขายขยะ" }
@@ -95,8 +94,7 @@ SellingTransactionNavigator = createStackNavigator(
     SellingTransactionDetailScreen: {
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" }
-    },
-    chooseBuyerForSellScreen: ChooseBuyerScreen
+    }
   },
   { headerMode: "none" }
 );

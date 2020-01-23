@@ -120,7 +120,8 @@ export default function(state = initialState, action) {
       sellerItemsCloned.confirmValue();
       return {
         ...state,
-        sellerItems: sellerItemsCloned
+        sellerItems: sellerItemsCloned,
+        sellerItemsFlatListFormat: sellerItemsCloned.getFlatListFormat(true)
       };
     case GET_BUYER_LIST:
       console.log("GET_BUYER_LIST Reducer Run");

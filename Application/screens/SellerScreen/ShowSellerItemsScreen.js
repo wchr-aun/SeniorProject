@@ -20,6 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
 import ThaiText from "../../components/ThaiText";
 import AppVariableSetting from "../../constants/AppVariableSetting";
@@ -117,14 +118,9 @@ const ShowAllUserTrashScreen = props => {
         return true; //Prevent go back to homepage
       }
     });
-    // const willFocusSub = props.navigation.addListener(
-    //   "willFocus",
-    //   refreshSellerItems
-    // );
 
     return () => {
       BackHandler.removeEventListener();
-      // willFocusSub.remove();
     };
   });
 
@@ -138,8 +134,12 @@ const ShowAllUserTrashScreen = props => {
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
-  // Load sellerItems and wasteType from firebase and store it to redux "initially"
+  // initially
   useEffect(() => {
+    // set operation status
+    dispatch(navigationBehaviorAction.startOperation());
+
+    // Load sellerItems and wasteType from firebase and store it to redux "initially"
     setIsLoading(true);
     refreshSellerItems()
       .then(() => setIsLoading(false))
@@ -147,7 +147,7 @@ const ShowAllUserTrashScreen = props => {
         setIsLoading(false);
         setError(err.message);
       });
-  }, [refreshSellerItems]);
+  }, [refreshSellerItems, dispatch]);
 
   // Get sellerItems and wasteTyp from redux
   const sellerItems = useSelector(state => {

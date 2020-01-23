@@ -19,6 +19,8 @@ import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as transactionAction from "../../store/actions/transactionAction";
+import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
+
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiText from "../../components/ThaiText";
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -85,7 +87,18 @@ const BuyerChoice = props => {
   );
 };
 
-export default UserAuthenScreen = props => {
+export default ChooseBuyerScreen = props => {
+  const isOperationCompleted = useSelector(
+    state => state.navigation.isOperationCompleted
+  );
+  useEffect(() => {
+    console.log("isOperationCompleted change -- useSelector in chooseBuyer");
+    console.log(isOperationCompleted);
+    if (isOperationCompleted === true) {
+      console.log("navigate to ");
+      props.navigation.navigate("ShowSellerItemsScreen");
+    }
+  }, [isOperationCompleted]);
   useEffect(() => {
     console.log("Choose Buyer Screen");
   }, []);
@@ -182,6 +195,7 @@ export default UserAuthenScreen = props => {
         )
       );
 
+      dispatch(navigationBehaviorAction.finishOperation());
       await dispatch(transactionAction.fetchTransaction("seller"));
       props.navigation.navigate("SellTransaction");
     } catch (err) {
@@ -291,7 +305,7 @@ export default UserAuthenScreen = props => {
   );
 };
 
-UserAuthenScreen.navigationOptions = {
+ChooseBuyerScreen.navigationOptions = {
   headerTitle: "เลือกผู้รับซื้อขยะ"
 };
 

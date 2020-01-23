@@ -71,7 +71,7 @@ const AdjustAmountOfTrash = props => {
           keyboardType="numeric"
           onChangeText={props.onEdit}
           value={props.editingValue}
-          style={{ textAlign: "center" }}
+          textAlign={"center"}
         />
       </View>
       <View style={{ width: "30%" }}>
@@ -94,9 +94,9 @@ export default TrashCard = props => {
         width: wp("95%"),
         height: hp("20%"),
         alignSelf: "center",
-        marginVertical: wp("1.25%"),
         backgroundColor: Colors.on_primary,
-        borderRadius: 5
+        borderRadius: 10,
+        marginVertical: 5
       }}
     >
       <View
@@ -144,8 +144,7 @@ export default TrashCard = props => {
           style={{
             width: "100%",
             height: "80%",
-            flexDirection: "row",
-            backgroundColor: "yellow"
+            flexDirection: "row"
           }}
         >
           <View style={{ width: "50%", height: "100%" }}>
@@ -172,7 +171,7 @@ export default TrashCard = props => {
 
           <View style={{ width: "50%", height: "100%" }}>
             <AmountOfTrash
-              style={{ width: "100%", height: "50%", backgroundColor: "red" }}
+              style={{ width: "100%", height: "50%" }}
               changeAmount={props.changeAmount}
               oldAmount={props.oldAmount}
             />

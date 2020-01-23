@@ -142,15 +142,16 @@ export const sellRequest = (
       txType: sellMode,
       assignedTime: assignedTime
     };
-
-    console.log("sellRequest");
-    console.log(sellRequest);
     try {
+      if (sellRequest["saleList"]["length"] === 0) {
+        return;
+      }
       await sellWaste(sellRequest);
       // update redux store
       dispatch({
         type: SELLED_SELLERITEMS,
-        sellRequest
+        sellRequest,
+        isReadyToNavigateBack: true
       });
     } catch (err) {
       throw new Error(err.message);
