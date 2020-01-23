@@ -58,14 +58,14 @@ const AmountOfTrash = props => {
 const AdjustAmountOfTrash = props => {
   return (
     <View style={{ ...props.style, flexDirection: "row" }}>
-      <View style={styles.plusAndMinusCircle}>
+      <View style={{ marginHorizontal: 5, width: "30%" }}>
         {!props.selected && !props.editingMode ? null : (
           <TouchableWithoutFeedback onPress={props.onDecrease}>
             <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
           </TouchableWithoutFeedback>
         )}
       </View>
-      <View style={{ width: 30 }}>
+      <View style={{ width: "30%", alignSelf: "center" }}>
         <TextInput
           selectTextOnFocus={true}
           keyboardType="numeric"
@@ -74,7 +74,7 @@ const AdjustAmountOfTrash = props => {
           style={{ textAlign: "center" }}
         />
       </View>
-      <View style={styles.plusAndMinusCircle}>
+      <View style={{ width: "30%" }}>
         {!props.selected && !props.editingMode ? null : (
           <TouchableWithoutFeedback onPress={props.onIncrease}>
             <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
@@ -94,7 +94,9 @@ export default TrashCard = props => {
         width: wp("95%"),
         height: hp("20%"),
         alignSelf: "center",
-        marginVertical: wp("1.25%")
+        marginVertical: wp("1.25%"),
+        backgroundColor: Colors.on_primary,
+        borderRadius: 5
       }}
     >
       <View
@@ -137,9 +139,19 @@ export default TrashCard = props => {
           </View>
         </View>
 
-        <View style={{ width: "100%", height: "80%", flexDirection: "row" }}>
+        {/* detail */}
+        <View
+          style={{
+            width: "100%",
+            height: "80%",
+            flexDirection: "row",
+            backgroundColor: "yellow"
+          }}
+        >
           <View style={{ width: "50%", height: "100%" }}>
-            <View style={styles.descriptionRow}>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
               <Ionicons
                 name="md-trash"
                 size={20}
@@ -149,7 +161,9 @@ export default TrashCard = props => {
                 {props.wasteDisposal}
               </ThaiText>
             </View>
-            <View style={styles.descriptionRow}>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
               <ThaiText style={styles.trashAdjustPrice}>
                 {props.trashAdjustPrice} บ./กก.
               </ThaiText>
@@ -158,7 +172,7 @@ export default TrashCard = props => {
 
           <View style={{ width: "50%", height: "100%" }}>
             <AmountOfTrash
-              style={{ width: "100%", height: "50%" }}
+              style={{ width: "100%", height: "50%", backgroundColor: "red" }}
               changeAmount={props.changeAmount}
               oldAmount={props.oldAmount}
             />
@@ -166,6 +180,7 @@ export default TrashCard = props => {
               style={{
                 alignSelf: "center",
                 alignItems: "center",
+                justifyContent: "space-around",
                 width: "100%",
                 height: "50%"
               }}
@@ -206,8 +221,5 @@ const styles = StyleSheet.create({
   },
   trashDisposal: {
     fontSize: 12
-  },
-  plusAndMinusCircle: {
-    marginHorizontal: 5
   }
 });
