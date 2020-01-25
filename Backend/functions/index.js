@@ -168,7 +168,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction has already passed the state"}
           else if (data.status < 1 || data.status > 4)
             return {errorMessage: "The transaction status is incorrect"}
-          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid)
+          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid && doc.data().seller != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
           else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4)
             return {errorMessage: "You cannot complete your own selling transaction"}

@@ -160,7 +160,7 @@ export const getTodayTxForPathOp = async () => {
     .then(querySnapshot => {
       let tx = [];
       querySnapshot.forEach(doc => {
-        tx.push({ txId: doc.id, detail: doc.data() });
+        tx.push({ txId: doc.id, detail: doc.data(), isSelected: false });
       });
       return tx;
     })
