@@ -131,6 +131,12 @@ export class Wastes {
       this.length -= 1;
     }
   }
+  getTypeBySubtype(subtype) {
+    for (let type in this) {
+      if (type[0] != "_") if (this[type][subtype] != undefined) return type;
+    }
+    return false;
+  }
   getValueBySubtype(subtype) {
     for (let type in this) {
       if (type[0] != "_")

@@ -20,13 +20,21 @@ export default (state = initialState, action) => {
         purchaseList: action.purchaseList
       };
     case EDIT_PURCHASELIST:
-      purchaseList.editValue(action.majortype, action.subtype, action.price);
+      console.log("EDIT_PURCHASELIST - Redux");
+      console.log(action);
+      purchaseList.editValue(
+        action.majortype,
+        action.subtype,
+        action.price - purchaseList[action.majortype][action.subtype]
+      );
+      console.log(purchaseList);
       return {
         ...state,
         purchaseList // if not usd {...} format, redux isn't force react app to re-render component so that the result in the page that use this redux-variable will be same.
       };
     case CONFIRM_CHANGE_PURCHASELIST:
       console.log("CONFIRM_CHANGE_PURCHASELIST - Redux");
+      console.log(action);
       return {
         ...state,
         purchaseList: action.purchaseList

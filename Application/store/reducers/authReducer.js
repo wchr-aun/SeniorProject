@@ -28,11 +28,17 @@ export default (state = initialState, action) => {
         userRole: action.userRole
       };
     case CHANGE_ROLE:
+      console.log("CHANGE_ROLE");
+      console.log(action);
+
       return {
         ...state,
         userRole: action.userRole
       };
     case LOGOUT:
+      console.log("LOGOUT");
+      console.log(state);
+      console.log(initialState);
       return initialState;
     default:
       return state;

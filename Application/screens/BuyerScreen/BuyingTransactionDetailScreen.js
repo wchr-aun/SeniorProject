@@ -20,26 +20,33 @@ import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
 
-export default SellingTransactionDetailScreen = props => {
+export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
-  const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
 
   const dispatch = useDispatch();
-  const cancelHandler = async () => {
-    await dispatch(
+  const cancelHandler = () => {
+    dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
         newStatus: 4
       })
     );
-    await dispatch(transactionAction.fetchTransaction(userRole));
-    props.navigation.goBack();
+  };
+
+  const acceptHandler = () => {
+    dispatch(
+      transactionAction.changeTransactionStatus({
+        txID: transactionItem.txId,
+        oldStatus: transactionItem.detail.txStatus, //for query
+        newStatus: 4
+      })
+    );
   };
 
   const backHandler = () => {

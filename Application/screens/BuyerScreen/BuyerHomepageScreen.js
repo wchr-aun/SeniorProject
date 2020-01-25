@@ -57,15 +57,15 @@ export default BuyerHomepageScreen = props => {
   }, []);
   const transactions = useSelector(state => state.transactions.transactions);
 
-  // // For looking into transaction detail
-  // const selectedHandler = transactionItem => {
-  //   props.navigation.navigate({
-  //     routeName: "SellingTransactionDetailScreen",
-  //     params: {
-  //       transactionItem: transactionItem
-  //     }
-  //   });
-  // };
+  // For looking into transaction detail
+  const selectedHandler = transactionItem => {
+    props.navigation.navigate({
+      routeName: "SellingTransactionDetailScreen",
+      params: {
+        transactionItem: transactionItem
+      }
+    });
+  };
 
   return (
     <View>

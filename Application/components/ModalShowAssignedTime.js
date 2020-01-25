@@ -75,7 +75,6 @@ export default ModalShowSellersItemsScreen = props => {
 
   confirmAssignedtime = () => {
     dispatchAssignedTime({ type: CONFIRM });
-    // console.log(assignedTime.selectedTimes); <-- this assignedTime.selectedTime not update
   };
 
   // When 'assignedTime.selectedTimes' got update set back to ChooseBuyerScreen

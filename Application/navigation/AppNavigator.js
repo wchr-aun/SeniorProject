@@ -4,6 +4,8 @@ import { createStackNavigator } from "react-navigation-stack";
 import { Platform } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+import { createMaterialTopTabNavigator } from "react-navigation-tabs";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
@@ -23,11 +25,13 @@ import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 
 import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
 import EditBuyerInfomationScreen from "../screens/BuyerScreen/EditBuyerInfomationScreen";
-import PathOptimization from "../screens/BuyerScreen/PathOptimizationScreen"
+import PathOptimization from "../screens/BuyerScreen/PathOptimizationScreen";
+import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransactionDetailScreen";
+import BuyingTransactionScreen from "../screens/BuyerScreen/BuyingTransactionScreen";
+import SearchQuicksellingScreen from "../screens/BuyerScreen/SearchQuicksellingScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
-import UIScreenTemplate from "../screens/UIScreenTemplate";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 
 // ************************************* Seller ***********************************
@@ -56,7 +60,6 @@ const ShowSellerItemsNavigator = createStackNavigator(
     ShowSellerItemsScreen: {
       screen: ShowSellerItemsScreen
     },
-    // EditTrashForSellerScreen: {screen: EditTrashForSellerScreen},
     SellingTrashScreen: {
       screen: SellingTrashScreen,
       navigationOptions: { headerTitle: "ขายขยะ" }
@@ -91,10 +94,9 @@ SellingTransactionNavigator = createStackNavigator(
     SellingTransactionDetailScreen: {
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" }
-    },
-    chooseBuyerForSellScreen: ChooseBuyerScreen
+    }
   },
-  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+  { headerMode: "none" }
 );
 
 // Trash Main
@@ -170,15 +172,51 @@ const SellerNavigator =
       });
 
 // **************************** For Buyer ****************************
+// const BuyerTransactionNavigator = createStackNavigator(
+//   {
+//     PathOptimization: {
+//       screen: PathOptimization,
+//       navigationOptions: { headerTitle: "การขายขยะ" }
+//     }
+//   },
+//   { headerMode: Platform.OS === "android" ? "screen" : "float" }
+// );
 
-const BuyerTransactionNavigator = createStackNavigator(
+const BuyerTransactionNavigator = createMaterialTopTabNavigator(
   {
     PathOptimization: {
       screen: PathOptimization,
-      navigationOptions: { headerTitle: "การขายขยะ" }
+      navigationOptions: {
+        tabBarLabel: "การรับซื้อขยะในวันนั้น",
+        tabBarIcon: tabInfo => {
+          return <Ionicons name="md-map" size={25} color={Colors.on_primary} />;
+        }
+      }
+    },
+    AllTypeTransaction: {
+      screen: BuyingTransactionScreen,
+      navigationOptions: {
+        headerTitle: "การรับซื้อขยะ",
+        tabBarLabel: "การรับซื้อขยะในวันนั้น",
+        tabBarIcon: tabInfo => {
+          return (
+            <Ionicons name="md-list-box" size={25} color={Colors.on_primary} />
+          );
+        }
+      }
     }
   },
-  { headerMode: Platform.OS === "android" ? "screen" : "float" }
+  {
+    tabBarOptions: {
+      activeTintColor: "white",
+      showIcon: true,
+      showLabel: false,
+      style: {
+        backgroundColor: "red",
+        paddingTop: getStatusBarHeight()
+      }
+    }
+  }
 );
 
 // Trash Main
@@ -205,25 +243,26 @@ const BuyerBottomTabConfig = {
       tabBarColor: Colors.primary
     }
   },
-  buyerTransaction: {
+
+  searchSellTransaction: {
+    screen: SearchQuicksellingScreen,
+    navigationOptions: {
+      tabBarLabel: "การรับซื้อขยะ",
+      tabBarIcon: tabInfo => {
+        return (
+          <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
+        );
+      },
+      tabBarColor: Colors.primary
+    }
+  },
+  BuyerTransaction: {
     screen: BuyerTransactionNavigator,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",
       tabBarIcon: tabInfo => {
         return (
           <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
-        );
-      },
-      tabBarColor: Colors.primary
-    }
-  },
-  searchSellTransaction: {
-    screen: BuyerHomepageScreen,
-    navigationOptions: {
-      tabBarLabel: "การรับซื้อขยะ",
-      tabBarIcon: tabInfo => {
-        return (
-          <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
         );
       },
       tabBarColor: Colors.primary

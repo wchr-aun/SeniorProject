@@ -135,6 +135,9 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
+    console.log("===================================")
+    console.log(formState)
+    console.log("===================================")
     setIsLoading(true);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
@@ -203,7 +206,7 @@ export default UserSignupScreen = props => {
     // set all addr form valid
     dispatchFormState({
       type: "CHOOSE_CURRENT_ADDR",
-      prestateIsCur: currentAddr
+      prestateIsCur: !currentAddr
     });
     setSellerAddr({ ...sellerAddrResult });
   }, [currentAddr]);
@@ -381,7 +384,7 @@ export default UserSignupScreen = props => {
                 label="ชื่อจริง"
                 keyboardType="default"
                 required
-                minLength={5}
+                minLength={2}
                 autoCapitalize="none"
                 errorText="Please enter a valid name."
                 onInputChange={inputChangeHandler}
@@ -401,7 +404,7 @@ export default UserSignupScreen = props => {
                 label="นามสกุล"
                 keyboardType="default"
                 required
-                minLength={5}
+                minLength={2}
                 autoCapitalize="none"
                 errorText="Please enter a valid surname."
                 onInputChange={inputChangeHandler}

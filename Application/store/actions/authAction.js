@@ -16,15 +16,20 @@ export const CHANGE_ROLE = "CHANGE_ROLE";
 export const signin = () => {
   return async dispatch => {
     // do async task-2 get user info from firebase
-    return getUsers().then(result => {
-      dispatch({
-        type: SIGNIN,
-        userProfile: {
-          ...result
-        }
+    return getUsers()
+      .then(result => {
+        dispatch({
+          type: SIGNIN,
+          userProfile: {
+            ...result
+          }
+        });
+        return;
+      })
+      .catch(err => {
+        console.log(err.message);
+        return false;
       });
-      return;
-    });
   };
 };
 
@@ -38,7 +43,7 @@ export const setUserRole = role => {
 };
 
 export const signout = () => {
-  return async dispatch => {
+  return dispatch => {
     return removeNotificationToken()
       .then(() => {
         return firebaseUtil

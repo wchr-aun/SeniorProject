@@ -56,7 +56,7 @@ export default EditBuyerInfomationScreen = props => {
 
       dispatch(
         buyerAction.updatePurchaseList(
-          purchaseList.getObject(),
+          purchaseList,
           description,
           buyerUserInfo.addr
         )
@@ -199,7 +199,7 @@ export default EditBuyerInfomationScreen = props => {
                             }}
                             keyboardType="numeric"
                             style={{
-                              color: isUpdated
+                              color: !isUpdated
                                 ? Colors.primary_variant
                                 : "black"
                             }}
@@ -208,7 +208,7 @@ export default EditBuyerInfomationScreen = props => {
                       </View>
                       <ThaiText> บาท/ กก.</ThaiText>
                     </View>
-                    {!isEditingMode ? null : (
+                    {/* {!isEditingMode ? null : (
                       <View style={{ width: "20%" }}>
                         <TouchableWithoutFeedback
                           onPress={() => {
@@ -224,7 +224,7 @@ export default EditBuyerInfomationScreen = props => {
                           />
                         </TouchableWithoutFeedback>
                       </View>
-                    )}
+                    )} */}
                   </View>
                 </View>
               );
