@@ -102,8 +102,6 @@ export const sellRequest = (
     // sell only sellerItem that buyer have
     let saleList = {};
     saleList["length"] = 0;
-    console.log("sellerItems");
-    console.log(sellerItems);
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
@@ -151,6 +149,7 @@ export const sellRequest = (
       if (sellRequest["saleList"]["length"] === 0) {
         return;
       }
+      console.log(sellRequest)
       await sellWaste(sellRequest);
       // update redux store
       dispatch({

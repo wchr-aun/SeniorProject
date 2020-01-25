@@ -91,7 +91,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
             let assignedTime = []
-            for (time in data.assignedTime) assignedTime.push(new Date(time))
+            for (index in data.assignedTime) assignedTime.push(new Date(data.assignedTime[index]))
             return txDB.add({
               txType,
               buyer,
@@ -372,7 +372,7 @@ exports.querySellers = functions.https.onCall((data,context) => {
 
 const getTitleAndBody = (data) => {
   const milis = data.date == undefined ? 0 : data.date.toMillis()
-  const days = ((milis - milis % 86400000) - (new Date() - new Date() % 86400000)) / 86400000
+  const days = ((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000
   const uid = data.uid
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
   const hour = new Date(milis).getHours() || ""

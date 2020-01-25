@@ -20,18 +20,21 @@ import SellTransactionCard from "../../components/SellTransactionCard";
 
 const destinationReducer = (state, action) => {
   let geopoint = state.geopoint
-  switch(action.type) {
-    case "PUSH_DESTINATION":
-      geopoint.push(action.geopoint)
+  for (index in geopoint) {
+    if (action.geopoint.txId == geopoint[index].txId) {
+      let newGeopoint = []
+      newGeopoint = geopoint.splice(0, index)
+      geopoint.shift()
+      newGeopoint.concat(geopoint)
       return {
-        geopoint
+        geopoint: newGeopoint
       };
-    case "POP_DESTINATION":
-      geopoint.pop()
-      return {
-        geopoint
-      };
+    }
   }
+  geopoint.push(action.geopoint)
+  return {
+    geopoint
+  };
 }
 
 export default UserSignupScreen = props => {
@@ -44,7 +47,7 @@ export default UserSignupScreen = props => {
   const [addrReadable, setAddrReadable] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
   const userProfile = useSelector(state => state.user.userProfile);
-  const [destinationState, dispatchDestination] = useReducer(destinationReducer, { geopoint: [] })
+  const [destinationState, dispatchDestination] = useReducer(destinationReducer, { geopoint: [] });
 
   // 'formState (state snapshot) will be updated when state changed
 
@@ -73,12 +76,13 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
+    console.log("aaaaaaaaaaaaaaaaaaaaa")
+    console.log(transactions)
     setAddrModalVisible(true);
   };
 
   const selectedHandler = tx => {
     dispatchDestination({
-      type: "PUSH_DESTINATION",
       geopoint: {
         txId: tx.txId,
         latitude: tx.detail.addr_geopoint.geopoint.latitude,
