@@ -1,13 +1,15 @@
 import {
   getSectionListFormatWasteType,
   editBuyerInfo,
-  getPurchaseList
+  getPurchaseList,
+  querySellers
 } from "../../utils/firebaseFunctions";
 import { Wastes } from "../../models/AllUserTrash";
 
 export const FETCH_PURCHASELIST = "FETCH_PURCHASELIST";
 export const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
 export const CONFIRM_CHANGE_PURCHASELIST = "CONFIRM_CHANGE_PURCHASELIST";
+export const GET_SELLER_LIST = "GET_SELLER_LIST";
 
 export const fetchBuyerInfo = () => {
   return async dispatch => {
@@ -56,5 +58,24 @@ buyerInfo = {
     });
 
     dispatch({ type: CONFIRM_CHANGE_PURCHASELIST, purchaseList });
+  };
+};
+
+export const getSellerList = queryData => {
+  console.log("getSellerList -- queryData -- firebaseFunc");
+  console.log(queryData);
+  return async dispatch => {
+    try {
+      // search buyer
+      let SellerList = await querySellers(queryData);
+
+      // dispatch
+      dispatch({
+        type: GET_SELLER_LIST,
+        SellerList
+      });
+    } catch (err) {
+      throw new Error(err.message);
+    }
   };
 };

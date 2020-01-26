@@ -27,16 +27,6 @@ export default EditBuyerInfomationScreen = props => {
   // initially fetch
   const dispatch = useDispatch();
 
-  // load data
-  const loadBuyerInfo = async () => {
-    setIsLoading(true);
-    await dispatch(buyerAction.fetchBuyerInfo());
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    loadBuyerInfo();
-  }, []);
-
   const [isLoading, setIsLoading] = useState(true);
 
   // ------------- DATA ------------- //
