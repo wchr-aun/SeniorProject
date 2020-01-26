@@ -1,10 +1,8 @@
 <template>
-  <div class="">
+  <div class="container">
     <AutoComZipcode/>
     <br>
-    <div class="small">
-      <line-chart :chart-data="datacollection"></line-chart>
-    </div>
+    <line-chart :options="options" :height="150" :chart-data="datacollection"></line-chart>
   </div>
   
 </template>
@@ -22,22 +20,49 @@
     },
     data () {
       return {
-        datacollection: {}
+        datacollection: {},
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              }    
+            }]
+          }
+        }
       }
     },
     methods: {
       fillData (zipcode) {
-        console.log(wasteAmount)
-        this.datacollection = {
-          labels: ["What", "The fuck"],
-          datasets: [
-            {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [wasteAmount[zipcode].PETE, wasteAmount[zipcode].battery]
-            }
-          ]
+        let labels = []
+        let data = []
+        let backgroundColor = []
+        for (let type in wasteAmount[zipcode]) {
+          for (let subtype in wasteAmount[zipcode][type]) {
+            labels.push(subtype)
+            backgroundColor.push(this.getRandomColor())
+            data.push(wasteAmount[zipcode][type][subtype])
+          }
         }
+        this.datacollection = {
+          labels,
+          datasets: [{
+            backgroundColor,
+            data
+          }]
+        }
+      },
+      getRandomColor () {
+        var letters = '0123456789ABC';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 12)];
+        }
+        return color;
       }
     }
   }

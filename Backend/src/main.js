@@ -10,8 +10,6 @@ import 'buefy/dist/buefy.css'
 Vue.use(VueResource);
 Vue.use(ProgressBar)
 Vue.use(ImageUploader);
-
-
 Vue.use(Buefy)
 Vue.config.productionTip = false
 

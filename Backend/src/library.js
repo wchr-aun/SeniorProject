@@ -13,9 +13,13 @@ export const queryWastesInAnArea = (zipcode) => {
       const saleList = doc.data().saleList
       for (let type in saleList) {
         for (let subtype in saleList[type]) {
-          if (wasteAmount[String(zipcode)][subtype] == undefined)
-            wasteAmount[String(zipcode)][subtype] = 0
-          wasteAmount[String(zipcode)][subtype] += saleList[type][subtype].amount
+          if (wasteAmount[String(zipcode)][type] == undefined) {
+            wasteAmount[String(zipcode)][type] = {}
+            wasteAmount[String(zipcode)][type][subtype] = 0
+          }
+          else if (wasteAmount[String(zipcode)][type][subtype] == undefined)
+            wasteAmount[String(zipcode)][type][subtype] = 0
+          wasteAmount[String(zipcode)][type][subtype] += saleList[type][subtype].amount
         }
       }
     })
