@@ -191,7 +191,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               case 2:
                 transaction.update(txDB.doc(data.txID), {
                   txStatus: data.status,
-                  chosenTime: doc.data().assignedTime[data.chosenTime],
+                  chosenTime: new Date(data.chosenTime),
                   buyer: doc.data().buyer || context.auth.uid
                 })
                 break
@@ -311,7 +311,7 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
     const wasteType = data.wasteType
     return geofirex.get(query).then(querySnapshot => {
       querySnapshot.forEach(buyer => {
-        if (buyer.id != context.auth.id && buyer.enableSearch) {
+        if (buyer.id != context.auth.uid && buyer.enableSearch) {
           const lastestArray = buyerList.push(buyer) - 1
           buyerList[lastestArray].totalPrice = 0
           buyerList[lastestArray].unavailableTypes = {}
@@ -325,7 +325,7 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
           if (Object.keys(buyerList[lastestArray].unavailableTypes).length == wasteType.length)
             buyerList.pop()
           else
-            buyerList[lastestArray].sorting = (wasteType.length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
+            buyerList[lastestArray].sorting = (wasteType.length - Object.keys(buyerList[lastestArray].unavailableTypes).length) * 100000000 +
             buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
         }
       })

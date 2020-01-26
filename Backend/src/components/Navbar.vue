@@ -1,21 +1,24 @@
 <template>
-  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
+  <b-navbar class="is-light">
+    <template slot="brand">
+      <b-navbar-item tag="router-link" :to="{ path: '/' }">
         Waste Separation Using Image Processing and Trading System to Solve Environmental Problems Occurring from Waste Pollution
-      </a>
-    </div>
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <a class="navbar-item" href="/annotate">
-          Annotate
-        </a>
-        <a class="navbar-item" href="/about">
-          About
-        </a>
-      </div>
-      <div class="navbar-item">
-      </div>
-    </div>
-  </nav>
+      </b-navbar-item>
+    </template>
+    <template slot="start">
+      <b-navbar-item href="/annotate">
+        Annotate
+      </b-navbar-item>
+    </template>
+
+    <template slot="end">
+        <b-navbar-item tag="div">
+          <div class="buttons">
+            <a class="button is-twitter">
+              <strong>About</strong>
+            </a>
+          </div>
+        </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
