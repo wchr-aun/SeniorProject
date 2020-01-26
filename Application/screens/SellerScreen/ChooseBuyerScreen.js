@@ -184,7 +184,8 @@ export default ChooseBuyerScreen = props => {
           buyerPriceInfo,
           unavailableTypes,
           selectedTimes,
-          sellMode
+          sellMode,
+          buyerListRedux.unavailableTypes
         )
       );
 

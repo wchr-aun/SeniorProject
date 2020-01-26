@@ -76,8 +76,6 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    console.log("aaaaaaaaaaaaaaaaaaaaa")
-    console.log(transactions)
     setAddrModalVisible(true);
   };
 
