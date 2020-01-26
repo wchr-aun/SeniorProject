@@ -121,7 +121,7 @@ export default ChooseBuyerScreen = props => {
     await dispatch(
       sellerItemsAction.getBuyerList({
         distance: parseInt(props.navigation.getParam("distance"), 10),
-        wasteType: sellerItemsForSell,
+        wasteType: sellerItemsForSell.getObject(),
         addr: sellerAddr
       })
     );

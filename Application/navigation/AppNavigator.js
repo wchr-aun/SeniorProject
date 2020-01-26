@@ -176,7 +176,7 @@ const SellerNavigator =
 const SearchQuicksellingNavigator = createStackNavigator(
   {
     SearchQuicksellingScreen,
-    BuyingQuickTransactionDetailScreen
+    BuyingTransactionDetailScreen
   },
   { headerMode: "none" }
 );

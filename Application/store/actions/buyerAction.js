@@ -5,6 +5,7 @@ import {
   querySellers
 } from "../../utils/firebaseFunctions";
 import { Wastes } from "../../models/AllUserTrash";
+import libary from "../../utils/libary";
 
 export const FETCH_PURCHASELIST = "FETCH_PURCHASELIST";
 export const EDIT_PURCHASELIST = "EDIT_PURCHASELIST";
@@ -69,8 +70,19 @@ export const getSellerList = queryData => {
       let cleanedFormatSellerList = [];
 
       SellerList.forEach((item, index) => {
-        cleanedFormatSellerList.push({ txId: item.id, detail: { ...item } });
+        // edit time obj to firebase timeStamp
+        let firebaseAssignedTime = [];
+        // libary.toDate(item.detail.assignedTime[0]._seconds)
+        item.assignedTime.forEach((time, index) => {
+          firebaseAssignedTime.push(libary.toDate(time._seconds));
+        });
+
+        cleanedFormatSellerList.push({
+          txId: item.id,
+          detail: { ...item, assignedTime: firebaseAssignedTime }
+        });
       });
+      console.log("cleanedFormatSellerList");
       console.log(cleanedFormatSellerList);
 
       // dispatch

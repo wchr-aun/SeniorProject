@@ -1,5 +1,6 @@
 import firebaseFunctions from "./firebaseFunctions";
 import { verifyLocationPermissions } from "./permissions";
+import firebase from "firebase";
 
 import {
   getCurrentPositionAsync,
@@ -8,6 +9,10 @@ import {
   Accuracy
 } from "expo-location";
 import Colors from "../constants/Colors";
+
+const toDate = dateInSeccond => {
+  return new firebase.firestore.Timestamp(dateInSeccond, 0);
+};
 
 const formatDate = date => {
   let monthNames = [
@@ -163,5 +168,6 @@ export default {
   formatTime,
   getReadableTxStatus,
   getColorTxStatus,
-  getPostalcodeAddressFromCord
+  getPostalcodeAddressFromCord,
+  toDate
 };

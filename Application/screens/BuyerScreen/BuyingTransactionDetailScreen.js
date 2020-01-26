@@ -183,6 +183,7 @@ export default BuyingTransactionDetailScreen = props => {
               ย้อนกลับ
             </CustomButton>
             <CustomButton
+              disable={txStatus === 0 ? false : true}
               btnColor={Colors.primary_variant}
               onPress={acceptHandler}
               btnTitleColor={Colors.on_primary}

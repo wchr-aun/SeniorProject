@@ -49,7 +49,7 @@ export default SearchQuicksellingScreen = props => {
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "BuyingQuickTransactionDetailScreen",
+      routeName: "BuyingTransactionDetailScreen",
       params: {
         transactionItem
       }
@@ -81,6 +81,8 @@ export default SearchQuicksellingScreen = props => {
           data={sellerList ? sellerList : []}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
+            console.log("item.detail.assignedTime[0]");
+            console.log(item.detail.assignedTime[0]._seconds);
             return (
               <SellTransactionCard
                 amountOfType={item.detail.saleList.length}
@@ -93,9 +95,15 @@ export default SearchQuicksellingScreen = props => {
                 onPress={() => {
                   selectedHandler(item);
                 }}
+                // meetDate={libary.formatDate(
+                //   new Date(item.detail.assignedTime[0]._seconds * 1000)
+                // )}
                 meetDate={libary.formatDate(
-                  new Date(item.detail.assignedTime[0]._seconds * 1000)
+                  item.detail.assignedTime[0].toDate()
                 )}
+                // meetDate={libary.formatDate(
+                //   libary.toDate(item.detail.assignedTime[0]._seconds).toDate()
+                // )}
               />
             );
           }}
