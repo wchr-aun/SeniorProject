@@ -152,9 +152,13 @@ export default BuyerHomepageScreen = props => {
                       }
                       txStatus={item.detail.txStatus}
                       userName={item.detail.buyer}
+                      addr={item.detail.addr}
                       onPress={() => {
                         selectedHandler(item);
                       }}
+                      meetDate={libary.formatDate(
+                        item.detail.assignedTime[0].toDate()
+                      )}
                     />
                   );
                 }}

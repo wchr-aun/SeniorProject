@@ -25,7 +25,8 @@ export default SearchQuicksellingScreen = props => {
   const buyerAddr = useSelector(state => state.user.userProfile.addr);
 
   useEffect(() => {
-    if (Object.keys(purchaseList).length && buyerAddr) loadSeller();
+    if (purchaseList != undefined)
+      if (Object.keys(purchaseList).length > 0 && buyerAddr) loadSeller();
   }, [purchaseList, buyerAddr]);
 
   // Callback fn
@@ -80,7 +81,11 @@ export default SearchQuicksellingScreen = props => {
           data={sellerList ? sellerList : []}
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
-            console.log(item.assignedTime[0].toDate());
+            console.log("item.assignedTime[0].seconds * 1000");
+            console.log(item.assignedTime[0]);
+            console.log(item.assignedTime[0].seconds);
+            console.log(item.assignedTime[0].seconds * 1000);
+            console.log(item);
             return (
               <SellTransactionCard
                 amountOfType={item.saleList.length}
@@ -93,7 +98,9 @@ export default SearchQuicksellingScreen = props => {
                 onPress={() => {
                   selectedHandler(item);
                 }}
-                meetDate={libary.formatDate(item.assignedTime[0].toDate())}
+                meetDate={libary.formatDate(
+                  new Date(item.assignedTime[0]._seconds * 1000)
+                )}
               />
             );
           }}
