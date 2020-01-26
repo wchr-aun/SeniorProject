@@ -62,8 +62,6 @@ buyerInfo = {
 };
 
 export const getSellerList = queryData => {
-  console.log("getSellerList -- queryData -- firebaseFunc");
-  console.log(queryData);
   return async dispatch => {
     try {
       // search buyer

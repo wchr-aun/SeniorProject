@@ -102,7 +102,8 @@ const trashsModifyingReducer = (state, action) => {
     case CANCEL:
       sellerItems.clearValue();
       return {
-        ...state
+        ...state,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       };
     default:
       return { ...state };

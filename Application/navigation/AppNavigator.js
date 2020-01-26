@@ -33,6 +33,7 @@ import SearchQuicksellingScreen from "../screens/BuyerScreen/SearchQuicksellingS
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
+import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQuickTransactionDetailScreen";
 
 // ************************************* Seller ***********************************
 // for UserHomepageScreen
@@ -172,15 +173,13 @@ const SellerNavigator =
       });
 
 // **************************** For Buyer ****************************
-// const BuyerTransactionNavigator = createStackNavigator(
-//   {
-//     PathOptimization: {
-//       screen: PathOptimization,
-//       navigationOptions: { headerTitle: "การขายขยะ" }
-//     }
-//   },
-//   { headerMode: Platform.OS === "android" ? "screen" : "float" }
-// );
+const SearchQuicksellingNavigator = createStackNavigator(
+  {
+    SearchQuicksellingScreen,
+    BuyingQuickTransactionDetailScreen
+  },
+  { headerMode: "none" }
+);
 
 const BuyerTransactionNavigator = createMaterialTopTabNavigator(
   {
@@ -245,7 +244,7 @@ const BuyerBottomTabConfig = {
   },
 
   searchSellTransaction: {
-    screen: SearchQuicksellingScreen,
+    screen: SearchQuicksellingNavigator,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",
       tabBarIcon: tabInfo => {

@@ -111,14 +111,20 @@ export default ModalShowSellersItemsScreen = props => {
               style={{
                 width: "40%",
                 height: "30%",
+                maxHeight: 80,
                 flexDirection: "row",
                 borderWidth: 1,
                 borderRadius: 5,
-                borderColor: Colors.lineSeparate,
-                backgroundColor: "red"
+                borderColor: Colors.lineSeparate
               }}
             >
               <TextInput
+                style={{
+                  width: "100%",
+                  paddingHorizontal: 2,
+                  paddingVertical: 5,
+                  textAlign: "center"
+                }}
                 placeholder="จำนวน"
                 keyboardType="number-pad"
                 onChangeText={thisValue => {
