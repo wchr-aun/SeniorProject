@@ -23,16 +23,16 @@
     methods: {
       fillData () {
         this.datacollection = {
-          labels: [this.getRandomInt(), this.getRandomInt()],
+          labels: ["What", "The fuck"],
           datasets: [
             {
               label: 'Data One',
-              backgroundColor: '#f87979',
+              backgroundColor: '#000000',
               data: [this.getRandomInt(), this.getRandomInt()]
             }, {
-              label: 'Data One',
+              label: 'Data Two',
               backgroundColor: '#f87979',
-              data: [this.getRandomInt(), this.getRandomInt()]
+              data: [30, 15]
             }
           ]
         }
