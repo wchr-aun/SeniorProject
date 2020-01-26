@@ -38,9 +38,6 @@ export default (state = initialState, action) => {
         ...state,
         purchaseList: action.purchaseList
       };
-    case GET_SELLER_LIST:
-      console.log("GET_SELLER_LIST - Redux");
-      return { ...state, sellerList: [...action.SellerList] };
     case CHANGE_ROLE:
       return initialState;
     case LOGOUT:

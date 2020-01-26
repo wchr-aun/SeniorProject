@@ -45,6 +45,7 @@ export default BuyingTransactionDetailScreen = props => {
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
+        chosenTime: transactionItem.detail.assignedTimeForUpdatingTx[0],
         newStatus: 2
       })
     );
@@ -183,7 +184,7 @@ export default BuyingTransactionDetailScreen = props => {
               ย้อนกลับ
             </CustomButton>
             <CustomButton
-              disable={txStatus === 0 ? false : true}
+              // disable={txStatus === 0 ? false : true}
               btnColor={Colors.primary_variant}
               onPress={acceptHandler}
               btnTitleColor={Colors.on_primary}
@@ -219,3 +220,52 @@ const styles = StyleSheet.create({
     height: "100%"
   }
 });
+
+/*
+Object {
+  "detail": Object {
+    "addr": "บ้านธรรมรักษา 2 กรุงเทพมหานคร ประเทศไทย 10140",
+    "addr_geopoint": Object {
+      "geohash": "w4rmwuccf",
+      "geopoint": Object {
+        "_latitude": 13.6494627,
+        "_longitude": 100.4944718,
+      },
+    },
+    "assignedTime": Array [
+      Timestamp {
+        "nanoseconds": 0,
+        "seconds": 1580169600,
+      },
+    ],
+    "buyer": "",
+    "createTimestamp": Object {
+      "_nanoseconds": 862000000,
+      "_seconds": 1580052487,
+    },
+    "hitMetadata": Object {
+      "bearing": 124.45176249258583,
+      "distance": 0.0010220999316233553,
+    },
+    "id": "3mTqURFZ7zBeXfqHetDd",
+    "saleList": Object {
+      "danger": Object {
+        "battery": Object {
+          "amount": 20,
+        },
+      },
+      "length": 2,
+      "plastic": Object {
+        "PETE": Object {
+          "amount": 20,
+        },
+      },
+    },
+    "seller": "huaweithree",
+    "txStatus": 0,
+    "txType": 1,
+    "zipcode": 10140,
+  },
+  "txId": "3mTqURFZ7zBeXfqHetDd",
+}
+*/

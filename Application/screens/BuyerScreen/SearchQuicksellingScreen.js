@@ -9,7 +9,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
-import * as buyerActions from "../../store/actions/buyerAction";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 import { useDispatch } from "react-redux";
 
@@ -35,7 +35,7 @@ export default SearchQuicksellingScreen = props => {
     // setIsRefreshing(true);
     // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
     await dispatch(
-      buyerActions.getSellerList({
+      transactionAction.fetchQuickTransaction({
         // distance: parseInt(props.navigation.getParam("distance"), 10),
         distance: parseInt(1000, 10),
         saleList: purchaseList.getObject(),
@@ -44,7 +44,9 @@ export default SearchQuicksellingScreen = props => {
     );
     // setIsRefreshing(false);
   }, [dispatch, buyerAddr]);
-  const sellerList = useSelector(state => state.buyerInfo.sellerList); // sure data is ready
+  const quickTransactions = useSelector(
+    state => state.transactions.quickTransactions
+  ); // sure data is ready
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
@@ -78,11 +80,9 @@ export default SearchQuicksellingScreen = props => {
         }}
       >
         <FlatList
-          data={sellerList ? sellerList : []}
+          data={quickTransactions ? quickTransactions : []}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
-            console.log("item.detail.assignedTime[0]");
-            console.log(item.detail.assignedTime[0]._seconds);
             return (
               <SellTransactionCard
                 amountOfType={item.detail.saleList.length}
@@ -95,15 +95,9 @@ export default SearchQuicksellingScreen = props => {
                 onPress={() => {
                   selectedHandler(item);
                 }}
-                // meetDate={libary.formatDate(
-                //   new Date(item.detail.assignedTime[0]._seconds * 1000)
-                // )}
                 meetDate={libary.formatDate(
                   item.detail.assignedTime[0].toDate()
                 )}
-                // meetDate={libary.formatDate(
-                //   libary.toDate(item.detail.assignedTime[0]._seconds).toDate()
-                // )}
               />
             );
           }}

@@ -56,9 +56,9 @@ const getReadableTxStatus = txStatus => {
     case 1:
       return "ถูกปฏิเสธ";
     case 2:
-      return "";
+      return "มีผู้รับซื้อแล้ว";
     case 3:
-      return "อยู่ในระหว่างการเดินทางไปรับ";
+      return "กำลังเดินทางไปรับ";
     case 4:
       return "ยกเลิก";
     case 5:

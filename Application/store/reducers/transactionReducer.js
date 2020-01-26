@@ -1,5 +1,6 @@
 import {
   FETCH_TRANSACTION,
+  FETCH_QUICK_TRANSACTION,
   FETCH_TODAY_TRANSACTION,
   CHANGE_TRANSACTION_STATUS
 } from "../actions/transactionAction";
@@ -9,6 +10,7 @@ import libary from "../../utils/libary";
 
 initialState = {
   transactions: [],
+  quickTransactions: [],
   transactionsSectionListFormat: [],
   todayTx: []
 };
@@ -42,6 +44,9 @@ export default (state = initialState, action) => {
         transactions: [...action.transactions],
         transactionsSectionListFormat: [...transactionsSectionListFormat]
       };
+    case FETCH_QUICK_TRANSACTION:
+      console.log("FETCH_QUICK_TRANSACTION - Redux");
+      return { ...state, quickTransactions: [...action.quickTransactions] };
     case FETCH_TODAY_TRANSACTION:
       console.log("FETCH_TODAY_TRANSACTION");
       return {

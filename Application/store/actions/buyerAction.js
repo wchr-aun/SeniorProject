@@ -62,39 +62,45 @@ buyerInfo = {
   };
 };
 
-export const getSellerList = queryData => {
-  return async dispatch => {
-    try {
-      // search buyer
-      let SellerList = await querySellers(queryData);
-      let cleanedFormatSellerList = [];
+// export const getSellerList = queryData => {
+//   return async dispatch => {
+//     try {
+//       // search buyer
+//       let SellerList = await querySellers(queryData);
+//       let cleanedFormatSellerList = [];
+//       let assignedTimeForUpdatingTx = [];
 
-      SellerList.forEach((item, index) => {
-        // edit time obj to firebase timeStamp
-        let firebaseAssignedTime = [];
-        // libary.toDate(item.detail.assignedTime[0]._seconds)
-        item.assignedTime.forEach((time, index) => {
-          firebaseAssignedTime.push(libary.toDate(time._seconds));
-        });
+//       SellerList.forEach((item, index) => {
+//         // edit time obj to firebase timeStamp
+//         let firebaseAssignedTime = [];
+//         item.assignedTime.forEach((time, index) => {
+//           let formattedTime = libary.toDate(time._seconds);
+//           firebaseAssignedTime.push(formattedTime);
+//           assignedTimeForUpdatingTx.push(formattedTime.seconds * 1000);
+//         });
 
-        cleanedFormatSellerList.push({
-          txId: item.id,
-          detail: { ...item, assignedTime: firebaseAssignedTime }
-        });
-      });
-      console.log("cleanedFormatSellerList");
-      console.log(cleanedFormatSellerList);
+//         cleanedFormatSellerList.push({
+//           txId: item.id,
+//           detail: {
+//             ...item,
+//             assignedTime: firebaseAssignedTime,
+//             assignedTimeForUpdatingTx
+//           }
+//         });
+//       });
+//       console.log("cleanedFormatSellerList");
+//       console.log(cleanedFormatSellerList);
 
-      // dispatch
-      dispatch({
-        type: GET_SELLER_LIST,
-        SellerList: cleanedFormatSellerList
-      });
-    } catch (err) {
-      throw new Error(err.message);
-    }
-  };
-};
+//       // dispatch
+//       dispatch({
+//         type: GET_SELLER_LIST,
+//         SellerList: cleanedFormatSellerList
+//       });
+//     } catch (err) {
+//       throw new Error(err.message);
+//     }
+//   };
+// };
 
 // let tx = [];
 //     querySnapshot.forEach(doc => {
