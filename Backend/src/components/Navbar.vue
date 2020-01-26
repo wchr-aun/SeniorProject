@@ -17,7 +17,7 @@
     <template slot="end">
         <b-navbar-item tag="div">
           <div class="buttons">
-            <a class="button is-twitter">
+            <a class="button is-twitter" href="/about">
               <strong>About</strong>
             </a>
           </div>
