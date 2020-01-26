@@ -96,7 +96,8 @@ export const sellRequest = (
   buyerName,
   buyerPriceInfo,
   assignedTime,
-  sellMode
+  sellMode,
+  unavailableTypes
 ) => {
   return async dispatch => {
     // sell only sellerItem that buyer have
@@ -105,6 +106,7 @@ export const sellRequest = (
     for (let type in sellerItems) {
       if (type != "length" && type != "_count" && type != "_selected") {
         for (let subtype in sellerItems[type]) {
+          if (unavailableTypes[subtype] != undefined) break
           // chooseBuyer sell
           if (
             sellMode === 1 &&

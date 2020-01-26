@@ -41,7 +41,6 @@ const assignedTimeReducer = (state, action) => {
     case CONFIRM:
       let date = state.date.getTime();
       let selectedTimes = [];
-      console.log("===============================GET IN TO THIS===============================")
       updatedTimes.forEach((item, index) => {
         if (item.selected) {
           let dateTmp = new Date(date);
