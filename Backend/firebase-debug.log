@@ -1,0 +1,192 @@
+[debug] [2020-01-26T12:17:35.267Z] ----------------------------------------------------------------------
+[debug] [2020-01-26T12:17:35.269Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\anaun\AppData\Local\Yarn\Data\global\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2020-01-26T12:17:35.270Z] CLI Version:   6.2.2
+[debug] [2020-01-26T12:17:35.270Z] Platform:      win32
+[debug] [2020-01-26T12:17:35.270Z] Node Version:  v12.9.0
+[debug] [2020-01-26T12:17:35.271Z] Time:          Sun Jan 26 2020 19:17:35 GMT+0700 (Indochina Time)
+[debug] [2020-01-26T12:17:35.271Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2020-01-26T12:17:35.282Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-01-26T12:17:35.283Z] > authorizing via signed-in user
+[debug] [2020-01-26T12:17:35.283Z] [iam] checking project senior-project-83de1 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-01-26T12:17:35.284Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/senior-project-83de1:testIamPermissions  
+
+[debug] [2020-01-26T12:17:36.631Z] <<< HTTP RESPONSE 200
+[warn] !  functions: package.json indicates an outdated version of firebase-functions.
+ Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+[info] 
+[info] === Deploying to 'senior-project-83de1'...
+[info] 
+[info] i  deploying functions
+[debug] [2020-01-26T12:17:39.614Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.1.0",
+    "geofirex": "^0.1.0",
+    "node-fetch": "^2.6.0",
+    "rxjs": "^6.5.4"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2020-01-26T12:17:39.616Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/senior-project-83de1?view=CONSUMER_VIEW  
+ 
+[debug] [2020-01-26T12:17:39.617Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/senior-project-83de1?view=CONSUMER_VIEW  
+ 
+[debug] [2020-01-26T12:17:41.822Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:41.828Z] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] [2020-01-26T12:17:41.829Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/senior-project-83de1  
+ 
+[debug] [2020-01-26T12:17:43.143Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:43.144Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/917485098032:getServerAppConfig  
+ 
+[debug] [2020-01-26T12:17:43.548Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2020-01-26T12:17:43.550Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/senior-project-83de1/configs  
+ 
+[debug] [2020-01-26T12:17:44.012Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (114.18 KB) for uploading
+[debug] [2020-01-26T12:17:44.536Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2020-01-26T12:17:45.807Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:45.807Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-7c2c6c88-c965-4f80-8a54-7bf5ab5ddda1/f5e5357f-a434-45e0-9854-25497f0a1901.zip?GoogleAccessId=service-917485098032@gcf-admin-robot.iam.gserviceaccount.com&Expires=1580042866&Signature=dZ1TwFPD%2FDnPM1YHWJInmTNQwsNMqAQiSL1jjK6ctr4NJ%2BezfQoZnS%2Fd7lGt9hCItk9uzH%2FRgaIaG7RmTyg4IJ1qNaXQ1LsO8pKghpsO8XN9lbiJ451ZcVYHinnzy9gEN2wq6cs2NI56zsID8a%2FdU5HTwL14EvBNMQOnpqELj59w7Br3416ga4XfeABj%2F2GdTNNKVvVHnewpX67KPhF7hLj9LL%2BA8gWfYfA%2BPlFma%2ByD2dGKZ7VlexYuHrB9ywTgPf0471OzJdfvc3%2BggVP5BNGpwT0ETrE8nHMGuAd%2BmFhk3yu7m90jTljGX%2BPMrylGI60Ntu4KwYuMtT1yJBCuGw%3D%3D  
+
+[debug] [2020-01-26T12:17:46.907Z] <<< HTTP RESPONSE 200
+[info] +  functions: functions folder uploaded successfully
+[debug] [2020-01-26T12:17:46.909Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/-/functions  
+ 
+[debug] [2020-01-26T12:17:47.934Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 6 function createAccount(us-central1)...
+[debug] [2020-01-26T12:17:47.937Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function addWaste(us-central1)...
+[debug] [2020-01-26T12:17:47.938Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function sellWaste(us-central1)...
+[debug] [2020-01-26T12:17:47.938Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function toggleSearch(us-central1)...
+[debug] [2020-01-26T12:17:47.944Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function changeTxStatus(us-central1)...
+[debug] [2020-01-26T12:17:47.944Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function editBuyerInfo(us-central1)...
+[debug] [2020-01-26T12:17:47.945Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function editUserInfo(us-central1)...
+[debug] [2020-01-26T12:17:47.946Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function updateNotificationToken(us-central1)...
+[debug] [2020-01-26T12:17:47.947Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function removeNotificationToken(us-central1)...
+[debug] [2020-01-26T12:17:47.947Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function queryBuyers(us-central1)...
+[debug] [2020-01-26T12:17:47.948Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function querySellers(us-central1)...
+[debug] [2020-01-26T12:17:47.948Z] Trigger is:  {"httpsTrigger":{}}
+[debug] [2020-01-26T12:17:47.950Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/createAccount {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.951Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/addWaste {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.952Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/sellWaste {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.952Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/toggleSearch {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.953Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/changeTxStatus {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.953Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/editBuyerInfo {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.953Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/editUserInfo {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.953Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/updateNotificationToken {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.954Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/removeNotificationToken {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.956Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/queryBuyers {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:47.957Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/us-central1/functions/querySellers {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2020-01-26T12:17:48.628Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.747Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.764Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.772Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.787Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.815Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.823Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.824Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.863Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.872Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.900Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:48.901Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/senior-project-83de1/locations/-/functions  
+ 
+[debug] [2020-01-26T12:17:49.712Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:49.713Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvY3JlYXRlQWNjb3VudC8tT21xNkhmOWU5bw  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvYWRkV2FzdGUvcHNSTWdyVEd2R0E  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvc2VsbFdhc3RlL0dNMWM0eEplOE5N  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvdG9nZ2xlU2VhcmNoLzlxRlV0VDkzU0Fn  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvY2hhbmdlVHhTdGF0dXMvVmJKMWpKMHZlV00  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvZWRpdEJ1eWVySW5mby9nUzdobGpyRXVpdw  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvZWRpdFVzZXJJbmZvL2NPdWdWUEFjVXlZ  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvdXBkYXRlTm90aWZpY2F0aW9uVG9rZW4vZ011SnZ5QlAxOEk  
+ 
+[debug] [2020-01-26T12:17:49.714Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcmVtb3ZlTm90aWZpY2F0aW9uVG9rZW4vWGhPSjRLVnQyd0E  
+ 
+[debug] [2020-01-26T12:17:49.715Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcXVlcnlCdXllcnMva1hIMnV2SXZZTm8  
+ 
+[debug] [2020-01-26T12:17:49.715Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcXVlcnlTZWxsZXJzL3hVdGNfcUVHSmg4  
+ 
+[debug] [2020-01-26T12:17:50.360Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.361Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.362Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.362Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.363Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.369Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.370Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.372Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.375Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.388Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:50.391Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:52.361Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvY2hhbmdlVHhTdGF0dXMvVmJKMWpKMHZlV00  
+ 
+[debug] [2020-01-26T12:17:52.362Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvY3JlYXRlQWNjb3VudC8tT21xNkhmOWU5bw  
+ 
+[debug] [2020-01-26T12:17:52.363Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcXVlcnlTZWxsZXJzL3hVdGNfcUVHSmg4  
+ 
+[debug] [2020-01-26T12:17:52.363Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvZWRpdEJ1eWVySW5mby9nUzdobGpyRXVpdw  
+ 
+[debug] [2020-01-26T12:17:52.366Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvc2VsbFdhc3RlL0dNMWM0eEplOE5N  
+ 
+[debug] [2020-01-26T12:17:52.370Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvZWRpdFVzZXJJbmZvL2NPdWdWUEFjVXlZ  
+ 
+[debug] [2020-01-26T12:17:52.371Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcmVtb3ZlTm90aWZpY2F0aW9uVG9rZW4vWGhPSjRLVnQyd0E  
+ 
+[debug] [2020-01-26T12:17:52.374Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvdXBkYXRlTm90aWZpY2F0aW9uVG9rZW4vZ011SnZ5QlAxOEk  
+ 
+[debug] [2020-01-26T12:17:52.375Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvYWRkV2FzdGUvcHNSTWdyVEd2R0E  
+ 
+[debug] [2020-01-26T12:17:52.388Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvcXVlcnlCdXllcnMva1hIMnV2SXZZTm8  
+ 
+[debug] [2020-01-26T12:17:52.392Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/c2VuaW9yLXByb2plY3QtODNkZTEvdXMtY2VudHJhbDEvdG9nZ2xlU2VhcmNoLzlxRlV0VDkzU0Fn  
+ 
+[debug] [2020-01-26T12:17:53.014Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.017Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.022Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.025Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.026Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.026Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.029Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.040Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.047Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.050Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-26T12:17:53.051Z] <<< HTTP RESPONSE 200
