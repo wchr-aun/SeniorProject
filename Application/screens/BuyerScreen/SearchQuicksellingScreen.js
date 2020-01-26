@@ -17,6 +17,7 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
 import ThaiText from "../../components/ThaiText";
+import SellTransactionCard from "../../components/SellTransactionCard";
 
 export default SearchQuicksellingScreen = props => {
   const dispatch = useDispatch();
@@ -42,16 +43,12 @@ export default SearchQuicksellingScreen = props => {
     );
     // setIsRefreshing(false);
   }, [dispatch, buyerAddr]);
-
-  // Get transactions for initially
-  const transactionsSectionListFormat = useSelector(
-    state => state.transactions.transactionsSectionListFormat
-  );
+  const sellerList = useSelector(state => state.buyerInfo.sellerList); // sure data is ready
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "BuyingTransactionDetailScreen",
+      routeName: "BuyingQuickTransactionDetailScreen",
       params: {
         transactionItem
       }
@@ -79,26 +76,27 @@ export default SearchQuicksellingScreen = props => {
           backgroundColor: Colors.primary_variant
         }}
       >
-        <SectionList
-          sections={transactionsSectionListFormat}
-          keyExtractor={(item, index) => item + index}
-          renderSectionHeader={({ section: { transactionMode } }) => {
-            return <Text>{transactionMode}</Text>;
+        <FlatList
+          data={sellerList ? sellerList : []}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            console.log(item.assignedTime[0].toDate());
+            return (
+              <SellTransactionCard
+                amountOfType={item.saleList.length}
+                imgUrl={
+                  "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
+                }
+                txStatus={item.txStatus}
+                userName={item.seller}
+                addr={item.addr}
+                onPress={() => {
+                  selectedHandler(item);
+                }}
+                meetDate={libary.formatDate(item.assignedTime[0].toDate())}
+              />
+            );
           }}
-          renderItem={({ item }) => (
-            <SellTransactionCard
-              amountOfType={item.detail.saleList.length}
-              imgUrl={
-                "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
-              }
-              userName={item.detail.buyer}
-              txStatus={item.detail.txStatus}
-              meetDate={libary.formatDate(item.detail.assignedTime[0].toDate())}
-              onPress={() => {
-                selectedHandler(item);
-              }}
-            />
-          )}
         />
       </View>
     </View>

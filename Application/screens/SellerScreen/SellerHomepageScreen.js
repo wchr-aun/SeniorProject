@@ -144,6 +144,7 @@ export default SellerHomepageScreen = props => {
                 data={transactions ? transactions[0] : []}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
+                  console.log(item.detail.assignedTime[0]);
                   return (
                     <SellTransactionCard
                       amountOfType={item.detail.saleList.length}

@@ -150,11 +150,13 @@ export default ChooseBuyerScreen = props => {
   const [sellMode, setSellMode] = useState(0);
   const [buyerName, setBuyerName] = useState("");
   const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
+  const [unavailableTypes, setUnavailableTypes] = useState("");
 
-  const buyerSelectHandler = (buyerName, buyerPriceInfo) => {
+  const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
     setSellMode(0);
     setBuyerName(buyerName);
     setBuyerPriceInfo(buyerPriceInfo);
+    setUnavailableTypes(unavailableTypes);
     setDatapickerShow(true);
   };
 
@@ -180,6 +182,7 @@ export default ChooseBuyerScreen = props => {
           sellerItemsForSell,
           buyerName,
           buyerPriceInfo,
+          unavailableTypes,
           selectedTimes,
           sellMode
         )
@@ -196,6 +199,7 @@ export default ChooseBuyerScreen = props => {
     sellerItemsForSell,
     buyerName,
     buyerPriceInfo,
+    unavailableTypes,
     selectedTimes
   ]);
 
@@ -260,7 +264,11 @@ export default ChooseBuyerScreen = props => {
                 <BuyerChoice
                   sellerItemsForSell={sellerItemsForSell}
                   onSelected={() =>
-                    buyerSelectHandler(item.id, item.purchaseList)
+                    buyerSelectHandler(
+                      item.id,
+                      item.purchaseList,
+                      item.unavailableTypes
+                    )
                   }
                   buyerName={item.id}
                   purchaseList={item.purchaseList}
