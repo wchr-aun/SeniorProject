@@ -86,24 +86,14 @@ export default SellTransactionCard = props => {
             </View>
           </View>
           <View style={{ ...styles.description, width: "50%" }}>
-            {/* <View style={{ width: "100%" }}>
-              <ThaiText
-                style={{
-                  fontSize: 8,
-                  color: libary.getColorTxStatus(props.txStatus)
-                }}
-              >
-                {libary.getReadableTxStatus(props.txStatus)}
-              </ThaiText>
-            </View> */}
             <View style={{ ...styles.amountOfType, width: "100%" }}>
               <Ionicons name="md-trash" size={24} color={Colors.primary} />
-              <ThaiText style={{ fontSize: 14 }}>
+              <ThaiText style={{ fontSize: 10 }}>
                 {props.amountOfType} ประเภท
               </ThaiText>
             </View>
             <View style={{ width: "100%" }}>
-              <ThaiText style={{ fontSize: 14 }}>{props.meetDate}</ThaiText>
+              <ThaiText style={{ fontSize: 10 }}>{props.meetDate}</ThaiText>
             </View>
           </View>
         </View>

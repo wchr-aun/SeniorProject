@@ -156,6 +156,7 @@ export default SellerHomepageScreen = props => {
                       meetDate={libary.formatDate(
                         item.detail.assignedTime[0].toDate()
                       )}
+                      addr={item.detail.addr}
                       onPress={() => {
                         selectedHandler(item);
                       }}
