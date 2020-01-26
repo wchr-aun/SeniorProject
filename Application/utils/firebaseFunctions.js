@@ -21,7 +21,8 @@ export const getUsers = async () => {
           addr: {
             readable: doc.data().addr,
             latitude: doc.data().addr_geopoint.geopoint.latitude,
-            longitude: doc.data().addr_geopoint.geopoint.longitude
+            longitude: doc.data().addr_geopoint.geopoint.longitude,
+            zipcode: doc.data().zipcode
           },
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
@@ -150,23 +151,29 @@ export const getTransactions = async role => {
 };
 
 export const getTodayTxForPathOp = async () => {
-  const timeNow = new Date(new Date() - new Date() % 86400000 - 25200000)
+  const timeNow = new Date(
+    new Date() - ((new Date().getTime() + 25200000) % 86400000)
+  );
+  const nextDay = new Date(
+    new Date() - ((new Date().getTime() + 25200000) % 86400000) + 86400000
+  );
   return firestore
     .collection("transactions")
     .where("buyer", "==", auth.currentUser.uid)
     .where("txStatus", "==", 2)
-    .where("chosenTime", ">", timeNow)
+    .where("chosenTime", ">=", timeNow)
     .get()
     .then(querySnapshot => {
       let tx = [];
       querySnapshot.forEach(doc => {
-        tx.push({ txId: doc.id, detail: doc.data() });
+        if (doc.data().chosenTime.toMillis() < nextDay)
+          tx.push({ txId: doc.id, detail: doc.data() });
       });
       return tx;
     })
     .catch(err => {
       throw new error(err.message);
-    })
+    });
 };
 
 export const getFavBuyers = async () => {
@@ -260,6 +267,7 @@ updatedTx = {
 } */
 
 export const updateTxStatus = async updatedTx => {
+  console.log("before sending to updateTxStatus fn this is 'updatedTx'");
   console.log(updatedTx);
   return functions
     .httpsCallable("changeTxStatus")(updatedTx)
@@ -345,6 +353,7 @@ buyerInfo = {
 } */
 
 export const editBuyerInfo = async buyerInfo => {
+  console.log(buyerInfo);
   return functions
     .httpsCallable("editBuyerInfo")(buyerInfo)
     .then(result => {
@@ -389,26 +398,18 @@ export const queryBuyers = async queryData => {
     });
 };
 
-// export const getSellerListAndWasteType = async () => {
-//   return getSellerItems().then(itemsReturned => {
-//     return new Promise((resolve, reject) => {
-//       if (itemsReturned.length > 0) {
-//         for (let i = 0; i < itemsReturned.length; i++) {
-//           getWasteTypeDetail(itemsReturned[i].wasteType).then( //HDPE, PP, PS --> itemsReturned[i].wasteType
-//             wasteTypeDetail => {
-//               itemsReturned[i].wasteDisposal = wasteTypeDetail.disposal;
-//               itemsReturned[i].wasteDescription = wasteTypeDetail.description;
-//               if (i === itemsReturned.length - 1) resolve();
-//             }
-//           );
-//         }
-//       } else resolve();
-//     })
-//       .then(() => {
-//         return itemsReturned;
-//       })
-//       .catch(err => {
-//         return [];
-//       });
-//   });
-// };
+export const querySellers = async queryData => {
+  return functions
+    .httpsCallable("querySellers")(queryData)
+    .then(result => {
+      if (result.data.errorMessage == null) return result.data;
+      else {
+        console.log(result.data.errorMessage);
+        throw new Error(result.data.errorMessage);
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+      throw new Error(err.message);
+    });
+};

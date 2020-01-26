@@ -1,5 +1,5 @@
 import {
-  CHOOSEBUYER_SELL,
+  SELLED_SELLERITEMS,
   SET_WASTE_FOR_SELL,
   GET_BUYER_LIST,
   FETCH_SELLER_ITEMS,
@@ -97,29 +97,31 @@ export default function(state = initialState, action) {
         ...state,
         sellerItemsForSell: sellerItemsForSellCloned
       };
-    case CHOOSEBUYER_SELL:
+    case SELLED_SELLERITEMS:
       console.log("CHOOSEBUYER_SELL Reducer Run");
       let sellerItemsCloned = Object.assign(
         Object.create(state.sellerItems),
         state.sellerItems
       );
       // reduce sellerItems
+      console.log(action.sellRequest);
       for (let type in action.sellRequest["saleList"]) {
         if (type !== "_count" && type !== "length") {
           // got object
-          for (let subtype in action.sellRequest[type]) {
+          for (let subtype in action.sellRequest["saleList"][type]) {
             sellerItemsCloned.incrementalValue(
               type,
               subtype,
-              -action.sellRequest["saleList"][type][subtype]
+              -action.sellRequest["saleList"][type][subtype].amount
             );
           }
         }
       }
-      //************ do remove some existing sellerItems
+      sellerItemsCloned.confirmValue();
       return {
         ...state,
-        sellerItems: sellerItemsCloned
+        sellerItems: sellerItemsCloned,
+        sellerItemsFlatListFormat: sellerItemsCloned.getFlatListFormat(true)
       };
     case GET_BUYER_LIST:
       console.log("GET_BUYER_LIST Reducer Run");

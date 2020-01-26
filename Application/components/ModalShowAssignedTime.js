@@ -39,16 +39,13 @@ const assignedTimeReducer = (state, action) => {
         times: [...updatedTimes]
       };
     case CONFIRM:
-      let date = state.date;
+      let date = state.date.getTime();
       let selectedTimes = [];
-
       updatedTimes.forEach((item, index) => {
         if (item.selected) {
           let dateTmp = new Date(date);
           dateTmp.setHours(item.hour);
           dateTmp.setMinutes(item.minute);
-          dateTmp.setSeconds(0);
-          dateTmp.setMilliseconds(0);
           selectedTimes.push(dateTmp.getTime());
         }
       });
@@ -75,7 +72,6 @@ export default ModalShowSellersItemsScreen = props => {
 
   confirmAssignedtime = () => {
     dispatchAssignedTime({ type: CONFIRM });
-    // console.log(assignedTime.selectedTimes); <-- this assignedTime.selectedTime not update
   };
 
   // When 'assignedTime.selectedTimes' got update set back to ChooseBuyerScreen

@@ -3,9 +3,10 @@ import {
   getTodayTxForPathOp
 } from "../../utils/firebaseFunctions";
 import libary from "../../utils/libary";
-import { updateTxStatus } from "../../utils/firebaseFunctions";
+import { updateTxStatus, querySellers } from "../../utils/firebaseFunctions";
 
 export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
+export const FETCH_QUICK_TRANSACTION = "FETCH_QUICK_TRANSACTION";
 export const FETCH_TODAY_TRANSACTION = "FETCH_TODAY_TRANSACTION";
 export const CHANGE_TRANSACTION_STATUS = "CHANGE_TRANSACTION_STATUS";
 
@@ -13,27 +14,53 @@ export const fetchTransaction = role => {
   return async dispatch => {
     try {
       let transactions = await getTransactions(role);
-      let transactionsSectionListFormat = [];
-      // create sectionList transactions
-      transactions.forEach((transactionMode, index) => {
-        let data = [];
-        transactionMode.forEach((transaction, index) => {
-          data.push(transaction);
-        });
-
-        transactionsSectionListFormat.push({
-          transactionMode: libary.getReadableTxStatus(index),
-          data
-        });
-      });
       dispatch({
         type: FETCH_TRANSACTION,
-        transactions,
-        transactionsSectionListFormat
+        transactions
       });
     } catch (err) {
       console.log(err.message);
-      dispatch({ type: FETCH_TRANSACTION, transactionMode: [] });
+      dispatch({ type: FETCH_TRANSACTION, transactions: [] });
+      throw new Error(err.message);
+    }
+  };
+};
+
+export const fetchQuickTransaction = queryData => {
+  return async dispatch => {
+    try {
+      // search buyer
+      let SellerList = await querySellers(queryData);
+      let cleanedFormatSellerList = [];
+      let assignedTimeForUpdatingTx = [];
+
+      SellerList.forEach((item, index) => {
+        // edit time obj to firebase timeStamp
+        let firebaseAssignedTime = [];
+        item.assignedTime.forEach((time, index) => {
+          let formattedTime = libary.toDate(time._seconds);
+          firebaseAssignedTime.push(formattedTime);
+          assignedTimeForUpdatingTx.push(formattedTime.seconds * 1000);
+        });
+
+        cleanedFormatSellerList.push({
+          txId: item.id,
+          detail: {
+            ...item,
+            assignedTime: firebaseAssignedTime,
+            assignedTimeForUpdatingTx
+          }
+        });
+      });
+      console.log("cleanedFormatSellerList");
+      console.log(cleanedFormatSellerList);
+
+      // dispatch
+      dispatch({
+        type: FETCH_QUICK_TRANSACTION,
+        quickTransactions: cleanedFormatSellerList
+      });
+    } catch (err) {
       throw new Error(err.message);
     }
   };
@@ -42,11 +69,9 @@ export const fetchTransaction = role => {
 export const changeTransactionStatus = updatedDetail => {
   return async dispatch => {
     try {
-      console.log("updatedDetail");
-      console.log(updatedDetail);
       await updateTxStatus({
         txID: updatedDetail.txID,
-        // chosenTime: 0,
+        chosenTime: updatedDetail.chosenTime,
         status: updatedDetail.newStatus
       });
 

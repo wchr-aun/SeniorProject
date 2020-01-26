@@ -46,7 +46,7 @@ export default SellTransactionCard = props => {
         }}
       >
         <ImageCircle
-          imgUrl={props.imgUrl}
+          imgUrl={props.imgUrl ? props.imgUrl : "assets/img/questionmark.png"}
           avariableWidth={wp("20%")}
           style={{ marginHorizontal: wp("3%") }}
         />
@@ -56,27 +56,14 @@ export default SellTransactionCard = props => {
             padding: wp("1.75%")
           }}
         >
-          <View style={{ ...styles.BuyerName }}>
-            <ThaiText style={{ fontSize: 14 }}>
-              ผู้รับซื้อ {props.userName}
-            </ThaiText>
-          </View>
-          <View style={styles.lineSeparate} />
-          <View
-            style={{
-              ...styles.description,
-              width: "100%"
-            }}
-          >
-            <View style={{ ...styles.amountOfType, width: "50%" }}>
-              <Ionicons name="md-trash" size={24} color={Colors.primary} />
+          <View style={{ width: "100%", flexDirection: "row" }}>
+            <View style={{ width: "60%" }}>
               <ThaiText style={{ fontSize: 14 }}>
-                {props.amountOfType} ประเภท
+                {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
+                {props.userName ? props.userName : "ยังไม่ระบุ"}
               </ThaiText>
             </View>
-          </View>
-          <View style={{ ...styles.description }}>
-            <View style={{ width: "50%" }}>
+            <View style={{ width: "40%" }}>
               <ThaiText
                 style={{
                   fontSize: 8,
@@ -86,8 +73,27 @@ export default SellTransactionCard = props => {
                 {libary.getReadableTxStatus(props.txStatus)}
               </ThaiText>
             </View>
-            <View style={{ width: "50%" }}>
-              <ThaiText style={{ fontSize: 14 }}>{props.meetDate}</ThaiText>
+          </View>
+          <View style={styles.lineSeparate} />
+          <View
+            style={{
+              ...styles.description,
+              width: "50%"
+            }}
+          >
+            <View style={{ width: "100%" }}>
+              <ThaiText style={{ fontSize: 8 }}>{props.addr}</ThaiText>
+            </View>
+          </View>
+          <View style={{ ...styles.description, width: "50%" }}>
+            <View style={{ ...styles.amountOfType, width: "100%" }}>
+              <Ionicons name="md-trash" size={24} color={Colors.primary} />
+              <ThaiText style={{ fontSize: 10 }}>
+                {props.amountOfType} ประเภท
+              </ThaiText>
+            </View>
+            <View style={{ width: "100%" }}>
+              <ThaiText style={{ fontSize: 10 }}>{props.meetDate}</ThaiText>
             </View>
           </View>
         </View>

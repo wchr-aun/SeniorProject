@@ -20,26 +20,33 @@ import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
 
-export default SellingTransactionDetailScreen = props => {
+export default BuyingQuickTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
-  const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
 
   const dispatch = useDispatch();
-  const cancelHandler = async () => {
-    await dispatch(
+  const cancelHandler = () => {
+    dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
         newStatus: 4
       })
     );
-    await dispatch(transactionAction.fetchTransaction(userRole));
-    props.navigation.goBack();
+  };
+
+  const acceptHandler = () => {
+    dispatch(
+      transactionAction.changeTransactionStatus({
+        txID: transactionItem.txId,
+        oldStatus: transactionItem.detail.txStatus, //for query
+        newStatus: 4
+      })
+    );
   };
 
   const backHandler = () => {
@@ -156,12 +163,6 @@ export default SellingTransactionDetailScreen = props => {
   );
 };
 
-// ProductDetailScreen.navigationOptions = navData => {
-//   return {
-//     headerTitle: navData.navigation.getParam("productTitle")
-//   };
-// };
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -184,3 +185,64 @@ const styles = StyleSheet.create({
     height: "100%"
   }
 });
+
+/*
+Object {
+  "addr": "12 ซอยสวนผัก35 ตำบล ฉิมพลี อำเภอ ตลิ่งชัน จังหวัด กรุงเทพมหานครฯ 10170",
+  "addr_geopoint": Object {
+    "geohash": "w4rqmqbt0",
+    "geopoint": Object {
+      "_latitude": 13.792826424015061,
+      "_longitude": 100.42674623429775,
+    },
+  },
+  "assignedTime": Array [
+    Object {
+      "_nanoseconds": 0,
+      "_seconds": 946684800,
+    },
+    Object {
+      "_nanoseconds": 0,
+      "_seconds": 978307200,
+    },
+    Object {
+      "_nanoseconds": 0,
+      "_seconds": 980985600,
+    },
+    Object {
+      "_nanoseconds": 0,
+      "_seconds": 983404800,
+    },
+    Object {
+      "_nanoseconds": 0,
+      "_seconds": 986083200,
+    },
+  ],
+  "buyer": "",
+  "createTimestamp": Object {
+    "_nanoseconds": 679000000,
+    "_seconds": 1579964943,
+  },
+  "hitMetadata": Object {
+    "bearing": -24.641701963313768,
+    "distance": 17.539013221710345,
+  },
+  "id": "ERp48pYvwdsW0zNj5Qq6",
+  "saleList": Object {
+    "glass": Object {
+      "redGlass": Object {
+        "amount": 556,
+      },
+    },
+    "length": 2,
+    "plastic": Object {
+      "PP": Object {
+        "amount": 1013,
+      },
+    },
+  },
+  "seller": "anaunz",
+  "txStatus": 0,
+  "txType": 1,
+}
+*/

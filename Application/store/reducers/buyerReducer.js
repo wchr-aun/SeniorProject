@@ -1,11 +1,13 @@
 import {
   FETCH_PURCHASELIST,
   EDIT_PURCHASELIST,
-  CONFIRM_CHANGE_PURCHASELIST
+  CONFIRM_CHANGE_PURCHASELIST,
+  GET_SELLER_LIST
 } from "../actions/buyerAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
   wasteListSectionFormat: [],
+  sellerList: [],
   purchaseList: {}
 };
 
@@ -20,7 +22,12 @@ export default (state = initialState, action) => {
         purchaseList: action.purchaseList
       };
     case EDIT_PURCHASELIST:
-      purchaseList.editValue(action.majortype, action.subtype, action.price);
+      console.log("EDIT_PURCHASELIST - Redux");
+      purchaseList.editValue(
+        action.majortype,
+        action.subtype,
+        action.price - purchaseList[action.majortype][action.subtype]
+      );
       return {
         ...state,
         purchaseList // if not usd {...} format, redux isn't force react app to re-render component so that the result in the page that use this redux-variable will be same.

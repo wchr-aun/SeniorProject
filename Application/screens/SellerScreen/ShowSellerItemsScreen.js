@@ -20,6 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
 import ThaiText from "../../components/ThaiText";
 import AppVariableSetting from "../../constants/AppVariableSetting";
@@ -101,7 +102,8 @@ const trashsModifyingReducer = (state, action) => {
     case CANCEL:
       sellerItems.clearValue();
       return {
-        ...state
+        ...state,
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
       };
     default:
       return { ...state };
@@ -117,14 +119,9 @@ const ShowAllUserTrashScreen = props => {
         return true; //Prevent go back to homepage
       }
     });
-    const willFocusSub = props.navigation.addListener(
-      "willFocus",
-      refreshSellerItems
-    );
 
     return () => {
       BackHandler.removeEventListener();
-      willFocusSub.remove();
     };
   });
 
@@ -138,8 +135,12 @@ const ShowAllUserTrashScreen = props => {
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
-  // Load sellerItems and wasteType from firebase and store it to redux "initially"
+  // initially
   useEffect(() => {
+    // set operation status
+    dispatch(navigationBehaviorAction.startOperation());
+
+    // Load sellerItems and wasteType from firebase and store it to redux "initially"
     setIsLoading(true);
     refreshSellerItems()
       .then(() => setIsLoading(false))
@@ -147,7 +148,7 @@ const ShowAllUserTrashScreen = props => {
         setIsLoading(false);
         setError(err.message);
       });
-  }, [refreshSellerItems]);
+  }, [refreshSellerItems, dispatch]);
 
   // Get sellerItems and wasteTyp from redux
   const sellerItems = useSelector(state => {
@@ -186,7 +187,6 @@ const ShowAllUserTrashScreen = props => {
   }, [sellerItems]);
 
   // // If the data sent from optionTrashCheck screen
-  // const
   useEffect(() => {
     if (
       Object.keys(trashsState.sellerItems).length &&
@@ -319,15 +319,21 @@ const ShowAllUserTrashScreen = props => {
                     wasteTypes[item.type][item.subtype]["description"]
                   }
                   changeAmount={
-                    trashsState.sellerItems._count[item.type][item.subtype]
+                    trashsState.sellerItems._count[item.type]
+                      ? trashsState.sellerItems._count[item.type][item.subtype]
+                      : 0
                   }
                   oldAmount={item.amount}
-                  editingValue={(item.amount +
-                    trashsState.sellerItems._count[item.type][item.subtype] <=
-                  0
-                    ? 0
-                    : item.amount +
-                      trashsState.sellerItems._count[item.type][item.subtype]
+                  editingValue={(trashsState.sellerItems._count[item.type]
+                    ? item.amount +
+                        trashsState.sellerItems._count[item.type][
+                          item.subtype
+                        ] <=
+                      0
+                      ? 0
+                      : item.amount +
+                        trashsState.sellerItems._count[item.type][item.subtype]
+                    : 0
                   ).toString()}
                   trashAdjustPrice={
                     item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"

@@ -15,8 +15,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import Animated, { Easing } from 'react-native-reanimated';
-import { TapGestureHandler, State } from 'react-native-gesture-handler';
+import Animated, { Easing } from "react-native-reanimated";
+import { TapGestureHandler, State } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
@@ -28,7 +28,6 @@ import CustomButton from "../components/UI/CustomButton";
 import ThaiTitleText from "../components/ThaiTitleText";
 import { updateNotificationToken } from "../utils/firebaseFunctions";
 
-const { width, height } = Dimensions.get('window');
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 // for updaing value of variable form
 const formReducer = (state, action) => {
@@ -101,7 +100,9 @@ export default UserAuthenScreen = props => {
     await firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {updateNotificationToken()})
+      .then(() => {
+        updateNotificationToken();
+      })
       .catch(err => {
         setIsLoading(false);
         setError(err.message);

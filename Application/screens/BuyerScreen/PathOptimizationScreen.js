@@ -18,8 +18,24 @@ import { fetchTransactionForPathOp } from "../../store/actions/transactionAction
 import libary from "../../utils/libary"
 import SellTransactionCard from "../../components/SellTransactionCard";
 
-// CHOOSE_CURRENT_ADDR
-// for updaing value of variable form
+const destinationReducer = (state, action) => {
+  let geopoint = state.geopoint
+  for (index in geopoint) {
+    if (action.geopoint.txId == geopoint[index].txId) {
+      let newGeopoint = []
+      newGeopoint = geopoint.splice(0, index)
+      geopoint.shift()
+      newGeopoint.concat(geopoint)
+      return {
+        geopoint: newGeopoint
+      };
+    }
+  }
+  geopoint.push(action.geopoint)
+  return {
+    geopoint
+  };
+}
 
 export default UserSignupScreen = props => {
   const dispatch = useDispatch();
@@ -29,8 +45,9 @@ export default UserSignupScreen = props => {
   const [isSelected, setisSelected] = useState(false);
   const [addrModalVisible, setAddrModalVisible] = useState(false);
   const [addrReadable, setAddrReadable] = useState("");
-  const [addrCord, setAddrCord] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
+  const userProfile = useSelector(state => state.user.userProfile);
+  const [destinationState, dispatchDestination] = useReducer(destinationReducer, { geopoint: [] });
 
   // 'formState (state snapshot) will be updated when state changed
 
@@ -51,7 +68,6 @@ export default UserSignupScreen = props => {
     }
   }, [error]);
 
-  const userProfile = useSelector(state => state.user.userProfile);
   useEffect(() => {
     setIsLoading(true);
     if (userProfile.uid) setIsLoading(false);
@@ -60,17 +76,26 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    setAddrCord(userProfile.addr);
     setAddrModalVisible(true);
   };
+
+  const selectedHandler = tx => {
+    dispatchDestination({
+      geopoint: {
+        txId: tx.txId,
+        latitude: tx.detail.addr_geopoint.geopoint.latitude,
+        longitude: tx.detail.addr_geopoint.geopoint.longitude
+      }
+    })
+  }
 
   if (addrModalVisible) {
     return (
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
-        origin={{latitude: addrCord.latitude, longitude: addrCord.longitude}}
-        destination={{latitude: 13.6487268, longitude: 100.5007013}}
+        origin={{latitude: userProfile.addr.latitude, longitude: userProfile.addr.longitude}}
+        destination={destinationState.geopoint}
         pathOptimize={true}
         setSellerAddr={setSellerAddr}
         addrReadable={addrReadable}
@@ -82,7 +107,7 @@ export default UserSignupScreen = props => {
     <View>
       <View style={{ width: "100%", height: hp("60%s") }}>
         <FlatList
-          data={transactions ? transactions : []}
+          data={transactions}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
             return (
@@ -105,7 +130,7 @@ export default UserSignupScreen = props => {
         />
       </View>
       <CustomButton
-        disable={!isSelected}
+        disable={isSelected}
         style={{
           width: wp("40%"),
           height: hp("6%"),

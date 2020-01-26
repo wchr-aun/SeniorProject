@@ -18,7 +18,7 @@ import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import * as authAction from "../../store/actions/authAction";
+import * as buyerAction from "../../store/actions/buyerAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import libary from "../../utils/libary";
@@ -50,6 +50,7 @@ export default BuyerHomepageScreen = props => {
     try {
       setIsLoading(true);
       dispatch(transactionAction.fetchTransaction(userRole));
+      dispatch(buyerAction.fetchBuyerInfo());
     } catch (err) {
       setError(err.message);
     }
@@ -57,15 +58,15 @@ export default BuyerHomepageScreen = props => {
   }, []);
   const transactions = useSelector(state => state.transactions.transactions);
 
-  // // For looking into transaction detail
-  // const selectedHandler = transactionItem => {
-  //   props.navigation.navigate({
-  //     routeName: "SellingTransactionDetailScreen",
-  //     params: {
-  //       transactionItem: transactionItem
-  //     }
-  //   });
-  // };
+  // For looking into transaction detail
+  const selectedHandler = transactionItem => {
+    props.navigation.navigate({
+      routeName: "BuyingTransactionDetailScreen",
+      params: {
+        transactionItem: transactionItem
+      }
+    });
+  };
 
   return (
     <View>
@@ -151,15 +152,13 @@ export default BuyerHomepageScreen = props => {
                       }
                       txStatus={item.detail.txStatus}
                       userName={item.detail.buyer}
-                      // meetDate={libary.formatDate(
-                      //   item.detail.assignedTime.toDate()
-                      // )}
-                      // meetTime={libary.formatTime(
-                      //   item.detail.assignedTime.toDate()
-                      // )}
+                      addr={item.detail.addr}
                       onPress={() => {
                         selectedHandler(item);
                       }}
+                      meetDate={libary.formatDate(
+                        item.detail.assignedTime[0].toDate()
+                      )}
                     />
                   );
                 }}

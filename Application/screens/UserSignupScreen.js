@@ -67,11 +67,14 @@ const formReducer = (state, action) => {
         ...state,
         inputValidities: {
           ...state.inputValidities,
-          shallowAddr: action.prestateIsCur || Boolean(updatedValues["shallowAddr"]),
-          subdistrict: action.prestateIsCur || Boolean(updatedValues["subdistrict"]),
+          shallowAddr:
+            action.prestateIsCur || Boolean(updatedValues["shallowAddr"]),
+          subdistrict:
+            action.prestateIsCur || Boolean(updatedValues["subdistrict"]),
           district: action.prestateIsCur || Boolean(updatedValues["district"]),
           province: action.prestateIsCur || Boolean(updatedValues["province"]),
-          postalCode: action.prestateIsCur || Boolean(updatedValues["postalCode"])
+          postalCode:
+            action.prestateIsCur || Boolean(updatedValues["postalCode"])
         }
       };
   }
@@ -135,9 +138,10 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
-    console.log("===================================")
-    console.log(formState)
-    console.log("===================================")
+    console.log("===================================");
+    console.log(formState);
+    console.log(sellerAddr);
+    console.log("===================================");
     setIsLoading(true);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
@@ -162,6 +166,7 @@ export default UserSignupScreen = props => {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
       addr: sellerAddr,
+      zipcode: sellerAddr.zipcode,
       phoneNo: "+66" + formState.inputValues.phoneNo.toString(),
       notificationToken
     };
@@ -173,9 +178,11 @@ export default UserSignupScreen = props => {
               .auth()
               .signInWithEmailAndPassword(user.email, user.password)
               .then(() => {
-                editBuyerInfo({addr: user.addr, enableSearch: false}).then(() => {
-                  props.navigation.navigate("ConfigAccountScreen");
-                })
+                editBuyerInfo({ addr: user.addr, enableSearch: false }).then(
+                  () => {
+                    props.navigation.navigate("ConfigAccountScreen");
+                  }
+                );
               });
           })
           .catch(err => {
@@ -203,6 +210,7 @@ export default UserSignupScreen = props => {
 
   const getCurrentLocationHandler = useCallback(async () => {
     let sellerAddrResult = await getCurrentLocation();
+    console.log(sellerAddrResult);
     // set all addr form valid
     dispatchFormState({
       type: "CHOOSE_CURRENT_ADDR",
@@ -253,9 +261,11 @@ export default UserSignupScreen = props => {
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
-        origin={{latitude: addrCord.latitude, longitude: addrCord.longitude}}
+        origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
         setSellerAddr={setSellerAddr}
         addrReadable={addrReadable}
+        zipcode={formState.inputValues.postalCode}
+        signupMode={true}
       />
     );
   }

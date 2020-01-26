@@ -1,5 +1,6 @@
 import firebaseFunctions from "./firebaseFunctions";
 import { verifyLocationPermissions } from "./permissions";
+import firebase from "firebase";
 
 import {
   getCurrentPositionAsync,
@@ -8,6 +9,10 @@ import {
   Accuracy
 } from "expo-location";
 import Colors from "../constants/Colors";
+
+const toDate = dateInSeccond => {
+  return new firebase.firestore.Timestamp(dateInSeccond, 0);
+};
 
 const formatDate = date => {
   let monthNames = [
@@ -51,9 +56,9 @@ const getReadableTxStatus = txStatus => {
     case 1:
       return "ถูกปฏิเสธ";
     case 2:
-      return "";
+      return "มีผู้รับซื้อแล้ว";
     case 3:
-      return "อยู่ในระหว่างการเดินทางไปรับ";
+      return "กำลังเดินทางไปรับ";
     case 4:
       return "ยกเลิก";
     case 5:
@@ -117,8 +122,6 @@ export const getCurrentLocation = async () => {
     // Step-2
     try {
       const locationInfo = await reverseGeocodeAsync(location.coords);
-      console.log("locationInfo");
-      console.log(locationInfo);
       return {
         readable:
           locationInfo[0].name +
@@ -129,7 +132,8 @@ export const getCurrentLocation = async () => {
           " " +
           locationInfo[0].postalCode,
         latitude: location.coords.latitude,
-        longitude: location.coords.longitude
+        longitude: location.coords.longitude,
+        zipcode: parseInt(locationInfo[0].postalCode, 10)
       };
     } catch (err) {
       console.log("Could not reverseGeocodeAsync");
@@ -138,6 +142,14 @@ export const getCurrentLocation = async () => {
   } catch (err) {
     console.log("Could not getCurrentPositionAsync");
   }
+};
+
+export const getPostalcodeAddressFromCord = async (lat, long) => {
+  const locationInfo = await reverseGeocodeAsync({
+    latitude: lat,
+    longitude: long
+  });
+  return locationInfo;
 };
 
 export const getManualStringLocation = async address => {
@@ -155,5 +167,7 @@ export default {
   getTransactionList,
   formatTime,
   getReadableTxStatus,
-  getColorTxStatus
+  getColorTxStatus,
+  getPostalcodeAddressFromCord,
+  toDate
 };

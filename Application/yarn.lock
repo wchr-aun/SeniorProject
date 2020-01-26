@@ -893,7 +893,7 @@
   dependencies:
     dooboolab-welcome "^1.1.1"
 
-"@dooboo-ui/native@^0.4.6":
+"@dooboo-ui/native@^0.4.12":
   version "0.4.12"
   resolved "https://registry.yarnpkg.com/@dooboo-ui/native/-/native-0.4.12.tgz#22f2d6d4075d25a1e2710d48fd1a474c6e058025"
   integrity sha512-Cw5FEeigCLuCVP8EfF22EnR8UiO2xDGwIkZfyvLRmzekRv9ggKImDa4TA5bs8lh8OZ1UjovdTSDAKwE0YNEhBw==
@@ -2515,7 +2515,7 @@ expo-image-manipulator@~7.0.0:
   resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-7.0.0.tgz#2306213b30e306e87ddb02f15e35c4f1f4d36a12"
   integrity sha512-N6DV6QQ4fwppRgntXTk2zydyuSBkpkJCbU/VWohhhP26Pp2Z6ay0OfXz08OdQN2UEStAisx+W1St7cWqwq7tjA==
 
-expo-image-picker@^8.0.1:
+expo-image-picker@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.0.2.tgz#14139f1d73793ae7fba6fe3cf34e1dc91baf402a"
   integrity sha512-oa0/JoKIv5mxyadpVqiQ+BXak2s7QS3+Rurj1j/gL5GGFmb3cDJWbGHxvtrEXEccv8812JAp5BfBRqfzlW1gMQ==
@@ -2826,7 +2826,7 @@ find-up@^3.0.0:
   dependencies:
     locate-path "^3.0.0"
 
-firebase@^7.6.0:
+firebase@^7.7.0:
   version "7.7.0"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.7.0.tgz#442c056ec6e80fd1d8550032c50c9599c213175c"
   integrity sha512-rAjobH47rAYMyS4jiJqBATa5fNTqUTHNHvLzoMGzWNbmYqBzKyCk7EySRJek/+ZhfgJRYDfJxIActCTZ1jyN1Q==
@@ -5068,7 +5068,7 @@ react-native-modal@^11.0.2:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
-react-native-paper@^3.4.0:
+react-native-paper@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.4.1.tgz#85dbaa6c7bbd1728419c0545efcee213fe432348"
   integrity sha512-Jx71GnjnmVtJhPfNUgYp1uBjdGc2GImMJLP60MF8DkCzZBJuvfykKUk5ZU0+DXIPfUOH9DRTlncid7YG9kRYfA==
@@ -5087,7 +5087,7 @@ react-native-reanimated@1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.1.0.tgz#ba6864055ec3a206cdd5209a293fe653ce276206"
   integrity sha512-UGDVNfvuIkMqYUx6aytSzihuzv6sWubn0MQi8dRcw7BjgezhjJnVnJ/NSOcpL3cO+Ld7lFcRX6GKcskwkHdPkw==
 
-react-native-responsive-screen@^1.3.0:
+react-native-responsive-screen@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-responsive-screen/-/react-native-responsive-screen-1.3.1.tgz#e91f3fd6cba1336b34bb9d2c59e1dafb30447544"
   integrity sha512-dMpFo132g7HQ/zos5WXvdHMUWIQg209ztnMnTkTq+4xHJApYLta5L3f9VKlY/yG/KKkmPA/h4YF2KAqHYq1FnA==
@@ -5224,7 +5224,7 @@ react-navigation-stack@^1.10.3:
   dependencies:
     prop-types "^15.7.2"
 
-react-navigation-tabs@^2.6.2:
+react-navigation-tabs@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-2.7.0.tgz#68505910164a51c44710f835def8fe29360f346a"
   integrity sha512-fQEHjFrIBi+89loLL521HjGS0Z9tl4Y89SSamRkDl8Of6bPS1Ep++an3ctl2j7c3veqBZBrj3H1qa7qjd3apBQ==

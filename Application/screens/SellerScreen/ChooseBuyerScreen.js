@@ -15,9 +15,13 @@ import {
 } from "react-native-responsive-screen";
 import { useSelector, useDispatch } from "react-redux";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { NavigationEvents } from "react-navigation";
 import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
+import * as transactionAction from "../../store/actions/transactionAction";
+import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
+
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiText from "../../components/ThaiText";
 import ThaiTitleText from "../../components/ThaiTitleText";
@@ -84,26 +88,19 @@ const BuyerChoice = props => {
   );
 };
 
-export default UserAuthenScreen = props => {
+export default ChooseBuyerScreen = props => {
   useEffect(() => {
     console.log("Choose Buyer Screen");
   }, []);
+  const isOperationCompleted = useSelector(
+    state => state.navigation.isOperationCompleted
+  );
 
-  // For back behavior + auto refresh
-  useEffect(() => {
-    // BackHandler.addEventListener("hardwareBackPress", () => {
-    //   if (editingMode) {
-    //     setEditingMode(false);
-    //     return true; //Prevent go back to homepage
-    //   }
-    // });
-    const willFocusSub = props.navigation.addListener("willFocus", loadBuyer);
-
-    return () => {
-      // BackHandler.removeEventListener();
-      willFocusSub.remove();
-    };
-  });
+  const checkIsOperationCompleted = () => {
+    if (isOperationCompleted === true) {
+      props.navigation.navigate("ShowSellerItemsScreen");
+    }
+  };
 
   // required data for sending an transaction
   const sellerAddr = useSelector(state => state.user.userProfile.addr);
@@ -124,7 +121,7 @@ export default UserAuthenScreen = props => {
     await dispatch(
       sellerItemsAction.getBuyerList({
         distance: parseInt(props.navigation.getParam("distance"), 10),
-        wasteType: sellerItemsForSell,
+        wasteType: sellerItemsForSell.getObject(),
         addr: sellerAddr
       })
     );
@@ -141,14 +138,6 @@ export default UserAuthenScreen = props => {
     }
   }, [loadBuyer, sellerAddr]);
 
-  const [buyerName, setBuyerName] = useState("");
-  const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
-  buyerSelectHandler = (buyerName, buyerPriceInfo) => {
-    setBuyerName(buyerName);
-    setBuyerPriceInfo(buyerPriceInfo);
-    setDatapickerShow(true);
-  };
-
   // date picker
   const [datepickerShow, setDatapickerShow] = useState(false);
   showDateTimePicker = () => {
@@ -157,6 +146,25 @@ export default UserAuthenScreen = props => {
   hideDateTimePicker = () => {
     setDatapickerShow(false);
   };
+
+  const [sellMode, setSellMode] = useState(0);
+  const [buyerName, setBuyerName] = useState("");
+  const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
+  const [unavailableTypes, setUnavailableTypes] = useState("");
+
+  const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
+    setSellMode(0);
+    setBuyerName(buyerName);
+    setBuyerPriceInfo(buyerPriceInfo);
+    setUnavailableTypes(unavailableTypes);
+    setDatapickerShow(true);
+  };
+
+  const quickSellHandler = () => {
+    setSellMode(1);
+    setDatapickerShow(true);
+  };
+
   const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
   const [selectedTimes, setSelectedTimes] = useState([]);
   handleDatePicked = date => {
@@ -169,16 +177,19 @@ export default UserAuthenScreen = props => {
     // ---------> FINAL: send to redux
     try {
       await dispatch(
-        sellerItemsAction.chooseBuyerSell(
+        sellerItemsAction.sellRequest(
           sellerAddr,
           sellerItemsForSell,
           buyerName,
           buyerPriceInfo,
-          selectedTimes
+          unavailableTypes,
+          selectedTimes,
+          sellMode,
+          buyerListRedux.unavailableTypes
         )
       );
 
-      // await dispatch(transactionAction.fetchTransaction("seller"));
+      await dispatch(transactionAction.fetchTransaction("seller"));
       props.navigation.navigate("SellTransaction");
     } catch (err) {
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
@@ -189,6 +200,7 @@ export default UserAuthenScreen = props => {
     sellerItemsForSell,
     buyerName,
     buyerPriceInfo,
+    unavailableTypes,
     selectedTimes
   ]);
 
@@ -197,11 +209,18 @@ export default UserAuthenScreen = props => {
     if (
       sellerAddr &&
       sellerItemsForSell.length &&
+      selectedTimes.length &&
       buyerName &&
-      buyerPriceInfo &&
-      selectedTimes.length
-    )
+      buyerPriceInfo
+    ) {
+      console.log("choose buyer submit");
       submitSellRequest();
+    } else if (sellMode === 1) {
+      if (sellerAddr && sellerItemsForSell.length && selectedTimes.length) {
+        console.log("quick sell submit");
+        submitSellRequest();
+      }
+    }
   }, [selectedTimes]);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -212,6 +231,7 @@ export default UserAuthenScreen = props => {
         modalVisible={modalVisible}
         date={date}
         setSelectedTimes={setSelectedTimes}
+        submitSellRequest={submitSellRequest}
       />
     );
   }
@@ -224,6 +244,7 @@ export default UserAuthenScreen = props => {
         flex: 1
       }}
     >
+      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <View
         style={{
           paddingTop: getStatusBarHeight(),
@@ -244,7 +265,11 @@ export default UserAuthenScreen = props => {
                 <BuyerChoice
                   sellerItemsForSell={sellerItemsForSell}
                   onSelected={() =>
-                    buyerSelectHandler(item.id, item.purchaseList)
+                    buyerSelectHandler(
+                      item.id,
+                      item.purchaseList,
+                      item.unavailableTypes
+                    )
                   }
                   buyerName={item.id}
                   purchaseList={item.purchaseList}
@@ -262,13 +287,24 @@ export default UserAuthenScreen = props => {
               onCancel={hideDateTimePicker}
             />
           ) : null}
+          <View style={{ width: "100%", height: 100 }}>
+            <CustomButton
+              style={{ width: "90%", height: "100%" }}
+              btnColor={Colors.primary}
+              onPress={quickSellHandler}
+              btnTitleColor={Colors.on_primary}
+              btnTitleFontSize={14}
+            >
+              ขายด่วน
+            </CustomButton>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-UserAuthenScreen.navigationOptions = {
+ChooseBuyerScreen.navigationOptions = {
   headerTitle: "เลือกผู้รับซื้อขยะ"
 };
 

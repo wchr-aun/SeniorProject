@@ -25,21 +25,19 @@ const AmountOfTrash = props => {
     <View
       style={{
         ...props.style,
-        alignItems: "center"
+        alignItems: "center",
+        flexDirection: "row"
       }}
     >
-      <View>
-        <ThaiText style={{ fontSize: 8 }}>เปลี่ยนแปลง</ThaiText>
-      </View>
       <View
         style={{
-          width: wp("20%")
+          width: "100%"
         }}
       >
-        <Text
+        <ThaiText
           style={{
             textAlign: "center",
-            fontSize: wp("7%"),
+            fontSize: 8,
             color:
               isNaN(props.changeAmount) || props.changeAmount === 0
                 ? "black"
@@ -48,8 +46,10 @@ const AmountOfTrash = props => {
                 : Colors.error
           }}
         >
-          {props.changeAmount ? props.changeAmount.toString() : 0}
-        </Text>
+          {`เปลี่ยนแปลง ${
+            props.changeAmount ? props.changeAmount.toString() : 0
+          }`}
+        </ThaiText>
       </View>
     </View>
   );
@@ -58,35 +58,25 @@ const AmountOfTrash = props => {
 const AdjustAmountOfTrash = props => {
   return (
     <View style={{ ...props.style, flexDirection: "row" }}>
-      <View style={styles.plusAndMinusCircle}>
+      <View style={{ marginHorizontal: 5, width: "30%" }}>
         {!props.selected && !props.editingMode ? null : (
-          <TouchableWithoutFeedback
-            // style={styles.plusAndMinusCircle}
-            onPress={props.onDecrease}
-          >
+          <TouchableWithoutFeedback onPress={props.onDecrease}>
             <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
           </TouchableWithoutFeedback>
         )}
       </View>
-      <View style={{ width: 30 }}>
+      <View style={{ width: "30%", alignSelf: "center" }}>
         <TextInput
           selectTextOnFocus={true}
           keyboardType="numeric"
           onChangeText={props.onEdit}
-          // value={(props.oldAmount + props.changeAmount <= 0
-          //   ? 0
-          //   : props.oldAmount + props.changeAmount
-          // ).toString()}
           value={props.editingValue}
-          style={{ textAlign: "center" }}
+          textAlign={"center"}
         />
       </View>
-      <View style={styles.plusAndMinusCircle}>
+      <View style={{ width: "30%" }}>
         {!props.selected && !props.editingMode ? null : (
-          <TouchableWithoutFeedback
-            // style={styles.plusAndMinusCircle}
-            onPress={props.onIncrease}
-          >
+          <TouchableWithoutFeedback onPress={props.onIncrease}>
             <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
           </TouchableWithoutFeedback>
         )}
@@ -104,9 +94,9 @@ export default TrashCard = props => {
         width: wp("95%"),
         height: hp("20%"),
         alignSelf: "center",
-        borderWidth: 1,
-        borderColor: "red",
-        marginVertical: wp("1.25%")
+        backgroundColor: Colors.on_primary,
+        borderRadius: 10,
+        marginVertical: 5
       }}
     >
       <View
@@ -124,10 +114,6 @@ export default TrashCard = props => {
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
-        <AmountOfTrash
-          changeAmount={props.changeAmount}
-          oldAmount={props.oldAmount}
-        />
       </View>
 
       <View
@@ -135,9 +121,7 @@ export default TrashCard = props => {
           ...styles.descriptionContainer,
           width: "70%",
           height: "100%",
-          padding: wp("2.5%"),
-          borderWidth: 1,
-          borderColor: "yellow"
+          padding: wp("2.5%")
         }}
       >
         {/* Trash Name */}
@@ -145,7 +129,6 @@ export default TrashCard = props => {
           style={{
             width: "100%",
             height: "20%",
-            backgroundColor: "red",
             flexDirection: "row"
           }}
         >
@@ -155,33 +138,65 @@ export default TrashCard = props => {
             </ThaiTitleText>
           </View>
         </View>
-        <View style={styles.descriptionRow}>
-          <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
-          <ThaiText style={styles.trashDisposal}>
-            {props.wasteDisposal}
-          </ThaiText>
+
+        {/* detail */}
+        <View
+          style={{
+            width: "100%",
+            height: "80%",
+            flexDirection: "row"
+          }}
+        >
+          <View style={{ width: "50%", height: "100%" }}>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
+              <Ionicons
+                name="md-trash"
+                size={20}
+                color={Colors.primary_variant}
+              />
+              <ThaiText style={styles.trashDisposal}>
+                {props.wasteDisposal}
+              </ThaiText>
+            </View>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
+              <ThaiText style={styles.trashAdjustPrice}>
+                {props.trashAdjustPrice} บ./กก.
+              </ThaiText>
+            </View>
+          </View>
+
+          <View style={{ width: "50%", height: "100%" }}>
+            <AmountOfTrash
+              style={{ width: "100%", height: "50%" }}
+              changeAmount={props.changeAmount}
+              oldAmount={props.oldAmount}
+            />
+            <AdjustAmountOfTrash
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                justifyContent: "space-around",
+                width: "100%",
+                height: "50%"
+              }}
+              subtype={props.subtype}
+              majortype={props.majortype}
+              onIncrease={props.onIncrease}
+              onDecrease={props.onDecrease}
+              onEdit={props.onEdit}
+              UI_diff={props.UI_diff}
+              selected={props.selected}
+              editingMode={props.editingMode}
+              editingValue={props.editingValue}
+              changeAmount={props.changeAmount}
+              oldAmount={props.oldAmount}
+            />
+          </View>
         </View>
-        <View style={styles.descriptionRow}>
-          <ThaiText style={styles.trashAdjustPrice}>
-            {props.trashAdjustPrice} บ./กก.
-          </ThaiText>
-        </View>
-        {!props.editingMode ? null : (
-          <AdjustAmountOfTrash
-            style={{ alignSelf: "center", alignItems: "center" }}
-            subtype={props.subtype}
-            majortype={props.majortype}
-            onIncrease={props.onIncrease}
-            onDecrease={props.onDecrease}
-            onEdit={props.onEdit}
-            UI_diff={props.UI_diff}
-            selected={props.selected}
-            editingMode={props.editingMode}
-            editingValue={props.editingValue}
-            changeAmount={props.changeAmount}
-            oldAmount={props.oldAmount}
-          />
-        )}
       </View>
     </View>
   );
@@ -205,8 +220,5 @@ const styles = StyleSheet.create({
   },
   trashDisposal: {
     fontSize: 12
-  },
-  plusAndMinusCircle: {
-    marginHorizontal: 5
   }
 });

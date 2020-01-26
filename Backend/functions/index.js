@@ -22,10 +22,11 @@ const geoBuyers = geo.query(buyerDB)
 const geoSellers = geo.query(txDB.where("txStatus", "==", 0).where("txType", "==", 1))
 
 exports.createAccount = functions.https.onCall((data, context) => {
-  let name = data.name
-  let surname = data.surname
-  let addr = data.addr.readable
-  let notificationToken = data.notificationToken || false
+  const name = data.name
+  const surname = data.surname
+  const addr = data.addr.readable
+  const notificationToken = data.notificationToken || false
+  const zipcode = data.zipcode
   return auth.createUser({
     uid: data.username,
     email: data.email,
@@ -37,6 +38,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       surname,
       addr,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
+      zipcode,
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).catch(err => {
       console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
@@ -67,11 +69,12 @@ exports.addWaste = functions.https.onCall((data, context) => {
 
 exports.sellWaste = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    let saleList = data.saleList
-    let buyer = (data.txType == 0) ? data.buyer : ""
-    let addr = data.addr.readable
-    let addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
-    let txType = data.txType
+    const saleList = data.saleList
+    const buyer = (data.txType == 0) ? data.buyer : ""
+    const addr = data.addr.readable
+    const addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
+    const zipcode = data.addr.zipcode
+    const txType = data.txType
     if (txType == 0 || txType == 1) {
       return sellerDB.doc(context.auth.uid).get().then(doc => {
         if (doc.exists) {
@@ -91,7 +94,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
             let assignedTime = []
-            for (time in data.assignedTime) assignedTime.push(new Date(time))
+            for (index in data.assignedTime) assignedTime.push(new Date(data.assignedTime[index]))
             return txDB.add({
               txType,
               buyer,
@@ -99,6 +102,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               saleList,
               addr,
               addr_geopoint,
+              zipcode,
               createTimestamp: new Date(),
               assignedTime,
               txStatus: 0
@@ -168,7 +172,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction has already passed the state"}
           else if (data.status < 1 || data.status > 4)
             return {errorMessage: "The transaction status is incorrect"}
-          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid)
+          else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid && doc.data().seller != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
           else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4)
             return {errorMessage: "You cannot complete your own selling transaction"}
@@ -187,7 +191,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               case 2:
                 transaction.update(txDB.doc(data.txID), {
                   txStatus: data.status,
-                  chosenTime: doc.data().assignedTime[data.chosenTime],
+                  chosenTime: new Date(data.chosenTime),
                   buyer: doc.data().buyer || context.auth.uid
                 })
                 break
@@ -217,12 +221,14 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
 
 exports.editBuyerInfo = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    let purchaseList = data.purchaseList || {}
-    let description = data.desc || "default description"
-    let addr = data.addr.readable || {}
-    let enableSearch = data.enableSearch || false
+    const purchaseList = data.purchaseList || {}
+    const description = data.desc || "default description"
+    const addr = data.addr.readable || {}
+    const enableSearch = data.enableSearch || false
+    const zipcode = data.addr.zipcode
     return buyerDB.doc(context.auth.uid).set({
       addr,
+      zipcode,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       purchaseList,
       description,
@@ -240,13 +246,15 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
 
 exports.editUserInfo = functions.https.onCall((data, context) => {
   if (context.auth != null) {
-    let name = data.name
-    let surname = data.surname
-    let addr = data.addr.readable
+    const name = data.name
+    const surname = data.surname
+    const addr = data.addr.readable
+    const zipcode = data.addr.zipcode
     return usersDB.doc(context.auth.uid).update({
       name,
       surname,
       addr,
+      zipcode,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude)
     }).then(() => {
       auth.updateUser(context.auth.uid, {
@@ -303,21 +311,21 @@ exports.queryBuyers = functions.https.onCall((data,context) => {
     const wasteType = data.wasteType
     return geofirex.get(query).then(querySnapshot => {
       querySnapshot.forEach(buyer => {
-        if (buyer.id != context.auth.id && buyer.enableSearch) {
+        if (buyer.id != context.auth.uid && buyer.enableSearch) {
           const lastestArray = buyerList.push(buyer) - 1
           buyerList[lastestArray].totalPrice = 0
-          buyerList[lastestArray].unavailableTypes = []
+          buyerList[lastestArray].unavailableTypes = {}
           for (type in wasteType)
             for (subtype in wasteType[type]) {
               if (buyerList[lastestArray].purchaseList[type] != undefined && buyerList[lastestArray].purchaseList[type][subtype] != undefined) 
                 buyerList[lastestArray].totalPrice += buyerList[lastestArray].purchaseList[type][subtype] * wasteType[type][subtype]
               else
-                buyerList[lastestArray].unavailableTypes.push(subtype)
+                buyerList[lastestArray].unavailableTypes[subtype] = subtype
             }
-          if (buyerList[lastestArray].unavailableTypes.length == wasteType.length)
+          if (Object.keys(buyerList[lastestArray].unavailableTypes).length == wasteType.length)
             buyerList.pop()
           else
-            buyerList[lastestArray].sorting = (wasteType.length - buyerList[lastestArray].unavailableTypes.length) * 100000000 +
+            buyerList[lastestArray].sorting = (wasteType.length - Object.keys(buyerList[lastestArray].unavailableTypes).length) * 100000000 +
             buyerList[lastestArray].totalPrice * 100 + (radius - buyerList[lastestArray].hitMetadata.distance)
         }
       })
@@ -342,23 +350,19 @@ exports.querySellers = functions.https.onCall((data,context) => {
     const radius = data.distance
     const query = geoSellers.within(center, radius, "addr_geopoint")
     return geofirex.get(query).then(querySnapshot => {
-      querySnapshot.forEach(seller => {
-        if (seller.id != context.auth.id) {
-          const lastestArray = txList.push(seller) - 1
-          txList[lastestArray].unavailableTypes = []
-          for (type in saleList)
-            for (subtype in saleList[type])
-              if (txList[lastestArray].saleList[type] == undefined && txList[lastestArray].saleList[type][subtype] == undefined)
-                txList[lastestArray].unavailableTypes.push(subtype)
-          if (txList[lastestArray].unavailableTypes.length == saleList.length)
-            txList.pop()
-          else
-            txList[lastestArray].sorting = (saleList.length - txList[lastestArray].unavailableTypes.length) * 100 +
-            (radius - txList[lastestArray].hitMetadata.distance)
+      querySnapshot.forEach(quickSellingTx => {
+        if (quickSellingTx.seller != context.auth.uid) {
+          const lastestArray = txList.push(quickSellingTx) - 1
+          let unavailableTypes = 0
+          for (type in txList[lastestArray].saleList)
+            for (subtype in txList[lastestArray].saleList[type])
+              if (saleList[type] == undefined || saleList[type][subtype] == undefined)
+                unavailableTypes += 1
+          if (unavailableTypes != 0) txList.pop()
         }
       })
       txList.sort((a, b) => {
-        return b.sorting - a.sorting
+        return a.hitMetadata.distance - b.hitMetadata.distance
       })
       return txList
     }).catch(err => {
@@ -372,7 +376,7 @@ exports.querySellers = functions.https.onCall((data,context) => {
 
 const getTitleAndBody = (data) => {
   const milis = data.date == undefined ? 0 : data.date.toMillis()
-  const days = ((milis - milis % 86400000) - (new Date() - new Date() % 86400000)) / 86400000
+  const days = ((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000
   const uid = data.uid
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
   const hour = new Date(milis).getHours() || ""
@@ -438,9 +442,15 @@ const sendNotification = (uid, title, body) => {
   })
 }
 
-// exports.quickSelling = functions.https.onCall((data, context) => {
-//   if (context.auth.uid != null) {
-
-//   }
-//   else return {err: "The request is denied because of authetication"}
+// exports.temp = functions.https.onCall((data, context) => {
+//   txDB.get().then(querySnapshot => {
+//     querySnapshot.forEach(doc => {
+//       console.log(doc.data().addr)
+//       const addr = doc.data().addr.split(" ")
+//       const zipcode = addr[addr.length - 1]
+//       txDB.doc(doc.id).update({
+//         zipcode: Number(zipcode)
+//       }).catch(err => console.log)
+//     })
+//   })
 // })
