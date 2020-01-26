@@ -45,8 +45,10 @@ export default ModalShowSellersItemsScreen = props => {
   };
 
   const addWasteHandler = () => {
-    props.addNewWasteHandler(majorType, subType, parseInt(amount, 10));
-    props.setModalVisible(false);
+    if (majorType && subType && parseInt(amount, 10)) {
+      props.addNewWasteHandler(majorType, subType, parseInt(amount, 10));
+      props.setModalVisible(false);
+    } else return;
   };
 
   return (
@@ -81,11 +83,11 @@ export default ModalShowSellersItemsScreen = props => {
             style={{
               justifyContent: "space-around",
               width: "100%",
-              height: "30%",
+              height: "50%",
               alignItems: "center"
             }}
           >
-            <View style={{ width: "40%", height: wp("10%") }}>
+            <View style={{ width: "40%", height: "30%" }}>
               <Dropdown
                 label="ประเภท"
                 value={majorType}
@@ -95,7 +97,7 @@ export default ModalShowSellersItemsScreen = props => {
                 }}
               />
             </View>
-            <View style={{ width: "40%", height: wp("10%") }}>
+            <View style={{ width: "40%", height: "30%" }}>
               <Dropdown
                 label="ชนิดขยะ"
                 value={subType}
@@ -108,12 +110,12 @@ export default ModalShowSellersItemsScreen = props => {
             <View
               style={{
                 width: "40%",
-                height: wp("10%"),
-                paddingVertical: wp("3%"),
+                height: "30%",
                 flexDirection: "row",
                 borderWidth: 1,
                 borderRadius: 5,
-                borderColor: Colors.lineSeparate
+                borderColor: Colors.lineSeparate,
+                backgroundColor: "red"
               }}
             >
               <TextInput
@@ -122,12 +124,13 @@ export default ModalShowSellersItemsScreen = props => {
                 onChangeText={thisValue => {
                   setAmount(thisValue);
                 }}
-              ></TextInput>
+              />
             </View>
           </View>
           <View
             style={{
               width: "100%",
+              height: "40%",
               flexDirection: "row",
               justifyContent: "space-around"
             }}

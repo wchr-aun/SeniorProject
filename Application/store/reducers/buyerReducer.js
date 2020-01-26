@@ -1,7 +1,8 @@
 import {
   FETCH_PURCHASELIST,
   EDIT_PURCHASELIST,
-  CONFIRM_CHANGE_PURCHASELIST
+  CONFIRM_CHANGE_PURCHASELIST,
+  GET_SELLER_LIST
 } from "../actions/buyerAction";
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
@@ -39,6 +40,10 @@ export default (state = initialState, action) => {
         ...state,
         purchaseList: action.purchaseList
       };
+    case GET_SELLER_LIST:
+      console.log("GET_SELLER_LIST - Redux");
+      console.log(action);
+      return { ...state };
     case CHANGE_ROLE:
       return initialState;
     case LOGOUT:

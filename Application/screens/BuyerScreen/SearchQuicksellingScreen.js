@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { StyleSheet, FlatList, View, Text, SectionList } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -9,6 +9,9 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
+import * as buyerActions from "../../store/actions/buyerAction";
+
+import { useDispatch } from "react-redux";
 
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
@@ -16,6 +19,30 @@ import libary from "../../utils/libary";
 import ThaiText from "../../components/ThaiText";
 
 export default SearchQuicksellingScreen = props => {
+  const dispatch = useDispatch();
+  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); // sure data is ready
+  const buyerAddr = useSelector(state => state.user.userProfile.addr);
+
+  useEffect(() => {
+    if (Object.keys(purchaseList).length && buyerAddr) loadSeller();
+  }, [purchaseList, buyerAddr]);
+
+  // Callback fn
+  const loadSeller = useCallback(async () => {
+    console.log("LoadSeller run");
+    // setIsRefreshing(true);
+    // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
+    await dispatch(
+      buyerActions.getSellerList({
+        // distance: parseInt(props.navigation.getParam("distance"), 10),
+        distance: parseInt(1000, 10),
+        saleList: purchaseList.getObject(),
+        addr: buyerAddr
+      })
+    );
+    // setIsRefreshing(false);
+  }, [dispatch, buyerAddr]);
+
   // Get transactions for initially
   const transactionsSectionListFormat = useSelector(
     state => state.transactions.transactionsSectionListFormat

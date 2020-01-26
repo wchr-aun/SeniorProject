@@ -18,7 +18,7 @@ import ThaiTitleText from "../../components/ThaiTitleText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import * as authAction from "../../store/actions/authAction";
+import * as buyerAction from "../../store/actions/buyerAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import libary from "../../utils/libary";
@@ -50,6 +50,7 @@ export default BuyerHomepageScreen = props => {
     try {
       setIsLoading(true);
       dispatch(transactionAction.fetchTransaction(userRole));
+      dispatch(buyerAction.fetchBuyerInfo());
     } catch (err) {
       setError(err.message);
     }
