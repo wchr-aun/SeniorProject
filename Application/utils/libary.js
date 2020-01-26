@@ -117,8 +117,6 @@ export const getCurrentLocation = async () => {
     // Step-2
     try {
       const locationInfo = await reverseGeocodeAsync(location.coords);
-      console.log("locationInfo");
-      console.log(locationInfo);
       return {
         readable:
           locationInfo[0].name +
@@ -129,7 +127,8 @@ export const getCurrentLocation = async () => {
           " " +
           locationInfo[0].postalCode,
         latitude: location.coords.latitude,
-        longitude: location.coords.longitude
+        longitude: location.coords.longitude,
+        zipcode: locationInfo[0].postalCode
       };
     } catch (err) {
       console.log("Could not reverseGeocodeAsync");
@@ -138,6 +137,14 @@ export const getCurrentLocation = async () => {
   } catch (err) {
     console.log("Could not getCurrentPositionAsync");
   }
+};
+
+export const getPostalcodeAddressFromCord = async (lat, long) => {
+  const locationInfo = await reverseGeocodeAsync({
+    latitude: lat,
+    longitude: long
+  });
+  return locationInfo;
 };
 
 export const getManualStringLocation = async address => {
@@ -155,5 +162,6 @@ export default {
   getTransactionList,
   formatTime,
   getReadableTxStatus,
-  getColorTxStatus
+  getColorTxStatus,
+  getPostalcodeAddressFromCord
 };

@@ -16,14 +16,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { sha256 } from "js-sha256";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSearch, editUserInfo } from "../utils/firebaseFunctions";
+import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Header } from "react-navigation-stack";
-import AppVariableSetting from "../constants/AppVariableSetting";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as authAction from "../store/actions/authAction";
@@ -100,7 +99,7 @@ export default EditingUserprofileScreen = props => {
   const [isCurrentAddr, setIsCurrentAddr] = useState(true);
   const [addrReadable, setAddrReadable] = useState(""); // readable
   const [addrCord, setAddrCord] = useState(""); //la, long
-  const [sellerAddr, setSellerAddr] = useState(userProfile.addr); // la, long, readable
+  const [userAddrObj, setUserAddrObj] = useState(userProfile.addr); // la, long, readable
   const [isEnableSearch, setIsEnableSearch] = useState(
     userProfile.enableSearch
   );
@@ -118,7 +117,9 @@ export default EditingUserprofileScreen = props => {
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
       photoURL: userProfile.photoURL,
-      phoneNo: userProfile.phoneNo ? userProfile.phoneNo.replace("+66", "0") : userProfile.phoneNo
+      phoneNo: userProfile.phoneNo
+        ? userProfile.phoneNo.replace("+66", "0")
+        : userProfile.phoneNo
     },
     inputValidities: {
       name: true,
@@ -213,7 +214,7 @@ export default EditingUserprofileScreen = props => {
   };
 
   // firebase call cloud function
-  const editHandler = async () => {
+  const editConfirmHandler = async () => {
     setIsLoading(true);
 
     if (!formState.allFormIsValid) {
@@ -232,7 +233,7 @@ export default EditingUserprofileScreen = props => {
     let user = {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
-      addr: sellerAddr,
+      addr: userAddrObj,
       photoURL: formState.inputValues.photoURL,
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
@@ -262,7 +263,7 @@ export default EditingUserprofileScreen = props => {
         modalVisible={isAddrModalVisible}
         latitude={addrCord.latitude}
         longitude={addrCord.longitude}
-        setSellerAddr={setSellerAddr}
+        setUserAddrObj={setUserAddrObj}
         addrReadable={addrReadable}
       />
     );
@@ -512,6 +513,7 @@ export default EditingUserprofileScreen = props => {
 
               <TouchableOpacity
                 onPress={() => {
+                  console.log(isCurrentAddr);
                   setIsCurrentAddr(preState => !preState);
                   // getCurrentLocationHandler();
                 }}
@@ -673,7 +675,7 @@ export default EditingUserprofileScreen = props => {
                       alignSelf: "center"
                     }}
                     onPress={() => {
-                      editHandler();
+                      editConfirmHandler();
                     }}
                     btnColor={Colors.primary}
                     btnTitleColor={Colors.on_primary}
