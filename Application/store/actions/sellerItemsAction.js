@@ -77,6 +77,9 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
+      console.log("queryData");
+      console.log(queryData);
+
       let buyerList = await queryBuyers(queryData);
 
       // dispatch

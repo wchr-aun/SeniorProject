@@ -26,13 +26,13 @@ import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
 import EditBuyerInfomationScreen from "../screens/BuyerScreen/EditBuyerInfomationScreen";
 import PathOptimization from "../screens/BuyerScreen/PathOptimizationScreen";
-import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransactionDetailScreen";
 import BuyingTransactionScreen from "../screens/BuyerScreen/BuyingTransactionScreen";
 import SearchQuicksellingScreen from "../screens/BuyerScreen/SearchQuicksellingScreen";
 
 // Constant setting
 import AppVariableSetting from "../constants/AppVariableSetting";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
+import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransactionDetailScreen";
 import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQuickTransactionDetailScreen";
 
 // ************************************* Seller ***********************************
@@ -176,7 +176,15 @@ const SellerNavigator =
 const SearchQuicksellingNavigator = createStackNavigator(
   {
     SearchQuicksellingScreen,
-    BuyingQuickTransactionDetailScreen
+    BuyingTransactionDetailScreen
+  },
+  { headerMode: "none" }
+);
+
+const BuyingTransactionNavigator = createStackNavigator(
+  {
+    BuyingTransactionScreen,
+    BuyingTransactionDetailScreen
   },
   { headerMode: "none" }
 );
@@ -193,7 +201,7 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
       }
     },
     AllTypeTransaction: {
-      screen: BuyingTransactionScreen,
+      screen: BuyingTransactionNavigator,
       navigationOptions: {
         headerTitle: "การรับซื้อขยะ",
         tabBarLabel: "การรับซื้อขยะในวันนั้น",

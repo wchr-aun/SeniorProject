@@ -151,8 +151,12 @@ export const getTransactions = async role => {
 };
 
 export const getTodayTxForPathOp = async () => {
-  const timeNow = new Date(new Date() - (new Date().getTime() + 25200000) % 86400000);
-  const nextDay = new Date(new Date() - ((new Date().getTime() + 25200000) % 86400000) + 86400000);
+  const timeNow = new Date(
+    new Date() - ((new Date().getTime() + 25200000) % 86400000)
+  );
+  const nextDay = new Date(
+    new Date() - ((new Date().getTime() + 25200000) % 86400000) + 86400000
+  );
   return firestore
     .collection("transactions")
     .where("buyer", "==", auth.currentUser.uid)
@@ -263,6 +267,7 @@ updatedTx = {
 } */
 
 export const updateTxStatus = async updatedTx => {
+  console.log("before sending to updateTxStatus fn this is 'updatedTx'");
   console.log(updatedTx);
   return functions
     .httpsCallable("changeTxStatus")(updatedTx)

@@ -9,7 +9,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
-import * as buyerActions from "../../store/actions/buyerAction";
+import * as transactionAction from "../../store/actions/transactionAction";
 
 import { useDispatch } from "react-redux";
 
@@ -35,7 +35,7 @@ export default SearchQuicksellingScreen = props => {
     // setIsRefreshing(true);
     // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
     await dispatch(
-      buyerActions.getSellerList({
+      transactionAction.fetchQuickTransaction({
         // distance: parseInt(props.navigation.getParam("distance"), 10),
         distance: parseInt(1000, 10),
         saleList: purchaseList.getObject(),
@@ -44,12 +44,14 @@ export default SearchQuicksellingScreen = props => {
     );
     // setIsRefreshing(false);
   }, [dispatch, buyerAddr]);
-  const sellerList = useSelector(state => state.buyerInfo.sellerList); // sure data is ready
+  const quickTransactions = useSelector(
+    state => state.transactions.quickTransactions
+  ); // sure data is ready
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "BuyingQuickTransactionDetailScreen",
+      routeName: "BuyingTransactionDetailScreen",
       params: {
         transactionItem
       }
@@ -78,28 +80,23 @@ export default SearchQuicksellingScreen = props => {
         }}
       >
         <FlatList
-          data={sellerList ? sellerList : []}
-          keyExtractor={item => item.id}
+          data={quickTransactions ? quickTransactions : []}
+          keyExtractor={item => item.txId}
           renderItem={({ item }) => {
-            console.log("item.assignedTime[0].seconds * 1000");
-            console.log(item.assignedTime[0]);
-            console.log(item.assignedTime[0].seconds);
-            console.log(item.assignedTime[0].seconds * 1000);
-            console.log(item);
             return (
               <SellTransactionCard
-                amountOfType={item.saleList.length}
+                amountOfType={item.detail.saleList.length}
                 imgUrl={
                   "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
                 }
-                txStatus={item.txStatus}
-                userName={item.seller}
-                addr={item.addr}
+                txStatus={item.detail.txStatus}
+                userName={item.detail.seller}
+                addr={item.detail.addr}
                 onPress={() => {
                   selectedHandler(item);
                 }}
                 meetDate={libary.formatDate(
-                  new Date(item.assignedTime[0]._seconds * 1000)
+                  item.detail.assignedTime[0].toDate()
                 )}
               />
             );

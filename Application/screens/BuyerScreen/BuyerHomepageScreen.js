@@ -61,7 +61,7 @@ export default BuyerHomepageScreen = props => {
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
     props.navigation.navigate({
-      routeName: "SellingTransactionDetailScreen",
+      routeName: "BuyingTransactionDetailScreen",
       params: {
         transactionItem: transactionItem
       }

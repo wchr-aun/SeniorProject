@@ -1,14 +1,34 @@
 import {
   FETCH_TRANSACTION,
+  FETCH_QUICK_TRANSACTION,
   FETCH_TODAY_TRANSACTION,
   CHANGE_TRANSACTION_STATUS
 } from "../actions/transactionAction";
+
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
+import libary from "../../utils/libary";
 
 initialState = {
   transactions: [],
+  quickTransactions: [],
   transactionsSectionListFormat: [],
   todayTx: []
+};
+
+const getTXSectionListFormat = transactions => {
+  let transactionsSectionListFormat = [];
+  // create sectionList transactions
+  transactions.forEach((transactionMode, index) => {
+    let data = [];
+    transactionMode.forEach((transaction, index) => {
+      data.push(transaction);
+    });
+    transactionsSectionListFormat.push({
+      transactionMode: libary.getReadableTxStatus(index),
+      data
+    });
+  });
+  return transactionsSectionListFormat;
 };
 
 export default (state = initialState, action) => {
@@ -16,11 +36,17 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_TRANSACTION:
       console.log("FETCH_TRANSACTION");
+      transactionsSectionListFormat = getTXSectionListFormat(
+        action.transactions
+      );
       return {
         ...state,
         transactions: [...action.transactions],
-        transactionsSectionListFormat: [...action.transactionsSectionListFormat]
+        transactionsSectionListFormat: [...transactionsSectionListFormat]
       };
+    case FETCH_QUICK_TRANSACTION:
+      console.log("FETCH_QUICK_TRANSACTION - Redux");
+      return { ...state, quickTransactions: [...action.quickTransactions] };
     case FETCH_TODAY_TRANSACTION:
       console.log("FETCH_TODAY_TRANSACTION");
       return {
@@ -44,7 +70,16 @@ export default (state = initialState, action) => {
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
 
-      return { ...state, transactions: updatedTransactions };
+      // update view
+      let transactionsSectionListFormat = getTXSectionListFormat(
+        updatedTransactions
+      );
+
+      return {
+        ...state,
+        transactions: updatedTransactions,
+        transactionsSectionListFormat: [...transactionsSectionListFormat]
+      };
     case CHANGE_ROLE:
       return initialState;
     case LOGOUT:
