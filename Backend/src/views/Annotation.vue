@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <canvas ref="canvas" width="" height="" @mousedown="mousedown" @mouseup="mouseup" @mousemove="mousemove" v-bind:style="{ backgroundImage: 'url(' + image_src + ')' }" style="cursor: crosshair;border: 1px solid #000000;background-size: contain;"></canvas>
     <div><button @click = "clearBox" class="btn_clear">clear</button></div>
     <div>last_x : {{last_x}}</div>

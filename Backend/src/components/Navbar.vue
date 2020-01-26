@@ -9,6 +9,9 @@
       <b-navbar-item href="/annotate">
         Annotate
       </b-navbar-item>
+      <b-navbar-item href="/uploadImage">
+        Upload
+      </b-navbar-item>
     </template>
 
     <template slot="end">

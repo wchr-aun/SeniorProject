@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
     <AutoComZipcode/>
     <br>
     <div class="small">
