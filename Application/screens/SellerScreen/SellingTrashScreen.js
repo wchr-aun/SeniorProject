@@ -40,21 +40,28 @@ const trashSellingReducer = (state, action) => {
       };
     case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
-      sellerItemsForSell.incrementalValue(
-        action.majortype,
-        action.subtype,
-        action.addAmount
-      );
+      if (sellerItemsForSell._count[action.majortype][action.subtype] < 0)
+        sellerItemsForSell.incrementalValue(
+          action.majortype,
+          action.subtype,
+          action.addAmount
+        );
       return {
         ...state
       };
     case MINUS_AMOUNT_FORSELL:
       console.log("MINUS_WASTE local Reducer Run");
-      sellerItemsForSell.incrementalValue(
-        action.majortype,
-        action.subtype,
-        -action.minusAmount
-      );
+      if (
+        sellerItemsForSell[action.majortype][action.subtype] +
+          sellerItemsForSell._count[action.majortype][action.subtype] >
+        0
+      ) {
+        sellerItemsForSell.incrementalValue(
+          action.majortype,
+          action.subtype,
+          -action.minusAmount
+        );
+      }
       return {
         ...state
       };
