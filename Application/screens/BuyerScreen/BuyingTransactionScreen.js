@@ -42,6 +42,12 @@ export default BuyingTransactionScreen = props => {
     });
   };
 
+  // CHECK !!!
+  useEffect(() => {
+    console.log("transactionsSectionListFormat change !!! in buying tx screen");
+    console.log(transactionsSectionListFormat);
+  }, [transactionsSectionListFormat]);
+
   return (
     <View
       style={{

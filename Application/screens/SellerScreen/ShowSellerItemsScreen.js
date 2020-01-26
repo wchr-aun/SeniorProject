@@ -240,6 +240,14 @@ const ShowAllUserTrashScreen = props => {
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
+  const sellHandler = () => {
+    dispatch(navigationBehaviorAction.startOperation());
+    props.navigation.navigate({
+      routeName: "SellingTrashScreen",
+      params: { sellerItemsNew: trashsState.sellerItems }
+    });
+  };
+
   // provide for editing button when operation mode is changed to editing mode
   const [editingMode, setEditingMode] = useState(false);
   useEffect(() => {
@@ -427,12 +435,7 @@ const ShowAllUserTrashScreen = props => {
           ) : (
             <CustomButton
               btnColor={Colors.primary_variant}
-              onPress={() => {
-                props.navigation.navigate({
-                  routeName: "SellingTrashScreen",
-                  params: { sellerItemsNew: trashsState.sellerItems }
-                });
-              }}
+              onPress={sellHandler}
               btnTitleColor={Colors.on_primary}
               btnTitleFontSize={14}
               style={{ ...styles.navigateBtn }}

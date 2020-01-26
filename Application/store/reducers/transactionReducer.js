@@ -58,14 +58,29 @@ export default (state = initialState, action) => {
       updatedTransactions = [...state.transactions];
       let oldStatusIndex = action.updatedDetail.oldStatus;
       let newStatusIndex = action.updatedDetail.newStatus;
-      // get that tX
-      let targetTx = updatedTransactions[oldStatusIndex].filter(
-        tx => tx.txId === action.updatedDetail.txID
-      )[0];
-      // delete that tx in old status
-      updatedTransactions[oldStatusIndex] = updatedTransactions[
-        oldStatusIndex
-      ].filter(tx => tx.txId !== action.updatedDetail.txID);
+      let txType = action.updatedDetail.txType;
+      let targetTx = "";
+
+      if (oldStatusIndex === 0 && txType === 1) {
+        // just got from 'quick selling pool'
+        // get that tX
+        targetTx = state.quickTransactions.filter(
+          tx => tx.txId === action.updatedDetail.txID
+        );
+        // delete that tx in old status
+        state.quickTransactions = state.quickTransactions.filter(
+          tx => tx.txId !== action.updatedDetail.txID
+        );
+      } else {
+        // get that tX
+        targetTx = updatedTransactions[oldStatusIndex].filter(
+          tx => tx.txId === action.updatedDetail.txID
+        )[0];
+        // delete that tx in old status
+        updatedTransactions[oldStatusIndex] = updatedTransactions[
+          oldStatusIndex
+        ].filter(tx => tx.txId !== action.updatedDetail.txID);
+      }
 
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
@@ -75,9 +90,15 @@ export default (state = initialState, action) => {
         updatedTransactions
       );
 
+      console.log("IN TransactionReducer --- before return-update store ");
+      console.log("updatedTransactions ");
+      console.log(updatedTransactions);
+      console.log("transactionsSectionListFormat ");
+      console.log(transactionsSectionListFormat);
+
       return {
         ...state,
-        transactions: updatedTransactions,
+        transactions: [...updatedTransactions],
         transactionsSectionListFormat: [...transactionsSectionListFormat]
       };
     case CHANGE_ROLE:

@@ -49,6 +49,8 @@ export default BuyingTransactionDetailScreen = props => {
         newStatus: 2
       })
     );
+
+    props.navigation.goBack();
   };
 
   const backHandler = () => {

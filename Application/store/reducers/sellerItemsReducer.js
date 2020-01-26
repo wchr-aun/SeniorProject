@@ -95,7 +95,10 @@ export default function(state = initialState, action) {
       sellerItemsForSellCloned.confirmValue();
       return {
         ...state,
-        sellerItemsForSell: sellerItemsForSellCloned
+        sellerItemsForSell: sellerItemsForSellCloned,
+        sellerItemsFlatListFormat: [
+          ...sellerItemsForSellCloned.getFlatListFormat(true)
+        ]
       };
     case SELLED_SELLERITEMS:
       console.log("CHOOSEBUYER_SELL Reducer Run");

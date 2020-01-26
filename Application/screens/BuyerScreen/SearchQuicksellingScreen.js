@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { StyleSheet, FlatList, View, Text, SectionList } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -30,10 +30,9 @@ export default SearchQuicksellingScreen = props => {
   }, [purchaseList, buyerAddr]);
 
   // Callback fn
+  const [isRefreshing, setIsRefreshing] = useState(true);
   const loadSeller = useCallback(async () => {
-    console.log("LoadSeller run");
-    // setIsRefreshing(true);
-    // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
+    setIsRefreshing(true);
     await dispatch(
       transactionAction.fetchQuickTransaction({
         // distance: parseInt(props.navigation.getParam("distance"), 10),
@@ -42,7 +41,7 @@ export default SearchQuicksellingScreen = props => {
         addr: buyerAddr
       })
     );
-    // setIsRefreshing(false);
+    setIsRefreshing(false);
   }, [dispatch, buyerAddr]);
   const quickTransactions = useSelector(
     state => state.transactions.quickTransactions
@@ -80,6 +79,8 @@ export default SearchQuicksellingScreen = props => {
         }}
       >
         <FlatList
+          refreshing={isRefreshing}
+          onRefresh={loadSeller}
           data={quickTransactions ? quickTransactions : []}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
