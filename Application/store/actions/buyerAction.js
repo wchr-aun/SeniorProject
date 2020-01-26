@@ -66,14 +66,25 @@ export const getSellerList = queryData => {
     try {
       // search buyer
       let SellerList = await querySellers(queryData);
+      let cleanedFormatSellerList = [];
+
+      SellerList.forEach((item, index) => {
+        cleanedFormatSellerList.push({ txId: item.id, detail: { ...item } });
+      });
+      console.log(cleanedFormatSellerList);
 
       // dispatch
       dispatch({
         type: GET_SELLER_LIST,
-        SellerList
+        SellerList: cleanedFormatSellerList
       });
     } catch (err) {
       throw new Error(err.message);
     }
   };
 };
+
+// let tx = [];
+//     querySnapshot.forEach(doc => {
+//       tx.push({ txId: doc.id, detail: doc.data() });
+//     });

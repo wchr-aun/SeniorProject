@@ -3,7 +3,9 @@ import {
   FETCH_TODAY_TRANSACTION,
   CHANGE_TRANSACTION_STATUS
 } from "../actions/transactionAction";
+
 import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
+import libary from "../../utils/libary";
 
 initialState = {
   transactions: [],
@@ -11,15 +13,34 @@ initialState = {
   todayTx: []
 };
 
+const getTXSectionListFormat = transactions => {
+  let transactionsSectionListFormat = [];
+  // create sectionList transactions
+  transactions.forEach((transactionMode, index) => {
+    let data = [];
+    transactionMode.forEach((transaction, index) => {
+      data.push(transaction);
+    });
+    transactionsSectionListFormat.push({
+      transactionMode: libary.getReadableTxStatus(index),
+      data
+    });
+  });
+  return transactionsSectionListFormat;
+};
+
 export default (state = initialState, action) => {
   let updatedTransactions = [];
   switch (action.type) {
     case FETCH_TRANSACTION:
       console.log("FETCH_TRANSACTION");
+      transactionsSectionListFormat = getTXSectionListFormat(
+        action.transactions
+      );
       return {
         ...state,
         transactions: [...action.transactions],
-        transactionsSectionListFormat: [...action.transactionsSectionListFormat]
+        transactionsSectionListFormat: [...transactionsSectionListFormat]
       };
     case FETCH_TODAY_TRANSACTION:
       console.log("FETCH_TODAY_TRANSACTION");
@@ -44,7 +65,16 @@ export default (state = initialState, action) => {
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
 
-      return { ...state, transactions: updatedTransactions };
+      // update view
+      let transactionsSectionListFormat = getTXSectionListFormat(
+        updatedTransactions
+      );
+
+      return {
+        ...state,
+        transactions: updatedTransactions,
+        transactionsSectionListFormat: [...transactionsSectionListFormat]
+      };
     case CHANGE_ROLE:
       return initialState;
     case LOGOUT:

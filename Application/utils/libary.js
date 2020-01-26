@@ -128,7 +128,7 @@ export const getCurrentLocation = async () => {
           locationInfo[0].postalCode,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        zipcode: locationInfo[0].postalCode
+        zipcode: parseInt(locationInfo[0].postalCode, 10)
       };
     } catch (err) {
       console.log("Could not reverseGeocodeAsync");

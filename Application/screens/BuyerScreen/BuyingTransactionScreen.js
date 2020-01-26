@@ -46,7 +46,10 @@ export default BuyingTransactionScreen = props => {
       style={{
         width: wp("100%"),
         height:
-          hp("100%") - AppVariableSetting.bottomBarHeight + getStatusBarHeight()
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight +
+          getStatusBarHeight() -
+          Header.HEIGHT
       }}
     >
       <View
@@ -56,7 +59,8 @@ export default BuyingTransactionScreen = props => {
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,
-          backgroundColor: Colors.primary_variant
+          backgroundColor: Colors.primary_variant,
+          paddingBottom: getStatusBarHeight()
         }}
       >
         <SectionList

@@ -75,7 +75,7 @@ export default ModalShowInteractMap = props => {
         : selectedLocationReadable[0],
       zipcode: props.signupMode
         ? props.zipcode
-        : selectedLocationReadable[0].postalCode
+        : parseInt(selectedLocationReadable[0].postalCode, 10)
     });
     props.setModalVisible(false);
   };

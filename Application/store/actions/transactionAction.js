@@ -13,32 +13,9 @@ export const fetchTransaction = role => {
   return async dispatch => {
     try {
       let transactions = await getTransactions(role);
-      let transactionsSectionListFormat = [];
-      let transactionsQuick = [];
-      // create sectionList transactions
-      transactions.forEach((transactionMode, index) => {
-        let data = [];
-        transactionMode.forEach((transaction, index) => {
-          data.push(transaction);
-          // for quick transaction
-          if (
-            transaction.detail.txStatus === 0 &&
-            transaction.detail.txType === 1
-          )
-            transactionsQuick.push({
-              transaction
-            });
-        });
-        transactionsSectionListFormat.push({
-          transactionMode: libary.getReadableTxStatus(index),
-          data
-        });
-      });
       dispatch({
         type: FETCH_TRANSACTION,
-        transactions,
-        transactionsQuick,
-        transactionsSectionListFormat
+        transactions
       });
     } catch (err) {
       console.log(err.message);

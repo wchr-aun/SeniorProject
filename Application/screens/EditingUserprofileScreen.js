@@ -31,7 +31,7 @@ import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import ThaiTitleText from "../components/ThaiTitleText";
 import ThaiText from "../components/ThaiText";
-import { getCurrentLocation } from "../utils/libary";
+import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
 // CHOOSE_CURRENT_TIME
@@ -194,6 +194,8 @@ export default EditingUserprofileScreen = props => {
         formState.inputValues.postalCode;
     setAddrReadable(userAddrString);
     let result = await getManualStringLocation(userAddrString);
+    console.log("result");
+    console.log(result);
     setAddrCord(result);
     setIsAddrModalVisible(true);
   };
@@ -261,10 +263,11 @@ export default EditingUserprofileScreen = props => {
       <ModalShowInteractMap
         setModalVisible={setIsAddrModalVisible}
         modalVisible={isAddrModalVisible}
-        latitude={addrCord.latitude}
-        longitude={addrCord.longitude}
+        origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
         setUserAddrObj={setUserAddrObj}
         addrReadable={addrReadable}
+        zipcode={formState.inputValues.postalCode}
+        signupMode={false}
       />
     );
   }
@@ -533,6 +536,7 @@ export default EditingUserprofileScreen = props => {
                     backgroundColorOff="#808080"
                     circleColorOff="#ffffff"
                     circleColorOn="#ffffff"
+                    onPress={() => setIsCurrentAddr(preState => !preState)}
                   />
                   <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
