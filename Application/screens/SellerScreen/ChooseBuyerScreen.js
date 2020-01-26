@@ -190,6 +190,7 @@ export default ChooseBuyerScreen = props => {
       );
 
       await dispatch(transactionAction.fetchTransaction("seller"));
+      dispatch(navigationBehaviorAction.finishOperation());
       props.navigation.navigate("SellTransaction");
     } catch (err) {
       Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);

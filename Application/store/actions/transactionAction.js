@@ -52,8 +52,6 @@ export const fetchQuickTransaction = queryData => {
           }
         });
       });
-      console.log("cleanedFormatSellerList");
-      console.log(cleanedFormatSellerList);
 
       // dispatch
       dispatch({
