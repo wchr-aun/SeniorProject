@@ -66,7 +66,7 @@ export default (state = initialState, action) => {
         // get that tX
         targetTx = state.quickTransactions.filter(
           tx => tx.txId === action.updatedDetail.txID
-        );
+        )[0];
         // delete that tx in old status
         state.quickTransactions = state.quickTransactions.filter(
           tx => tx.txId !== action.updatedDetail.txID
@@ -84,17 +84,13 @@ export default (state = initialState, action) => {
 
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
+      console.log("targetTx");
+      console.log(targetTx);
 
       // update view
       let transactionsSectionListFormat = getTXSectionListFormat(
         updatedTransactions
       );
-
-      console.log("IN TransactionReducer --- before return-update store ");
-      console.log("updatedTransactions ");
-      console.log(updatedTransactions);
-      console.log("transactionsSectionListFormat ");
-      console.log(transactionsSectionListFormat);
 
       return {
         ...state,
