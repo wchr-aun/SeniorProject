@@ -32,7 +32,7 @@ export const fetchQuickTransaction = queryData => {
       // search buyer
       let SellerList = await querySellers(queryData);
       let cleanedFormatSellerList = [];
-      let assignedTimeForUpdatingTx = [];
+      // let assignedTimeForUpdatingTx = [];
 
       SellerList.forEach((item, index) => {
         // edit time obj to firebase timeStamp
@@ -40,15 +40,15 @@ export const fetchQuickTransaction = queryData => {
         item.assignedTime.forEach((time, index) => {
           let formattedTime = libary.toDate(time._seconds);
           firebaseAssignedTime.push(formattedTime);
-          assignedTimeForUpdatingTx.push(formattedTime.seconds * 1000);
+          // assignedTimeForUpdatingTx.push(formattedTime.seconds * 1000);
         });
 
         cleanedFormatSellerList.push({
           txId: item.id,
           detail: {
             ...item,
-            assignedTime: firebaseAssignedTime,
-            assignedTimeForUpdatingTx
+            assignedTime: firebaseAssignedTime
+            // assignedTimeForUpdatingTx
           }
         });
       });
@@ -65,6 +65,8 @@ export const fetchQuickTransaction = queryData => {
 };
 
 export const changeTransactionStatus = updatedDetail => {
+  console.log("updatedDetail");
+  console.log(updatedDetail);
   return async dispatch => {
     try {
       await updateTxStatus({

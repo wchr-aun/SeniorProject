@@ -61,9 +61,17 @@ export default (state = initialState, action) => {
       let txType = action.updatedDetail.txType;
       let targetTx = "";
 
+      console.log("oldStatusIndex");
+      console.log(oldStatusIndex);
+      console.log("txType");
+      console.log(txType);
       if (oldStatusIndex === 0 && txType === 1) {
         // just got from 'quick selling pool'
         // get that tX
+        console.log("state.quickTransactions");
+        console.log(state.quickTransactions);
+        console.log("action.updatedDetail.txID");
+        console.log(action.updatedDetail.txID);
         targetTx = state.quickTransactions.filter(
           tx => tx.txId === action.updatedDetail.txID
         )[0];

@@ -42,12 +42,6 @@ export default BuyingTransactionScreen = props => {
     });
   };
 
-  // // CHECK !!!
-  // useEffect(() => {
-  //   console.log("transactionsSectionListFormat change !!! in buying tx screen");
-  //   console.log(transactionsSectionListFormat);
-  // }, [transactionsSectionListFormat]);
-
   return (
     <View
       style={{
@@ -77,10 +71,6 @@ export default BuyingTransactionScreen = props => {
             return <Text>{transactionMode}</Text>;
           }}
           renderItem={({ item }) => {
-            console.log(
-              "SellTransactionCard -- item.detail.saleList.length -- in BuyingTransactionScreen"
-            );
-            console.log(item.detail.saleList.length);
             return (
               <SellTransactionCard
                 userRole={userRole}
