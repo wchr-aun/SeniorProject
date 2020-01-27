@@ -1,27 +1,32 @@
 <template>
   <div>
     <b-field label="Find Waste Amount by Zipcode" style="width:50%;margin: auto;">
-      <b-autocomplete
-        rounded
-        v-model="name"
-        :data="filteredDataArray"
-        placeholder="e.g. 10100"
-        icon="magnify"
-        maxlength=5
-        @select="option => selected = option">
-        <template slot="empty">No results found</template>
-      </b-autocomplete>
+      <div class="columns">
+        <div class="column is-four-fifths">
+          <b-autocomplete
+            rounded
+            v-model="name"
+            :data="filteredDataArray"
+            placeholder="e.g. 10140"
+            icon="magnify"
+            maxlength=5
+            @select="option => selected = option">
+            <template slot="empty">No results found</template>
+          </b-autocomplete>
+        </div>
+        <div class="column">
+          <div class="buttons">
+            <b-button :loading="loading" rounded @click="queryData(selected)">Search: {{ selected }}</b-button>
+          </div>
+        </div>
+      </div>
     </b-field>
-    <div class="buttons is-pulled-right" style="width:35%;margin: auto;">
-      <b-button :loading="loading" rounded @click="queryData(selected)">Search: {{ selected }}</b-button>
-    </div>
   </div>
 </template>
 
 <script>
-import { zipcode } from '../variables'
+import { zipcode, wasteAmountDC } from '../variables'
 import { queryWastesInAnArea } from "../library"
-import { wasteAmount } from "../variables"
 export default {
   data () {
     return {
@@ -43,17 +48,32 @@ export default {
   },
   methods: {
     queryData(zipcode) {
-      if (zipcode == "00000") return alert("Please search for zipcode")
+      if (zipcode == "00000" || zipcode == null) return alert("Please enter zipcode")
       this.loading = true
-      if (wasteAmount[zipcode] == undefined)
-        queryWastesInAnArea(zipcode).then(() => {
+      if (wasteAmountDC[zipcode] == undefined) {
+        queryWastesInAnArea(zipcode).then(wasteAmount => {
+          if (Object.keys(wasteAmount).length == 0) {
+            this.danger()
+            this.loading = false
+            return
+          }
+          wasteAmountDC[zipcode] = this.$parent.fetchData(wasteAmount)
           this.loading = false
-          this.$parent.fillData(zipcode)
+          this.$parent.fillData(wasteAmountDC[zipcode])
         })
+      }
       else {
         this.loading = false
-        this.$parent.fillData(zipcode)
+        this.$parent.fillData(wasteAmountDC[zipcode])
       }
+    },
+    danger () {
+      this.$buefy.toast.open({
+        duration: 3000,
+        message: `No data was found!`,
+        position: 'is-bottom',
+        type: 'is-danger'
+      })
     }
   }
 }
