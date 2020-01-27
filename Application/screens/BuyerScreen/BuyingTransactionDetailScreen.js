@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
+import { MaterialIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
@@ -27,6 +29,13 @@ export default BuyingTransactionDetailScreen = props => {
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
+
+  // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
+  const [timeSelected, setTimeSelected] = useState("");
+  const onTimeSelectedHandler = timeItem => {
+    console.log("timeItem");
+    console.log(timeItem);
+  };
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
@@ -53,15 +62,27 @@ export default BuyingTransactionDetailScreen = props => {
     props.navigation.goBack();
   };
 
+  const preferTimeHandler = () => {
+    // dispatch(
+    //   transactionAction.changeTransactionStatus({
+    //     txID: transactionItem.txId,
+    //     oldStatus: transactionItem.detail.txStatus, //for query
+    //     chosenTime: transactionItem.detail.assignedTimeForUpdatingTx[0],
+    //     newStatus: 2
+    //   })
+    // );
+    // props.navigation.goBack();
+  };
+
   const backHandler = () => {
     props.navigation.goBack();
   };
 
   return (
     <View style={{ ...styles.screen }}>
-      <View style={styles.infoContainerCard}>
+      <View style={{ ...styles.infoContainerCard }}>
         <ScrollView>
-          <View style={{ height: "50%", width: "100%" }}>
+          <View style={{ height: "30%", width: "100%" }}>
             <View
               style={{
                 width: "20%",
@@ -104,7 +125,12 @@ export default BuyingTransactionDetailScreen = props => {
             </ThaiTitleText>
           </View>
           <View
-            style={{ width: "100%", height: "15%", backgroundColor: "red" }}
+            style={{
+              width: "100%",
+              height: "20%",
+              borderColor: Colors.lineSeparate,
+              borderWidth: 0.5
+            }}
           >
             <FlatList
               data={transactionItem.detail.assignedTime}
@@ -115,13 +141,22 @@ export default BuyingTransactionDetailScreen = props => {
               style={{ flex: 1 }}
               renderItem={({ item }) => {
                 return (
-                  <View style={{ height: 50, padding: 3, alignSelf: "center" }}>
-                    <ThaiText>
-                      {libary.formatDate(item.toDate()) +
-                        " " +
-                        libary.formatTime(item.toDate())}
-                    </ThaiText>
-                  </View>
+                  <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
+                    <View
+                      style={{ height: 50, padding: 3, alignSelf: "center" }}
+                    >
+                      <ThaiText>
+                        {libary.formatDate(item.toDate()) +
+                          " " +
+                          libary.formatTime(item.toDate())}
+                      </ThaiText>
+                      <MaterialIcons
+                        name={"check-box"}
+                        size={20}
+                        color={Colors.primary}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 );
               }}
             />
@@ -132,7 +167,12 @@ export default BuyingTransactionDetailScreen = props => {
             </ThaiTitleText>
           </View>
           <View
-            style={{ width: "100%", height: "15%", backgroundColor: "yellow" }}
+            style={{
+              width: "100%",
+              height: "20%",
+              borderColor: Colors.lineSeparate,
+              borderWidth: 0.5
+            }}
           >
             <FlatList
               data={saleList}
@@ -166,10 +206,16 @@ export default BuyingTransactionDetailScreen = props => {
               maxHeight: 50,
               width: "100%",
               justifyContent: "space-around",
-              alignItems: "center"
+              alignItems: "center",
+              marginVertical: 10
             }}
           >
             <CustomButton
+              disable={libary.getDisableStatusForBuyer(
+                4,
+                transactionItem.detail.txStatus
+              )}
+              style={{ width: "25%", height: 40 }}
               btnColor={Colors.error}
               onPress={cancelHandler}
               btnTitleColor={Colors.on_primary}
@@ -178,15 +224,24 @@ export default BuyingTransactionDetailScreen = props => {
               ยกเลิก
             </CustomButton>
             <CustomButton
-              btnColor={Colors.primary}
-              onPress={backHandler}
-              btnTitleColor={Colors.on_primary}
+              disable={libary.getDisableStatusForBuyer(
+                1,
+                transactionItem.detail.txStatus
+              )}
+              style={{ width: "25%", height: 40 }}
+              btnColor={Colors.on_primary}
+              onPress={preferTimeHandler}
+              btnTitleColor={Colors.primary}
               btnTitleFontSize={12}
             >
-              ย้อนกลับ
+              เสนอเวลาอื่น
             </CustomButton>
             <CustomButton
-              // disable={txStatus === 0 ? false : true}
+              disable={libary.getDisableStatusForBuyer(
+                2,
+                transactionItem.detail.txStatus
+              )}
+              style={{ width: "25%", height: 40 }}
               btnColor={Colors.primary_variant}
               onPress={acceptHandler}
               btnTitleColor={Colors.on_primary}
@@ -195,6 +250,31 @@ export default BuyingTransactionDetailScreen = props => {
               ยอมรับ
             </CustomButton>
           </View>
+          <TouchableOpacity
+            onPress={backHandler}
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end"
+            }}
+          >
+            <View
+              style={{
+                height: "10%",
+                width: "30%"
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <ThaiText style={{ color: Colors.lineSeparate, fontSize: 10 }}>
+                  ปิดหน้าต่าง{" "}
+                </ThaiText>
+                <MaterialIcons
+                  name="cancel"
+                  size={25}
+                  color={Colors.lineSeparate}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </View>
@@ -210,7 +290,7 @@ const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.on_primary,
     borderRadius: 10,
-    height: Dimensions.get("window").height * 0.8,
+    height: Dimensions.get("window").height * 0.9,
     alignSelf: "center",
     padding: 10
   },
