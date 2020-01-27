@@ -35,6 +35,7 @@ export default BuyingTransactionDetailScreen = props => {
   const onTimeSelectedHandler = timeItem => {
     console.log("timeItem");
     console.log(timeItem);
+    setTimeSelected(timeItem);
   };
 
   const dispatch = useDispatch();
@@ -54,7 +55,7 @@ export default BuyingTransactionDetailScreen = props => {
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
-        chosenTime: transactionItem.detail.assignedTimeForUpdatingTx[0],
+        chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
         newStatus: 2
       })
     );
@@ -143,7 +144,12 @@ export default BuyingTransactionDetailScreen = props => {
                 return (
                   <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
                     <View
-                      style={{ height: 50, padding: 3, alignSelf: "center" }}
+                      style={{
+                        height: 50,
+                        padding: 3,
+                        alignSelf: "center",
+                        flexDirection: "row"
+                      }}
                     >
                       <ThaiText>
                         {libary.formatDate(item.toDate()) +
@@ -151,7 +157,11 @@ export default BuyingTransactionDetailScreen = props => {
                           libary.formatTime(item.toDate())}
                       </ThaiText>
                       <MaterialIcons
-                        name={"check-box"}
+                        name={
+                          timeSelected === item
+                            ? "check-box"
+                            : "check-box-outline-blank"
+                        }
                         size={20}
                         color={Colors.primary}
                       />
