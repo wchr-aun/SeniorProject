@@ -65,6 +65,8 @@ export const fetchQuickTransaction = queryData => {
 };
 
 export const changeTransactionStatus = updatedDetail => {
+  console.log("updatedDetail");
+  console.log(updatedDetail);
   return async dispatch => {
     try {
       await updateTxStatus({

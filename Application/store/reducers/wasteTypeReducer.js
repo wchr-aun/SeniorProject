@@ -9,6 +9,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_WASTETYPE:
       console.log("FETCH_WASTETYPE Redux Run");
+      console.log(action.wasteTypes);
+      console.log(action.wasteTypeDropdownFormat);
       return {
         ...state,
         wasteTypes: action.wasteTypes,

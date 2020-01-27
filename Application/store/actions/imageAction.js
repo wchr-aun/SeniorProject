@@ -6,7 +6,7 @@ export const ADD_SELLERITEMS_BYCAMERA = "ADD_SELLERITEMS_BYCAMERA";
 
 export const CONFIRM_SELLERITEMSCAMERA = "CONFIRM_SELLERITEMSCAMERA";
 
-const PERDICT_LINK = "http://c433f137.ngrok.io/predict";
+const PERDICT_LINK = "http://35.197.147.180:5000/predict";
 
 export const confirmSellerItemsCamera = sellerItemsCameraObj => {
   return async dispatch => {
@@ -52,58 +52,59 @@ export const getPrediction = (image, wasteTypesDB) => {
     console.log("formData, typeof image.base64");
     console.log(typeof image.base64);
 
-    //tmp
-    dispatch({
-      type: GET_PREDICTION,
-      results: [
-        {
-          class: "PETE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        },
-        {
-          class: "PETE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        },
-        {
-          class: "HDPE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        }
-      ],
-      wasteTypesDB
-    });
+    // //tmp
+    // dispatch({
+    //   type: GET_PREDICTION,
+    //   results: [
+    //     {
+    //       class: "PETE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     },
+    //     {
+    //       class: "PETE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     },
+    //     {
+    //       class: "HDPE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     }
+    //   ],
+    //   wasteTypesDB
+    // });
 
-    // // send an image
-    // fetch(PERDICT_LINK, {
-    //   method: "POST",
-    //   headers: {
-    //     // "content-type": "multipart/form-data"
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({ photo: image.base64 })
-    // })
-    //   .then(res => {
-    //     return res.json();
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     dispatch({
-    //       type: ADD_SELLERITEMS_BYCAMERA,
-    //       result: res.results
-    //     });
-    //     return res;
-    //   })
-    //   .catch(error => console.log(error));
+    // send an image
+    fetch(PERDICT_LINK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ photo: image.base64 })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(res => {
+        console.log("getpredict ! res.results");
+        console.log(res.results);
+        dispatch({
+          type: GET_PREDICTION,
+          results: res.results[0],
+          wasteTypesDB
+        });
+        return res;
+      })
+      .catch(error => console.log(error));
   };
 };

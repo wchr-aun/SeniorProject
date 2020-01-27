@@ -166,6 +166,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
   /* 
   preferTime --> 1
   accept --> 2
+  buyerWillGo --> 3
   cancel --> 4
   */
   switch (txStatus) {
@@ -175,7 +176,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
       if (btnType == 1 || btnType == 2) return true;
       else return false;
     case 2:
-      if (btnType == 2) return true;
+      if (btnType != 4 && btnType != 3 && btnType != 1) return true;
       else return false;
     case 3:
       if (btnType == 1 || btnType == 2) return true;
