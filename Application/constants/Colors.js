@@ -32,6 +32,20 @@ export default {
     three: "#a9fc03",
     four: "#B3B3B3",
     five: "#90B37B"
+  },
+  button: {
+    cancel: {
+      btnBackground: "#d7d7d7",
+      btnText: "#191919"
+    },
+    submit_primary_dark: {
+      btnBackground: "#191919",
+      btnText: "#d7d7d7"
+    },
+    submit_primary_bright: {
+      btnBackground: "#149c6a",
+      btnText: "#ffffff"
+    }
   }
 };
 //   Transaction Status

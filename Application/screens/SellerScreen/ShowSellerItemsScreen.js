@@ -26,9 +26,11 @@ import ThaiRegText from "../../components/ThaiRegText";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import TrashCard from "../../components/TrashCard";
 import Colors from "../../constants/Colors";
+import ThaiBoldText from "../../components/ThaiBoldText";
 
 import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 import CustomButton from "../../components/UI/CustomButton";
+import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
 const ADD_NEW_SELLERITEMS_AMOUNT = "ADD_NEW_SELLERITEMS_AMOUNT";
@@ -240,6 +242,12 @@ const ShowAllUserTrashScreen = props => {
     setIsRefreshing(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
+  const cancelHandler = () => {
+    setEditingMode(false);
+    dispatchAmountTrashsState({ type: "CANCEL" });
+    dispatch(sellerItemsAction.clearSellerItemsCamera());
+  };
+
   const sellHandler = () => {
     dispatch(navigationBehaviorAction.startOperation());
     props.navigation.navigate({
@@ -252,9 +260,9 @@ const ShowAllUserTrashScreen = props => {
   const [editingMode, setEditingMode] = useState(false);
   useEffect(() => {
     props.navigation.setParams({ editingMode });
-    props.navigation.setParams({ setEditingMode });
-    props.navigation.setParams({ confirmHandlerTricker });
-  }, [editingMode, setEditingMode, confirmHandlerTricker]);
+    props.navigation.setParams({ setModalVisible });
+    // props.navigation.setParams({ confirmHandlerTricker });
+  }, [editingMode, setModalVisible]);
 
   //add spinner loading
   if (isLoading) {
@@ -285,24 +293,30 @@ const ShowAllUserTrashScreen = props => {
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <CustomStatusBar />
       <LinearGradient
         colors={Colors.linearGradientB}
         style={{
           ...styles.screen,
           width: wp("100%"),
-          height:
-            hp("100%") - Header.HEIGHT - AppVariableSetting.bottomBarHeight,
-          alignItems: "center"
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
+          alignItems: "center",
+          borderRadius: 5
         }}
       >
         <View
           style={{
             width: "100%",
-            height: "85%",
+            height: "70%",
             paddingHorizontal: 10,
             alignItems: "center"
           }}
         >
+          <View style={{ width: "100%", height: "15%", flexDirection: "row" }}>
+            <View>
+              <ThaiBoldText></ThaiBoldText>
+            </View>
+          </View>
           <FlatList
             data={trashsState.sellerItemsFlatListFormat}
             refreshing={isRefreshing}
@@ -315,9 +329,8 @@ const ShowAllUserTrashScreen = props => {
               return (
                 <TrashCard
                   style={styles.eachTrashCard}
-                  imgUrl={
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8jHyAAAAAbFxhYVVXV1dUYExXa2tpraWlcWVkgHB3x8fEvLCwNBAegn58FAAAVDxFvbW3i4eG3traJiIimpaW9vLx6eHmcm5vp6eljYWFCP0Dz8/Ovra4qJidOTEyGhYXIyMhST1A3MzRJRkd1c3PEw8SAf3+TGW0NAAAEd0lEQVR4nO2df1uyMBSGgykqSpBp+as0s/r+3/CN94qNUhiDeTwbz/2vwLWbPZwxQXd3BwAAAAAAAHCcx3stq/WtG9mJTZjoCIe3bmQnxlGgI4Uhb2AIQ/70yDA7GyVivwyzxfIv29grwwvD+kTA0AlgCEP+wBCG/JEj/uHv1N63Ed//u7YaYMgcGMKQPz0y9H60wBzfXWAIQ/7AEIb8gSEM+TMQnhs+hoHWMNrcoGG22GVxtWHRvUH4coOmWWKc/UjEyfTsw+ek+DB19p0hmdEgfDz/dCeKDo4G9G2zwvS1UMguXmpP6gQ4mtMPmdHscgwf5AaxkznVd9FO08nMUXW0+jJzO6fajObUFlvmfDbqHtXRzuVUXWL1tyzu5lQN59m8dkNVTwOn6umb6ppl/ZZTOe5nY5q2WWEXy4weddvW3/hwpXFGczYyp6Ez9fQtld1yr996GruX0/diXiT2TTZ3L6cyo0HYrDyOHbs/LdXRBhnNca2eqoyemu5SyunTNZtmh4Oso8mo8U6qnka7K7bNCiqj6ar5XmtVTx+u1zY7tMhozoszOV2ooVA/1pfZFA/841fW4/6wVUZzpqkb9XTbLqM5buR0oeqo+Vf1qp6+sq2npYwuzPdeRzKnH/bbZgdVR7dtduef01Idbfc4aaLqKcucjqRgm4zmrGUn8hz3T90ymlPK6afNptlhpcpM+0eeE1VP2Y37KqNJy4zmzOU8Knm21zY7yLE+DrocZsk2pyqjHf9A4CjrqWBVT0fyfdjk0O1I65TnuC/PvHjveuZ55vReteqt88EGMqczNjmdS8Hky8LRIn71tDR7tXG4Uk6bf9NzXdSbMd0zmnMqzhibP3YpDDMLGc2ZJ1wNrYWq5n2/2wBDY2BIDgyNgSE5MDQGhuTA0BgYkgNDY2BIDgyNgSE5MDQGhuT0yNDsRa9qHrgaiuOkir2+ewdq61nM1DAQlTRoaxrJrWt+W3sbpGE1DdqatdqLhv70of/Xof+1tAfjIQybAkNyYGgMDMmBoTEwJKdHht7fl4r9ZKDQvQL2NaiC79zi1/ww0f010iCpnE2ynR/+QugMJ1a+GaDhYh9mPvah/9eh/7W0B+MhDJsCQ3JgaAwMyYGhMTAkp0eG3t+X+v/80P9nwDXgOf43qRNz/Mpp+0l/HR7V1myvQ/9raQ/GQxg2BYbkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0BobkwNAYGJIDQ2NgSA4MjYEhOTA0Bobk+G/4UTTI1pIbR9svWXVl9fNP/5GtdVOKV/dCLkt4yIVSLa2XVqw8z2dxsmlhGEdWFrgoVlaK+Kz1KH/wGqeLzmsWz4/Fu7SpZl12Qj7luilBFnZGnq6I0QrPcl0/m2RsFtL5ZhTG+habwmas+I9ad9qeYMNVvalY2e7FZHNrpb+8pPrfJBgQ8hkpJMOZvW4UoaWFlSyznKWZEHFHhEiSLZdb7jOGh81p1pHTZsFlMbIKdtNOcLkVBQAAADzjH4W+XbnKuWNsAAAAAElFTkSuQmCC"
-                  }
+                  localImgUrl={false}
+                  imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
                   type={item.type}
                   subtype={item.subtype}
                   wasteDisposal={
@@ -385,64 +398,61 @@ const ShowAllUserTrashScreen = props => {
             paddingBottom: getStatusBarHeight()
           }}
         >
-          {editingMode ? (
-            <View
-              style={{
-                width: "100%",
-                height: "100%",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "center"
-              }}
-            >
-              <CustomButton
-                btnColor={Colors.primary}
-                onPress={() => {
-                  setEditingMode(false);
-                  dispatchAmountTrashsState({ type: "CANCEL" });
-                  dispatch(sellerItemsAction.clearSellerItemsCamera());
-                }}
-                btnTitleColor={Colors.on_primary}
-                btnTitleFontSize={14}
-                style={{ ...styles.navigateBtn }}
-              >
-                ยกเลิก
-              </CustomButton>
-
-              <CustomButton
-                btnColor={Colors.on_primary}
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-                btnTitleColor={Colors.on_primary}
-                btnTitleFontSize={14}
-                style={{
-                  ...styles.navigateBtn
-                }}
-              >
-                <ThaiRegText
-                  style={{ fontSize: 12, color: Colors.primary_variant }}
-                >
-                  เพิ่มขยะ{"   "}
-                </ThaiRegText>
-                <AntDesign
-                  name="plussquareo"
-                  size={14}
-                  color={Colors.primary_variant}
-                />
-              </CustomButton>
-            </View>
-          ) : (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center"
+            }}
+          >
             <CustomButton
-              btnColor={Colors.primary_variant}
-              onPress={sellHandler}
-              btnTitleColor={Colors.on_primary}
+              btnColor={
+                editingMode
+                  ? Colors.button.cancel.btnBackground
+                  : Colors.button.submit_primary_bright.btnBackground
+              }
+              onPress={editingMode ? cancelHandler : sellHandler}
+              btnTitleColor={
+                editingMode
+                  ? Colors.button.cancel.btnText
+                  : Colors.button.submit_primary_bright.btnText
+              }
               btnTitleFontSize={14}
               style={{ ...styles.navigateBtn }}
             >
-              ขายขยะ
+              {editingMode ? "ยกเลิก" : "ขายขยะ"}
             </CustomButton>
-          )}
+
+            <CustomButton
+              btnColor={
+                editingMode
+                  ? Colors.button.submit_primary_dark.btnBackground
+                  : Colors.button.submit_primary_dark.btnBackground
+              }
+              onPress={() => {
+                if (editingMode === true) {
+                  confirmHandlerTricker();
+                } else setEditingMode(true);
+              }}
+              btnTitleColor={
+                editingMode
+                  ? Colors.button.submit_primary_dark.btnText
+                  : Colors.button.submit_primary_dark.btnText
+              }
+              btnTitleFontSize={14}
+              style={{
+                ...styles.navigateBtn
+              }}
+            >
+              <ThaiRegText
+                style={{ fontSize: 12, color: Colors.primary_variant }}
+              >
+                {editingMode ? "ยืนยันการแก้ไข" : "แก้ไขขยะ"}
+              </ThaiRegText>
+            </CustomButton>
+          </View>
         </View>
       </LinearGradient>
     </KeyboardAvoidingView>
@@ -450,11 +460,12 @@ const ShowAllUserTrashScreen = props => {
 };
 
 ShowAllUserTrashScreen.navigationOptions = navData => {
-  let setEditingMode = navData.navigation.getParam("setEditingMode");
+  // let setEditingMode = navData.navigation.getParam("setEditingMode");
   let editingMode = navData.navigation.getParam("editingMode");
-  let confirmHandlerTricker = navData.navigation.getParam(
-    "confirmHandlerTricker"
-  );
+  let setModalVisible = navData.navigation.getParam("setModalVisible");
+  // let confirmHandlerTricker = navData.navigation.getParam(
+  //   "confirmHandlerTricker"
+  // );
 
   return {
     headerTitle: "ขยะที่สะสมไว้",
@@ -464,17 +475,18 @@ ShowAllUserTrashScreen.navigationOptions = navData => {
           <Item
             title="Cart"
             iconName={"check"}
-            onPress={confirmHandlerTricker}
+            onPress={() => setModalVisible(true)}
           />
-        ) : (
-          <Item
-            title="Cart"
-            iconName={"square-edit-outline"}
-            onPress={() => {
-              setEditingMode(true);
-            }}
-          />
-        )}
+        ) : // (
+        //   <Item
+        //     title="Cart"
+        //     iconName={"square-edit-outline"}
+        //     onPress={() => {
+        //       setEditingMode(true);
+        //     }}
+        //   />
+        // )
+        null}
       </HeaderButtons>
     )
   };

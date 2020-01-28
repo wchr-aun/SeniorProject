@@ -102,6 +102,7 @@ export default SellerHomepageScreen = props => {
               //     ? userProfile.imgUrl
               //     : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
               // }
+              localImg={true}
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
@@ -152,7 +153,6 @@ export default SellerHomepageScreen = props => {
                   return (
                     <SellTransactionCard
                       amountOfType={item.detail.saleList.length}
-                      imgUrl={""}
                       userName={item.detail.buyer}
                       userRole={userRole}
                       txType={item.detail.txType}

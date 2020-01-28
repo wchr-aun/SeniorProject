@@ -68,7 +68,7 @@ const ShowSellerItemsNavigator = createStackNavigator(
     chooseBuyerForSellScreen: ChooseBuyerScreen
   },
   {
-    headerMode: Platform.OS === "android" ? "screen" : "float",
+    headerMode: "none",
     cardStyle: {
       paddingTop: 0
     }

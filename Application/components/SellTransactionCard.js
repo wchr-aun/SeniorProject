@@ -46,6 +46,7 @@ export default SellTransactionCard = props => {
         }}
       >
         <ImageCircle
+          localImg={true}
           imgUrl={require("./../assets/img/questionmark.png")}
           avariableWidth={wp("20%")}
           style={{ marginHorizontal: wp("3%") }}

@@ -13,6 +13,7 @@ export default UserInfoCard = props => {
         {/* Row 1 */}
         <View style={styles.userInfoContentContainerRow1}>
           <ImageCircle
+            localImgUrl={true}
             imgUrl={
               props.imgUrl
                 ? props.imgUrl

@@ -111,6 +111,7 @@ export default TrashCard = props => {
       >
         <ImageCircle
           avariableWidth={wp("20%")}
+          localImgUrl={props.localImgUrl}
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
