@@ -101,8 +101,9 @@ export default {
       if(this.hasImage){
         this.uploadValue = 28
         this.isUpload = true
-        axios.post('http://localhost:5000/upload', this.image.dataUrl).then(response =>{
+        axios.post('https://asia-east2-formal-purpose-262413.cloudfunctions.net/uploadImageAnn', this.image.dataUrl).then(response =>{
               if(response.data){
+                console.log(response.data)
                 this.uploadValue = 100
                 this.isUpload = false
                 this.hasImage = false

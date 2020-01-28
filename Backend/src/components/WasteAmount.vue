@@ -1,68 +1,90 @@
 <template>
   <div class="container">
-    <AutoComZipcode/>
-    <br>
-    <line-chart :options="options" :height="150" :chart-data="datacollection"></line-chart>
+    <div class="columns">
+      <div class="column">
+        <AutoComZipcode/>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <div class="block is-size-6">
+        </div>
+        <bar-chart :options="options" :height="120" :chart-data="datacollection"></bar-chart>
+      </div>
+    </div>
+    <div class="columns" v-if="datacollection.labels != 0">
+      <div class="column">
+        <div class="buttons is-pulled-right">
+          <b-button type="is-danger" rounded @click="clearData()">Clear Data</b-button>
+        </div>
+      </div>
+    </div>
   </div>
   
 </template>
 
 <script>
-  import LineChart from './LineChart.js'
+  import BarChart from './BarChart.js'
   import AutoComZipcode from './AutoComZipcode'
-  import { queryWastesInAnArea } from "../library"
-  import { wasteAmount } from "../variables"
+  import { getRandomColor } from "../library"
 
   export default {
     components: {
-      LineChart,
+      BarChart,
       AutoComZipcode
     },
     data () {
       return {
-        datacollection: {},
+        datacollection: {
+          labels: [],
+          datasets: []
+        },
         options: {
-          legend: {
-            display: false,
-          },
           scales: {
+            dataset: [{
+              barPercentage: 1,
+              categoryPercentage: 0.5
+            }],
+            xAxes: [{
+              stacked: true
+            }],
             yAxes: [{
-              ticks: {
-                beginAtZero: true,
-                min: 0
-              }    
+              stacked: true
             }]
           }
         }
       }
     },
     methods: {
-      fillData (zipcode) {
+      fillData (datasets) {
+        this.datacollection = JSON.parse(JSON.stringify(datasets))
+      },
+      fetchData (wasteAmount) {
         let labels = []
-        let data = []
-        let backgroundColor = []
-        for (let type in wasteAmount[zipcode]) {
-          for (let subtype in wasteAmount[zipcode][type]) {
+        let datasets = [{
+          label: 'On Hold',
+          backgroundColor: getRandomColor(),
+          data: []
+
+        }, {
+          label: 'In Transactions',
+          backgroundColor: getRandomColor(),
+          data: []
+        }]
+        for (let type in wasteAmount) {
+          for (let subtype in wasteAmount[type]) {
             labels.push(subtype)
-            backgroundColor.push(this.getRandomColor())
-            data.push(wasteAmount[zipcode][type][subtype])
+            datasets[0].data.push(wasteAmount[type][subtype].onHold)
+            datasets[1].data.push(wasteAmount[type][subtype].inTx)
           }
         }
-        this.datacollection = {
-          labels,
-          datasets: [{
-            backgroundColor,
-            data
-          }]
-        }
+        return {labels, datasets}
       },
-      getRandomColor () {
-        var letters = '0123456789ABC';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 12)];
+      clearData () {
+        this.datacollection = {
+          labels: [],
+          datasets: []
         }
-        return color;
       }
     }
   }

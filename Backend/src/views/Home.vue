@@ -4,16 +4,16 @@
       <b>Data Visualization</b>
     </div>
     <b-tabs>
-      <b-tab-item label="Waste Amount">
+      <b-tab-item label="Total Waste Amount">
+        <TotalWaste />
+      </b-tab-item>
+
+      <b-tab-item label="Waste Amount By Zipcode">
         <WasteAmount />
       </b-tab-item>
 
-      <b-tab-item label="Buyers">
+      <b-tab-item label="Buyers by Zipcode">
         Buyers
-      </b-tab-item>
-
-      <b-tab-item label="Waste in Total">
-        Waste in Total
       </b-tab-item>
     </b-tabs>
   </div>
@@ -22,11 +22,13 @@
 <script>
 // @ is an alias to /src
 import WasteAmount from '@/components/WasteAmount'
+import TotalWaste from '@/components/TotalWaste'
 
 export default {
   name: 'Home',
   components: {
-    WasteAmount
+    WasteAmount,
+    TotalWaste
   }
 }
 </script>

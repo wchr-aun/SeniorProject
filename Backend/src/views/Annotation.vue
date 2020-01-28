@@ -210,9 +210,12 @@ export default {
           "annotations": this.rects,
           "filename": this.filename,
           "collectionID": this.collectionID
-        }
+        };
+        let config = {
+            "headers": {"Access-Control-Allow-Origin": "*"}
+        };
         console.log(payload)
-        axios.post('http://localhost:5000/annotate', payload).then(response =>{
+        axios.post('https://asia-east2-formal-purpose-262413.cloudfunctions.net/imageAnnotation', payload, config).then(response =>{
             if(response.data){
               console.log(response.data)
               this.rects = []
