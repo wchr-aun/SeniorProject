@@ -22,7 +22,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import ModalShowSellerItemsScreen from "../../components/ModalShowSellerItemsScreen";
-import ThaiText from "../../components/ThaiText";
+import ThaiRegText from "../../components/ThaiRegText";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import TrashCard from "../../components/TrashCard";
 import Colors from "../../constants/Colors";
@@ -420,11 +420,11 @@ const ShowAllUserTrashScreen = props => {
                   ...styles.navigateBtn
                 }}
               >
-                <ThaiText
+                <ThaiRegText
                   style={{ fontSize: 12, color: Colors.primary_variant }}
                 >
                   เพิ่มขยะ{"   "}
-                </ThaiText>
+                </ThaiRegText>
                 <AntDesign
                   name="plussquareo"
                   size={14}

@@ -1,10 +1,5 @@
 import React, { useReducer, useCallback, useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  FlatList
-} from "react-native";
+import { View, StyleSheet, Alert, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -15,27 +10,27 @@ import {
 import Colors from "../../constants/Colors";
 import ModalShowInteractMap from "../../components/ModalShowInteractMap";
 import { fetchTransactionForPathOp } from "../../store/actions/transactionAction";
-import libary from "../../utils/libary"
+import libary from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
 
 const destinationReducer = (state, action) => {
-  let geopoint = state.geopoint
+  let geopoint = state.geopoint;
   for (index in geopoint) {
     if (action.geopoint.txId == geopoint[index].txId) {
-      let newGeopoint = []
-      newGeopoint = geopoint.splice(0, index)
-      geopoint.shift()
-      newGeopoint.concat(geopoint)
+      let newGeopoint = [];
+      newGeopoint = geopoint.splice(0, index);
+      geopoint.shift();
+      newGeopoint.concat(geopoint);
       return {
         geopoint: newGeopoint
       };
     }
   }
-  geopoint.push(action.geopoint)
+  geopoint.push(action.geopoint);
   return {
     geopoint
   };
-}
+};
 
 export default UserSignupScreen = props => {
   const dispatch = useDispatch();
@@ -47,7 +42,10 @@ export default UserSignupScreen = props => {
   const [addrReadable, setAddrReadable] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
   const userProfile = useSelector(state => state.user.userProfile);
-  const [destinationState, dispatchDestination] = useReducer(destinationReducer, { geopoint: [] });
+  const [destinationState, dispatchDestination] = useReducer(
+    destinationReducer,
+    { geopoint: [] }
+  );
 
   // 'formState (state snapshot) will be updated when state changed
 
@@ -86,15 +84,18 @@ export default UserSignupScreen = props => {
         latitude: tx.detail.addr_geopoint.geopoint.latitude,
         longitude: tx.detail.addr_geopoint.geopoint.longitude
       }
-    })
-  }
+    });
+  };
 
   if (addrModalVisible) {
     return (
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
-        origin={{latitude: userProfile.addr.latitude, longitude: userProfile.addr.longitude}}
+        origin={{
+          latitude: userProfile.addr.latitude,
+          longitude: userProfile.addr.longitude
+        }}
         destination={destinationState.geopoint}
         pathOptimize={true}
         setSellerAddr={setSellerAddr}
@@ -140,9 +141,7 @@ export default UserSignupScreen = props => {
         }}
         onPress={searchMapHandler}
         btnColor={Colors.on_primary}
-        btnTitleColor={
-          isSelected ? Colors.lineSeparate : Colors.primary
-        }
+        btnTitleColor={isSelected ? Colors.lineSeparate : Colors.primary_dark}
         btnTitleFontSize={14}
       >
         ค้นหาเส้นทาง

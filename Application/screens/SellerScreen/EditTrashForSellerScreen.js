@@ -72,7 +72,7 @@ export default EditTrashForSellerScreen = props => {
       <View>
         <Button
           title={"Add it"}
-          color={Colors.primary}
+          color={Colors.primary_dark}
           onPress={addTrashHandler}
         />
       </View>

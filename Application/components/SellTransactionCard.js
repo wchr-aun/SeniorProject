@@ -13,7 +13,7 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import ThaiText from "./ThaiText";
+import ThaiRegText from "./ThaiRegText";
 import ImageCircle from "./UI/ImageCircle";
 import libary from "../utils/libary";
 
@@ -38,7 +38,7 @@ export default SellTransactionCard = props => {
         style={{
           width: wp("95%"),
           height: 100,
-          backgroundColor: Colors.on_primary,
+          backgroundColor: Colors.on_primary_dark,
           alignSelf: "center",
           marginVertical: 5,
           borderRadius: 10,
@@ -58,20 +58,20 @@ export default SellTransactionCard = props => {
         >
           <View style={{ width: "100%", flexDirection: "row" }}>
             <View style={{ width: "60%" }}>
-              <ThaiText style={{ fontSize: 14 }}>
+              <ThaiRegText style={{ fontSize: 14 }}>
                 {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
                 {props.userName ? props.userName : "ยังไม่ระบุ"}
-              </ThaiText>
+              </ThaiRegText>
             </View>
             <View style={{ width: "40%" }}>
-              <ThaiText
+              <ThaiRegText
                 style={{
                   fontSize: 8,
                   color: libary.getColorTxStatus(props.txStatus)
                 }}
               >
                 {libary.getReadableTxStatus(props.txStatus)}
-              </ThaiText>
+              </ThaiRegText>
             </View>
           </View>
           <View style={styles.lineSeparate} />
@@ -82,18 +82,20 @@ export default SellTransactionCard = props => {
             }}
           >
             <View style={{ width: "100%" }}>
-              <ThaiText style={{ fontSize: 8 }}>{props.addr}</ThaiText>
+              <ThaiRegText style={{ fontSize: 8 }}>{props.addr}</ThaiRegText>
             </View>
           </View>
           <View style={{ ...styles.description, width: "50%" }}>
             <View style={{ ...styles.amountOfType, width: "100%" }}>
-              <Ionicons name="md-trash" size={24} color={Colors.primary} />
-              <ThaiText style={{ fontSize: 10 }}>
+              <Ionicons name="md-trash" size={24} color={Colors.primary_dark} />
+              <ThaiRegText style={{ fontSize: 10 }}>
                 {props.amountOfType} ประเภท
-              </ThaiText>
+              </ThaiRegText>
             </View>
             <View style={{ width: "100%" }}>
-              <ThaiText style={{ fontSize: 10 }}>{props.meetDate}</ThaiText>
+              <ThaiRegText style={{ fontSize: 10 }}>
+                {props.meetDate}
+              </ThaiRegText>
             </View>
           </View>
         </View>

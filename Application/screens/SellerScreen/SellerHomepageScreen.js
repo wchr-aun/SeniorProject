@@ -5,8 +5,7 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
-  Alert,
-  StatusBar
+  Alert
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,7 +15,7 @@ import {
 } from "react-native-responsive-screen";
 
 import UserInfoCard from "../../components/UserInfoCard";
-import ThaiTitleText from "../../components/ThaiTitleText";
+import ThaiTitleText from "../../components/ThaiBoldText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -25,7 +24,6 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import * as transactionAction from "../../store/actions/transactionAction";
 
 import libary from "../../utils/libary";
-import { Wastes } from "../../models/AllUserTrash";
 
 export default SellerHomepageScreen = props => {
   // Loading effect
@@ -82,16 +80,17 @@ export default SellerHomepageScreen = props => {
             style={{
               width: "100%",
               height: "100%",
-              backgroundColor: Colors.on_primary,
+              backgroundColor: Colors.on_primary_dark.high_constrast,
               alignSelf: "center",
               justifyContent: "center"
             }}
           >
-            <ActivityIndicator size="large" color={Colors.primary} />
+            <ActivityIndicator size="large" color={Colors.primary_dark} />
           </View>
         ) : (
           <>
             <UserInfoCard
+              avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
                 height: "40%",
@@ -105,7 +104,6 @@ export default SellerHomepageScreen = props => {
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
-              // onSignout={() => signOutHandler()}
               onSignout={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
@@ -117,7 +115,7 @@ export default SellerHomepageScreen = props => {
                 alignSelf: "center",
                 alignItems: "center",
                 paddingVertical: 10,
-                backgroundColor: Colors.primary_variant,
+                backgroundColor: Colors.primary_bright,
                 paddingBottom: getStatusBarHeight()
               }}
             >
@@ -133,7 +131,10 @@ export default SellerHomepageScreen = props => {
                   }}
                 >
                   <ThaiTitleText
-                    style={{ color: Colors.on_primary, fontSize: 18 }}
+                    style={{
+                      color: Colors.on_primary_bright.low_constrast,
+                      fontSize: 18
+                    }}
                   >
                     การรับซื้อขยะล่าสุด
                   </ThaiTitleText>
@@ -144,7 +145,6 @@ export default SellerHomepageScreen = props => {
                 data={transactions ? transactions[0] : []}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {
-                  console.log(item.detail.assignedTime[0]);
                   return (
                     <SellTransactionCard
                       amountOfType={item.detail.saleList.length}
@@ -174,6 +174,6 @@ export default SellerHomepageScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Colors.screen
+    backgroundColor: Colors.secondary
   }
 });

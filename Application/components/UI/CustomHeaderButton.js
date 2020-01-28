@@ -9,7 +9,7 @@ const CustomHeaderButton = props => {
       {...props}
       IconComponent={MaterialCommunityIcons}
       iconSize={23}
-      color={Colors.primary}
+      color={Colors.primary_dark}
     />
   );
 };

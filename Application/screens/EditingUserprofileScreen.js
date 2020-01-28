@@ -29,8 +29,8 @@ import * as authAction from "../store/actions/authAction";
 
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
-import ThaiTitleText from "../components/ThaiTitleText";
-import ThaiText from "../components/ThaiText";
+import ThaiMdText from "../components/ThaiMdText";
+import ThaiRegText from "../components/ThaiRegText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 
@@ -295,9 +295,9 @@ export default EditingUserprofileScreen = props => {
             alignSelf: "center"
           }}
         >
-          <ThaiTitleText style={{ color: Colors.on_primary, fontSize: 14 }}>
+          <ThaiMdText style={{ color: Colors.on_primary, fontSize: 14 }}>
             ตั้งค่าข้อมูลผู้ใช้งาน
-          </ThaiTitleText>
+          </ThaiMdText>
         </View>
         <View
           style={{
@@ -346,7 +346,7 @@ export default EditingUserprofileScreen = props => {
                     }
                     size={36}
                   />
-                  <ThaiText>คนขาย</ThaiText>
+                  <ThaiRegText>คนขาย</ThaiRegText>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => changeRoleHandler("buyer")}
@@ -371,7 +371,7 @@ export default EditingUserprofileScreen = props => {
                     }
                     size={36}
                   />
-                  <ThaiText>คนซื้อ</ThaiText>
+                  <ThaiRegText>คนซื้อ</ThaiRegText>
                 </TouchableOpacity>
               </View>
               {!userRole === "buyer" ? null : (
@@ -409,9 +409,9 @@ export default EditingUserprofileScreen = props => {
                     }}
                   />
                   <View>
-                    <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
+                    <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
                       สามารถถูกค้นหาได้
-                    </ThaiText>
+                    </ThaiRegText>
                   </View>
                 </View>
               )}
@@ -488,9 +488,9 @@ export default EditingUserprofileScreen = props => {
                   alignSelf: "center"
                 }}
               >
-                <ThaiText style={{ textAlign: "center", fontSize: 16 }}>
+                <ThaiRegText style={{ textAlign: "center", fontSize: 16 }}>
                   ที่อยู่ในการจัดส่ง
-                </ThaiText>
+                </ThaiRegText>
               </View>
 
               <View
@@ -501,7 +501,7 @@ export default EditingUserprofileScreen = props => {
                   alignSelf: "center"
                 }}
               >
-                <ThaiText
+                <ThaiRegText
                   style={{
                     textAlign: "center",
                     fontSize: 12,
@@ -511,7 +511,7 @@ export default EditingUserprofileScreen = props => {
                   }}
                 >
                   {userProfile.addr.readable}
-                </ThaiText>
+                </ThaiRegText>
               </View>
 
               <TouchableOpacity
@@ -538,9 +538,9 @@ export default EditingUserprofileScreen = props => {
                     circleColorOn="#ffffff"
                     onPress={() => setIsCurrentAddr(preState => !preState)}
                   />
-                  <ThaiText style={{ textAlign: "center", fontSize: 12 }}>
+                  <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
-                  </ThaiText>
+                  </ThaiRegText>
                 </View>
               </TouchableOpacity>
 
@@ -639,7 +639,7 @@ export default EditingUserprofileScreen = props => {
                 }
                 iconName="account-card-details"
               />
-              <ThaiText
+              <ThaiRegText
                 style={{
                   fontSize: 12,
                   color:
@@ -647,7 +647,7 @@ export default EditingUserprofileScreen = props => {
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
-              </ThaiText>
+              </ThaiRegText>
               <CustomButton
                 disable={isCurrentAddr}
                 style={{

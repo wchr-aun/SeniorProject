@@ -16,7 +16,7 @@ import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import TrashCardForSell from "../../components/TrashCardForSell";
 import CustomButton from "../../components/UI/CustomButton";
 import { TextInput } from "react-native-gesture-handler";
-import ThaiText from "../../components/ThaiText";
+import ThaiRegText from "../../components/ThaiRegText";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
@@ -265,7 +265,7 @@ export default SellingTrashScreen = props => {
           <View
             style={{ width: "40%", height: "100%", backgroundColor: "red" }}
           >
-            <ThaiText>ค้นในระยะ </ThaiText>
+            <ThaiRegText>ค้นในระยะ </ThaiRegText>
             <TextInput
               value={distance}
               onChangeText={value => {

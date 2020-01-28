@@ -23,8 +23,8 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
-import ThaiText from "../../components/ThaiText";
-import ThaiTitleText from "../../components/ThaiTitleText";
+import ThaiRegText from "../../components/ThaiRegText";
+import ThaiMdText from "../../components/ThaiMdText";
 
 const BuyerChoice = props => {
   return (
@@ -48,7 +48,7 @@ const BuyerChoice = props => {
           padding: 5
         }}
       >
-        <ThaiText>{`ผู้รับซื้อ ${props.buyerName}`}</ThaiText>
+        <ThaiRegText>{`ผู้รับซื้อ ${props.buyerName}`}</ThaiRegText>
       </View>
       <View style={{ height: "70%", width: "100%" }}>
         <FlatList
@@ -66,10 +66,10 @@ const BuyerChoice = props => {
                   borderRadius: 5
                 }}
               >
-                <ThaiText>
-                  <ThaiTitleText style={{ fontSize: 10 }}>
+                <ThaiRegText>
+                  <ThaiMdText style={{ fontSize: 10 }}>
                     {item.subtype}
-                  </ThaiTitleText>
+                  </ThaiMdText>
                   {props.purchaseList[item.type] == undefined
                     ? ` ไม่รับซื้อ `
                     : props.purchaseList[item.type][item.subtype] == undefined
@@ -78,7 +78,7 @@ const BuyerChoice = props => {
                         props.purchaseList[item.type][item.subtype]
                       } = ${item.amount *
                         props.purchaseList[item.type][item.subtype]}`}
-                </ThaiText>
+                </ThaiRegText>
               </View>
             );
           }}
@@ -292,7 +292,7 @@ export default ChooseBuyerScreen = props => {
           <View style={{ width: "100%", height: 100 }}>
             <CustomButton
               style={{ width: "90%", height: "100%" }}
-              btnColor={Colors.primary}
+              btnColor={Colors.primary_dark}
               onPress={quickSellHandler}
               btnTitleColor={Colors.on_primary}
               btnTitleFontSize={14}

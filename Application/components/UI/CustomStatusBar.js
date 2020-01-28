@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StatusBar } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import Colors from "../../constants/Colors";
 
 export default CustomStatusBar = () => {
   return (

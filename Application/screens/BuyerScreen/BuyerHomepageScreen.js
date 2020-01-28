@@ -14,7 +14,7 @@ import {
 } from "react-native-responsive-screen";
 
 import UserInfoCard from "../../components/UserInfoCard";
-import ThaiTitleText from "../../components/ThaiTitleText";
+import ThaiMdText from "../../components/ThaiMdText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -87,7 +87,7 @@ export default BuyerHomepageScreen = props => {
               justifyContent: "center"
             }}
           >
-            <ActivityIndicator size="large" color={Colors.primary} />
+            <ActivityIndicator size="large" color={Colors.primary_dark} />
           </View>
         ) : (
           <>
@@ -117,7 +117,7 @@ export default BuyerHomepageScreen = props => {
                 alignSelf: "center",
                 alignItems: "center",
                 paddingVertical: 10,
-                backgroundColor: Colors.primary_variant,
+                backgroundColor: Colors.primary_bright,
                 paddingBottom: getStatusBarHeight()
               }}
             >
@@ -132,11 +132,11 @@ export default BuyerHomepageScreen = props => {
                     setGoToUITestingScreen(preState => preState + 1);
                   }}
                 >
-                  <ThaiTitleText
+                  <ThaiMdText
                     style={{ color: Colors.on_primary, fontSize: 18 }}
                   >
                     การรับซื้อขยะล่าสุด
-                  </ThaiTitleText>
+                  </ThaiMdText>
                 </TouchableWithoutFeedback>
               </View>
 

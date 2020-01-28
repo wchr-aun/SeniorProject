@@ -15,7 +15,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import ThaiText from "./ThaiText";
+import ThaiRegText from "./ThaiRegText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default ModalShowSellersItemsScreen = props => {

@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  StyleSheet,
-  FlatList,
-  View,
-  Text,
-  Image,
-  Platform,
-  Dimensions,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import ThaiText from "./ThaiText";
+import ThaiRegText from "./ThaiRegText";
+import ImageCircle from "./UI/ImageCircle";
 
 export default UserInfoCard = props => {
   return (
@@ -20,7 +12,7 @@ export default UserInfoCard = props => {
       <View style={styles.userInfoContentContainer}>
         {/* Row 1 */}
         <View style={styles.userInfoContentContainerRow1}>
-          <View style={{ ...styles.imgContainer }}>
+          {/* <View style={{ ...styles.imgContainer }}>
             <Image
               source={{
                 uri: props.imgUrl
@@ -28,19 +20,34 @@ export default UserInfoCard = props => {
               style={styles.userImg}
               resizeMode="contain"
             />
-          </View>
+          </View> */}
+          <ImageCircle
+            imgUrl={props.imgUrl}
+            avariableWidth={props.avariableWidth * 0.3}
+          />
           <View
             style={{
-              width: "60%",
+              width: props.avariableWidth * 0.6,
               paddingLeft: 20
             }}
           >
-            <ThaiText style={styles.userName}>{props.userName}</ThaiText>
-            <Text>{props.address}</Text>
+            <ThaiRegText
+              style={{
+                ...styles.userName,
+                color: Colors.on_primary_dark.high_constrast
+              }}
+            >
+              {props.userName}
+            </ThaiRegText>
+            <ThaiRegText>{props.address}</ThaiRegText>
           </View>
           <View style={{ width: "10%" }}>
             <TouchableOpacity onPress={props.onSignout}>
-              <Ionicons name="ios-settings" size={30} color={Colors.primary} />
+              <Ionicons
+                name="ios-settings"
+                size={30}
+                color={Colors.primary_dark}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -48,8 +55,22 @@ export default UserInfoCard = props => {
         <View style={styles.lineSeparate} />
         {/* Row 2 */}
         <View style={styles.userInfoContentContainerRow2}>
-          <ThaiText style={{ fontSize: 14 }}>การรับซื้อขยะรอบต่อไป</ThaiText>
-          <ThaiText style={{ fontSize: 20 }}>{props.meetTime}</ThaiText>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            การรับซื้อขยะรอบต่อไป
+          </ThaiRegText>
+          <ThaiRegText
+            style={{
+              fontSize: 20,
+              color: Colors.on_primary_dark.high_constrast
+            }}
+          >
+            {props.meetTime}
+          </ThaiRegText>
         </View>
       </View>
     </View>
@@ -58,7 +79,7 @@ export default UserInfoCard = props => {
 
 const styles = StyleSheet.create({
   userInfoContainer: {
-    backgroundColor: Colors.on_primary,
+    backgroundColor: Colors.primary_dark,
     alignSelf: "center"
   },
   userInfoContentContainer: {
@@ -93,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   lineSeparate: {
-    borderBottomColor: Colors.lineSeparate,
+    borderBottomColor: Colors.soft_primary_dark,
     borderBottomWidth: 1,
     marginVertical: 5
   }

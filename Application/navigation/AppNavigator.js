@@ -109,7 +109,7 @@ const SellerBottomTabConfig = {
       tabBarIcon: tabInfo => {
         return <Ionicons name="md-home" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
   AllTrash: {
@@ -119,7 +119,7 @@ const SellerBottomTabConfig = {
       tabBarIcon: tabInfo => {
         return <Ionicons name="md-trash" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
   CheckTrash: {
@@ -131,7 +131,7 @@ const SellerBottomTabConfig = {
           <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
   SellTransaction: {
@@ -143,7 +143,7 @@ const SellerBottomTabConfig = {
           <Ionicons name="md-list-box" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   }
 };
@@ -152,21 +152,21 @@ const SellerBottomTabConfig = {
 const SellerNavigator =
   Platform.OS === "android"
     ? createMaterialBottomTabNavigator(SellerBottomTabConfig, {
-        activeColor: Colors.primary_variant,
+        activeColor: Colors.primary_bright,
         shifting: true,
         labeled: true,
-        inactiveColor: Colors.on_primary,
+        inactiveColor: Colors.soft_primary_dark,
         barStyle: {
           height: AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary
+          backgroundColor: Colors.primary_dark
         }
       })
     : createBottomTabNavigator(SellerBottomTabConfig, {
         tabBarOptions: {
           // when using like 'color={tabTintColor}
-          activeTintColor: Colors.on_primary,
+          activeTintColor: Colors.primary_bright,
           style: {
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.primary_dark,
             height: AppVariableSetting.bottomBarHeight
           }
         }
@@ -196,7 +196,9 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
       navigationOptions: {
         tabBarLabel: "การรับซื้อขยะในวันนั้น",
         tabBarIcon: tabInfo => {
-          return <Ionicons name="md-map" size={25} color={Colors.on_primary} />;
+          return (
+            <Ionicons name="md-map" size={25} color={Colors.on_primary_dark} />
+          );
         }
       }
     },
@@ -207,7 +209,11 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
         tabBarLabel: "การรับซื้อขยะในวันนั้น",
         tabBarIcon: tabInfo => {
           return (
-            <Ionicons name="md-list-box" size={25} color={Colors.on_primary} />
+            <Ionicons
+              name="md-list-box"
+              size={25}
+              color={Colors.on_primary_dark}
+            />
           );
         }
       }
@@ -235,7 +241,7 @@ const BuyerBottomTabConfig = {
       tabBarIcon: tabInfo => {
         return <Ionicons name="md-home" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
   EditBuyerInfo: {
@@ -247,7 +253,7 @@ const BuyerBottomTabConfig = {
           <Ionicons name="ios-build" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
 
@@ -260,7 +266,7 @@ const BuyerBottomTabConfig = {
           <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   },
   BuyerTransaction: {
@@ -272,7 +278,7 @@ const BuyerBottomTabConfig = {
           <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary
+      tabBarColor: Colors.primary_dark
     }
   }
 };
@@ -281,21 +287,21 @@ const BuyerBottomTabConfig = {
 const BuyerNavigator =
   Platform.OS === "android"
     ? createMaterialBottomTabNavigator(BuyerBottomTabConfig, {
-        activeColor: Colors.primary_variant,
+        activeColor: Colors.primary_bright,
         shifting: true,
         labeled: true,
-        inactiveColor: Colors.on_primary,
+        inactiveColor: Colors.on_primary_dark,
         barStyle: {
           height: AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary
+          backgroundColor: Colors.primary_dark
         }
       })
     : createBottomTabNavigator(BuyerBottomTabConfig, {
         tabBarOptions: {
           // when using like 'color={tabTintColor}
-          activeTintColor: Colors.on_primary,
+          activeTintColor: Colors.on_primary_dark,
           style: {
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.primary_dark,
             height: AppVariableSetting.bottomBarHeight
           }
         }

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 
-export default ThaiButtonText = props => {
+export default ThaiTitleText = props => {
   return (
     <Text style={{ ...styles.customStyle, ...props.style }}>
       {props.children}
@@ -11,7 +11,7 @@ export default ThaiButtonText = props => {
 
 const styles = StyleSheet.create({
   customStyle: {
-    fontSize: 26,
-    fontFamily: "MD_K2D"
+    fontSize: 10,
+    fontFamily: "BOLD_K2D"
   }
 });

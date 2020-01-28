@@ -14,7 +14,7 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
-import ThaiText from "../../components/ThaiText";
+import ThaiRegText from "../../components/ThaiRegText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 
 export default BuyingTransactionScreen = props => {
@@ -60,7 +60,7 @@ export default BuyingTransactionScreen = props => {
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,
-          backgroundColor: Colors.primary_variant,
+          backgroundColor: Colors.primary_bright,
           paddingBottom: getStatusBarHeight()
         }}
       >

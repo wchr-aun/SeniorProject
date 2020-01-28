@@ -20,8 +20,8 @@ import {
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import { createAccount, editBuyerInfo } from "../utils/firebaseFunctions";
-import ThaiTitleText from "../components/ThaiTitleText";
-import ThaiText from "../components/ThaiText";
+import ThaiMdText from "../components/ThaiMdText";
+import ThaiRegText from "../components/ThaiRegText";
 import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
 import ModalShowInteractMap from "../components/ModalShowInteractMap";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -281,9 +281,9 @@ export default UserSignupScreen = props => {
             paddingTop: getStatusBarHeight()
           }}
         >
-          <ThaiTitleText style={{ color: Colors.on_primary }}>
+          <ThaiMdText style={{ color: Colors.on_primary }}>
             สร้างบัญชีผู้ใช้
-          </ThaiTitleText>
+          </ThaiMdText>
         </View>
         <View
           style={{
@@ -437,9 +437,9 @@ export default UserSignupScreen = props => {
                   alignSelf: "center"
                 }}
               >
-                <ThaiText style={{ fontSize: 14, textAlign: "center" }}>
+                <ThaiRegText style={{ fontSize: 14, textAlign: "center" }}>
                   ที่อยู่ในการจัดส่ง
-                </ThaiText>
+                </ThaiRegText>
               </View>
               <TouchableOpacity
                 onPress={() => {
@@ -460,9 +460,9 @@ export default UserSignupScreen = props => {
                     size={15}
                     color={Colors.primary}
                   />
-                  <ThaiText style={{ fontSize: 10, textAlign: "center" }}>
+                  <ThaiRegText style={{ fontSize: 10, textAlign: "center" }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
-                  </ThaiText>
+                  </ThaiRegText>
                 </View>
               </TouchableOpacity>
               <Input
@@ -560,7 +560,7 @@ export default UserSignupScreen = props => {
                 }
                 iconName="account-card-details"
               />
-              <ThaiText
+              <ThaiRegText
                 style={{
                   fontSize: 12,
                   color:
@@ -568,7 +568,7 @@ export default UserSignupScreen = props => {
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
-              </ThaiText>
+              </ThaiRegText>
               <CustomButton
                 disable={currentAddr}
                 style={{

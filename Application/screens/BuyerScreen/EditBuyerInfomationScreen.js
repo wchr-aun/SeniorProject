@@ -16,11 +16,12 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import * as buyerAction from "../../store/actions/buyerAction";
 
-import ThaiTitleText from "../../components/ThaiTitleText";
+import ThaiRegText from "../../components/ThaiRegText";
+import ThaiMdText from "../../components/ThaiMdText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import AppVariableSetting from "../../constants/AppVariableSetting";
-import ThaiText from "../../components/ThaiText";
+
 import CustomButton from "../../components/UI/CustomButton";
 
 export default EditBuyerInfomationScreen = props => {
@@ -84,12 +85,12 @@ export default EditBuyerInfomationScreen = props => {
               height: "20%",
               marginHorizontal: 5,
               borderRadius: 5,
-              borderColor: Colors.primary,
+              borderColor: Colors.primary_dark,
               borderWidth: 0.75
             }}
             btnColor={Colors.on_primary}
             onPress={toggleModeHandler}
-            btnTitleColor={Colors.primary}
+            btnTitleColor={Colors.primary_dark}
             btnTitleFontSize={10}
           >
             {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขราคา"}
@@ -154,7 +155,7 @@ export default EditBuyerInfomationScreen = props => {
                     }}
                   >
                     <View style={{ width: "20%" }}>
-                      <ThaiText>{subtypeName}</ThaiText>
+                      <ThaiRegText>{subtypeName}</ThaiRegText>
                     </View>
                     <View
                       style={{
@@ -170,9 +171,9 @@ export default EditBuyerInfomationScreen = props => {
                         }}
                       >
                         {!isEditingMode ? (
-                          <ThaiText>
+                          <ThaiRegText>
                             {(isDefinedPrice ? price : 0).toString()}
-                          </ThaiText> // show price
+                          </ThaiRegText> // show price
                         ) : (
                           <TextInput
                             placeholder={price.toString()}
@@ -190,13 +191,13 @@ export default EditBuyerInfomationScreen = props => {
                             keyboardType="numeric"
                             style={{
                               color: !isUpdated
-                                ? Colors.primary_variant
+                                ? Colors.primary_bright
                                 : "black"
                             }}
                           />
                         )}
                       </View>
-                      <ThaiText> บาท/ กก.</ThaiText>
+                      <ThaiRegText> บาท/ กก.</ThaiRegText>
                     </View>
                     {/* {!isEditingMode ? null : (
                       <View style={{ width: "20%" }}>
@@ -220,7 +221,7 @@ export default EditBuyerInfomationScreen = props => {
               );
             }}
             renderSectionHeader={({ section: { type } }) => {
-              return <ThaiTitleText>{type}</ThaiTitleText>;
+              return <ThaiMdText>{type}</ThaiMdText>;
             }}
           />
         </View>

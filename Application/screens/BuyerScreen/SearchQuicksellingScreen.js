@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
-import ThaiText from "../../components/ThaiText";
+import ThaiRegText from "../../components/ThaiRegText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 
 export default SearchQuicksellingScreen = props => {
@@ -75,7 +75,7 @@ export default SearchQuicksellingScreen = props => {
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,
-          backgroundColor: Colors.primary_variant
+          backgroundColor: Colors.primary_bright
         }}
       >
         <FlatList

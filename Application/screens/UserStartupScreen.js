@@ -6,7 +6,7 @@ import * as authAction from "../store/actions/authAction";
 import * as buyerAction from "../store/actions/buyerAction";
 import * as wasteTypeAction from "../store/actions/wasteTypeAction";
 import { verifyNotificationsPermissions } from "../utils/permissions";
-import 'react-native-console-time-polyfill';
+import "react-native-console-time-polyfill";
 
 export default UserStartupScreen = props => {
   const dispatch = useDispatch();
@@ -16,14 +16,14 @@ export default UserStartupScreen = props => {
     verifyNotificationsPermissions();
     firebaseUtil.auth().onAuthStateChanged(user => {
       console.log("startup-afterOnAuth");
-      console.time("Startup-Navigate")
+      console.time("Startup-Navigate");
       if (user != null) {
         dispatch(authAction.signin())
           .then(dispatch(wasteTypeAction.fetchWasteType()))
           .then(() => {
             AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
               dispatch(authAction.setUserRole(config_role));
-              console.timeEnd("Startup-Navigate")
+              console.timeEnd("Startup-Navigate");
               console.log("startup-beforeNavigate");
               if (config_role == "seller")
                 props.navigation.navigate("SellerNavigator");
@@ -33,10 +33,10 @@ export default UserStartupScreen = props => {
             });
           });
       } else {
-        console.timeEnd("Startup-Navigate")
+        console.timeEnd("Startup-Navigate");
         console.log("startup-beforeNavigatetoLogin");
-        props.navigation.navigate("UserAuthenNavigator")
-      };
+        props.navigation.navigate("UserAuthenNavigator");
+      }
     });
   }, []);
 

@@ -1,14 +1,24 @@
 export default {
-  primary: "#272727",
-  primary_variant: "#18b87d",
-  on_primary: "#fafafa",
-  on_semi_primary: "#fafafa",
-  screen: "#fafafa",
-  secondary: "#0084ff",
-  on_secondary: "#effffb",
-  lineSeparate: "#cccccc",
+  primary_dark: "#272727",
+  primary_bright: "#149c6a",
+  secondary: "#fafafa",
+  soft_primary_dark: "#414141",
+  soft_primary_bright: "#1ac989",
+  soft_secondary: "#fafafa",
+  on_primary_dark: {
+    low_constrast: "#fafafa",
+    high_constrast: "#149c6a"
+  },
+  on_primary_bright: {
+    low_constrast: "#fafafa",
+    high_constrast: "#272727"
+  },
+  on_secondary: {
+    low_constrast: "#149c6a",
+    high_constrast: "#272727"
+  },
   error: "#8c0b04",
-  linearGradient: ["#2abf9d", "#0084ff"],
+  linearGradient: ["#149c6a", "#0084ff"],
   linearGradientB: ["#2abfbf", "#3797f0"],
   // txStatus
   txStatus: {

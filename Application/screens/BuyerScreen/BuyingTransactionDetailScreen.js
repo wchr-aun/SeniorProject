@@ -12,8 +12,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
-import ThaiTitleText from "../../components/ThaiTitleText";
-import ThaiText from "../../components/ThaiText";
+import ThaiMdText from "../../components/ThaiMdText";
+import ThaiRegText from "../../components/ThaiRegText";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 import CustomButton from "../../components/UI/CustomButton";
@@ -136,27 +136,23 @@ export default BuyingTransactionDetailScreen = props => {
             />
           </View>
           <View style={{ width: "100%", height: "50%" }}>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>สถานะ: </ThaiTitleText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>สถานะ: </ThaiMdText>
               {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
-            </ThaiText>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>
-                ผู้รับซื้อ:{" "}
-              </ThaiTitleText>
+            </ThaiRegText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>ผู้รับซื้อ: </ThaiMdText>
               {transactionItem.detail.buyer}
-            </ThaiText>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>
-                สถานที่รับขยะ:{" "}
-              </ThaiTitleText>
+            </ThaiRegText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>สถานที่รับขยะ: </ThaiMdText>
               {transactionItem.detail.addr}
-            </ThaiText>
-            <ThaiText>{transactionItem.tel}</ThaiText>
+            </ThaiRegText>
+            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
           </View>
         </View>
         <View style={{ width: "100%", height: "5%" }}>
-          <ThaiTitleText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiTitleText>
+          <ThaiMdText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiMdText>
         </View>
         <View
           style={{
@@ -186,11 +182,11 @@ export default BuyingTransactionDetailScreen = props => {
                       alignSelf: "center"
                     }}
                   >
-                    <ThaiText>
+                    <ThaiRegText>
                       {libary.formatDate(item.toDate()) +
                         " " +
                         libary.formatTime(item.toDate())}
-                    </ThaiText>
+                    </ThaiRegText>
                     <MaterialIcons
                       name={
                         timeSelected === item
@@ -207,9 +203,7 @@ export default BuyingTransactionDetailScreen = props => {
           />
         </View>
         <View style={{ width: "100%", height: "5%" }}>
-          <ThaiTitleText style={{ fontSize: 12 }}>
-            ประเภทขยะที่ขาย
-          </ThaiTitleText>
+          <ThaiMdText style={{ fontSize: 12 }}>ประเภทขยะที่ขาย</ThaiMdText>
         </View>
         <View
           style={{
@@ -234,10 +228,10 @@ export default BuyingTransactionDetailScreen = props => {
                   }}
                 >
                   <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiText>{item.type + " " + item.subtype}</ThaiText>
+                    <ThaiRegText>{item.type + " " + item.subtype}</ThaiRegText>
                   </View>
                   <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiText>{"จำนวน " + item.amount.amount}</ThaiText>
+                    <ThaiRegText>{"จำนวน " + item.amount.amount}</ThaiRegText>
                   </View>
                 </View>
               );
@@ -313,9 +307,9 @@ export default BuyingTransactionDetailScreen = props => {
             }}
           >
             <View style={{ flexDirection: "row" }}>
-              <ThaiText style={{ color: Colors.lineSeparate, fontSize: 10 }}>
+              <ThaiRegText style={{ color: Colors.lineSeparate, fontSize: 10 }}>
                 ปิดหน้าต่าง{" "}
-              </ThaiText>
+              </ThaiRegText>
               <MaterialIcons
                 name="cancel"
                 size={25}

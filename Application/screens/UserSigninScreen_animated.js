@@ -18,21 +18,21 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import Animated, { Easing } from 'react-native-reanimated';
-import { TapGestureHandler, State } from 'react-native-gesture-handler';
+import Animated, { Easing } from "react-native-reanimated";
+import { TapGestureHandler, State } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
-import ThaiText from "../components/ThaiText";
 import CustomButton from "../components/UI/CustomButton";
-import ThaiTitleText from "../components/ThaiTitleText";
+import ThaiRegText from "../components/ThaiRegText";
+import ThaiMdText from "../components/ThaiMdText";
 import { updateNotificationToken } from "../utils/firebaseFunctions";
 import { shadow } from "react-native-paper";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 const {
   Value,
@@ -102,13 +102,13 @@ function runTiming(clock, value, dest) {
       startClock(clock)
     ]),
     timing(clock, state, config),
-    cond(state.finished, debug('stop clock', stopClock(clock))),
+    cond(state.finished, debug("stop clock", stopClock(clock))),
     state.position
   ]);
 }
 
 export default UserAuthenScreen = props => {
-  this.buttonOpacity = new Value(1)
+  this.buttonOpacity = new Value(1);
   this.onStateChange = event([
     {
       nativeEvent: ({ state }) =>
@@ -132,11 +132,11 @@ export default UserAuthenScreen = props => {
     outputRange: [-height / 3, 0],
     extrapolate: Extrapolate.CLAMP
   });
-  
+
   this.textInputZindex = interpolate(this.buttonOpacity, {
-      inputRange: [0, 1],
-      outputRange: [1, -1],
-      extrapolate: Extrapolate.CLAMP
+    inputRange: [0, 1],
+    outputRange: [1, -1],
+    extrapolate: Extrapolate.CLAMP
   });
 
   this.textInputY = interpolate(this.buttonOpacity, {
@@ -144,7 +144,7 @@ export default UserAuthenScreen = props => {
     outputRange: [0, 1000],
     extrapolate: Extrapolate.CLAMP
   });
-  
+
   this.textInputOpacity = interpolate(this.buttonOpacity, {
     inputRange: [0, 1],
     outputRange: [1, 0],
@@ -212,7 +212,9 @@ export default UserAuthenScreen = props => {
     await firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {updateNotificationToken()})
+      .then(() => {
+        updateNotificationToken();
+      })
       .catch(err => {
         setIsLoading(false);
         setError(err.message);
@@ -237,19 +239,21 @@ export default UserAuthenScreen = props => {
       style={{
         ...styles.screen,
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: "flex-end"
       }}
     >
       <Animated.View
-          style={{
-            ...StyleSheet.absoluteFill,
-            transform: [{ translateY: this.bgY }]
-          }}
-        >
-        <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
-        </LinearGradient>
+        style={{
+          ...StyleSheet.absoluteFill,
+          transform: [{ translateY: this.bgY }]
+        }}
+      >
+        <LinearGradient
+          colors={Colors.linearGradient}
+          style={styles.gradient}
+        ></LinearGradient>
       </Animated.View>
-      <View style={{ height: height / 3, justifyContent: 'center' }}>
+      <View style={{ height: height / 3, justifyContent: "center" }}>
         <TapGestureHandler onHandlerStateChange={this.onStateChange}>
           <Animated.View
             style={{
@@ -258,48 +262,62 @@ export default UserAuthenScreen = props => {
               transform: [{ translateY: this.buttonY }]
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>SIGN IN</Text>
           </Animated.View>
         </TapGestureHandler>
-        
+
         <Animated.View
           style={{
             ...styles.button,
-            backgroundColor: '#2E71DC',
+            backgroundColor: "#2E71DC",
             opacity: this.buttonOpacity,
             transform: [{ translateY: this.buttonY }]
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
             SIGN UP
           </Text>
         </Animated.View>
       </View>
-      <Animated.View style={{
-        zIndex: this.textInputZindex,
-        opacity: this.textInputOpacity,
-        transform:[{translateY:this.textInputY}], 
-        height:height/3,
-        ...StyleSheet.absoluteFill,top:null,justifyContent:'center'}}>
-          <TapGestureHandler onHandlerStateChange={this.onCloseState}>
-          < Animated.View style={styles.closeButton}>
-              <Animated.Text style={{ fontSize: 15,transform:[{rotate: concat(this.rotateCross,'deg')}]}}>X</Animated.Text>
-            </Animated.View>
-          </TapGestureHandler>
-          <TextInput
-            placeholder="EMAIL"
-            style={styles.TextInput}
-            placeholderTextColor="black"/>
-          <TextInput
-            placeholder="PASSWORD"
-            style={styles.TextInput}
-            placeholderTextColor="black"/>
-          <Animated.View style={styles.button}>
-            <Text style={{fontSize:20, fontWeight:'bold'}}>SIGNIN</Text>
+      <Animated.View
+        style={{
+          zIndex: this.textInputZindex,
+          opacity: this.textInputOpacity,
+          transform: [{ translateY: this.textInputY }],
+          height: height / 3,
+          ...StyleSheet.absoluteFill,
+          top: null,
+          justifyContent: "center"
+        }}
+      >
+        <TapGestureHandler onHandlerStateChange={this.onCloseState}>
+          <Animated.View style={styles.closeButton}>
+            <Animated.Text
+              style={{
+                fontSize: 15,
+                transform: [{ rotate: concat(this.rotateCross, "deg") }]
+              }}
+            >
+              X
+            </Animated.Text>
           </Animated.View>
+        </TapGestureHandler>
+        <TextInput
+          placeholder="EMAIL"
+          style={styles.TextInput}
+          placeholderTextColor="black"
+        />
+        <TextInput
+          placeholder="PASSWORD"
+          style={styles.TextInput}
+          placeholderTextColor="black"
+        />
+        <Animated.View style={styles.button}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>SIGNIN</Text>
+        </Animated.View>
       </Animated.View>
 
-        {/* {<View style={{ marginVertical: wp("5%") }}>
+      {/* {<View style={{ marginVertical: wp("5%") }}>
           <ThaiTitleText style={{ color: Colors.on_primary }}>
             ลงชื่อเข้าใช้
           </ThaiTitleText>
@@ -436,49 +454,49 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "center"
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center"
   },
   button: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: 70,
     marginHorizontal: 20,
     borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 5,
-    shadowOffset: {width: 2, height: 2},
+    shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.2,
-    shadowColor: 'black',
+    shadowColor: "black",
     elevation: 5
   },
   closeButton: {
-    height:40,
-    width:40,
-    backgroundColor: 'white',
+    height: 40,
+    width: 40,
+    backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",
     top: -20,
-    left: width/2 -20,
-    shadowOffset: { width: 2,height: 2 },
-    shadowColor: 'black',
+    left: width / 2 - 20,
+    shadowOffset: { width: 2, height: 2 },
+    shadowColor: "black",
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5
   },
   TextInput: {
-    height:50,
+    height: 50,
     borderRadius: 25,
     borderWidth: 5,
     marginHorizontal: 20,
     paddingLeft: 10,
     marginVertical: 2,
-    borderColor: 'rgba(0,0,0,0.2)'
+    borderColor: "rgba(0,0,0,0.2)"
   }
 });

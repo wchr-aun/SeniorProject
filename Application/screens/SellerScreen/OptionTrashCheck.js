@@ -213,7 +213,7 @@ export default OptionTrashCheck = props => {
         >
           <CustomButton
             style={{ width: "40%", height: "80%" }}
-            btnColor={Colors.primary_variant}
+            btnColor={Colors.primary_bright}
             onPress={takeImageHandler}
             btnTitleColor={Colors.on_primary}
             btnTitleFontSize={12}
@@ -222,7 +222,7 @@ export default OptionTrashCheck = props => {
           </CustomButton>
           <CustomButton
             style={{ width: "40%", height: "80%" }}
-            btnColor={Colors.primary}
+            btnColor={Colors.primary_dark}
             onPress={confirmHandler}
             btnTitleColor={Colors.on_primary}
             btnTitleFontSize={12}

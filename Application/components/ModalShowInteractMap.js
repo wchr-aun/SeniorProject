@@ -145,7 +145,7 @@ export default ModalShowInteractMap = props => {
             <Button
               title="ยกเลิก"
               onPress={() => props.setModalVisible(false)}
-              color={Colors.primary}
+              color={Colors.primary_dark}
             />
           </View>
           <View
@@ -154,7 +154,7 @@ export default ModalShowInteractMap = props => {
             <Button
               title="ยืนยัน"
               onPress={confirmLocationHandler}
-              color={Colors.primary_variant}
+              color={Colors.primary_bright}
             />
           </View>
         </View>

@@ -12,8 +12,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
-import ThaiTitleText from "../../components/ThaiTitleText";
-import ThaiText from "../../components/ThaiText";
+import ThaiMdText from "../../components/ThaiMdText";
+import ThaiRegText from "../../components/ThaiRegText";
 
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
@@ -62,27 +62,23 @@ export default SellingTransactionDetailScreen = props => {
             />
           </View>
           <View style={{ width: "100%", height: "50%" }}>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>สถานะ: </ThaiTitleText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>สถานะ: </ThaiMdText>
               {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
-            </ThaiText>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>
-                ผู้รับซื้อ:{" "}
-              </ThaiTitleText>
+            </ThaiRegText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>ผู้รับซื้อ: </ThaiMdText>
               {transactionItem.detail.buyer}
-            </ThaiText>
-            <ThaiText>
-              <ThaiTitleText style={{ fontSize: 12 }}>
-                สถานที่รับขยะ:{" "}
-              </ThaiTitleText>
+            </ThaiRegText>
+            <ThaiRegText>
+              <ThaiMdText style={{ fontSize: 12 }}>สถานที่รับขยะ: </ThaiMdText>
               {transactionItem.detail.addr}
-            </ThaiText>
-            <ThaiText>{transactionItem.tel}</ThaiText>
+            </ThaiRegText>
+            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
           </View>
         </View>
         <View style={{ width: "100%", height: "5%" }}>
-          <ThaiTitleText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiTitleText>
+          <ThaiMdText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiMdText>
         </View>
         <View style={{ width: "100%", height: "15%", backgroundColor: "red" }}>
           <FlatList
@@ -95,20 +91,18 @@ export default SellingTransactionDetailScreen = props => {
             renderItem={({ item }) => {
               return (
                 <View style={{ height: 50, padding: 3, alignSelf: "center" }}>
-                  <ThaiText>
+                  <ThaiRegText>
                     {libary.formatDate(item.toDate()) +
                       " " +
                       libary.formatTime(item.toDate())}
-                  </ThaiText>
+                  </ThaiRegText>
                 </View>
               );
             }}
           />
         </View>
         <View style={{ width: "100%", height: "5%" }}>
-          <ThaiTitleText style={{ fontSize: 12 }}>
-            ประเภทขยะที่ขาย
-          </ThaiTitleText>
+          <ThaiMdText style={{ fontSize: 12 }}>ประเภทขยะที่ขาย</ThaiMdText>
         </View>
         <View
           style={{ width: "100%", height: "15%", backgroundColor: "yellow" }}
@@ -128,10 +122,10 @@ export default SellingTransactionDetailScreen = props => {
                   }}
                 >
                   <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiText>{item.type + " " + item.subtype}</ThaiText>
+                    <ThaiRegText>{item.type + " " + item.subtype}</ThaiRegText>
                   </View>
                   <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiText>{"จำนวน " + item.amount.amount}</ThaiText>
+                    <ThaiRegText>{"จำนวน " + item.amount.amount}</ThaiRegText>
                   </View>
                 </View>
               );
@@ -166,7 +160,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingTop: Dimensions.get("window").height * 0.05,
-    backgroundColor: Colors.primary
+    backgroundColor: Colors.primary_dark
   },
   infoContainerCard: {
     backgroundColor: Colors.on_primary,

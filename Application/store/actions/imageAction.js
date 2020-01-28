@@ -100,7 +100,7 @@ export const getPrediction = (image, wasteTypesDB) => {
         console.log(res.results);
         dispatch({
           type: GET_PREDICTION,
-          results: res.results[0],
+          results: res.results,
           wasteTypesDB
         });
         return res;

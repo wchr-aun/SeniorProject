@@ -23,9 +23,9 @@ import Card from "../components/UI/Card";
 import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
-import ThaiText from "../components/ThaiText";
 import CustomButton from "../components/UI/CustomButton";
-import ThaiTitleText from "../components/ThaiTitleText";
+import ThaiRegText from "../components/ThaiRegText";
+import ThaiMdText from "../components/ThaiMdText";
 import { updateNotificationToken } from "../utils/firebaseFunctions";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -131,9 +131,9 @@ export default UserAuthenScreen = props => {
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
         <View style={{ marginVertical: wp("5%") }}>
-          <ThaiTitleText style={{ color: Colors.on_primary }}>
+          <ThaiMdText style={{ color: Colors.on_primary }}>
             ลงชื่อเข้าใช้
-          </ThaiTitleText>
+          </ThaiMdText>
         </View>
         <Card
           style={{
@@ -216,14 +216,14 @@ export default UserAuthenScreen = props => {
                 <View
                   style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}
                 >
-                  <ThaiText
+                  <ThaiRegText
                     style={{
                       color: Colors.primary,
                       fontSize: 10
                     }}
                   >
                     หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
-                  </ThaiText>
+                  </ThaiRegText>
                 </View>
 
                 <CustomButton

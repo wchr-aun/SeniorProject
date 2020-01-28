@@ -15,8 +15,8 @@ import {
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import ThaiTitleText from "./ThaiTitleText";
-import ThaiText from "./ThaiText";
+import ThaiMdText from "./ThaiMdText";
+import ThaiRegText from "./ThaiRegText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 
@@ -34,7 +34,7 @@ const AmountOfTrash = props => {
           width: "100%"
         }}
       >
-        <ThaiText
+        <ThaiRegText
           style={{
             textAlign: "center",
             fontSize: 8,
@@ -49,7 +49,7 @@ const AmountOfTrash = props => {
           {`เปลี่ยนแปลง ${
             props.changeAmount ? props.changeAmount.toString() : 0
           }`}
-        </ThaiText>
+        </ThaiRegText>
       </View>
     </View>
   );
@@ -133,9 +133,7 @@ export default TrashCard = props => {
           }}
         >
           <View style={{ width: "80%", height: "100%" }}>
-            <ThaiTitleText style={styles.trashName}>
-              {props.subtype}
-            </ThaiTitleText>
+            <ThaiMdText style={styles.trashName}>{props.subtype}</ThaiMdText>
           </View>
         </View>
 
@@ -156,16 +154,16 @@ export default TrashCard = props => {
                 size={20}
                 color={Colors.primary_variant}
               />
-              <ThaiText style={styles.trashDisposal}>
+              <ThaiRegText style={styles.trashDisposal}>
                 {props.wasteDisposal}
-              </ThaiText>
+              </ThaiRegText>
             </View>
             <View
               style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
             >
-              <ThaiText style={styles.trashAdjustPrice}>
+              <ThaiRegText style={styles.trashAdjustPrice}>
                 {props.trashAdjustPrice} บ./กก.
-              </ThaiText>
+              </ThaiRegText>
             </View>
           </View>
 

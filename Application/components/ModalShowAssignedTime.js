@@ -148,7 +148,7 @@ export default ModalShowSellersItemsScreen = props => {
           >
             <Button
               title={"ปิดหน้าต่าง"}
-              color={Colors.primary}
+              color={Colors.primary_dark}
               onPress={() => {
                 props.setModalVisible(false);
               }}
@@ -164,7 +164,7 @@ export default ModalShowSellersItemsScreen = props => {
           >
             <Button
               title={"ยืนยัน"}
-              color={Colors.primary_variant}
+              color={Colors.primary_bright}
               onPress={() => {
                 confirmAssignedtime();
               }}

@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Image,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Dimensions,
-  TextInput,
-  Text
-} from "react-native";
-
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import ThaiTitleText from "../ThaiTitleText";
-import ThaiText from "../ThaiText";
-import Colors from "../../constants/Colors";
+import { View, Image } from "react-native";
 
 export default ImageCircle = props => {
   return (

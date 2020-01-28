@@ -13,7 +13,7 @@ import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
-import ThaiText from "../../components/ThaiText";
+import ThaiRegText from "../../components/ThaiRegText";
 
 export default SellingTransactionScreen = props => {
   // Get transactions for initially
