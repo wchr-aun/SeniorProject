@@ -162,6 +162,61 @@ export const getManualStringLocation = async address => {
   };
 };
 
+const getDisableStatusForBuyer = (btnType, txStatus) => {
+  /* 
+  preferTime --> 1
+  accept --> 2
+  buyerWillGo --> 3
+  cancel --> 4
+  */
+  switch (txStatus) {
+    case 0:
+      return false;
+    case 1:
+      if (btnType == 1 || btnType == 2) return true;
+      else return false;
+    case 2:
+      if (btnType != 4 && btnType != 3 && btnType != 1) return true;
+      else return false;
+    case 3:
+      if (btnType == 1 || btnType == 2) return true;
+      else return false;
+    case 4:
+      return true;
+    case 5:
+      return true;
+    default:
+      break;
+  }
+};
+
+const getDisableStatusForSeller = (btnType, txStatus) => {
+  /* 
+  preferTime --> 1
+  accept --> 2
+  cancel --> 4
+  */
+  switch (txStatus) {
+    case 0:
+      if (btnType != 4) return true;
+      else return false;
+    case 1:
+      if (btnType != 4 && btnType != 2) return true;
+      else return false;
+    case 2:
+      if (btnType != 4) return true;
+      else return false;
+    case 3:
+      return true;
+    case 4:
+      return true;
+    case 5:
+      return true;
+    default:
+      break;
+  }
+};
+
 export default {
   formatDate,
   getTransactionList,
@@ -169,5 +224,7 @@ export default {
   getReadableTxStatus,
   getColorTxStatus,
   getPostalcodeAddressFromCord,
+  getDisableStatusForBuyer,
+  getDisableStatusForSeller,
   toDate
 };

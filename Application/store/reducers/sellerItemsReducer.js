@@ -22,6 +22,7 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
+  let sellerItemsForSellCloned = "";
   switch (action.type) {
     case SET_SELLERITEMS:
       console.log("SET_SELLERITEMS Redux Reducer Run");
@@ -88,18 +89,26 @@ export default function(state = initialState, action) {
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
-      let sellerItemsForSellCloned = Object.assign(
+      sellerItemsForSellCloned = Object.assign(
         Object.create(action.sellerItemsForSell),
         action.sellerItemsForSell
       );
       sellerItemsForSellCloned.confirmValue();
       return {
         ...state,
-        sellerItemsForSell: sellerItemsForSellCloned
+        sellerItemsForSell: sellerItemsForSellCloned,
+        sellerItemsFlatListFormat: [
+          ...sellerItemsForSellCloned.getFlatListFormat(true)
+        ]
       };
     case SELLED_SELLERITEMS:
       console.log("CHOOSEBUYER_SELL Reducer Run");
       let sellerItemsCloned = Object.assign(
+        Object.create(state.sellerItems),
+        state.sellerItems
+      );
+
+      sellerItemsForSellCloned = Object.assign(
         Object.create(state.sellerItems),
         state.sellerItems
       );
@@ -121,6 +130,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         sellerItems: sellerItemsCloned,
+        sellerItemsForSell: sellerItemsForSellCloned,
         sellerItemsFlatListFormat: sellerItemsCloned.getFlatListFormat(true)
       };
     case GET_BUYER_LIST:

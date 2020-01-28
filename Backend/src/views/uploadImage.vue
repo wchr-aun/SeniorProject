@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div v-bind:style="{display: firstState? 'inline-block' : 'none'}" style="background-color: black; height:400px; width:250px; vertical-align: middle; margin: 20px;" >
         
     </div>

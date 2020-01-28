@@ -71,8 +71,6 @@ export default BuyingTransactionScreen = props => {
             return <Text>{transactionMode}</Text>;
           }}
           renderItem={({ item }) => {
-            console.log("SellTransactionCard in BuyingTransactionScreen");
-            console.log(item);
             return (
               <SellTransactionCard
                 userRole={userRole}

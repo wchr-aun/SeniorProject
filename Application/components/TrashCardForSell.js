@@ -25,31 +25,35 @@ const AmountOfTrash = props => {
     <View
       style={{
         ...props.style,
-        alignItems: "center"
+        alignItems: "center",
+        flexDirection: "row"
       }}
     >
-      <View>
-        <ThaiText style={{ fontSize: 8 }}>เปลี่ยนแปลง</ThaiText>
-      </View>
       <View
         style={{
-          width: wp("20%")
+          width: "100%"
         }}
       >
-        <Text
+        <ThaiText
           style={{
             textAlign: "center",
-            fontSize: wp("7%"),
+            fontSize: 8,
             color:
-              isNaN(props.changeAmount) || props.changeAmount === 0
+              isNaN(props.changeAmount) ||
+              props.changeAmount === 0 ||
+              !props.selected
                 ? "black"
                 : props.changeAmount > 0
                 ? "green"
                 : Colors.error
           }}
         >
-          {props.changeAmount ? props.changeAmount.toString() : 0}
-        </Text>
+          {`คงเหลือ ${
+            props.selected
+              ? props.oldAmount - (props.oldAmount + props.changeAmount)
+              : props.oldAmount
+          }`}
+        </ThaiText>
       </View>
     </View>
   );
@@ -66,16 +70,18 @@ const AdjustAmountOfTrash = props => {
         )}
       </View>
       <View style={{ width: 30 }}>
-        <TextInput
-          selectTextOnFocus={true}
-          keyboardType="numeric"
-          onChangeText={props.onEdit}
-          value={(props.oldAmount + props.changeAmount <= 0
-            ? 0
-            : props.oldAmount + props.changeAmount
-          ).toString()}
-          style={{ textAlign: "center" }}
-        />
+        {props.selected ? (
+          <TextInput
+            selectTextOnFocus={true}
+            keyboardType="numeric"
+            onChangeText={props.onEdit}
+            value={(props.oldAmount + props.changeAmount <= 0
+              ? 0
+              : props.oldAmount + props.changeAmount
+            ).toString()}
+            style={{ textAlign: "center" }}
+          />
+        ) : null}
       </View>
       <View style={styles.plusAndMinusCircle}>
         {!props.selected ? null : (
@@ -97,8 +103,6 @@ export default TrashCardForSell = props => {
         width: wp("95%"),
         height: hp("20%"),
         alignSelf: "center",
-        borderWidth: 1,
-        borderColor: "red",
         marginVertical: wp("1.25%")
       }}
     >
@@ -117,10 +121,6 @@ export default TrashCardForSell = props => {
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
-        <AmountOfTrash
-          changeAmount={props.changeAmount}
-          oldAmount={props.oldAmount}
-        />
       </View>
 
       <View
@@ -128,9 +128,7 @@ export default TrashCardForSell = props => {
           ...styles.descriptionContainer,
           width: "70%",
           height: "100%",
-          padding: wp("2.5%"),
-          borderWidth: 1,
-          borderColor: "yellow"
+          padding: wp("2.5%")
         }}
       >
         {/* Trash Name */}
@@ -138,7 +136,6 @@ export default TrashCardForSell = props => {
           style={{
             width: "100%",
             height: "20%",
-            backgroundColor: "red",
             flexDirection: "row"
           }}
         >
@@ -156,36 +153,63 @@ export default TrashCardForSell = props => {
           >
             <MaterialIcons
               name={props.selected ? "check-box" : "check-box-outline-blank"}
-              size={20}
+              size={30}
               color={Colors.primary}
             />
           </TouchableWithoutFeedback>
         </View>
-        <View style={styles.descriptionRow}>
-          <Ionicons name="md-trash" size={20} color={Colors.primary_variant} />
-          <ThaiText style={styles.trashDisposal}>
-            {props.wasteDisposal}
-          </ThaiText>
+
+        {/* detail */}
+        <View
+          style={{
+            width: "100%",
+            height: "80%",
+            flexDirection: "row"
+          }}
+        >
+          <View style={{ width: "50%", height: "100%" }}>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
+              <Ionicons
+                name="md-trash"
+                size={20}
+                color={Colors.primary_variant}
+              />
+              <ThaiText style={styles.trashDisposal}>
+                {props.wasteDisposal}
+              </ThaiText>
+            </View>
+            <View
+              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
+            >
+              <ThaiText style={styles.trashAdjustPrice}>
+                {props.trashAdjustPrice} บ./กก.
+              </ThaiText>
+            </View>
+          </View>
+
+          <View style={{ width: "50%", height: "100%" }}>
+            <AmountOfTrash
+              style={{ width: "100%", height: "50%" }}
+              changeAmount={props.changeAmount}
+              oldAmount={props.oldAmount}
+              selected={props.selected}
+            />
+            <AdjustAmountOfTrash
+              style={{ alignSelf: "center", alignItems: "center" }}
+              subtype={props.subtype}
+              majortype={props.majortype}
+              changeAmount={props.changeAmount}
+              oldAmount={props.oldAmount}
+              onIncrease={props.onIncrease}
+              onDecrease={props.onDecrease}
+              onEdit={props.onEdit}
+              UI_diff={props.UI_diff}
+              selected={props.selected}
+            />
+          </View>
         </View>
-        <View style={styles.descriptionRow}>
-          <ThaiText style={styles.trashAdjustPrice}>
-            {props.trashAdjustPrice} บ./กก.
-          </ThaiText>
-        </View>
-        {!props.selected ? null : (
-          <AdjustAmountOfTrash
-            style={{ alignSelf: "center", alignItems: "center" }}
-            subtype={props.subtype}
-            majortype={props.majortype}
-            changeAmount={props.changeAmount}
-            oldAmount={props.oldAmount}
-            onIncrease={props.onIncrease}
-            onDecrease={props.onDecrease}
-            onEdit={props.onEdit}
-            UI_diff={props.UI_diff}
-            selected={props.selected}
-          />
-        )}
       </View>
     </View>
   );

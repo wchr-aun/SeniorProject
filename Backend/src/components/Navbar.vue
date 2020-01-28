@@ -9,12 +9,15 @@
       <b-navbar-item href="/annotate">
         Annotate
       </b-navbar-item>
+      <b-navbar-item href="/uploadImage">
+        Upload
+      </b-navbar-item>
     </template>
 
     <template slot="end">
         <b-navbar-item tag="div">
           <div class="buttons">
-            <a class="button is-twitter">
+            <a class="button is-twitter" href="/about">
               <strong>About</strong>
             </a>
           </div>

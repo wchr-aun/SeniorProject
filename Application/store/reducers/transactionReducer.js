@@ -58,17 +58,42 @@ export default (state = initialState, action) => {
       updatedTransactions = [...state.transactions];
       let oldStatusIndex = action.updatedDetail.oldStatus;
       let newStatusIndex = action.updatedDetail.newStatus;
-      // get that tX
-      let targetTx = updatedTransactions[oldStatusIndex].filter(
-        tx => tx.txId === action.updatedDetail.txID
-      )[0];
-      // delete that tx in old status
-      updatedTransactions[oldStatusIndex] = updatedTransactions[
-        oldStatusIndex
-      ].filter(tx => tx.txId !== action.updatedDetail.txID);
+      let txType = action.updatedDetail.txType;
+      let targetTx = "";
+
+      console.log("oldStatusIndex");
+      console.log(oldStatusIndex);
+      console.log("txType");
+      console.log(txType);
+      if (oldStatusIndex === 0 && txType === 1) {
+        // just got from 'quick selling pool'
+        // get that tX
+        console.log("state.quickTransactions");
+        console.log(state.quickTransactions);
+        console.log("action.updatedDetail.txID");
+        console.log(action.updatedDetail.txID);
+        targetTx = state.quickTransactions.filter(
+          tx => tx.txId === action.updatedDetail.txID
+        )[0];
+        // delete that tx in old status
+        state.quickTransactions = state.quickTransactions.filter(
+          tx => tx.txId !== action.updatedDetail.txID
+        );
+      } else {
+        // get that tX
+        targetTx = updatedTransactions[oldStatusIndex].filter(
+          tx => tx.txId === action.updatedDetail.txID
+        )[0];
+        // delete that tx in old status
+        updatedTransactions[oldStatusIndex] = updatedTransactions[
+          oldStatusIndex
+        ].filter(tx => tx.txId !== action.updatedDetail.txID);
+      }
 
       // insert new tx in new status array
       updatedTransactions[newStatusIndex].push(targetTx);
+      console.log("targetTx");
+      console.log(targetTx);
 
       // update view
       let transactionsSectionListFormat = getTXSectionListFormat(
@@ -77,7 +102,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        transactions: updatedTransactions,
+        transactions: [...updatedTransactions],
         transactionsSectionListFormat: [...transactionsSectionListFormat]
       };
     case CHANGE_ROLE:
