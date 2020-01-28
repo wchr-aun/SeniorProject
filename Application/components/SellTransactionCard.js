@@ -64,15 +64,22 @@ export default SellTransactionCard = props => {
             }}
           >
             <View style={{ width: "60%" }}>
-              <ThaiRegText style={{ fontSize: 14 }}>
-                {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
-                {props.userName ? props.userName : "ยังไม่ระบุ"}
+              <ThaiRegText
+                style={{ fontSize: 10, color: Colors.soft_primary_dark }}
+              >
+                {props.userRole === "seller" ? "ผู้รับซื้อ: " : "ผู้ขาย: "}{" "}
+                <ThaiMdText
+                  style={{ fontSize: 10, color: Colors.primary_bright_variant }}
+                >
+                  {props.userName ? props.userName : "ยังไม่ระบุ"}
+                </ThaiMdText>
               </ThaiRegText>
             </View>
+
             <View style={{ width: "40%" }}>
               <ThaiRegText
                 style={{
-                  fontSize: 8,
+                  fontSize: 10,
                   color: libary.getColorTxStatus(props.txStatus)
                 }}
               >
@@ -80,7 +87,7 @@ export default SellTransactionCard = props => {
               </ThaiRegText>
             </View>
           </View>
-          <View style={styles.lineSeparate} />
+          <View style={styles.lineSeparateHorizontal} />
           <View
             style={{
               ...styles.description,
@@ -124,9 +131,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-  lineSeparate: {
-    backgroundColor: Colors.hard_secondary,
-    borderBottomColor: Colors.soft_secondary,
+  lineSeparateHorizontal: {
+    borderBottomColor: Colors.hard_secondary,
     borderBottomWidth: 1,
     borderRadius: 5,
     marginVertical: 5

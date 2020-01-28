@@ -4,6 +4,7 @@ export default {
   hard_secondary: "#d7d7d7",
   primary_dark: "#272727",
   primary_bright: "#149c6a",
+  primary_bright_variant: "#0084ff",
   secondary: "#fafafa",
   soft_primary_dark: "#414141",
   soft_primary_bright: "#1ac989",
@@ -25,9 +26,9 @@ export default {
   linearGradientB: ["#2abfbf", "#3797f0"],
   // txStatus
   txStatus: {
-    zero: "#fcba03",
-    one: "#fc2803",
-    two: "#fc5603",
+    zero: "#149c6a",
+    one: "#fcba03",
+    two: "#3797f0",
     three: "#a9fc03",
     four: "#B3B3B3",
     five: "#90B37B"

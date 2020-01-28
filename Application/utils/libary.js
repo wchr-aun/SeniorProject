@@ -52,9 +52,9 @@ const getReadableTxStatus = txStatus => {
   // 5 - Complete เสร็จสมบูรณ์
   switch (txStatus) {
     case 0:
-      return "กำลังรอการตอบกลับ";
+      return "รอการตอบกลับ";
     case 1:
-      return "ถูกปฏิเสธ";
+      return "มีการเสนอเวลาใหม่";
     case 2:
       return "มีผู้รับซื้อแล้ว";
     case 3:
