@@ -72,7 +72,8 @@ export default SellerHomepageScreen = props => {
       <View
         style={{
           width: wp("100%"),
-          height: hp("100%") - AppVariableSetting.bottomBarHeight
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
+          backgroundColor: Colors.primary_dark
         }}
       >
         {isLoading ? (
@@ -96,11 +97,11 @@ export default SellerHomepageScreen = props => {
                 height: "40%",
                 width: "100%"
               }}
-              imgUrl={
-                userProfile.imgUrl
-                  ? userProfile.imgUrl
-                  : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
-              }
+              // imgUrl={
+              //   userProfile.imgUrl
+              //     ? userProfile.imgUrl
+              //     : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
+              // }
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
@@ -116,7 +117,9 @@ export default SellerHomepageScreen = props => {
                 alignItems: "center",
                 paddingVertical: 10,
                 backgroundColor: Colors.primary_bright,
-                paddingBottom: getStatusBarHeight()
+                paddingBottom: getStatusBarHeight(),
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15
               }}
             >
               <View
@@ -132,7 +135,8 @@ export default SellerHomepageScreen = props => {
                 >
                   <ThaiTitleText
                     style={{
-                      color: Colors.on_primary_bright.low_constrast,
+                      // color: Colors.on_primary_bright.low_constrast,
+                      color: Colors.soft_primary_bright,
                       fontSize: 18
                     }}
                   >

@@ -38,7 +38,7 @@ export default SellTransactionCard = props => {
         style={{
           width: wp("95%"),
           height: 100,
-          backgroundColor: Colors.on_primary_dark,
+          backgroundColor: Colors.on_primary_dark.low_constrast,
           alignSelf: "center",
           marginVertical: 5,
           borderRadius: 10,
@@ -46,7 +46,7 @@ export default SellTransactionCard = props => {
         }}
       >
         <ImageCircle
-          imgUrl={props.imgUrl ? props.imgUrl : "assets/img/questionmark.png"}
+          imgUrl={require("./../assets/img/questionmark.png")}
           avariableWidth={wp("20%")}
           style={{ marginHorizontal: wp("3%") }}
         />
@@ -56,7 +56,13 @@ export default SellTransactionCard = props => {
             padding: wp("1.75%")
           }}
         >
-          <View style={{ width: "100%", flexDirection: "row" }}>
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center"
+            }}
+          >
             <View style={{ width: "60%" }}>
               <ThaiRegText style={{ fontSize: 14 }}>
                 {props.userRole === "seller" ? "ผู้รับซื้อ" : "ผู้ขาย"}{" "}
@@ -87,13 +93,13 @@ export default SellTransactionCard = props => {
           </View>
           <View style={{ ...styles.description, width: "50%" }}>
             <View style={{ ...styles.amountOfType, width: "100%" }}>
-              <Ionicons name="md-trash" size={24} color={Colors.primary_dark} />
-              <ThaiRegText style={{ fontSize: 10 }}>
+              <Ionicons name="md-trash" size={20} color={Colors.primary_dark} />
+              <ThaiRegText style={{ fontSize: 12 }}>
                 {props.amountOfType} ประเภท
               </ThaiRegText>
             </View>
             <View style={{ width: "100%" }}>
-              <ThaiRegText style={{ fontSize: 10 }}>
+              <ThaiRegText style={{ fontSize: 12 }}>
                 {props.meetDate}
               </ThaiRegText>
             </View>
@@ -119,8 +125,10 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   lineSeparate: {
-    borderBottomColor: Colors.lineSeparate,
+    backgroundColor: Colors.hard_secondary,
+    borderBottomColor: Colors.soft_secondary,
     borderBottomWidth: 1,
-    marginVertical: 2
+    borderRadius: 5,
+    marginVertical: 5
   }
 });

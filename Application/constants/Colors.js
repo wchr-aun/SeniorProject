@@ -1,4 +1,7 @@
 export default {
+  hard_primary_dark: "#191919",
+  hard_primary_bright: "#17aa75",
+  hard_secondary: "#d7d7d7",
   primary_dark: "#272727",
   primary_bright: "#149c6a",
   secondary: "#fafafa",

@@ -12,43 +12,62 @@ export default UserInfoCard = props => {
       <View style={styles.userInfoContentContainer}>
         {/* Row 1 */}
         <View style={styles.userInfoContentContainerRow1}>
-          {/* <View style={{ ...styles.imgContainer }}>
-            <Image
-              source={{
-                uri: props.imgUrl
-              }}
-              style={styles.userImg}
-              resizeMode="contain"
-            />
-          </View> */}
           <ImageCircle
-            imgUrl={props.imgUrl}
+            imgUrl={
+              props.imgUrl
+                ? props.imgUrl
+                : require("../assets/img/questionmark.png")
+            }
             avariableWidth={props.avariableWidth * 0.3}
           />
           <View
             style={{
-              width: props.avariableWidth * 0.6,
-              paddingLeft: 20
+              width: props.avariableWidth * 0.7,
+              padding: 20
             }}
           >
-            <ThaiRegText
-              style={{
-                ...styles.userName,
-                color: Colors.on_primary_dark.high_constrast
-              }}
-            >
-              {props.userName}
+            <View style={{ width: "100%", flexDirection: "row" }}>
+              <View style={{ width: "70%" }}>
+                <ThaiRegText
+                  style={{
+                    ...styles.userName,
+                    color: Colors.on_primary_dark.high_constrast
+                  }}
+                >
+                  {props.userName}
+                </ThaiRegText>
+              </View>
+              <View
+                style={{
+                  width: "30%",
+                  flexDirection: "row",
+                  justifyContent: "center"
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: Colors.soft_primary_dark,
+                    borderRadius: 5,
+                    width: 35,
+                    height: 35,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <TouchableOpacity onPress={props.onSignout}>
+                    <Ionicons
+                      name="ios-settings"
+                      size={30}
+                      color={Colors.primary_dark}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <ThaiRegText style={{ color: Colors.soft_primary_dark }}>
+              {props.address}
             </ThaiRegText>
-            <ThaiRegText>{props.address}</ThaiRegText>
-          </View>
-          <View style={{ width: "10%" }}>
-            <TouchableOpacity onPress={props.onSignout}>
-              <Ionicons
-                name="ios-settings"
-                size={30}
-                color={Colors.primary_dark}
-              />
-            </TouchableOpacity>
           </View>
         </View>
         {/* Line Separate */}
@@ -114,8 +133,18 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   lineSeparate: {
+    backgroundColor: Colors.hard_primary_dark,
     borderBottomColor: Colors.soft_primary_dark,
     borderBottomWidth: 1,
-    marginVertical: 5
+    borderRadius: 5,
+    marginVertical: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowRadius: 6,
+    shadowOpacity: 0.26,
+    elevation: 5 //for android
   }
 });

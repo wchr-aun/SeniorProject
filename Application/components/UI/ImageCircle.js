@@ -14,9 +14,10 @@ export default ImageCircle = props => {
       }}
     >
       <Image
-        source={{
-          uri: props.imgUrl
-        }}
+        // source={{
+        //   uri: props.imgUrl
+        // }}
+        source={props.imgUrl}
         style={{
           width: props.avariableWidth,
           height: props.avariableWidth
