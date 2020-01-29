@@ -18,8 +18,11 @@ import CustomButton from "./UI/CustomButton";
 import { AntDesign } from "@expo/vector-icons";
 
 export default ModalShowSellersItemsScreen = props => {
-  const [subType, setSubType] = useState();
-  const [amount, setAmount] = useState();
+  console.log(props.wasteTypeDropdownFormat);
+  const [subType, setSubType] = useState(
+    props.wasteTypeDropdownFormat[0].subTypes[0].value
+  );
+  const [amount, setAmount] = useState("0");
   const [majorType, setMajorType] = useState(
     props.wasteTypeDropdownFormat[0].value
   );
@@ -63,44 +66,44 @@ export default ModalShowSellersItemsScreen = props => {
       <View
         style={{
           width: wp("80%"),
-          height: hp("50%"),
+          height: hp("60%"),
           alignSelf: "center",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          marginTop: getStatusBarHeight()
         }}
       >
         <View
           style={{
             ...styles.realContent,
-            // width: wp("80%"),
-            // height: hp("100%"),
             width: "100%",
             height: "100%",
             alignItems: "center",
             backgroundColor: Colors.secondary,
             borderRadius: 10,
             borderWidth: 2,
-            borderColor: Colors.soft_primary_dark
+            borderColor: Colors.hard_secondary,
+            padding: 10
           }}
         >
           <View
             style={{
               ...styles.realContent_ModalHeader,
               width: "100%",
-              height: "10%",
-              flexDirection: "row",
+              height: "20%",
               backgroundColor: Colors.soft_primary_dark,
-              paddingVertical: 10,
-              alignItems: "center"
+              padding: 10,
+              borderRadius: 10
             }}
           >
             <View
-              style={{ width: "70%", height: "100%", alignItems: "center" }}
+              style={{ width: "100%", height: "100%", alignItems: "center" }}
             >
               <ThaiBoldText
                 style={{
                   color: Colors.on_primary_dark.low_constrast,
-                  fontSize: 26
+                  fontSize: 26,
+                  textAlign: "center"
                 }}
               >
                 เพิ่มประเภทขยะ
@@ -251,11 +254,12 @@ export default ModalShowSellersItemsScreen = props => {
                     }}
                   >
                     <TouchableWithoutFeedback
-                      onPress={() =>
-                        setAmount(preAmount =>
-                          (Number(preAmount) - 1).toString()
-                        )
-                      }
+                      onPress={() => {
+                        if (amount !== "0")
+                          setAmount(preAmount =>
+                            (Number(preAmount) - 1).toString()
+                          );
+                      }}
                     >
                       <AntDesign
                         name="minus"
@@ -272,7 +276,7 @@ export default ModalShowSellersItemsScreen = props => {
           <View
             style={{
               width: "100%",
-              height: "40%",
+              height: "30%",
               maxHeight: 50,
               flexDirection: "row",
               justifyContent: "space-around",
@@ -280,7 +284,13 @@ export default ModalShowSellersItemsScreen = props => {
             }}
           >
             <CustomButton
-              style={{ width: "40%", height: "100%", borderRadius: 5 }}
+              style={{
+                width: "40%",
+                height: "100%",
+                borderRadius: 5,
+                borderColor: Colors.button.cancel.btnText,
+                borderWidth: 1
+              }}
               btnColor={Colors.button.cancel.btnBackground}
               onPress={() => {
                 console.log("cancel press.");

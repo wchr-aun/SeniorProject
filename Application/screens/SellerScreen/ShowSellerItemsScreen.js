@@ -374,7 +374,6 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
-              console.log(item);
               return (
                 <TrashCard
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}

@@ -23,7 +23,7 @@ export default {
   },
   button: {
     cancel: {
-      btnBackground: "#f0f0f0",
+      btnBackground: "#ffffff",
       btnText: "#272727"
     },
     start_operation_info: {
