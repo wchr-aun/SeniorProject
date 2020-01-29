@@ -21,77 +21,6 @@ import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 import ThaiBoldText from "./ThaiBoldText";
 
-// const AmountOfTrash = props => {
-//   return (
-//     <View
-//       style={{
-//         ...props.style,
-//         alignItems: "center",
-//         flexDirection: "row"
-//       }}
-//     >
-//       <View
-//         style={{
-//           width: "100%"
-//         }}
-//       >
-//         <ThaiRegText
-//           style={{
-//             textAlign: "center",
-//             fontSize: 8,
-// color:
-//   isNaN(props.changeAmount) || props.changeAmount === 0
-//     ? "black"
-//     : props.changeAmount > 0
-//     ? "green"
-//     : Colors.error
-//           }}
-//         >
-//           {`เปลี่ยนแปลง ${
-//             props.changeAmount ? props.changeAmount.toString() : 0
-//           }`}
-//         </ThaiRegText>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const AdjustAmountOfTrash = props => {
-//   return (
-//     <View style={{ ...props.style, flexDirection: "row" }}>
-//       <View style={{ marginHorizontal: 5, width: "30%" }}>
-//         {!props.selected && !props.editingMode ? null : (
-//           <TouchableWithoutFeedback onPress={props.onDecrease}>
-//             <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
-//           </TouchableWithoutFeedback>
-//         )}
-//       </View>
-//       <View style={{ width: "30%", alignSelf: "center" }}>
-//         <TextInput
-//           selectTextOnFocus={true}
-//           keyboardType="numeric"
-//           onChangeText={props.onEdit}
-//           value={props.editingValue}
-//           textAlign={"center"}
-//         />
-//       </View>
-//       <View style={{ width: "30%" }}>
-//         {!props.selected && !props.editingMode ? null : (
-//           <TouchableWithoutFeedback onPress={props.onIncrease}>
-//             <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
-//           </TouchableWithoutFeedback>
-//         )}
-//       </View>
-//     </View>
-//   );
-// };
-
-// const AmountOfTrash = () => {
-//   return <View style={{...props.style, }}>
-
-//   </View>
-// }
-
 export default TrashCard = props => {
   return (
     <View
@@ -101,15 +30,17 @@ export default TrashCard = props => {
         width: wp("96%"),
         height: hp("20%"),
         alignSelf: "center",
-        borderRadius: 10,
         marginVertical: 5,
         overflow: "hidden",
-        backgroundColor: Colors.secondary
+        backgroundColor: Colors.secondary,
+        borderRadius: 10,
+        borderWidth: props.editingMode ? 3 : null,
+        borderColor: props.editingMode ? Colors.primary_bright_variant : ""
       }}
     >
-      {/* Image */}
       <View
         style={{
+          ...styles.image,
           width: "30%",
           height: "100%",
           backgroundColor: Colors.secondary,
@@ -125,9 +56,9 @@ export default TrashCard = props => {
         />
       </View>
 
-      {/* Description */}
       <View
         style={{
+          ...styles.descriptionContainer,
           width: "50%",
           height: "100%",
           backgroundColor: Colors.secondary
@@ -177,7 +108,6 @@ export default TrashCard = props => {
                 >
                   {props.changeAmount ? props.changeAmount.toString() : 0}
                 </ThaiBoldText>
-                {`   บ./กก.`}
               </ThaiRegText>
             </View>
           </>
@@ -221,34 +151,6 @@ export default TrashCard = props => {
         )}
       </View>
 
-      {/* <View style={{ width: "50%", height: "100%" }}>
-            <AmountOfTrash
-              style={{ width: "100%", height: "50%" }}
-              changeAmount={props.changeAmount}
-              oldAmount={props.oldAmount}
-            />
-            <AdjustAmountOfTrash
-              style={{
-                alignSelf: "center",
-                alignItems: "center",
-                justifyContent: "space-around",
-                width: "100%",
-                height: "50%"
-              }}
-              subtype={props.subtype}
-              majortype={props.majortype}
-              onIncrease={props.onIncrease}
-              onDecrease={props.onDecrease}
-              onEdit={props.onEdit}
-              UI_diff={props.UI_diff}
-              selected={props.selected}
-              editingMode={props.editingMode}
-              editingValue={props.editingValue}
-              changeAmount={props.changeAmount}
-              oldAmount={props.oldAmount}
-            />
-          </View> */}
-
       {/* Adjust Component */}
       <View
         style={{
@@ -268,7 +170,9 @@ export default TrashCard = props => {
             justifyContent: "space-around",
             borderRadius: 8,
             backgroundColor: Colors.soft_secondary,
-            borderColor: Colors.hard_secondary,
+            borderColor: props.editingMode
+              ? Colors.primary_bright_variant
+              : Colors.hard_secondary,
             borderWidth: 3
           }}
         >
@@ -298,7 +202,8 @@ export default TrashCard = props => {
             style={{
               width: "100%",
               height: "30%",
-              alignSelf: "center"
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
             <TextInput

@@ -6,16 +6,13 @@ import {
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
-  Alert,
-  TouchableOpacity
+  Alert
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { Header } from "react-navigation-stack";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,7 +26,6 @@ import TrashCard from "../../components/TrashCard";
 import Colors from "../../constants/Colors";
 import ThaiBoldText from "../../components/ThaiBoldText";
 
-import CustomHeaderButton from "../../components/UI/CustomHeaderButton";
 import CustomButton from "../../components/UI/CustomButton";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
@@ -277,9 +273,9 @@ const ShowAllUserTrashScreen = props => {
   if (modalVisible) {
     return (
       <ModalShowSellerItemsScreen
+        modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         wasteTypeDropdownFormat={wasteTypeDropdownFormat}
-        modalVisible={modalVisible}
         addNewWasteHandler={(majortype, subtype, addAmount) => {
           dispatchAmountTrashsState({
             type: ADD_NEW_SELLERITEMS_AMOUNT,
@@ -338,20 +334,26 @@ const ShowAllUserTrashScreen = props => {
                 style={{
                   backgroundColor: Colors.soft_primary_dark,
                   borderRadius: 5,
-                  width: 35,
-                  height: 35,
+                  width: "100%",
+                  height: "100%",
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center"
                 }}
               >
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <CustomButton
+                  btnColor={Colors.button.submit_primary_dark.btnBackground}
+                  onPress={() => setModalVisible(true)}
+                  btnTitleColor={Colors.button.submit_primary_dark.btnText}
+                  btnTitleFontSize={14}
+                >
+                  <ThaiRegText style={{ fontSize: 10 }}>เพิ่มขยะ </ThaiRegText>
                   <AntDesign
-                    name="plussquare"
-                    size={30}
-                    color={Colors.on_primary_dark.high_constrast}
+                    name="plus"
+                    size={10}
+                    color={Colors.button.submit_primary_dark.btnText}
                   />
-                </TouchableOpacity>
+                </CustomButton>
               </View>
             ) : null}
           </View>
@@ -474,8 +476,8 @@ const ShowAllUserTrashScreen = props => {
             <CustomButton
               btnColor={
                 editingMode
-                  ? Colors.button.submit_primary_dark.btnBackground
-                  : Colors.button.submit_primary_dark.btnBackground
+                  ? Colors.button.finish_operation_info.btnBackground
+                  : Colors.button.start_operation_info.btnBackground
               }
               onPress={() => {
                 if (editingMode === true) {
@@ -484,17 +486,15 @@ const ShowAllUserTrashScreen = props => {
               }}
               btnTitleColor={
                 editingMode
-                  ? Colors.button.submit_primary_dark.btnText
-                  : Colors.button.submit_primary_dark.btnText
+                  ? Colors.button.finish_operation_info.btnText
+                  : Colors.button.start_operation_info.btnText
               }
               btnTitleFontSize={14}
               style={{
                 ...styles.navigateBtn
               }}
             >
-              <ThaiRegText
-                style={{ fontSize: 12, color: Colors.primary_variant }}
-              >
+              <ThaiRegText style={{ fontSize: 12 }}>
                 {editingMode ? "ยืนยันการแก้ไข" : "แก้ไขขยะ"}
               </ThaiRegText>
             </CustomButton>
@@ -503,26 +503,6 @@ const ShowAllUserTrashScreen = props => {
       </LinearGradient>
     </KeyboardAvoidingView>
   );
-};
-
-ShowAllUserTrashScreen.navigationOptions = navData => {
-  let editingMode = navData.navigation.getParam("editingMode");
-  let setModalVisible = navData.navigation.getParam("setModalVisible");
-
-  return {
-    headerTitle: "ขยะที่สะสมไว้",
-    headerRight: (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        {editingMode ? (
-          <Item
-            title="Cart"
-            iconName={"check"}
-            onPress={() => setModalVisible(true)}
-          />
-        ) : null}
-      </HeaderButtons>
-    )
-  };
 };
 
 const styles = StyleSheet.create({

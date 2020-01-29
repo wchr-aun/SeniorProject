@@ -61,7 +61,7 @@ export default UserInfoCard = props => {
                 </View>
               </View>
             </View>
-            <ThaiRegText style={{ color: Colors.soft_primary_dark }}>
+            <ThaiRegText style={{ color: Colors.soft_secondary }}>
               {props.address}
             </ThaiRegText>
           </View>

@@ -26,8 +26,20 @@ export default {
       btnBackground: "#f0f0f0",
       btnText: "#272727"
     },
+    start_operation_info: {
+      btnBackground: "#ffffff",
+      btnText: "#0084ff"
+    },
+    finish_operation_info: {
+      btnBackground: "#0084ff",
+      btnText: "#ffffff"
+    },
     submit_primary_dark: {
       btnBackground: "#272727",
+      btnText: "#f0f0f0"
+    },
+    submit_soft_primary_dark: {
+      btnBackground: "#414141",
       btnText: "#f0f0f0"
     },
     submit_primary_bright: {

@@ -18,7 +18,9 @@ export default CustomButton = props => {
     <TouchableComp
       style={{
         ...props.style,
-        backgroundColor: props.disable ? Colors.on_primary : props.btnColor,
+        backgroundColor: props.disable
+          ? Colors.button.cancel.btnBackground
+          : props.btnColor,
         justifyContent: "center"
       }}
       onPress={props.disable === true ? null : props.onPress}
@@ -32,7 +34,9 @@ export default CustomButton = props => {
       >
         <ThaiMdText
           style={{
-            color: props.disable ? Colors.lineSeparate : props.btnTitleColor,
+            color: props.disable
+              ? Colors.button.cancel.btnText
+              : props.btnTitleColor,
             fontSize: props.btnTitleFontSize,
             padding: wp("1.75%"),
             alignSelf: "center"
