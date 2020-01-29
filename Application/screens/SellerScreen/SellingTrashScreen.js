@@ -6,6 +6,12 @@ import {
   BackHandler,
   KeyboardAvoidingView
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -16,6 +22,7 @@ import { TextInput } from "react-native-gesture-handler";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import { LinearGradient } from "expo-linear-gradient";
+import AppVariableSetting from "../../constants/AppVariableSetting";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
@@ -147,7 +154,6 @@ export default SellingTrashScreen = props => {
       });
     }
   }, [sellerItemsForSell, sellerItemsFlatListFormat]);
-
   const dispatch = useDispatch();
   return (
     <KeyboardAvoidingView
@@ -155,18 +161,42 @@ export default SellingTrashScreen = props => {
       keyboardVerticalOffset={100}
       behavior={"padding"}
     >
-      <View
+      <CustomStatusBar />
+      <LinearGradient
+        colors={Colors.linearGradient}
         style={{
           ...styles.screen,
-          flex: 1,
+          width: wp("100%"),
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
           alignItems: "center"
         }}
       >
         <View
           style={{
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center"
+          }}
+        >
+          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 26
+              }}
+            >
+              จำนวนขยะที่คุณมี
+            </ThaiBoldText>
+          </View>
+        </View>
+        <View
+          style={{
             ...styles.allTrashContainer,
             width: "100%",
-            height: "90%",
+            height: "70%",
             padding: 10,
             alignItems: "center"
           }}
@@ -254,53 +284,64 @@ export default SellingTrashScreen = props => {
         <View
           style={{
             width: "100%",
-            height: "10%",
-            flexDirection: "row",
+            height: "20%",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
+            paddingBottom: getStatusBarHeight()
           }}
         >
           <View
-            style={{ width: "40%", height: "100%", backgroundColor: "red" }}
+            style={{
+              width: "100%",
+              height: "50%",
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
           >
-            <ThaiRegText>ค้นในระยะ </ThaiRegText>
+            <ThaiRegText>ค้นหาผู้รับซื้อในระยะ </ThaiRegText>
             <TextInput
               value={distance}
+              selectTextOnFocus={true}
               onChangeText={value => {
                 setDistance(value.toString());
               }}
               keyboardType="number-pad"
             />
+            <ThaiRegText> กิโลเมตร</ThaiRegText>
           </View>
 
           <CustomButton
-            style={{ width: "40%", height: "100%" }}
-            btnColor={Colors.primary}
+            style={{ width: "60%", height: "50%", borderRadius: 8 }}
+            btnColor={Colors.button.start_operation_info.btnBackground}
             onPress={setSellerItemsForSell}
-            btnTitleColor={Colors.on_primary}
+            btnTitleColor={Colors.button.start_operation_info.btnText}
             btnTitleFontSize={14}
           >
-            ค้นหาผู้รับซื้อขยะ
+            <MaterialCommunityIcons
+              name={"account-search"}
+              size={12}
+              color={Colors.button.submit_primary_bright.btnBackground}
+            />
+            <ThaiRegText
+              style={{
+                fontSize: 12,
+                color: Colors.button.submit_primary_bright.btnText
+              }}
+            >
+              ค้นหาผู้รับซื้อขยะ
+            </ThaiRegText>
           </CustomButton>
         </View>
-      </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: Colors.screen
-  },
-  allTrashContainer: {
-    backgroundColor: Colors.primary_variant,
-    borderRadius: 10
-  },
   eachTrashCard: {
     marginBottom: 5,
     width: "100%",
     height: 100,
-    backgroundColor: Colors.on_primary,
     borderRadius: 10
   },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
