@@ -14,76 +14,82 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import ThaiMdText from "./ThaiMdText";
 import ThaiRegText from "./ThaiRegText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 
-const AmountOfTrash = props => {
-  return (
-    <View
-      style={{
-        ...props.style,
-        alignItems: "center",
-        flexDirection: "row"
-      }}
-    >
-      <View
-        style={{
-          width: "100%"
-        }}
-      >
-        <ThaiRegText
-          style={{
-            textAlign: "center",
-            fontSize: 8,
-            color:
-              isNaN(props.changeAmount) || props.changeAmount === 0
-                ? "black"
-                : props.changeAmount > 0
-                ? "green"
-                : Colors.error
-          }}
-        >
-          {`เปลี่ยนแปลง ${
-            props.changeAmount ? props.changeAmount.toString() : 0
-          }`}
-        </ThaiRegText>
-      </View>
-    </View>
-  );
-};
+// const AmountOfTrash = props => {
+//   return (
+//     <View
+//       style={{
+//         ...props.style,
+//         alignItems: "center",
+//         flexDirection: "row"
+//       }}
+//     >
+//       <View
+//         style={{
+//           width: "100%"
+//         }}
+//       >
+//         <ThaiRegText
+//           style={{
+//             textAlign: "center",
+//             fontSize: 8,
+//             color:
+//               isNaN(props.changeAmount) || props.changeAmount === 0
+//                 ? "black"
+//                 : props.changeAmount > 0
+//                 ? "green"
+//                 : Colors.error
+//           }}
+//         >
+//           {`เปลี่ยนแปลง ${
+//             props.changeAmount ? props.changeAmount.toString() : 0
+//           }`}
+//         </ThaiRegText>
+//       </View>
+//     </View>
+//   );
+// };
 
-const AdjustAmountOfTrash = props => {
-  return (
-    <View style={{ ...props.style, flexDirection: "row" }}>
-      <View style={{ marginHorizontal: 5, width: "30%" }}>
-        {!props.selected && !props.editingMode ? null : (
-          <TouchableWithoutFeedback onPress={props.onDecrease}>
-            <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
-          </TouchableWithoutFeedback>
-        )}
-      </View>
-      <View style={{ width: "30%", alignSelf: "center" }}>
-        <TextInput
-          selectTextOnFocus={true}
-          keyboardType="numeric"
-          onChangeText={props.onEdit}
-          value={props.editingValue}
-          textAlign={"center"}
-        />
-      </View>
-      <View style={{ width: "30%" }}>
-        {!props.selected && !props.editingMode ? null : (
-          <TouchableWithoutFeedback onPress={props.onIncrease}>
-            <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
-          </TouchableWithoutFeedback>
-        )}
-      </View>
-    </View>
-  );
-};
+// const AdjustAmountOfTrash = props => {
+//   return (
+//     <View style={{ ...props.style, flexDirection: "row" }}>
+//       <View style={{ marginHorizontal: 5, width: "30%" }}>
+//         {!props.selected && !props.editingMode ? null : (
+//           <TouchableWithoutFeedback onPress={props.onDecrease}>
+//             <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
+//           </TouchableWithoutFeedback>
+//         )}
+//       </View>
+//       <View style={{ width: "30%", alignSelf: "center" }}>
+//         <TextInput
+//           selectTextOnFocus={true}
+//           keyboardType="numeric"
+//           onChangeText={props.onEdit}
+//           value={props.editingValue}
+//           textAlign={"center"}
+//         />
+//       </View>
+//       <View style={{ width: "30%" }}>
+//         {!props.selected && !props.editingMode ? null : (
+//           <TouchableWithoutFeedback onPress={props.onIncrease}>
+//             <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
+//           </TouchableWithoutFeedback>
+//         )}
+//       </View>
+//     </View>
+//   );
+// };
+
+// const AmountOfTrash = () => {
+//   return <View style={{...props.style, }}>
+
+//   </View>
+// }
 
 export default TrashCard = props => {
   return (
@@ -91,19 +97,21 @@ export default TrashCard = props => {
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: wp("95%"),
+        width: wp("96%"),
         height: hp("20%"),
         alignSelf: "center",
-        backgroundColor: Colors.on_primary,
+        backgroundColor: Colors.on_primary_bright.low_constrast,
         borderRadius: 10,
-        marginVertical: 5
+        marginVertical: 5,
+        overflow: "hidden"
       }}
     >
+      {/* Image */}
       <View
         style={{
           width: "30%",
           height: "100%",
-          backgroundColor: Colors.on_primary,
+          backgroundColor: Colors.on_primary_bright.low_constrast,
           padding: wp("2.5%"),
           alignItems: "center",
           justifyContent: "space-around"
@@ -111,64 +119,49 @@ export default TrashCard = props => {
       >
         <ImageCircle
           avariableWidth={wp("20%")}
-          localImgUrl={props.localImgUrl}
           imgUrl={props.imgUrl}
           style={{ borderWidth: 1, borderColor: "black" }}
         />
       </View>
 
+      {/* Description */}
       <View
         style={{
-          ...styles.descriptionContainer,
-          width: "70%",
+          width: "50%",
           height: "100%",
-          padding: wp("2.5%")
+          backgroundColor: Colors.soft_secondary
         }}
       >
         {/* Trash Name */}
         <View
-          style={{
-            width: "100%",
-            height: "20%",
-            flexDirection: "row"
-          }}
+          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
         >
-          <View style={{ width: "80%", height: "100%" }}>
-            <ThaiMdText style={styles.trashName}>{props.subtype}</ThaiMdText>
+          <ThaiMdText
+            style={styles.trashName}
+          >{`ประเภท: ${props.subtype}`}</ThaiMdText>
+        </View>
+        <View
+          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
+        >
+          <View style={{ width: "20%" }}>
+            <Ionicons name="md-trash" size={20} color={Colors.hard_secondary} />
+          </View>
+          <View style={{ width: "80%" }}>
+            <ThaiRegText style={styles.trashDisposal}>
+              {` ${props.wasteDisposal}`}
+            </ThaiRegText>
           </View>
         </View>
-
-        {/* detail */}
         <View
-          style={{
-            width: "100%",
-            height: "80%",
-            flexDirection: "row"
-          }}
+          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
         >
-          <View style={{ width: "50%", height: "100%" }}>
-            <View
-              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
-            >
-              <Ionicons
-                name="md-trash"
-                size={20}
-                color={Colors.primary_variant}
-              />
-              <ThaiRegText style={styles.trashDisposal}>
-                {props.wasteDisposal}
-              </ThaiRegText>
-            </View>
-            <View
-              style={{ ...styles.descriptionRow, width: "100%", height: "50%" }}
-            >
-              <ThaiRegText style={styles.trashAdjustPrice}>
-                {props.trashAdjustPrice} บ./กก.
-              </ThaiRegText>
-            </View>
-          </View>
+          <ThaiRegText style={styles.trashAdjustPrice}>
+            {`ราคารับซื้อเฉลี่ย ${props.trashAdjustPrice} บ./กก.`}
+          </ThaiRegText>
+        </View>
+      </View>
 
-          <View style={{ width: "50%", height: "100%" }}>
+      {/* <View style={{ width: "50%", height: "100%" }}>
             <AmountOfTrash
               style={{ width: "100%", height: "50%" }}
               changeAmount={props.changeAmount}
@@ -194,6 +187,88 @@ export default TrashCard = props => {
               changeAmount={props.changeAmount}
               oldAmount={props.oldAmount}
             />
+          </View> */}
+
+      {/* Adjust Component */}
+      <View
+        style={{
+          width: "20%",
+          height: "100%",
+          backgroundColor: Colors.soft_secondary,
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 10
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "space-around",
+            borderRadius: 8,
+            borderColor: Colors.hard_secondary,
+            borderWidth: 3
+          }}
+        >
+          {/* + */}
+          <View
+            style={{
+              width: "100%",
+              height: "30%",
+              alignItems: "center",
+              justifyContent: "center",
+              borderBottomColor: props.editingMode ? Colors.hard_secondary : "",
+              borderBottomWidth: props.editingMode ? 0.5 : null
+            }}
+          >
+            {!props.selected && !props.editingMode ? null : (
+              <TouchableWithoutFeedback onPress={props.onIncrease}>
+                <AntDesign
+                  name="plus"
+                  size={24}
+                  color={Colors.hard_secondary}
+                />
+              </TouchableWithoutFeedback>
+            )}
+          </View>
+          {/* number */}
+          <View
+            style={{
+              width: "100%",
+              height: "30%",
+              alignSelf: "center"
+            }}
+          >
+            <TextInput
+              style={{ textAlign: "center" }}
+              selectTextOnFocus={true}
+              keyboardType="numeric"
+              onChangeText={props.onEdit}
+              value={props.editingValue}
+              textAlign={"center"}
+            />
+          </View>
+          {/* - */}
+          <View
+            style={{
+              width: "100%",
+              height: "30%",
+              alignItems: "center",
+              justifyContent: "center",
+              borderTopColor: props.editingMode ? Colors.hard_secondary : "",
+              borderTopWidth: props.editingMode ? 0.5 : null
+            }}
+          >
+            {!props.selected && !props.editingMode ? null : (
+              <TouchableWithoutFeedback onPress={props.onDecrease}>
+                <AntDesign
+                  name="minus"
+                  size={24}
+                  color={Colors.hard_secondary}
+                />
+              </TouchableWithoutFeedback>
+            )}
           </View>
         </View>
       </View>
@@ -209,7 +284,8 @@ const styles = StyleSheet.create({
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "space-around"
   },
   trashName: {
     fontSize: 16

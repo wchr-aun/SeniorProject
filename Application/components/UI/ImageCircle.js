@@ -14,7 +14,11 @@ export default ImageCircle = props => {
       }}
     >
       <Image
-        source={props.localImgUrl ? props.imgUrl : { uri: props.imgUrl }}
+        source={
+          props.imgUrl != ""
+            ? { uri: props.imgUrl }
+            : require("./../../assets/img/questionmark.png")
+        }
         style={{
           width: props.avariableWidth,
           height: props.avariableWidth

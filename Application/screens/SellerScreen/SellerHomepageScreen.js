@@ -97,12 +97,7 @@ export default SellerHomepageScreen = props => {
                 height: "40%",
                 width: "100%"
               }}
-              // imgUrl={
-              //   userProfile.imgUrl
-              //     ? userProfile.imgUrl
-              //     : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
-              // }
-              localImg={true}
+              imgUrl={userProfile.imgUrl ? userProfile.imgUrl : ""}
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}

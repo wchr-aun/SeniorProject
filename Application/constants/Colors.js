@@ -1,20 +1,20 @@
 export default {
   hard_primary_dark: "#191919",
   hard_primary_bright: "#17aa75",
-  hard_secondary: "#d7d7d7",
+  hard_secondary: "#e3e3e3",
   primary_dark: "#272727",
   primary_bright: "#149c6a",
   primary_bright_variant: "#0084ff",
-  secondary: "#fafafa",
+  secondary: "#ececec",
   soft_primary_dark: "#414141",
   soft_primary_bright: "#1ac989",
-  soft_secondary: "#fafafa",
+  soft_secondary: "#f2f2f2",
   on_primary_dark: {
-    low_constrast: "#fafafa",
+    low_constrast: "#ececec",
     high_constrast: "#149c6a"
   },
   on_primary_bright: {
-    low_constrast: "#fafafa",
+    low_constrast: "#ececec",
     high_constrast: "#272727"
   },
   on_secondary: {

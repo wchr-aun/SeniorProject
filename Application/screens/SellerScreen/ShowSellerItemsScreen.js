@@ -6,7 +6,8 @@ import {
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -300,23 +301,66 @@ const ShowAllUserTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
-          alignItems: "center",
-          borderRadius: 5
+          alignItems: "center"
         }}
       >
         <View
           style={{
             width: "100%",
-            height: "70%",
-            paddingHorizontal: 10,
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
             alignItems: "center"
           }}
         >
-          <View style={{ width: "100%", height: "15%", flexDirection: "row" }}>
-            <View>
-              <ThaiBoldText></ThaiBoldText>
+          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 26
+              }}
+            >
+              ขยะที่คุณมี
+            </ThaiBoldText>
+          </View>
+          <View
+            style={{
+              width: "30%",
+              height: "100%",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: Colors.soft_primary_dark,
+                borderRadius: 5,
+                width: 35,
+                height: 35,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <AntDesign
+                  name="plussquare"
+                  size={30}
+                  color={Colors.on_primary_dark.high_constrast}
+                />
+              </TouchableOpacity>
             </View>
           </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "75%",
+            alignItems: "center"
+          }}
+        >
           <FlatList
             data={trashsState.sellerItemsFlatListFormat}
             refreshing={isRefreshing}
@@ -328,8 +372,6 @@ const ShowAllUserTrashScreen = props => {
             renderItem={({ item }) => {
               return (
                 <TrashCard
-                  style={styles.eachTrashCard}
-                  localImgUrl={false}
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
                   type={item.type}
                   subtype={item.subtype}
@@ -460,12 +502,8 @@ const ShowAllUserTrashScreen = props => {
 };
 
 ShowAllUserTrashScreen.navigationOptions = navData => {
-  // let setEditingMode = navData.navigation.getParam("setEditingMode");
   let editingMode = navData.navigation.getParam("editingMode");
   let setModalVisible = navData.navigation.getParam("setModalVisible");
-  // let confirmHandlerTricker = navData.navigation.getParam(
-  //   "confirmHandlerTricker"
-  // );
 
   return {
     headerTitle: "ขยะที่สะสมไว้",
@@ -477,16 +515,7 @@ ShowAllUserTrashScreen.navigationOptions = navData => {
             iconName={"check"}
             onPress={() => setModalVisible(true)}
           />
-        ) : // (
-        //   <Item
-        //     title="Cart"
-        //     iconName={"square-edit-outline"}
-        //     onPress={() => {
-        //       setEditingMode(true);
-        //     }}
-        //   />
-        // )
-        null}
+        ) : null}
       </HeaderButtons>
     )
   };

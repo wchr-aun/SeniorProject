@@ -13,12 +13,7 @@ export default UserInfoCard = props => {
         {/* Row 1 */}
         <View style={styles.userInfoContentContainerRow1}>
           <ImageCircle
-            localImgUrl={true}
-            imgUrl={
-              props.imgUrl
-                ? props.imgUrl
-                : require("../assets/img/questionmark.png")
-            }
+            imgUrl={props.imgUrl}
             avariableWidth={props.avariableWidth * 0.3}
           />
           <View
