@@ -120,7 +120,7 @@ export default TrashCard = props => {
         <ImageCircle
           avariableWidth={wp("20%")}
           imgUrl={props.imgUrl}
-          style={{ borderWidth: 1, borderColor: "black" }}
+          style={{ borderWidth: 1, borderColor: Colors.soft_secondary }}
         />
       </View>
 
@@ -136,15 +136,26 @@ export default TrashCard = props => {
         <View
           style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
         >
+          <ThaiRegText style={{ fontSize: 8 }}>ประเภท: </ThaiRegText>
           <ThaiMdText
-            style={styles.trashName}
-          >{`ประเภท: ${props.subtype}`}</ThaiMdText>
+            style={{
+              ...styles.trashName,
+              color: Colors.primary_bright_variant
+            }}
+          >
+            {props.wasteName}
+          </ThaiMdText>
         </View>
         <View
-          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
+          style={{
+            ...styles.descriptionRow,
+            width: "100%",
+            height: "30%",
+            justifyContent: "space-around"
+          }}
         >
           <View style={{ width: "20%" }}>
-            <Ionicons name="md-trash" size={20} color={Colors.hard_secondary} />
+            <Ionicons name="md-trash" size={25} color={Colors.hard_secondary} />
           </View>
           <View style={{ width: "80%" }}>
             <ThaiRegText style={styles.trashDisposal}>
@@ -284,8 +295,10 @@ const styles = StyleSheet.create({
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
-    alignItems: "center",
-    justifyContent: "space-around"
+    alignItems: "flex-start",
+    borderBottomColor: Colors.soft_secondary,
+    borderBottomColor: 0.8,
+    borderRadius: 2
   },
   trashName: {
     fontSize: 16

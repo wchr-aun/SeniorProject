@@ -333,25 +333,27 @@ const ShowAllUserTrashScreen = props => {
               alignItems: "center"
             }}
           >
-            <View
-              style={{
-                backgroundColor: Colors.soft_primary_dark,
-                borderRadius: 5,
-                width: 35,
-                height: 35,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <AntDesign
-                  name="plussquare"
-                  size={30}
-                  color={Colors.on_primary_dark.high_constrast}
-                />
-              </TouchableOpacity>
-            </View>
+            {editingMode ? (
+              <View
+                style={{
+                  backgroundColor: Colors.soft_primary_dark,
+                  borderRadius: 5,
+                  width: 35,
+                  height: 35,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <AntDesign
+                    name="plussquare"
+                    size={30}
+                    color={Colors.on_primary_dark.high_constrast}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : null}
           </View>
         </View>
         <View
@@ -370,11 +372,13 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
+              console.log(item);
               return (
                 <TrashCard
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
                   type={item.type}
                   subtype={item.subtype}
+                  wasteName={wasteTypes[item.type][item.subtype]["name"]}
                   wasteDisposal={
                     wasteTypes[item.type][item.subtype]["disposal"]
                   }
