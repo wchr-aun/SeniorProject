@@ -46,7 +46,7 @@ export default CustomButton = props => {
 };
 
 {
-  /* <CustomButton btnColor={} onPress={} btnTitleColor={} btnTitleFontSize={} props.disable>
+  /* <CustomButton btnColor={} onPress={} btnTitleColor={} btnTitleFontSize={} disable={}>
                   
 </CustomButton> */
 }

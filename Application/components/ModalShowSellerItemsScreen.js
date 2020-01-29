@@ -17,6 +17,7 @@ import {
 } from "react-native-responsive-screen";
 import ThaiRegText from "./ThaiRegText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import CustomButton from "./UI/CustomButton";
 
 export default ModalShowSellersItemsScreen = props => {
   const [subType, setSubType] = useState();
@@ -141,22 +142,41 @@ export default ModalShowSellersItemsScreen = props => {
               justifyContent: "space-around"
             }}
           >
-            <View>
+            {/* <View>
               <Button
                 title={"เพิ่ม"}
-                color={Colors.primary}
+                color={Colors.primary_dark}
                 onPress={addWasteHandler}
               />
-            </View>
-            <View>
+            </View> */}
+            {/* <View>
               <Button
                 title={"ปิดหน้าต่าง"}
-                color={Colors.primary}
+                color={Colors.button.cancel.btnBackground}
                 onPress={() => {
                   props.setModalVisible(false);
                 }}
               />
-            </View>
+            </View> */}
+
+            <CustomButton
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={addWasteHandler}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={12}
+              disable={true}
+            >
+              ยืนยันการเพิ่มขยะ
+            </CustomButton>
+            <CustomButton
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => props.setModalVisible(false)}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={12}
+              disable={true}
+            >
+              ปิดหน้าต่าง
+            </CustomButton>
           </View>
         </View>
       </View>

@@ -5,21 +5,35 @@ export default {
   primary_dark: "#272727",
   primary_bright: "#149c6a",
   primary_bright_variant: "#0084ff",
-  secondary: "#ececec",
+  secondary: "#f0f0f0",
   soft_primary_dark: "#414141",
   soft_primary_bright: "#1ac989",
-  soft_secondary: "#f2f2f2",
+  soft_secondary: "#ffffff",
   on_primary_dark: {
-    low_constrast: "#ececec",
+    low_constrast: "#f0f0f0",
     high_constrast: "#149c6a"
   },
   on_primary_bright: {
-    low_constrast: "#ececec",
+    low_constrast: "#f0f0f0",
     high_constrast: "#272727"
   },
   on_secondary: {
     low_constrast: "#149c6a",
     high_constrast: "#272727"
+  },
+  button: {
+    cancel: {
+      btnBackground: "#f0f0f0",
+      btnText: "#272727"
+    },
+    submit_primary_dark: {
+      btnBackground: "#272727",
+      btnText: "#f0f0f0"
+    },
+    submit_primary_bright: {
+      btnBackground: "#149c6a",
+      btnText: "#ffffff"
+    }
   },
   error: "#8c0b04",
   linearGradient: ["#149c6a", "#0084ff"],
@@ -32,20 +46,6 @@ export default {
     three: "#a9fc03",
     four: "#B3B3B3",
     five: "#90B37B"
-  },
-  button: {
-    cancel: {
-      btnBackground: "#d7d7d7",
-      btnText: "#191919"
-    },
-    submit_primary_dark: {
-      btnBackground: "#191919",
-      btnText: "#d7d7d7"
-    },
-    submit_primary_bright: {
-      btnBackground: "#149c6a",
-      btnText: "#ffffff"
-    }
   }
 };
 //   Transaction Status

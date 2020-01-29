@@ -100,10 +100,10 @@ export default TrashCard = props => {
         width: wp("96%"),
         height: hp("20%"),
         alignSelf: "center",
-        backgroundColor: Colors.on_primary_bright.low_constrast,
         borderRadius: 10,
         marginVertical: 5,
-        overflow: "hidden"
+        overflow: "hidden",
+        backgroundColor: Colors.secondary
       }}
     >
       {/* Image */}
@@ -111,7 +111,7 @@ export default TrashCard = props => {
         style={{
           width: "30%",
           height: "100%",
-          backgroundColor: Colors.on_primary_bright.low_constrast,
+          backgroundColor: Colors.secondary,
           padding: wp("2.5%"),
           alignItems: "center",
           justifyContent: "space-around"
@@ -129,18 +129,19 @@ export default TrashCard = props => {
         style={{
           width: "50%",
           height: "100%",
-          backgroundColor: Colors.soft_secondary
+          backgroundColor: Colors.secondary
         }}
       >
         {/* Trash Name */}
         <View
           style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
         >
-          <ThaiRegText style={{ fontSize: 8 }}>ประเภท: </ThaiRegText>
+          <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
           <ThaiMdText
             style={{
               ...styles.trashName,
-              color: Colors.primary_bright_variant
+              color: Colors.primary_bright_variant,
+              fontSize: 10
             }}
           >
             {props.wasteName}
@@ -205,7 +206,7 @@ export default TrashCard = props => {
         style={{
           width: "20%",
           height: "100%",
-          backgroundColor: Colors.soft_secondary,
+          backgroundColor: Colors.secondary,
           alignItems: "center",
           justifyContent: "center",
           padding: 10
@@ -218,6 +219,7 @@ export default TrashCard = props => {
             alignItems: "center",
             justifyContent: "space-around",
             borderRadius: 8,
+            backgroundColor: Colors.soft_secondary,
             borderColor: Colors.hard_secondary,
             borderWidth: 3
           }}
@@ -295,10 +297,7 @@ const styles = StyleSheet.create({
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
-    alignItems: "flex-start",
-    borderBottomColor: Colors.soft_secondary,
-    borderBottomColor: 0.8,
-    borderRadius: 2
+    alignItems: "center"
   },
   trashName: {
     fontSize: 16
