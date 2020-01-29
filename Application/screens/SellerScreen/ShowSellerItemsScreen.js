@@ -321,7 +321,7 @@ const ShowAllUserTrashScreen = props => {
                 fontSize: 26
               }}
             >
-              ขยะที่คุณมี
+              จำนวนขยะที่คุณมี
             </ThaiBoldText>
           </View>
           <View

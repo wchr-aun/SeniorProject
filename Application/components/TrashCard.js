@@ -19,6 +19,7 @@ import ThaiMdText from "./ThaiMdText";
 import ThaiRegText from "./ThaiRegText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
+import ThaiBoldText from "./ThaiBoldText";
 
 // const AmountOfTrash = props => {
 //   return (
@@ -38,12 +39,12 @@ import ImageCircle from "./UI/ImageCircle";
 //           style={{
 //             textAlign: "center",
 //             fontSize: 8,
-//             color:
-//               isNaN(props.changeAmount) || props.changeAmount === 0
-//                 ? "black"
-//                 : props.changeAmount > 0
-//                 ? "green"
-//                 : Colors.error
+// color:
+//   isNaN(props.changeAmount) || props.changeAmount === 0
+//     ? "black"
+//     : props.changeAmount > 0
+//     ? "green"
+//     : Colors.error
 //           }}
 //         >
 //           {`เปลี่ยนแปลง ${
@@ -132,9 +133,13 @@ export default TrashCard = props => {
           backgroundColor: Colors.secondary
         }}
       >
-        {/* Trash Name */}
         <View
-          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
+          style={{
+            ...styles.sellerItemName,
+            ...styles.descriptionRow,
+            width: "100%",
+            height: "30%"
+          }}
         >
           <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
           <ThaiMdText
@@ -147,30 +152,73 @@ export default TrashCard = props => {
             {props.wasteName}
           </ThaiMdText>
         </View>
-        <View
-          style={{
-            ...styles.descriptionRow,
-            width: "100%",
-            height: "30%",
-            justifyContent: "space-around"
-          }}
-        >
-          <View style={{ width: "20%" }}>
-            <Ionicons name="md-trash" size={25} color={Colors.hard_secondary} />
-          </View>
-          <View style={{ width: "80%" }}>
-            <ThaiRegText style={styles.trashDisposal}>
-              {` ${props.wasteDisposal}`}
-            </ThaiRegText>
-          </View>
-        </View>
-        <View
-          style={{ ...styles.descriptionRow, width: "100%", height: "30%" }}
-        >
-          <ThaiRegText style={styles.trashAdjustPrice}>
-            {`ราคารับซื้อเฉลี่ย ${props.trashAdjustPrice} บ./กก.`}
-          </ThaiRegText>
-        </View>
+        {props.editingMode ? (
+          <>
+            <View
+              style={{
+                ...styles._sellerItemPrice,
+                ...styles.descriptionRow,
+                width: "100%",
+                height: "60%"
+              }}
+            >
+              <ThaiRegText style={{ fontSize: 12 }}>
+                {`จำนวนเปลี่ยนแปลง   `}
+                <ThaiBoldText
+                  style={{
+                    fontSize: 12,
+                    color:
+                      isNaN(props.changeAmount) || props.changeAmount === 0
+                        ? Colors.primary_dark
+                        : props.changeAmount > 0
+                        ? Colors.primary_bright
+                        : Colors.error
+                  }}
+                >
+                  {props.changeAmount ? props.changeAmount.toString() : 0}
+                </ThaiBoldText>
+                {`   บ./กก.`}
+              </ThaiRegText>
+            </View>
+          </>
+        ) : (
+          <>
+            <View
+              style={{
+                ...styles.sellerItemDisposal,
+                ...styles.descriptionRow,
+                width: "100%",
+                height: "30%",
+                justifyContent: "space-around"
+              }}
+            >
+              <View style={{ width: "20%" }}>
+                <Ionicons
+                  name="md-trash"
+                  size={25}
+                  color={Colors.hard_secondary}
+                />
+              </View>
+              <View style={{ width: "80%" }}>
+                <ThaiRegText style={styles.trashDisposal}>
+                  {` ${props.wasteDisposal}`}
+                </ThaiRegText>
+              </View>
+            </View>
+            <View
+              style={{
+                ...styles._sellerItemPrice,
+                ...styles.descriptionRow,
+                width: "100%",
+                height: "30%"
+              }}
+            >
+              <ThaiRegText style={styles.trashAdjustPrice}>
+                {`ราคารับซื้อเฉลี่ย ${props.trashAdjustPrice} บ./กก.`}
+              </ThaiRegText>
+            </View>
+          </>
+        )}
       </View>
 
       {/* <View style={{ width: "50%", height: "100%" }}>
@@ -301,9 +349,6 @@ const styles = StyleSheet.create({
   },
   trashName: {
     fontSize: 16
-  },
-  trashAdjustPrice: {
-    fontSize: 12
   },
   trashDisposal: {
     fontSize: 12
