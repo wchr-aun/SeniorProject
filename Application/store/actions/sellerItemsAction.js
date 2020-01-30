@@ -66,6 +66,8 @@ export const clearSellerItemsCamera = () => {
 
 export const setSellerItemsForSell = sellerItemsForSell => {
   return async dispatch => {
+    console.log("sellerItemsForSell");
+    console.log(sellerItemsForSell);
     return dispatch({
       type: SET_WASTE_FOR_SELL,
       sellerItemsForSell
@@ -77,10 +79,12 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      console.log("queryData");
+      console.log("queryData in QueryBuyer");
       console.log(queryData);
 
       let buyerList = await queryBuyers(queryData);
+      console.log("buyerList");
+      console.log(buyerList);
 
       // dispatch
       dispatch({

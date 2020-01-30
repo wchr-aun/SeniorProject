@@ -82,7 +82,7 @@ export default BuyerHomepageScreen = props => {
             style={{
               width: "100%",
               height: "100%",
-              backgroundColor: Colors.on_primary,
+              backgroundColor: Colors.primary_bright,
               alignSelf: "center",
               justifyContent: "center"
             }}
@@ -92,20 +92,16 @@ export default BuyerHomepageScreen = props => {
         ) : (
           <>
             <UserInfoCard
+              avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
                 height: "40%",
                 width: "100%"
               }}
-              imgUrl={
-                userProfile.imgUrl
-                  ? userProfile.imgUrl
-                  : "https://www.clipartkey.com/mpngs/m/107-1076987_user-staff-man-profile-person-icon-circle-png.png"
-              }
+              imgUrl={userProfile.imgUrl ? userProfile.imgUrl : ""}
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
-              // onSignout={() => signOutHandler()}
               onSignout={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
@@ -133,7 +129,10 @@ export default BuyerHomepageScreen = props => {
                   }}
                 >
                   <ThaiMdText
-                    style={{ color: Colors.on_primary, fontSize: 18 }}
+                    style={{
+                      color: Colors.on_primary_bright.high_constrast,
+                      fontSize: 18
+                    }}
                   >
                     การรับซื้อขยะล่าสุด
                   </ThaiMdText>
@@ -147,9 +146,9 @@ export default BuyerHomepageScreen = props => {
                   return (
                     <SellTransactionCard
                       amountOfType={item.detail.saleList.length}
-                      imgUrl={
-                        "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
-                      }
+                      // imgUrl={
+                      //   "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
+                      // }
                       txStatus={item.detail.txStatus}
                       userName={item.detail.buyer}
                       addr={item.detail.addr}
@@ -173,6 +172,6 @@ export default BuyerHomepageScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Colors.screen
+    backgroundColor: Colors.secondary
   }
 });

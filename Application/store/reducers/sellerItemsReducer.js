@@ -94,6 +94,7 @@ export default function(state = initialState, action) {
         action.sellerItemsForSell
       );
       sellerItemsForSellCloned.confirmValue();
+
       return {
         ...state,
         sellerItemsForSell: sellerItemsForSellCloned,

@@ -149,6 +149,21 @@ export class Wastes {
     }
     return obj;
   }
+  getSelected() {
+    let obj = {};
+    obj.length = 0;
+    for (let type in this) {
+      if (type[0] != "_")
+        for (let subtype in this[type]) {
+          if (this._selected[type][subtype]) {
+            if (obj[type] == undefined) obj[type] = {};
+            obj[type][subtype] = this[type][subtype];
+            obj.length += 1;
+          }
+        }
+    }
+    return obj;
+  }
   getFlatListFormat(isGetAll) {
     let data = [];
     for (let type in this) {

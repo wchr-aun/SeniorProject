@@ -25,6 +25,9 @@ import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+
 const BuyerChoice = props => {
   return (
     <TouchableOpacity
@@ -35,53 +38,122 @@ const BuyerChoice = props => {
         alignSelf: "center",
         borderRadius: 10,
         margin: wp("3.75%"),
-        justifyContent: "center"
+        justifyContent: "center",
+        padding: 10
       }}
       onPress={props.onSelected}
     >
       <View
         style={{
-          alignSelf: "center",
-          height: "30%",
           width: "100%",
-          padding: 5
+          height: "100%",
+          flexDirection: "row",
+          justifyContent: "space-around"
         }}
       >
-        <ThaiRegText>{`ผู้รับซื้อ ${props.buyerName}`}</ThaiRegText>
-      </View>
-      <View style={{ height: "70%", width: "100%" }}>
-        <FlatList
-          style={{ flex: 1 }}
-          data={props.sellerItemsForSell.getFlatListFormat(false)}
-          keyExtractor={item => item.type + item.subtype}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  height: 30,
-                  width: "100%",
-                  padding: 5,
-                  backgroundColor: Colors.secondary,
-                  borderRadius: 5
-                }}
+        <View style={{ width: "70%", height: "100%", padding: 5 }}>
+          <View
+            style={{
+              alignSelf: "center",
+              height: "30%",
+              width: "100%"
+            }}
+          >
+            <ThaiRegText>
+              {`ผู้รับซื้อ `}
+              <ThaiBoldText
+                style={{ fontSize: 12, color: Colors.primary_bright_variant }}
               >
-                <ThaiRegText>
-                  <ThaiMdText style={{ fontSize: 10 }}>
-                    {item.subtype}
-                  </ThaiMdText>
-                  {props.purchaseList[item.type] == undefined
-                    ? ` ไม่รับซื้อ `
-                    : props.purchaseList[item.type][item.subtype] == undefined
-                    ? ` ไม่รับซื้อ `
-                    : ` จำนวน ${item.amount} ราคารับซื้อ ${
-                        props.purchaseList[item.type][item.subtype]
-                      } = ${item.amount *
-                        props.purchaseList[item.type][item.subtype]}`}
-                </ThaiRegText>
-              </View>
-            );
+                {props.buyerName}
+              </ThaiBoldText>
+            </ThaiRegText>
+          </View>
+          <View style={{ height: "70%", width: "100%" }}>
+            <FlatList
+              style={{ flex: 1 }}
+              data={props.sellerItemsForSell.getFlatListFormat(false)}
+              keyExtractor={item => item.type + item.subtype}
+              renderItem={({ item }) => {
+                return (
+                  <View
+                    style={{
+                      height: 20,
+                      width: "100%",
+                      backgroundColor: Colors.secondary,
+                      borderRadius: 5
+                    }}
+                  >
+                    <ThaiRegText>
+                      {`ประเภท `}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 10,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.subtype}
+                      </ThaiMdText>
+                      {props.purchaseList[item.type] == undefined ? (
+                        <ThaiRegText
+                          style={{ fontSize: Colors.error }}
+                        >{` ไม่รับซื้อ `}</ThaiRegText>
+                      ) : props.purchaseList[item.type][item.subtype] ==
+                        undefined ? (
+                        <ThaiRegText
+                          style={{ fontSize: Colors.error }}
+                        >{` ไม่รับซื้อ `}</ThaiRegText>
+                      ) : (
+                        `  ${item.amount} X ${
+                          props.purchaseList[item.type][item.subtype]
+                        } บาท/ชิ้น. = `
+                      )}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 10,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.amount *
+                          props.purchaseList[item.type][item.subtype]}
+                      </ThaiMdText>
+                    </ThaiRegText>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            width: "30%",
+            height: "100%",
+            justifyContent: "center",
+            padding: 3
           }}
-        />
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 8,
+              backgroundColor: Colors.soft_primary_dark,
+
+              alignItems: "center"
+            }}
+          >
+            <ThaiRegText
+              style={{ color: Colors.on_primary_dark.low_constrast }}
+            >{`ราคารวม`}</ThaiRegText>
+            <ThaiBoldText
+              style={{
+                fontSize: 24,
+                color: Colors.on_primary_dark.high_constrast
+              }}
+            >
+              {props.totalPrice}
+            </ThaiBoldText>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -120,7 +192,7 @@ export default ChooseBuyerScreen = props => {
     await dispatch(
       sellerItemsAction.getBuyerList({
         distance: parseInt(props.navigation.getParam("distance"), 10),
-        wasteType: sellerItemsForSell.getObject(),
+        wasteType: sellerItemsForSell.getSelected(),
         addr: sellerAddr
       })
     );
@@ -247,7 +319,8 @@ export default ChooseBuyerScreen = props => {
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
-      <View
+      <LinearGradient
+        colors={Colors.linearGradient}
         style={{
           width: wp("100%"),
           height: hp("100%"),
@@ -295,6 +368,7 @@ export default ChooseBuyerScreen = props => {
                   }
                   buyerName={item.id}
                   purchaseList={item.purchaseList}
+                  totalPrice={item.totalPrice}
                 />
               );
             }}
@@ -312,7 +386,7 @@ export default ChooseBuyerScreen = props => {
         <View
           style={{
             height: "20%",
-            maxHeight: 100,
+            maxHeight: 60,
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-around"
@@ -341,16 +415,16 @@ export default ChooseBuyerScreen = props => {
 
           <CustomButton
             style={{ width: "40%", height: "100%", borderRadius: 8 }}
-            btnColor={Colors.button.start_operation_info.btnBackground}
+            btnColor={Colors.button.submit_primary_dark.btnBackground}
             onPress={quickSellHandler}
-            btnTitleColor={Colors.button.start_operation_info.btnText}
+            btnTitleColor={Colors.button.submit_primary_dark.btnText}
             btnTitleFontSize={14}
           >
-            <MaterialCommunityIcons
+            {/* <MaterialCommunityIcons
               name={"account-search"}
               size={12}
               color={Colors.button.start_operation_info.btnText}
-            />
+            /> */}
             <ThaiRegText
               style={{
                 fontSize: 12
@@ -360,7 +434,7 @@ export default ChooseBuyerScreen = props => {
             </ThaiRegText>
           </CustomButton>
         </View>
-      </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 };

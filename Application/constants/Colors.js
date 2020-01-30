@@ -14,8 +14,8 @@ export default {
     high_constrast: "#149c6a"
   },
   on_primary_bright: {
-    low_constrast: "#f0f0f0",
-    high_constrast: "#272727"
+    low_constrast: "#272727",
+    high_constrast: "#f0f0f0"
   },
   on_secondary: {
     low_constrast: "#149c6a",
