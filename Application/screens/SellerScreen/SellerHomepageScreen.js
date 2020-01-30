@@ -131,7 +131,6 @@ export default SellerHomepageScreen = props => {
                 >
                   <ThaiTitleText
                     style={{
-                      // color: Colors.on_primary_bright.low_constrast,
                       color: Colors.soft_primary_bright,
                       fontSize: 18
                     }}

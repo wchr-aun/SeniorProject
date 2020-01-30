@@ -53,58 +53,58 @@ export const getPrediction = (image, wasteTypesDB) => {
     console.log(typeof image.base64);
 
     // //tmp
-    // dispatch({
-    //   type: GET_PREDICTION,
-    //   results: [
-    //     {
-    //       class: "PETE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     },
-    //     {
-    //       class: "PETE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     },
-    //     {
-    //       class: "HDPE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     }
-    //   ],
-    //   wasteTypesDB
-    // });
+    dispatch({
+      type: GET_PREDICTION,
+      results: [
+        {
+          class: "PETE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        },
+        {
+          class: "PETE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        },
+        {
+          class: "HDPE",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32"
+        }
+      ],
+      wasteTypesDB
+    });
 
-    // send an image
-    fetch(PERDICT_LINK, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ photo: image.base64 })
-    })
-      .then(res => {
-        return res.json();
-      })
-      .then(res => {
-        console.log("getpredict ! res.results");
-        console.log(res.results);
-        dispatch({
-          type: GET_PREDICTION,
-          results: res.results,
-          wasteTypesDB
-        });
-        return res;
-      })
-      .catch(error => console.log(error));
+    // // send an image
+    // fetch(PERDICT_LINK, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ photo: image.base64 })
+    // })
+    //   .then(res => {
+    //     return res.json();
+    //   })
+    //   .then(res => {
+    //     console.log("getpredict ! res.results");
+    //     console.log(res.results);
+    //     dispatch({
+    //       type: GET_PREDICTION,
+    //       results: res.results,
+    //       wasteTypesDB
+    //     });
+    //     return res;
+    //   })
+    //   .catch(error => console.log(error));
   };
 };

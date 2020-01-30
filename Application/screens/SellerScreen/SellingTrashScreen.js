@@ -322,7 +322,9 @@ export default SellingTrashScreen = props => {
                 height: "50%",
                 width: "100%",
                 flexDirection: "row",
-                justifyContent: "space-around"
+                justifyContent: "space-around",
+                alignItems: "center",
+                backgroundColor: "red"
               }}
             >
               <CustomButton

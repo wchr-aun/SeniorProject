@@ -34,8 +34,12 @@ export default TrashCard = props => {
         overflow: "hidden",
         backgroundColor: Colors.secondary,
         borderRadius: 10,
-        borderWidth: props.editingMode ? 3 : null,
-        borderColor: props.editingMode ? Colors.primary_bright_variant : ""
+        borderWidth: !props.cameraMode ? (props.editingMode ? 3 : null) : null,
+        borderColor: !props.cameraMode
+          ? props.editingMode
+            ? Colors.primary_bright_variant
+            : ""
+          : ""
       }}
     >
       <View
@@ -83,7 +87,7 @@ export default TrashCard = props => {
             {props.wasteName}
           </ThaiMdText>
         </View>
-        {props.editingMode ? (
+        {props.editingMode && !props.cameraMode ? (
           <>
             <View
               style={{
@@ -178,11 +182,11 @@ export default TrashCard = props => {
             justifyContent: "space-around",
             borderRadius: 8,
             backgroundColor: Colors.soft_secondary,
-            // borderColor: props.editingMode
-            //   ? Colors.primary_bright_variant
-            //   : Colors.hard_secondary,
-            borderColor: props.editingMode ? Colors.hard_secondary : "",
-            borderWidth: props.editingMode ? 3 : null
+            borderColor:
+              props.cameraMode || props.editingMode
+                ? Colors.hard_secondary
+                : "",
+            borderWidth: props.cameraMode || props.editingMode ? 3 : null
           }}
         >
           {/* + */}
@@ -192,11 +196,17 @@ export default TrashCard = props => {
               height: "30%",
               alignItems: "center",
               justifyContent: "center",
-              borderBottomColor: props.editingMode ? Colors.hard_secondary : "",
-              borderBottomWidth: props.editingMode ? 0.5 : null
+              borderBottomColor:
+                props.cameraMode || props.editingMode
+                  ? Colors.hard_secondary
+                  : "",
+              borderBottomWidth:
+                props.cameraMode || props.editingMode ? 0.5 : null
             }}
           >
-            {!props.selected && !props.editingMode ? null : (
+            {!props.selected &&
+            !props.editingMode &&
+            !props.cameraMode ? null : (
               <TouchableWithoutFeedback onPress={props.onIncrease}>
                 <AntDesign
                   name="plus"
@@ -231,11 +241,16 @@ export default TrashCard = props => {
               height: "30%",
               alignItems: "center",
               justifyContent: "center",
-              borderTopColor: props.editingMode ? Colors.hard_secondary : "",
-              borderTopWidth: props.editingMode ? 0.5 : null
+              borderTopColor:
+                props.cameraMode || props.editingMode
+                  ? Colors.hard_secondary
+                  : "",
+              borderTopWidth: props.cameraMode || props.editingMode ? 0.5 : null
             }}
           >
-            {!props.selected && !props.editingMode ? null : (
+            {!props.selected &&
+            !props.editingMode &&
+            !props.cameraMode ? null : (
               <TouchableWithoutFeedback onPress={props.onDecrease}>
                 <AntDesign
                   name="minus"

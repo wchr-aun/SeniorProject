@@ -69,14 +69,20 @@ export default SellTransactionCard = props => {
               >
                 {props.userRole === "seller" ? "ผู้รับซื้อ: " : "ผู้ขาย: "}{" "}
                 <ThaiMdText
-                  style={{ fontSize: 10, color: Colors.primary_bright_variant }}
+                  style={{ fontSize: 15, color: Colors.primary_bright_variant }}
                 >
                   {props.userName ? props.userName : "ยังไม่ระบุ"}
                 </ThaiMdText>
               </ThaiRegText>
             </View>
 
-            <View style={{ width: "40%" }}>
+            <View
+              style={{
+                width: "40%",
+                flexDirection: "row",
+                justifyContent: "flex-end"
+              }}
+            >
               <ThaiRegText
                 style={{
                   fontSize: 10,

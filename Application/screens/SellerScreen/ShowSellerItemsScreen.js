@@ -310,7 +310,7 @@ const ShowAllUserTrashScreen = props => {
             alignItems: "center"
           }}
         >
-          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,

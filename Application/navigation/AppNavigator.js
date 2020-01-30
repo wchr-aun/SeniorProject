@@ -197,7 +197,11 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
         tabBarLabel: "การรับซื้อขยะในวันนั้น",
         tabBarIcon: tabInfo => {
           return (
-            <Ionicons name="md-map" size={25} color={Colors.on_primary_dark} />
+            <Ionicons
+              name="md-map"
+              size={25}
+              color={Colors.on_primary_dark.low_constrast}
+            />
           );
         }
       }
@@ -212,7 +216,7 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
             <Ionicons
               name="md-list-box"
               size={25}
-              color={Colors.on_primary_dark}
+              color={Colors.on_primary_dark.low_constrast}
             />
           );
         }
@@ -225,7 +229,7 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
       showIcon: true,
       showLabel: false,
       style: {
-        backgroundColor: "red",
+        backgroundColor: Colors.soft_primary_dark,
         paddingTop: getStatusBarHeight()
       }
     }
@@ -290,7 +294,7 @@ const BuyerNavigator =
         activeColor: Colors.primary_bright,
         shifting: true,
         labeled: true,
-        inactiveColor: Colors.on_primary_dark,
+        inactiveColor: Colors.on_primary_dark.low_constrast,
         barStyle: {
           height: AppVariableSetting.bottomBarHeight,
           backgroundColor: Colors.primary_dark
@@ -299,7 +303,7 @@ const BuyerNavigator =
     : createBottomTabNavigator(BuyerBottomTabConfig, {
         tabBarOptions: {
           // when using like 'color={tabTintColor}
-          activeTintColor: Colors.on_primary_dark,
+          activeTintColor: Colors.on_primary_dark.high_constrast,
           style: {
             backgroundColor: Colors.primary_dark,
             height: AppVariableSetting.bottomBarHeight

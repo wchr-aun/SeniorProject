@@ -7,13 +7,10 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 
-import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
-import ThaiRegText from "../../components/ThaiRegText";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -94,22 +91,6 @@ export default SellingTransactionScreen = props => {
               }}
             />
           )}
-          // ListEmptyComponent={() => {
-          //   return (
-          //     <View style={{ width: 100, height: 60 }}>
-          //       <ThaiBoldText style={{ color: "black", fontSize: 12 }}>
-          //         No content
-          //       </ThaiBoldText>
-          //     </View>
-          //   );
-          // }}
-          // ListEmptyComponent={
-          //   <View style={{ width: 100, height: 60 }}>
-          //     <ThaiBoldText style={{ color: "black", fontSize: 12 }}>
-          //       No content
-          //     </ThaiBoldText>
-          //   </View>
-          // }
         />
       </LinearGradient>
     </View>

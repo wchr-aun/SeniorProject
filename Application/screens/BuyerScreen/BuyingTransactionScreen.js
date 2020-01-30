@@ -11,11 +11,10 @@ import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import * as transactionAction from "../../store/actions/transactionAction";
 
-import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
-import ThaiRegText from "../../components/ThaiRegText";
 import SellTransactionCard from "../../components/SellTransactionCard";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default BuyingTransactionScreen = props => {
   // Get transactions for initially
@@ -53,7 +52,8 @@ export default BuyingTransactionScreen = props => {
           Header.HEIGHT
       }}
     >
-      <View
+      <LinearGradient
+        colors={Colors.linearGradientB}
         style={{
           width: "100%",
           height: "100%",
@@ -68,18 +68,35 @@ export default BuyingTransactionScreen = props => {
           sections={transactionsSectionListFormat}
           keyExtractor={(item, index) => item + index}
           renderSectionHeader={({ section: { transactionMode } }) => {
-            return <Text>{transactionMode}</Text>;
+            return (
+              <View style={{ width: "100%", height: 40, alignItems: "center" }}>
+                <ThaiBoldText
+                  style={{
+                    color: Colors.on_primary_bright.high_constrast,
+                    fontSize: 18
+                  }}
+                >
+                  {transactionMode}
+                </ThaiBoldText>
+                <View
+                  style={{
+                    width: "15%",
+                    borderBottomColor: Colors.soft_primary_bright,
+                    borderBottomWidth: 2
+                  }}
+                ></View>
+              </View>
+            );
           }}
           renderItem={({ item }) => {
             return (
               <SellTransactionCard
                 userRole={userRole}
                 amountOfType={item.detail.saleList.length}
-                imgUrl={
-                  "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
-                }
-                userName={item.detail.buyer}
+                imgUrl={""}
+                userName={item.detail.seller}
                 txStatus={item.detail.txStatus}
+                txType={item.detail.txType}
                 addr={item.detail.addr}
                 meetDate={libary.formatDate(
                   item.detail.assignedTime[0].toDate()
@@ -91,7 +108,7 @@ export default BuyingTransactionScreen = props => {
             );
           }}
         />
-      </View>
+      </LinearGradient>
     </View>
   );
 };

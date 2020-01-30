@@ -77,7 +77,8 @@ export default Input = props => {
       <Text
         style={{
           ...styles.label,
-          color: props.editable === true ? Colors.primary : Colors.lineSeparate
+          color:
+            props.editable === true ? Colors.primary_dark : Colors.secondary
         }}
       >
         {props.label}
@@ -105,7 +106,7 @@ export default Input = props => {
             ...styles.input,
             width: wp("70%"),
             color:
-              props.editable === true ? Colors.primary : Colors.lineSeparate
+              props.editable === true ? Colors.primary_dark : Colors.secondary
           }}
           value={inputState.value}
           onChangeText={textChangeHandler}

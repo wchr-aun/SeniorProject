@@ -279,6 +279,11 @@ export default EditingUserprofileScreen = props => {
     dispatch(authAction.signout());
   };
 
+  // check
+  useEffect(() => {
+    console.log(!userRole === "buyer");
+  });
+
   return (
     <View
       style={{
@@ -379,41 +384,58 @@ export default EditingUserprofileScreen = props => {
                   <ThaiRegText>คนซื้อ</ThaiRegText>
                 </TouchableOpacity>
               </View>
-              {!userRole === "buyer" ? null : (
+              {!userRole == "buyer" ? null : (
                 <View
                   style={{
-                    width: "100%",
+                    width: "50%",
+                    height: 50,
                     marginVertical: 3,
-                    alignSelf: "center",
                     alignItems: "center",
                     flexDirection: "row",
-                    justifyContent: "flex-end"
+                    justifyContent: "space-around",
+                    alignSelf: "flex-end"
                   }}
                 >
-                  <SwitchToggle
-                    switchOn={isEnableSearch}
-                    onPress={() => setIsEnableSearch(!isEnableSearch)}
-                    duration={150}
-                    backgroundColorOn="#5fdba7"
-                    backgroundColorOff="#808080"
-                    circleColorOff="#ffffff"
-                    circleColorOn="#ffffff"
-                    containerStyle={{
-                      marginTop: 16,
-                      width: 36,
-                      height: 16,
-                      borderRadius: 25,
-                      backgroundColor: "#ccc",
-                      padding: 5
+                  <View
+                    style={{
+                      height: "100%",
+                      width: "30%",
+                      justifyContent: "center",
+                      alignItems: "flex-end",
+                      marginRight: 3
                     }}
-                    circleStyle={{
-                      width: 12,
-                      height: 12,
-                      borderRadius: 19,
-                      backgroundColor: "white" // rgb(102,134,205)
+                  >
+                    <SwitchToggle
+                      switchOn={isEnableSearch}
+                      onPress={() => setIsEnableSearch(!isEnableSearch)}
+                      duration={150}
+                      backgroundColorOn="#5fdba7"
+                      backgroundColorOff="#808080"
+                      circleColorOff="#ffffff"
+                      circleColorOn="#ffffff"
+                      containerStyle={{
+                        width: 36,
+                        height: 16,
+                        borderRadius: 25,
+                        backgroundColor: "#ccc",
+                        padding: 5
+                      }}
+                      circleStyle={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: 19,
+                        backgroundColor: "white" // rgb(102,134,205)
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      height: "100%",
+                      width: "70%",
+                      justifyContent: "center",
+                      alignItems: "flex-start"
                     }}
-                  />
-                  <View>
+                  >
                     <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
                       สามารถถูกค้นหาได้
                     </ThaiRegText>
