@@ -22,6 +22,10 @@ export default {
     high_constrast: "#272727"
   },
   button: {
+    disabled: {
+      btnBackground: "#f0f0f0",
+      btnText: "#e3e3e3"
+    },
     cancel: {
       btnBackground: "#ffffff",
       btnText: "#272727"

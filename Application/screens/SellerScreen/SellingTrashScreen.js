@@ -11,7 +11,11 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  Ionicons
+} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -155,7 +159,7 @@ export default SellingTrashScreen = props => {
   }, [sellerItemsForSell, sellerItemsFlatListFormat]);
   const dispatch = useDispatch();
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <View style={{ flex: 1 }}>
       <CustomStatusBar />
       <LinearGradient
         colors={Colors.linearGradient}
@@ -166,7 +170,10 @@ export default SellingTrashScreen = props => {
           alignItems: "center"
         }}
       >
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={"padding"}>
+        <KeyboardAvoidingView
+          style={{ width: "100%", height: "100%" }}
+          behavior={"padding"}
+        >
           <View
             style={{
               width: "100%",
@@ -310,26 +317,56 @@ export default SellingTrashScreen = props => {
               <ThaiRegText style={{ fontSize: 12 }}> กิโลเมตร</ThaiRegText>
             </View>
 
-            <CustomButton
-              style={{ width: "100%", height: "50%", borderRadius: 8 }}
-              btnColor={Colors.button.start_operation_info.btnBackground}
-              onPress={setSellerItemsForSell}
-              btnTitleColor={Colors.button.start_operation_info.btnText}
-              btnTitleFontSize={14}
+            <View
+              style={{
+                height: "50%",
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-around"
+              }}
             >
-              <MaterialCommunityIcons
-                name={"account-search"}
-                size={12}
-                color={Colors.button.start_operation_info.btnText}
-              />
-              <ThaiRegText
-                style={{
-                  fontSize: 12
-                }}
+              <CustomButton
+                style={{ width: "40%", height: "100%", borderRadius: 8 }}
+                btnColor={Colors.button.cancel.btnBackground}
+                onPress={() => props.navigation.goBack()}
+                btnTitleColor={Colors.button.cancel.btnText}
+                btnTitleFontSize={14}
               >
-                ค้นหาผู้รับซื้อขยะ
-              </ThaiRegText>
-            </CustomButton>
+                <Ionicons
+                  name={"ios-arrow-back"}
+                  size={12}
+                  color={Colors.button.cancel.btnText}
+                />
+                <ThaiRegText
+                  style={{
+                    fontSize: 12
+                  }}
+                >
+                  {` ย้อนกลับ`}
+                </ThaiRegText>
+              </CustomButton>
+
+              <CustomButton
+                style={{ width: "40%", height: "100%", borderRadius: 8 }}
+                btnColor={Colors.button.start_operation_info.btnBackground}
+                onPress={setSellerItemsForSell}
+                btnTitleColor={Colors.button.start_operation_info.btnText}
+                btnTitleFontSize={14}
+              >
+                <MaterialCommunityIcons
+                  name={"account-search"}
+                  size={12}
+                  color={Colors.button.start_operation_info.btnText}
+                />
+                <ThaiRegText
+                  style={{
+                    fontSize: 12
+                  }}
+                >
+                  {` ค้นหาผู้รับซื้อขยะ`}
+                </ThaiRegText>
+              </CustomButton>
+            </View>
           </View>
         </KeyboardAvoidingView>
       </LinearGradient>

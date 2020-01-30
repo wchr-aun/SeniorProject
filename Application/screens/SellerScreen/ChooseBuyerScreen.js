@@ -1,10 +1,8 @@
 import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
-  ScrollView,
   View,
   KeyboardAvoidingView,
   StyleSheet,
-  ActivityIndicator,
   Alert,
   FlatList,
   TouchableOpacity
@@ -32,7 +30,7 @@ const BuyerChoice = props => {
       style={{
         width: wp("90%"),
         height: hp("15%"),
-        backgroundColor: Colors.screen,
+        backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
         margin: wp("3.75%"),
@@ -62,7 +60,7 @@ const BuyerChoice = props => {
                   height: 30,
                   width: "100%",
                   padding: 5,
-                  backgroundColor: Colors.screen,
+                  backgroundColor: Colors.secondary,
                   borderRadius: 5
                 }}
               >

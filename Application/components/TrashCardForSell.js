@@ -120,10 +120,48 @@ export default TrashCardForSell = props => {
           justifyContent: "space-around"
         }}
       >
+        <CustomButton
+          style={{
+            width: "100%",
+            height: "20%",
+            maxHeight: 40,
+            borderRadius: 8,
+            padding: 10
+          }}
+          btnColor={
+            props.selected
+              ? Colors.button.submit_primary_bright.btnBackground
+              : Colors.hard_secondary
+          }
+          onPress={props.onSelected}
+          btnTitleColor={
+            props.selected
+              ? Colors.button.submit_primary_bright.btnText
+              : Colors.button.submit_primary_dark.btnText
+          }
+          btnTitleFontSize={10}
+          disable={false}
+        >
+          <ThaiBoldText style={{ fontSize: 10 }}>เลือก </ThaiBoldText>
+          <MaterialIcons
+            name={props.selected ? "check-box" : "check-box-outline-blank"}
+            size={12}
+            color={
+              props.selected
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.submit_primary_dark.btnText
+            }
+          />
+        </CustomButton>
         <ImageCircle
           avariableWidth={wp("20%")}
           imgUrl={props.imgUrl}
-          style={{ borderWidth: 1, borderColor: Colors.soft_secondary }}
+          style={{
+            borderWidth: 1,
+            borderColor: Colors.soft_secondary,
+            height: "80%",
+            width: "100%"
+          }}
         />
       </View>
 
@@ -155,48 +193,26 @@ export default TrashCardForSell = props => {
             <ThaiMdText
               style={{
                 ...styles.trashName,
-                color: Colors.primary_bright_variant,
+                color: props.selected
+                  ? Colors.primary_bright_variant
+                  : Colors.hard_secondary,
                 fontSize: 12
               }}
             >
               {props.wasteName}
             </ThaiMdText>
           </View>
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%"
-            }}
-            btnColor={
-              props.selected
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.cancel.btnBackground
-            }
-            onPress={props.onSelected}
-            btnTitleColor={
-              props.selected
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.cancel.btnText
-            }
-            btnTitleFontSize={10}
-            disable={false}
-          >
-            <MaterialIcons
-              name={props.selected ? "check-box" : "check-box-outline-blank"}
-              size={30}
-              color={
-                props.selected
-                  ? Colors.button.submit_primary_bright.btnText
-                  : Colors.button.cancel.btnText
-              }
-            />
-          </CustomButton>
         </View>
         <View style={{ width: "100%", height: "30%" }}>
           <ThaiRegText>ราคารับซื้อ: </ThaiRegText>
           <View style={{ flexDirection: "row" }}>
             <ThaiBoldText
-              style={{ color: Colors.primary_bright, fontSize: 12 }}
+              style={{
+                color: props.selected
+                  ? Colors.primary_bright
+                  : Colors.hard_secondary,
+                fontSize: 12
+              }}
             >
               {props.sellerItemAdjustPrice}
             </ThaiBoldText>
@@ -212,7 +228,7 @@ export default TrashCardForSell = props => {
                 isNaN(props.changeAmount) ||
                 props.changeAmount === 0 ||
                 !props.selected
-                  ? Colors.primary_dark
+                  ? Colors.hard_secondary
                   : props.changeAmount > 0
                   ? Colors.primary_bright
                   : Colors.error
