@@ -8,7 +8,7 @@ export default {
   secondary: "#f0f0f0",
   soft_primary_dark: "#414141",
   soft_primary_bright: "#1ac989",
-  soft_secondary: "#ffffff",
+  soft_secondary: "#f4f4f4",
   on_primary_dark: {
     low_constrast: "#f0f0f0",
     high_constrast: "#149c6a"

@@ -144,7 +144,13 @@ export default TrashCard = props => {
               }}
             >
               <ThaiRegText style={styles.trashAdjustPrice}>
-                {`ราคารับซื้อเฉลี่ย ${props.trashAdjustPrice} บ./กก.`}
+                {`ราคารับซื้อเฉลี่ย `}
+              </ThaiRegText>
+              <ThaiBoldText style={{ fontSize: 12 }}>
+                ${props.trashAdjustPrice}
+              </ThaiBoldText>
+              <ThaiRegText style={styles.trashAdjustPrice}>
+                {` บ./กก.`}
               </ThaiRegText>
             </View>
           </>
@@ -170,10 +176,11 @@ export default TrashCard = props => {
             justifyContent: "space-around",
             borderRadius: 8,
             backgroundColor: Colors.soft_secondary,
-            borderColor: props.editingMode
-              ? Colors.primary_bright_variant
-              : Colors.hard_secondary,
-            borderWidth: 3
+            // borderColor: props.editingMode
+            //   ? Colors.primary_bright_variant
+            //   : Colors.hard_secondary,
+            borderColor: props.editingMode ? Colors.hard_secondary : "",
+            borderWidth: props.editingMode ? 3 : null
           }}
         >
           {/* + */}

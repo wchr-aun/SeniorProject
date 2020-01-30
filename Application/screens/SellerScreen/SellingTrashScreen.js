@@ -188,7 +188,7 @@ export default SellingTrashScreen = props => {
                 fontSize: 26
               }}
             >
-              จำนวนขยะที่คุณมี
+              เลือกขยะที่ต้องการขายพร้อมจำนวน
             </ThaiBoldText>
           </View>
         </View>
@@ -295,11 +295,15 @@ export default SellingTrashScreen = props => {
               width: "100%",
               height: "50%",
               flexDirection: "row",
-              justifyContent: "center"
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
-            <ThaiRegText>ค้นหาผู้รับซื้อในระยะ </ThaiRegText>
+            <ThaiRegText style={{ fontSize: 12 }}>
+              ค้นหาผู้รับซื้อในระยะ{" "}
+            </ThaiRegText>
             <TextInput
+              style={{ fontSize: 12, textAlign: "center" }}
               value={distance}
               selectTextOnFocus={true}
               onChangeText={value => {
@@ -307,7 +311,7 @@ export default SellingTrashScreen = props => {
               }}
               keyboardType="number-pad"
             />
-            <ThaiRegText> กิโลเมตร</ThaiRegText>
+            <ThaiRegText style={{ fontSize: 12 }}> กิโลเมตร</ThaiRegText>
           </View>
 
           <CustomButton
