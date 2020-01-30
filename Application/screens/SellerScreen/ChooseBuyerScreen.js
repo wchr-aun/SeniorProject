@@ -137,7 +137,7 @@ const BuyerChoice = props => {
               height: "100%",
               borderRadius: 8,
               backgroundColor: Colors.soft_primary_dark,
-
+              justifyContent: "space-around",
               alignItems: "center"
             }}
           >

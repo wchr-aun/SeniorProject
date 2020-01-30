@@ -1,12 +1,9 @@
 import React, { useState, useReducer, useEffect } from "react";
 import {
-  StyleSheet,
   View,
-  Dimensions,
   Button,
   Modal,
   Text,
-  TextInput,
   Alert,
   FlatList,
   TouchableOpacity
@@ -16,13 +13,39 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { AntDesign } from "@expo/vector-icons";
+import ThaiBoldText from "./ThaiBoldText";
+import ThaiRegText from "./ThaiRegText";
+import CustomButton from "./UI/CustomButton";
 
 const DATA = [
   { hour: 6, minute: 0, selected: false },
   { hour: 6, minute: 30, selected: false },
   { hour: 7, minute: 0, selected: false },
   { hour: 7, minute: 30, selected: false },
-  { hour: 8, minute: 0, selected: false }
+  { hour: 8, minute: 0, selected: false },
+  { hour: 8, minute: 30, selected: false },
+  { hour: 9, minute: 0, selected: false },
+  { hour: 9, minute: 30, selected: false },
+  { hour: 10, minute: 0, selected: false },
+  { hour: 10, minute: 30, selected: false },
+  { hour: 11, minute: 0, selected: false },
+  { hour: 11, minute: 30, selected: false },
+  { hour: 12, minute: 0, selected: false },
+  { hour: 12, minute: 30, selected: false },
+  { hour: 13, minute: 0, selected: false },
+  { hour: 13, minute: 30, selected: false },
+  { hour: 14, minute: 0, selected: false },
+  { hour: 14, minute: 30, selected: false },
+  { hour: 15, minute: 0, selected: false },
+  { hour: 15, minute: 30, selected: false },
+  { hour: 16, minute: 0, selected: false },
+  { hour: 16, minute: 30, selected: false },
+  { hour: 17, minute: 0, selected: false },
+  { hour: 17, minute: 30, selected: false },
+  { hour: 18, minute: 0, selected: false },
+  { hour: 18, minute: 30, selected: false }
 ];
 
 const SELECTED = "SELECTED";
@@ -93,21 +116,42 @@ export default ModalShowSellersItemsScreen = props => {
     >
       <View
         style={{
-          height: hp("80%"),
-          width: wp("80%"),
+          height: hp("100%"),
+          width: wp("100%"),
           alignItems: "center",
-          justifyContent: "center",
-          alignSelf: "center",
-          borderColor: "black",
-          borderWidth: 3,
-          paddingTop: 60
+          borderWidth: 2,
+          backgroundColor: Colors.secondary
         }}
       >
+        {/* Header */}
+        <View style={{ width: "100%", height: "20%", maxHeight: 80 }}>
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: Colors.soft_primary_dark
+            }}
+          >
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 26,
+                textAlign: "center"
+              }}
+            >
+              เลือกเวลารับซื้อที่คุณสะดวก
+            </ThaiBoldText>
+          </View>
+        </View>
+        {/* Time content */}
         <View
           style={{
             width: "100%",
-            height: "80%",
-            padding: 20
+            height: "70%",
+            padding: 10,
+            alignItems: "center"
           }}
         >
           <FlatList
@@ -115,61 +159,73 @@ export default ModalShowSellersItemsScreen = props => {
             keyExtractor={item => item.hour.toString() + item.minute.toString()}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity
+                <CustomButton
+                  style={{
+                    borderRadius: 8,
+                    marginVertical: 2,
+                    width: "80%",
+                    aligeSelf: "center"
+                  }}
+                  btnColor={
+                    item.selected
+                      ? Colors.button.submit_primary_dark.btnBackground
+                      : Colors.button.disabled.btnBackground
+                  }
                   onPress={() => onAssignedtimeSelectedHandler(item)}
+                  btnTitleColor={
+                    item.selected
+                      ? Colors.button.submit_primary_dark.btnText
+                      : Colors.button.disabled.btnText
+                  }
+                  btnTitleFontSize={12}
+                  disable={false}
                 >
-                  <View
-                    style={{
-                      width: "100%",
-                      height: 50,
-                      borderWidth: 2,
-                      borderColor: "yellow",
-                      padding: 5,
-                      alignSelf: "center"
-                    }}
-                  >
-                    <Text>
-                      {item.hour.toString() + " " + item.minute.toString()}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                  <ThaiRegText>เวลา </ThaiRegText>
+                  <ThaiBoldText>
+                    {item.hour.toString() +
+                      "." +
+                      (item.minute === 0 ? "00" : item.minute.toString())}
+                  </ThaiBoldText>
+                  <ThaiRegText> น.</ThaiRegText>
+                </CustomButton>
               );
             }}
           />
         </View>
-        <View style={{ width: "100%", height: "20%", flexDirection: "row" }}>
-          <View
-            style={{
-              width: "40%",
-              height: "100%",
-              borderWidth: 2,
-              borderColor: "red"
+        {/* Btn */}
+        <View
+          style={{
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            maxHeight: 60
+          }}
+        >
+          <CustomButton
+            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            btnColor={Colors.button.cancel.btnBackground}
+            onPress={() => {
+              props.setModalVisible(false);
             }}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={12}
+            disable={false}
           >
-            <Button
-              title={"ปิดหน้าต่าง"}
-              color={Colors.primary_dark}
-              onPress={() => {
-                props.setModalVisible(false);
-              }}
-            />
-          </View>
-          <View
-            style={{
-              width: "40%",
-              height: "100%",
-              borderWidth: 2,
-              borderColor: "red"
+            ปิดหน้าต่าง
+          </CustomButton>
+          <CustomButton
+            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            btnColor={Colors.button.submit_primary_bright.btnBackground}
+            onPress={() => {
+              confirmAssignedtime();
             }}
+            btnTitleColor={Colors.button.submit_primary_bright.btnText}
+            btnTitleFontSize={12}
+            disable={false}
           >
-            <Button
-              title={"ยืนยัน"}
-              color={Colors.primary_bright}
-              onPress={() => {
-                confirmAssignedtime();
-              }}
-            />
-          </View>
+            ยืนยัน
+          </CustomButton>
         </View>
       </View>
     </Modal>
