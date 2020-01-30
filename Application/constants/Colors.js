@@ -26,8 +26,12 @@ export default {
       btnBackground: "#f0f0f0",
       btnText: "#e3e3e3"
     },
+    // cancel: {
+    //   btnBackground: "#ffffff",
+    //   btnText: "#272727"
+    // },
     cancel: {
-      btnBackground: "#ffffff",
+      btnBackground: "#e3e3e3",
       btnText: "#272727"
     },
     start_operation_info: {
@@ -48,6 +52,10 @@ export default {
     },
     submit_primary_bright: {
       btnBackground: "#149c6a",
+      btnText: "#ffffff"
+    },
+    danger_operation: {
+      btnBackground: "#ff386d",
       btnText: "#ffffff"
     }
   },

@@ -14,6 +14,8 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
 import ThaiRegText from "../../components/ThaiRegText";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default SellingTransactionScreen = props => {
   // Get transactions for initially
@@ -43,21 +45,39 @@ export default SellingTransactionScreen = props => {
         paddingTop: getStatusBarHeight()
       }}
     >
-      <View
+      <LinearGradient
+        colors={Colors.linearGradient}
         style={{
           width: "100%",
           height: "100%",
           alignSelf: "center",
           alignItems: "center",
-          paddingVertical: 10,
-          backgroundColor: Colors.primary_bright
+          paddingVertical: 10
         }}
       >
         <SectionList
           sections={transactionsSectionListFormat}
           keyExtractor={(item, index) => item + index}
           renderSectionHeader={({ section: { transactionMode } }) => {
-            return <Text>{transactionMode}</Text>;
+            return (
+              <View style={{ width: "100%", height: 40, alignItems: "center" }}>
+                <ThaiBoldText
+                  style={{
+                    color: Colors.on_primary_bright.high_constrast,
+                    fontSize: 18
+                  }}
+                >
+                  {transactionMode}
+                </ThaiBoldText>
+                <View
+                  style={{
+                    width: "15%",
+                    borderBottomColor: Colors.soft_primary_bright,
+                    borderBottomWidth: 2
+                  }}
+                ></View>
+              </View>
+            );
           }}
           renderItem={({ item }) => (
             <SellTransactionCard
@@ -74,8 +94,24 @@ export default SellingTransactionScreen = props => {
               }}
             />
           )}
+          // ListEmptyComponent={() => {
+          //   return (
+          //     <View style={{ width: 100, height: 60 }}>
+          //       <ThaiBoldText style={{ color: "black", fontSize: 12 }}>
+          //         No content
+          //       </ThaiBoldText>
+          //     </View>
+          //   );
+          // }}
+          // ListEmptyComponent={
+          //   <View style={{ width: 100, height: 60 }}>
+          //     <ThaiBoldText style={{ color: "black", fontSize: 12 }}>
+          //       No content
+          //     </ThaiBoldText>
+          //   </View>
+          // }
         />
-      </View>
+      </LinearGradient>
     </View>
   );
 };

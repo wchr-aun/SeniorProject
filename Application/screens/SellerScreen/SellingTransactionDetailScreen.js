@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Button,
-  ScrollView,
-  Dimensions,
-  FlatList
-} from "react-native";
+import { View, Image, StyleSheet, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
@@ -19,10 +10,21 @@ import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import ImageCircle from "../../components/UI/ImageCircle";
+
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
+  console.log(transactionItem);
   const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
@@ -47,128 +49,275 @@ export default SellingTransactionDetailScreen = props => {
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.infoContainerCard}>
-        <View style={{ height: "50%", width: "100%" }}>
-          <View
-            style={{ width: "20%", height: "50%", maxHeight: 150, padding: 5 }}
-          >
-            <Image
-              source={{
-                uri: transactionItem.imgUrl
-              }}
-              style={styles.userImg}
-              resizeMode="center"
-            />
-          </View>
-          <View style={{ width: "100%", height: "50%" }}>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>สถานะ: </ThaiMdText>
-              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
-            </ThaiRegText>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>ผู้รับซื้อ: </ThaiMdText>
-              {transactionItem.detail.buyer}
-            </ThaiRegText>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>สถานที่รับขยะ: </ThaiMdText>
-              {transactionItem.detail.addr}
-            </ThaiRegText>
-            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
-          </View>
-        </View>
-        <View style={{ width: "100%", height: "5%" }}>
-          <ThaiMdText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiMdText>
-        </View>
-        <View style={{ width: "100%", height: "15%", backgroundColor: "red" }}>
-          <FlatList
-            data={transactionItem.detail.assignedTime}
-            keyExtractor={item =>
-              libary.formatDate(item.toDate()) +
-              libary.formatTime(item.toDate())
-            }
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ height: 50, padding: 3, alignSelf: "center" }}>
-                  <ThaiRegText>
-                    {libary.formatDate(item.toDate()) +
-                      " " +
-                      libary.formatTime(item.toDate())}
-                  </ThaiRegText>
-                </View>
-              );
-            }}
-          />
-        </View>
-        <View style={{ width: "100%", height: "5%" }}>
-          <ThaiMdText style={{ fontSize: 12 }}>ประเภทขยะที่ขาย</ThaiMdText>
-        </View>
+    <View
+      style={{
+        ...styles.infoContainerCard,
+        width: "100%",
+        height: "100%",
+        paddingHorizontal: 10
+      }}
+    >
+      <CustomStatusBar />
+      <View style={{ height: "35%", width: "100%" }}>
         <View
-          style={{ width: "100%", height: "15%", backgroundColor: "yellow" }}
+          style={{
+            width: "100%",
+            height: "20%",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
         >
-          <FlatList
-            data={saleList}
-            keyExtractor={item => item.subtype}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    height: 50,
-                    padding: 3,
-                    alignSelf: "center",
-                    flexDirection: "row"
-                  }}
-                >
-                  <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiRegText>{item.type + " " + item.subtype}</ThaiRegText>
-                  </View>
-                  <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiRegText>{"จำนวน " + item.amount.amount}</ThaiRegText>
-                  </View>
-                </View>
-              );
+          <ThaiBoldText
+            style={{
+              color: Colors.on_primary_dark.low_constrast,
+              fontSize: 26
             }}
-          />
+          >
+            รายละเอียดการขาย
+          </ThaiBoldText>
         </View>
         <View
           style={{
-            flexDirection: "row",
-            height: "10%",
-            maxHeight: 50,
             width: "100%",
+            height: "40%",
+            padding: 5,
+            alignItems: "center"
+          }}
+        >
+          <ImageCircle
+            imgUrl={transactionItem.imgUrl ? transactionItem.imgUrl : ""}
+            avariableWidth={wp("25%")}
+          />
+        </View>
+        <View style={{ width: "100%", height: "40%" }}>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`สถานะ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`ผู้รับซื้อ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {transactionItem.detail.buyer}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`สถานที่รับขยะ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {transactionItem.detail.addr}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText>{transactionItem.tel}</ThaiRegText>
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "5%"
+        }}
+      >
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          วันเวลาที่เสนอขาย (สีขาว) / วันเวลาที่นัด (สีเขียว)
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "20%",
+          backgroundColor: Colors.soft_primary_dark,
+          borderRadius: 5
+        }}
+      >
+        <FlatList
+          data={transactionItem.detail.assignedTime}
+          keyExtractor={item =>
+            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
+          }
+          style={{ flex: 1 }}
+          renderItem={({ item }) => {
+            return (
+              <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                <ThaiRegText style={{ fontSize: 18 }}>
+                  <ThaiMdText
+                    style={{
+                      fontSize: 18,
+                      color: Colors.soft_secondary
+                    }}
+                  >
+                    {libary.formatDate(item.toDate())}
+                  </ThaiMdText>
+                  {` `}
+                  <ThaiMdText
+                    style={{
+                      fontSize: 18,
+                      color: Colors.soft_secondary
+                    }}
+                  >
+                    {libary.formatTime(item.toDate())}
+                  </ThaiMdText>
+                </ThaiRegText>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <View style={{ width: "100%", height: "5%" }}>
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          ประเภทขยะที่ขาย
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "20%",
+          backgroundColor: Colors.soft_primary_dark,
+          borderRadius: 5
+        }}
+      >
+        <FlatList
+          data={saleList}
+          keyExtractor={item => item.subtype}
+          style={{ flex: 1 }}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 30,
+                  padding: 3,
+                  alignSelf: "center",
+                  flexDirection: "row"
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center"
+                  }}
+                >
+                  <ThaiRegText
+                    style={{ fontSize: 18, color: Colors.soft_secondary }}
+                  >
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.type}
+                    </ThaiMdText>
+                    {` ประเภท `}
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.subtype}
+                    </ThaiMdText>
+                    {` จำนวน `}
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.amount.amount}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "15%",
+          padding: 5,
+          paddingBottom: getStatusBarHeight()
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center"
           }}
         >
-          <Button onPress={cancelHandler} title="ยกเลิก" />
-          <Button onPress={backHandler} title="ย้อนกลับ" />
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              maxHeight: 60,
+              borderRadius: 5
+            }}
+            btnColor={Colors.button.cancel.btnBackground}
+            onPress={backHandler}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={18}
+          >
+            <Ionicons
+              name={"ios-arrow-back"}
+              size={14}
+              color={Colors.button.cancel.btnText}
+            />
+            <ThaiMdText style={{ fontSize: 18 }}> ย้อนกลับ</ThaiMdText>
+          </CustomButton>
+
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              maxHeight: 60,
+              borderRadius: 5
+            }}
+            btnColor={Colors.button.danger_operation.btnBackground}
+            onPress={cancelHandler}
+            btnTitleColor={Colors.button.danger_operation.btnText}
+            btnTitleFontSize={18}
+          >
+            <MaterialIcons
+              name={"cancel"}
+              color={Colors.button.danger_operation.btnText}
+              size={14}
+            />
+            <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
+          </CustomButton>
         </View>
       </View>
     </View>
   );
 };
 
-// ProductDetailScreen.navigationOptions = navData => {
-//   return {
-//     headerTitle: navData.navigation.getParam("productTitle")
-//   };
-// };
-
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    paddingTop: Dimensions.get("window").height * 0.05,
-    backgroundColor: Colors.primary_dark
-  },
   infoContainerCard: {
-    backgroundColor: Colors.on_primary,
-    borderRadius: 10,
-    width: Dimensions.get("window").width * 0.9,
-    height: Dimensions.get("window").height * 0.9,
-    alignSelf: "center",
-    padding: 10
+    backgroundColor: Colors.primary_dark,
+    alignSelf: "center"
   },
   userInfo: {
     alignItems: "center"
