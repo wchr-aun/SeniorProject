@@ -123,7 +123,7 @@ export default ModalShowSellersItemsScreen = props => {
         }}
       >
         {/* Header */}
-        <View style={{ width: "100%", height: "20%", maxHeight: 80 }}>
+        <View style={{ width: "100%", height: "10%", maxHeight: 80 }}>
           <View
             style={{
               width: "100%",
@@ -194,15 +194,19 @@ export default ModalShowSellersItemsScreen = props => {
         <View
           style={{
             width: "100%",
-            height: "10%",
+            height: "20%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center",
-            maxHeight: 60
+            alignItems: "center"
           }}
         >
           <CustomButton
-            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 60
+            }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => {
               props.setModalVisible(false);
@@ -214,7 +218,12 @@ export default ModalShowSellersItemsScreen = props => {
             ปิดหน้าต่าง
           </CustomButton>
           <CustomButton
-            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 60
+            }}
             btnColor={Colors.button.submit_primary_bright.btnBackground}
             onPress={() => {
               confirmAssignedtime();

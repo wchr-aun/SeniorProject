@@ -386,14 +386,19 @@ export default ChooseBuyerScreen = props => {
         <View
           style={{
             height: "20%",
-            maxHeight: 60,
             width: "100%",
             flexDirection: "row",
-            justifyContent: "space-around"
+            justifyContent: "space-around",
+            alignItems: "center"
           }}
         >
           <CustomButton
-            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 60
+            }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => props.navigation.goBack()}
             btnTitleColor={Colors.button.cancel.btnText}
@@ -414,7 +419,12 @@ export default ChooseBuyerScreen = props => {
           </CustomButton>
 
           <CustomButton
-            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 60
+            }}
             btnColor={Colors.button.submit_primary_dark.btnBackground}
             onPress={quickSellHandler}
             btnTitleColor={Colors.button.submit_primary_dark.btnText}
