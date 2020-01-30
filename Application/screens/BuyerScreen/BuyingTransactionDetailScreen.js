@@ -1,27 +1,26 @@
 import React, { useState, useEffect, useCallback, useReducer } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Button,
-  ScrollView,
-  Dimensions,
-  FlatList
-} from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
-import DateTimePicker from "react-native-modal-datetime-picker";
 
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
-import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons
+} from "@expo/vector-icons";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
@@ -108,60 +107,100 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   return (
-    <View style={{ ...styles.screen }}>
-      <View style={{ ...styles.infoContainerCard }}>
-        {datepickerShow ? (
-          <DateTimePicker
-            mode="datetime"
-            isVisible={datepickerShow}
-            onConfirm={handleDatePicked}
-            onCancel={hideDateTimePicker}
-          />
-        ) : null}
-        <View style={{ height: "30%", width: "100%", alignItems: "center" }}>
-          <View
-            style={{
-              width: "20%",
-              height: "50%",
-              maxHeight: 150,
-              padding: 5
-            }}
-          >
-            <Image
-              source={{
-                uri: transactionItem.imgUrl
-              }}
-              style={styles.userImg}
-              resizeMode="center"
-            />
-          </View>
-          <View style={{ width: "100%", height: "50%" }}>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>สถานะ: </ThaiMdText>
-              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
-            </ThaiRegText>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>ผู้รับซื้อ: </ThaiMdText>
-              {transactionItem.detail.buyer}
-            </ThaiRegText>
-            <ThaiRegText>
-              <ThaiMdText style={{ fontSize: 12 }}>สถานที่รับขยะ: </ThaiMdText>
-              {transactionItem.detail.addr}
-            </ThaiRegText>
-            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
-          </View>
-        </View>
-        <View style={{ width: "100%", height: "5%" }}>
-          <ThaiMdText style={{ fontSize: 12 }}>วันเวลาที่รับ</ThaiMdText>
-        </View>
+    <View
+      style={{
+        ...styles.infoContainerCard,
+        width: "100%",
+        height: "100%",
+        paddingHorizontal: 10
+      }}
+    >
+      <CustomStatusBar />
+      <View style={{ height: "35%", width: "100%" }}>
         <View
           style={{
             width: "100%",
             height: "20%",
-            borderColor: Colors.lineSeparate,
-            borderWidth: 0.5
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
+          <ThaiBoldText
+            style={{
+              color: Colors.on_primary_dark.low_constrast,
+              fontSize: 26
+            }}
+          >
+            รายละเอียดคำขอ
+          </ThaiBoldText>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "40%",
+            padding: 5,
+            alignItems: "center"
+          }}
+        >
+          <ImageCircle
+            imgUrl={transactionItem.imgUrl ? transactionItem.imgUrl : ""}
+            avariableWidth={wp("25%")}
+          />
+        </View>
+        <View style={{ width: "100%", height: "40%" }}>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`สถานะ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`สถานที่รับขยะ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {transactionItem.detail.addr}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText>{transactionItem.tel}</ThaiRegText>
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "5%"
+        }}
+      >
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          วันเวลาที่เสนอขาย (สีขาว) / เลือกวันที่จะไปรับ (สีเขียว)
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "20%",
+          backgroundColor: Colors.soft_primary_dark,
+          borderRadius: 5,
+          padding: 5
+        }}
+      >
+        <View style={{ width: "100%", height: "65%", paddingVertical: 5 }}>
           <FlatList
             data={transactionItem.detail.assignedTime}
             keyExtractor={item =>
@@ -170,172 +209,238 @@ export default BuyingTransactionDetailScreen = props => {
             }
             style={{ flex: 1 }}
             renderItem={({ item }) => {
+              console.log(item);
               return (
                 <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
-                  <View
-                    style={{
-                      height: 50,
-                      width: "100%",
-                      padding: 3,
-                      alignSelf: "center",
-                      flexDirection: "row",
-                      alignSelf: "center"
-                    }}
-                  >
-                    <ThaiRegText>
-                      {libary.formatDate(item.toDate()) +
-                        " " +
-                        libary.formatTime(item.toDate())}
+                  <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                    <ThaiRegText style={{ fontSize: 18 }}>
+                      <ThaiMdText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.soft_secondary
+                        }}
+                      >
+                        {libary.formatDate(item.toDate())}
+                      </ThaiMdText>
+                      {` `}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.soft_secondary
+                        }}
+                      >
+                        {libary.formatTime(item.toDate())}
+                      </ThaiMdText>
+                      <MaterialIcons
+                        name={
+                          timeSelected === item
+                            ? "check-box"
+                            : "check-box-outline-blank"
+                        }
+                        size={20}
+                        color={Colors.primary_bright}
+                      />
                     </ThaiRegText>
-                    <MaterialIcons
-                      name={
-                        timeSelected === item
-                          ? "check-box"
-                          : "check-box-outline-blank"
-                      }
-                      size={20}
-                      color={Colors.primary}
-                    />
                   </View>
                 </TouchableOpacity>
               );
             }}
           />
         </View>
-        <View style={{ width: "100%", height: "5%" }}>
-          <ThaiMdText style={{ fontSize: 12 }}>ประเภทขยะที่ขาย</ThaiMdText>
-        </View>
         <View
           style={{
             width: "100%",
-            height: "20%",
-            borderColor: Colors.lineSeparate,
-            borderWidth: 0.5
-          }}
-        >
-          <FlatList
-            data={saleList}
-            keyExtractor={item => item.subtype}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    height: 50,
-                    padding: 3,
-                    alignSelf: "center",
-                    flexDirection: "row"
-                  }}
-                >
-                  <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiRegText>{item.type + " " + item.subtype}</ThaiRegText>
-                  </View>
-                  <View style={{ width: "50%", height: "100%" }}>
-                    <ThaiRegText>{"จำนวน " + item.amount.amount}</ThaiRegText>
-                  </View>
-                </View>
-              );
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            height: "10%",
-            maxHeight: 50,
-            width: "100%",
-            justifyContent: "space-around",
-            alignItems: "center",
-            marginVertical: 10
-          }}
-        >
-          <CustomButton
-            disable={libary.getDisableStatusForBuyer(
-              4,
-              transactionItem.detail.txStatus
-            )}
-            style={{ width: "25%", height: 40 }}
-            btnColor={Colors.error}
-            onPress={cancelHandler}
-            btnTitleColor={Colors.on_primary}
-            btnTitleFontSize={12}
-          >
-            ยกเลิก
-          </CustomButton>
-          <CustomButton
-            disable={libary.getDisableStatusForBuyer(
-              1,
-              transactionItem.detail.txStatus
-            )}
-            style={{ width: "25%", height: 40 }}
-            btnColor={Colors.on_primary}
-            onPress={
-              transactionItem.detail.txStatus != 2
-                ? preferTimeHandler
-                : onBuyerWayHandler
-            }
-            btnTitleColor={Colors.primary}
-            btnTitleFontSize={12}
-          >
-            {transactionItem.detail.txStatus != 2 ? "เสนอเวลาอื่น" : "กำลังไป"}
-          </CustomButton>
-          <CustomButton
-            disable={libary.getDisableStatusForBuyer(
-              2,
-              transactionItem.detail.txStatus
-            )}
-            style={{ width: "25%", height: 40 }}
-            btnColor={Colors.primary_variant}
-            onPress={acceptHandler}
-            btnTitleColor={Colors.on_primary}
-            btnTitleFontSize={12}
-          >
-            ยอมรับ
-          </CustomButton>
-        </View>
-        <TouchableOpacity
-          onPress={backHandler}
-          style={{
+            height: "35%",
             flexDirection: "row",
             justifyContent: "flex-end"
           }}
         >
-          <View
+          <CustomButton
+            disable={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? false //not disabled
+                : true
+            }
             style={{
-              height: "10%",
-              width: "30%"
+              width: "40%",
+              height: "100%",
+              maxHeight: 40,
+              borderRadius: 5
             }}
+            btnColor={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            btnTitleColor={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.disabled.btnText
+            }
+            onPress={preferTimeHandler}
+            btnTitleFontSize={12}
           >
-            <View style={{ flexDirection: "row" }}>
-              <ThaiRegText style={{ color: Colors.lineSeparate, fontSize: 10 }}>
-                ปิดหน้าต่าง{" "}
-              </ThaiRegText>
-              <MaterialIcons
-                name="cancel"
-                size={25}
-                color={Colors.lineSeparate}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
+            <MaterialCommunityIcons
+              name={"calendar-multiple-check"}
+              color={Colors.button.submit_primary_bright.btnText}
+              size={12}
+            />
+            <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
+          </CustomButton>
+        </View>
+      </View>
+      <View style={{ width: "100%", height: "5%", padding: 2 }}>
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          ประเภทขยะที่ขาย
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "20%",
+          backgroundColor: Colors.soft_primary_dark,
+          borderRadius: 5
+        }}
+      >
+        <FlatList
+          data={saleList}
+          keyExtractor={item => item.subtype}
+          style={{ flex: 1 }}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 30,
+                  padding: 3,
+                  alignSelf: "center",
+                  flexDirection: "row"
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center"
+                  }}
+                >
+                  <ThaiRegText
+                    style={{ fontSize: 18, color: Colors.soft_secondary }}
+                  >
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.type}
+                    </ThaiMdText>
+                    {` ประเภท `}
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.subtype}
+                    </ThaiMdText>
+                    {` จำนวน `}
+                    <ThaiMdText
+                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    >
+                      {item.amount.amount}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "15%",
+          padding: 5,
+          paddingBottom: getStatusBarHeight()
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center"
+          }}
+        >
+          <CustomButton
+            style={{
+              width: "30%",
+              height: "100%",
+              maxHeight: 50,
+              borderRadius: 5
+            }}
+            btnColor={Colors.button.submit_primary_bright.btnBackground}
+            onPress={acceptHandler}
+            btnTitleColor={Colors.button.submit_primary_bright.btnText}
+            btnTitleFontSize={18}
+          >
+            <MaterialIcons
+              name={"cancel"}
+              color={Colors.button.submit_primary_bright.btnText}
+              size={14}
+            />
+            <ThaiMdText style={{ fontSize: 18 }}> ยอมรับ</ThaiMdText>
+          </CustomButton>
+          <CustomButton
+            style={{
+              width: "30%",
+              height: "100%",
+              maxHeight: 50,
+              borderRadius: 5
+            }}
+            btnColor={Colors.button.danger_operation.btnBackground}
+            onPress={cancelHandler}
+            btnTitleColor={Colors.button.danger_operation.btnText}
+            btnTitleFontSize={18}
+          >
+            <MaterialIcons
+              name={"cancel"}
+              color={Colors.button.danger_operation.btnText}
+              size={14}
+            />
+            <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
+          </CustomButton>
+          <CustomButton
+            style={{
+              width: "30%",
+              height: "100%",
+              maxHeight: 50,
+              borderRadius: 5
+            }}
+            btnColor={Colors.button.cancel.btnBackground}
+            onPress={backHandler}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={18}
+          >
+            <Ionicons
+              name={"ios-arrow-back"}
+              size={14}
+              color={Colors.button.cancel.btnText}
+            />
+            <ThaiMdText style={{ fontSize: 18 }}> ย้อนกลับ</ThaiMdText>
+          </CustomButton>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    paddingTop: Dimensions.get("window").height * 0.05,
-    backgroundColor: Colors.primary
-  },
   infoContainerCard: {
-    backgroundColor: Colors.on_primary,
-    borderRadius: 10,
-    height: Dimensions.get("window").height * 0.9,
-    width: "100%",
-    alignSelf: "center",
-    padding: 10
+    backgroundColor: Colors.primary_dark,
+    alignSelf: "center"
   },
   userInfo: {
     alignItems: "center"

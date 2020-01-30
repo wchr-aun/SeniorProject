@@ -1,5 +1,12 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { StyleSheet, FlatList, View, Text, SectionList } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  SectionList,
+  TextInput
+} from "react-native";
 import { useSelector } from "react-redux";
 
 import {
@@ -18,6 +25,10 @@ import Colors from "../../constants/Colors";
 import libary from "../../utils/libary";
 import ThaiRegText from "../../components/ThaiRegText";
 import SellTransactionCard from "../../components/SellTransactionCard";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import ThaiMdText from "../../components/ThaiMdText";
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default SearchQuicksellingScreen = props => {
   const dispatch = useDispatch();
@@ -62,16 +73,104 @@ export default SearchQuicksellingScreen = props => {
       style={{
         width: wp("100%"),
         height:
-          hp("100%") -
-          AppVariableSetting.bottomBarHeight +
-          getStatusBarHeight(),
-        paddingTop: getStatusBarHeight()
+          hp("100%") - AppVariableSetting.bottomBarHeight + getStatusBarHeight()
       }}
     >
+      <CustomStatusBar />
       <View
         style={{
           width: "100%",
-          height: "100%",
+          height: "10%",
+          backgroundColor: Colors.soft_primary_dark,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <ThaiBoldText
+          style={{
+            color: Colors.on_primary_dark.low_constrast,
+            fontSize: 26
+          }}
+        >
+          คำขอขายขยะด่วน
+        </ThaiBoldText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "10%",
+          justifyContent: "space-around",
+          alignItems: "center",
+          flexDirection: "row",
+          backgroundColor: Colors.soft_primary_dark
+        }}
+      >
+        <View
+          style={{
+            width: "40%",
+            height: "100%",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center"
+          }}
+        >
+          <ThaiRegText
+            style={{
+              fontSize: 12,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            ค้นหาในระยะ{" "}
+          </ThaiRegText>
+          <TextInput
+            style={{
+              fontSize: 14,
+              textAlign: "center",
+              color: Colors.on_primary_dark.high_constrast
+            }}
+            selectTextOnFocus={true}
+            value={"10"}
+            keyboardType="number-pad"
+          />
+          <ThaiRegText
+            style={{
+              fontSize: 12,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {" "}
+            กิโลเมตร
+          </ThaiRegText>
+        </View>
+        <CustomButton
+          style={{
+            width: "40%",
+            height: "100%",
+            borderRadius: 8,
+            maxHeight: 50
+          }}
+          btnColor={Colors.button.submit_primary_dark.btnBackground}
+          btnTitleColor={Colors.button.submit_primary_dark.btnText}
+          btnTitleFontSize={14}
+        >
+          <MaterialCommunityIcons
+            name={"account-search"}
+            size={12}
+            color={Colors.button.start_operation_info.btnText}
+          />
+          <ThaiRegText
+            style={{
+              fontSize: 12
+            }}
+          >
+            {` ค้นหาคำขอ`}
+          </ThaiRegText>
+        </CustomButton>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "80%",
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,

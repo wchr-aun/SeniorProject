@@ -128,7 +128,7 @@ const SellerBottomTabConfig = {
       tabBarLabel: "เช็คขยะ",
       tabBarIcon: tabInfo => {
         return (
-          <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
+          <Ionicons name="md-camera" size={25} color={tabInfo.tintColor} />
         );
       },
       tabBarColor: Colors.primary_dark
