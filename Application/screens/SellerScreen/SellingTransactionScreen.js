@@ -50,7 +50,7 @@ export default SellingTransactionScreen = props => {
           alignSelf: "center",
           alignItems: "center",
           paddingVertical: 10,
-          backgroundColor: Colors.primary_variant
+          backgroundColor: Colors.primary_bright
         }}
       >
         <SectionList

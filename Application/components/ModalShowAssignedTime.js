@@ -119,7 +119,6 @@ export default ModalShowSellersItemsScreen = props => {
           height: hp("100%"),
           width: wp("100%"),
           alignItems: "center",
-          borderWidth: 2,
           backgroundColor: Colors.secondary
         }}
       >
@@ -150,8 +149,7 @@ export default ModalShowSellersItemsScreen = props => {
           style={{
             width: "100%",
             height: "70%",
-            padding: 10,
-            alignItems: "center"
+            padding: 10
           }}
         >
           <FlatList
@@ -164,7 +162,7 @@ export default ModalShowSellersItemsScreen = props => {
                     borderRadius: 8,
                     marginVertical: 2,
                     width: "80%",
-                    aligeSelf: "center"
+                    alignSelf: "center"
                   }}
                   btnColor={
                     item.selected
@@ -175,18 +173,18 @@ export default ModalShowSellersItemsScreen = props => {
                   btnTitleColor={
                     item.selected
                       ? Colors.button.submit_primary_dark.btnText
-                      : Colors.button.disabled.btnText
+                      : Colors.primary_dark
                   }
                   btnTitleFontSize={12}
                   disable={false}
                 >
-                  <ThaiRegText>เวลา </ThaiRegText>
-                  <ThaiBoldText>
+                  <ThaiRegText style={{ fontSize: 20 }}>เวลา </ThaiRegText>
+                  <ThaiBoldText style={{ fontSize: 20 }}>
                     {item.hour.toString() +
                       "." +
                       (item.minute === 0 ? "00" : item.minute.toString())}
                   </ThaiBoldText>
-                  <ThaiRegText> น.</ThaiRegText>
+                  <ThaiRegText style={{ fontSize: 20 }}> น.</ThaiRegText>
                 </CustomButton>
               );
             }}
@@ -199,6 +197,7 @@ export default ModalShowSellersItemsScreen = props => {
             height: "10%",
             flexDirection: "row",
             justifyContent: "space-around",
+            alignItems: "center",
             maxHeight: 60
           }}
         >
