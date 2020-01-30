@@ -72,12 +72,12 @@ export default TrashCard = props => {
             height: "30%"
           }}
         >
-          <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
+          <ThaiRegText style={{ fontSize: 12 }}>ประเภท: </ThaiRegText>
           <ThaiMdText
             style={{
               ...styles.trashName,
               color: Colors.primary_bright_variant,
-              fontSize: 10
+              fontSize: 12
             }}
           >
             {props.wasteName}
@@ -146,8 +146,10 @@ export default TrashCard = props => {
               <ThaiRegText style={styles.trashAdjustPrice}>
                 {`ราคารับซื้อเฉลี่ย `}
               </ThaiRegText>
-              <ThaiBoldText style={{ fontSize: 12 }}>
-                ${props.trashAdjustPrice}
+              <ThaiBoldText
+                style={{ fontSize: 12, color: Colors.soft_primary_bright }}
+              >
+                {props.trashAdjustPrice}
               </ThaiBoldText>
               <ThaiRegText style={styles.trashAdjustPrice}>
                 {` บ./กก.`}

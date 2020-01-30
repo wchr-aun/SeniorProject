@@ -295,7 +295,12 @@ export default EditingUserprofileScreen = props => {
             alignSelf: "center"
           }}
         >
-          <ThaiMdText style={{ color: Colors.on_primary, fontSize: 14 }}>
+          <ThaiMdText
+            style={{
+              color: Colors.on_primary_bright.high_constrast,
+              fontSize: 20
+            }}
+          >
             ตั้งค่าข้อมูลผู้ใช้งาน
           </ThaiMdText>
         </View>
@@ -333,16 +338,16 @@ export default EditingUserprofileScreen = props => {
                     borderWidth: 3,
                     borderColor:
                       userRole === "seller"
-                        ? Colors.primary_variant
-                        : Colors.lineSeparate
+                        ? Colors.primary_bright
+                        : Colors.secondary
                   }}
                 >
                   <MaterialCommunityIcons
                     name="account"
                     color={
                       userRole === "seller"
-                        ? Colors.primary_variant
-                        : Colors.lineSeparate
+                        ? Colors.primary_bright
+                        : Colors.secondary
                     }
                     size={36}
                   />
@@ -358,16 +363,16 @@ export default EditingUserprofileScreen = props => {
                     borderWidth: 3,
                     borderColor:
                       userRole === "buyer"
-                        ? Colors.primary_variant
-                        : Colors.lineSeparate
+                        ? Colors.primary_bright
+                        : Colors.secondary
                   }}
                 >
                   <MaterialCommunityIcons
                     name="car-pickup"
                     color={
                       userRole === "buyer"
-                        ? Colors.primary_variant
-                        : Colors.lineSeparate
+                        ? Colors.primary_bright
+                        : Colors.secondary
                     }
                     size={36}
                   />
@@ -506,8 +511,8 @@ export default EditingUserprofileScreen = props => {
                     textAlign: "center",
                     fontSize: 12,
                     color: isCurrentAddr
-                      ? Colors.primary_variant
-                      : Colors.lineSeparate
+                      ? Colors.primary_bright
+                      : Colors.secondary
                   }}
                 >
                   {userProfile.addr.readable}
@@ -643,7 +648,9 @@ export default EditingUserprofileScreen = props => {
                 style={{
                   fontSize: 12,
                   color:
-                    isCurrentAddr === true ? Colors.on_primary : Colors.primary
+                    isCurrentAddr === true
+                      ? Colors.secondary
+                      : Colors.primary_dark
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
@@ -658,9 +665,9 @@ export default EditingUserprofileScreen = props => {
                   alignSelf: "center"
                 }}
                 onPress={searchMapHandler}
-                btnColor={Colors.on_primary}
+                btnColor={Colors.secondary}
                 btnTitleColor={
-                  !isCurrentAddr ? Colors.primary : Colors.lineSeparate
+                  !isCurrentAddr ? Colors.primary_dark : Colors.secondary
                 }
                 btnTitleFontSize={14}
               >
@@ -668,7 +675,7 @@ export default EditingUserprofileScreen = props => {
               </CustomButton>
               <View style={styles.buttonContainer}>
                 {isLoading ? (
-                  <ActivityIndicator size="small" color={Colors.primary} />
+                  <ActivityIndicator size="small" color={Colors.primary_dark} />
                 ) : (
                   <CustomButton
                     style={{
@@ -681,8 +688,8 @@ export default EditingUserprofileScreen = props => {
                     onPress={() => {
                       editConfirmHandler();
                     }}
-                    btnColor={Colors.primary}
-                    btnTitleColor={Colors.on_primary}
+                    btnColor={Colors.button.submit_primary_dark.btnBackground}
+                    btnTitleColor={Colors.button.submit_primary_dark.btnText}
                     btnTitleFontSize={14}
                   >
                     ยืนยันการแก้ไข
@@ -708,19 +715,19 @@ export default EditingUserprofileScreen = props => {
               borderRadius: 10,
               margin: wp("1.25%"),
               borderWidth: 1,
-              borderColor: Colors.on_secondary
+              borderColor: Colors.secondary
             }}
             onPress={() => {
               props.navigation.navigate("StartupScreen");
             }}
-            btnColor={Colors.on_primary}
-            btnTitleColor={Colors.primary}
+            btnColor={Colors.button.cancel.btnBackground}
+            btnTitleColor={Colors.button.cancel.btnText}
             btnTitleFontSize={14}
           >
             <MaterialIcons
               name="chevron-left"
               size={12}
-              color={Colors.primary}
+              color={Colors.button.cancel.btnText}
             />{" "}
             ย้อนกลับ
           </CustomButton>
@@ -731,11 +738,11 @@ export default EditingUserprofileScreen = props => {
               borderRadius: 10,
               margin: wp("1.25%"),
               borderWidth: 1,
-              borderColor: Colors.on_secondary
+              borderColor: Colors.button.submit_primary_dark.btnText
             }}
             onPress={signOutHandler}
-            btnColor={Colors.error}
-            btnTitleColor={Colors.on_primary}
+            btnColor={Colors.button.submit_primary_dark.btnBackground}
+            btnTitleColor={Colors.button.submit_primary_dark.btnText}
             btnTitleFontSize={14}
           >
             ลงชื่อออก

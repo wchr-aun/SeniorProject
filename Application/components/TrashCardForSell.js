@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Image,
   StyleSheet,
   TouchableWithoutFeedback,
   TextInput
@@ -11,11 +10,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import ThaiMdText from "./ThaiMdText";
 import ThaiRegText from "./ThaiRegText";
 import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
+import ThaiBoldText from "./ThaiBoldText";
+import CustomButton from "./UI/CustomButton";
 
 const AmountOfTrash = props => {
   return (
@@ -71,11 +72,11 @@ const AmountOfTrash = props => {
 //           <TextInput
 //             selectTextOnFocus={true}
 //             keyboardType="numeric"
-//             onChangeText={props.onEdit}
-//             value={(props.oldAmount + props.changeAmount <= 0
-//               ? 0
-//               : props.oldAmount + props.changeAmount
-//             ).toString()}
+// onChangeText={props.onEdit}
+// value={(props.oldAmount + props.changeAmount <= 0
+//   ? 0
+//   : props.oldAmount + props.changeAmount
+// ).toString()}
 //             style={{ textAlign: "center" }}
 //           />
 //         ) : null}
@@ -103,7 +104,9 @@ export default TrashCardForSell = props => {
         borderRadius: 10,
         marginVertical: 5,
         overflow: "hidden",
-        backgroundColor: Colors.secondary
+        backgroundColor: Colors.secondary,
+        borderWidth: props.selected ? 3 : null,
+        borderColor: props.selected ? Colors.primary_bright : ""
       }}
     >
       <View
@@ -128,22 +131,24 @@ export default TrashCardForSell = props => {
         style={{
           ...styles.detailContainer,
           width: "50%",
-          height: "100%"
+          height: "100%",
+          justifyContent: "space-around"
         }}
       >
         <View
           style={{
             ...styles.sellerItemNameAndCheckbox,
             width: "100%",
-            height: "20%",
+            height: "30%",
             flexDirection: "row"
           }}
         >
           <View
             style={{
               ...styles.sellerItemName,
-              width: "80%",
-              height: "100%"
+              width: "60%",
+              height: "100%",
+              justifyContent: "space-between"
             }}
           >
             <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
@@ -151,31 +156,58 @@ export default TrashCardForSell = props => {
               style={{
                 ...styles.trashName,
                 color: Colors.primary_bright_variant,
-                fontSize: 10
+                fontSize: 12
               }}
             >
               {props.wasteName}
             </ThaiMdText>
           </View>
-          <TouchableWithoutFeedback
+          <CustomButton
             style={{
-              width: "20%",
+              width: "40%",
               height: "100%"
             }}
+            btnColor={
+              props.selected
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.cancel.btnBackground
+            }
             onPress={props.onSelected}
+            btnTitleColor={
+              props.selected
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.cancel.btnText
+            }
+            btnTitleFontSize={10}
+            disable={false}
           >
             <MaterialIcons
               name={props.selected ? "check-box" : "check-box-outline-blank"}
               size={30}
-              color={Colors.primary}
+              color={
+                props.selected
+                  ? Colors.button.submit_primary_bright.btnText
+                  : Colors.button.cancel.btnText
+              }
             />
-          </TouchableWithoutFeedback>
+          </CustomButton>
         </View>
-        <View style={{ width: "100%", height: "80%" }}>
-          <ThaiRegText
+        <View style={{ width: "100%", height: "30%" }}>
+          <ThaiRegText>ราคารับซื้อ: </ThaiRegText>
+          <View style={{ flexDirection: "row" }}>
+            <ThaiBoldText
+              style={{ color: Colors.primary_bright, fontSize: 12 }}
+            >
+              {props.sellerItemAdjustPrice}
+            </ThaiBoldText>
+            <ThaiBoldText style={{ fontSize: 12 }}> บาท/กก.</ThaiBoldText>
+          </View>
+        </View>
+        <View style={{ width: "100%", height: "30%" }}>
+          <ThaiRegText>คงเหลือ: </ThaiRegText>
+          <ThaiMdText
             style={{
-              textAlign: "center",
-              fontSize: 8,
+              fontSize: 12,
               color:
                 isNaN(props.changeAmount) ||
                 props.changeAmount === 0 ||
@@ -186,12 +218,10 @@ export default TrashCardForSell = props => {
                   : Colors.error
             }}
           >
-            {`คงเหลือ ${
-              props.selected
-                ? props.oldAmount - (props.oldAmount + props.changeAmount)
-                : props.oldAmount
-            }`}
-          </ThaiRegText>
+            {props.selected
+              ? props.oldAmount - (props.oldAmount + props.changeAmount)
+              : props.oldAmount}
+          </ThaiMdText>
         </View>
       </View>
 
@@ -217,91 +247,98 @@ export default TrashCardForSell = props => {
           </View> */}
 
       {/* Adjust Component */}
-      <View
-        style={{
-          width: "20%",
-          height: "100%",
-          backgroundColor: Colors.secondary,
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 10
-        }}
-      >
+      {!props.selected ? null : (
         <View
           style={{
-            width: "100%",
+            width: "20%",
             height: "100%",
+            backgroundColor: Colors.secondary,
             alignItems: "center",
-            justifyContent: "space-around",
-            borderRadius: 8,
-            backgroundColor: Colors.soft_secondary,
-            borderColor: Colors.hard_secondary,
-            borderWidth: 3
+            justifyContent: "center",
+            padding: 10
           }}
         >
-          {/* + */}
           <View
             style={{
               width: "100%",
-              height: "30%",
+              height: "100%",
               alignItems: "center",
-              justifyContent: "center",
-              borderBottomColor: props.editingMode ? Colors.hard_secondary : "",
-              borderBottomWidth: props.editingMode ? 0.5 : null
+              justifyContent: "space-around",
+              borderRadius: 8,
+              backgroundColor: Colors.soft_secondary,
+              borderColor: Colors.hard_secondary,
+              borderWidth: 3
             }}
           >
-            {!props.selected ? null : (
-              <TouchableWithoutFeedback onPress={props.onIncrease}>
-                <AntDesign
-                  name="plus"
-                  size={24}
-                  color={Colors.hard_secondary}
+            {/* + */}
+            <View
+              style={{
+                width: "100%",
+                height: "30%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderBottomColor: props.editingMode
+                  ? Colors.hard_secondary
+                  : "",
+                borderBottomWidth: props.editingMode ? 0.5 : null
+              }}
+            >
+              {!props.selected ? null : (
+                <TouchableWithoutFeedback onPress={props.onIncrease}>
+                  <AntDesign
+                    name="plus"
+                    size={24}
+                    color={Colors.hard_secondary}
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+            {/* number */}
+            <View
+              style={{
+                width: "100%",
+                height: "30%",
+                alignSelf: "center"
+              }}
+            >
+              {props.selected ? (
+                <TextInput
+                  style={{ textAlign: "center" }}
+                  selectTextOnFocus={true}
+                  keyboardType="numeric"
+                  value={(props.oldAmount + props.changeAmount <= 0
+                    ? 0
+                    : props.oldAmount + props.changeAmount
+                  ).toString()}
+                  onChangeText={props.onEdit}
+                  textAlign={"center"}
                 />
-              </TouchableWithoutFeedback>
-            )}
-          </View>
-          {/* number */}
-          <View
-            style={{
-              width: "100%",
-              height: "30%",
-              alignSelf: "center"
-            }}
-          >
-            {props.selected ? (
-              <TextInput
-                style={{ textAlign: "center" }}
-                selectTextOnFocus={true}
-                keyboardType="numeric"
-                onChangeText={props.onEdit}
-                value={props.editingValue}
-                textAlign={"center"}
-              />
-            ) : null}
-          </View>
-          {/* - */}
-          <View
-            style={{
-              width: "100%",
-              height: "30%",
-              alignItems: "center",
-              justifyContent: "center",
-              borderTopColor: props.editingMode ? Colors.hard_secondary : "",
-              borderTopWidth: props.editingMode ? 0.5 : null
-            }}
-          >
-            {!props.selected ? null : (
-              <TouchableWithoutFeedback onPress={props.onDecrease}>
-                <AntDesign
-                  name="minus"
-                  size={24}
-                  color={Colors.hard_secondary}
-                />
-              </TouchableWithoutFeedback>
-            )}
+              ) : null}
+            </View>
+            {/* - */}
+            <View
+              style={{
+                width: "100%",
+                height: "30%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: props.editingMode ? Colors.hard_secondary : "",
+                borderTopWidth: props.editingMode ? 0.5 : null
+              }}
+            >
+              {!props.selected ? null : (
+                <TouchableWithoutFeedback onPress={props.onDecrease}>
+                  <AntDesign
+                    name="minus"
+                    size={24}
+                    color={Colors.hard_secondary}
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };
