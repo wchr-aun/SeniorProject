@@ -13,7 +13,11 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import ImageCircle from "../../components/UI/ImageCircle";
 
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 
 import {
   widthPercentageToDP as wp,
@@ -25,6 +29,8 @@ export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
   console.log(transactionItem);
+  console.log(transactionItem.detail.chosenTime != undefined);
+  console.log(transactionItem.detail.txStatus === 1);
   const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
@@ -46,6 +52,10 @@ export default SellingTransactionDetailScreen = props => {
 
   const backHandler = () => {
     props.navigation.goBack();
+  };
+
+  const acceptPreferedtimeHandler = () => {
+    //
   };
 
   return (
@@ -151,41 +161,89 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "20%",
           backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5
+          borderRadius: 5,
+          padding: 5
         }}
       >
-        <FlatList
-          data={transactionItem.detail.assignedTime}
-          keyExtractor={item =>
-            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
-          }
-          style={{ flex: 1 }}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
-                <ThaiRegText style={{ fontSize: 18 }}>
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color: Colors.soft_secondary
-                    }}
-                  >
-                    {libary.formatDate(item.toDate())}
-                  </ThaiMdText>
-                  {` `}
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color: Colors.soft_secondary
-                    }}
-                  >
-                    {libary.formatTime(item.toDate())}
-                  </ThaiMdText>
-                </ThaiRegText>
-              </View>
-            );
+        <View style={{ width: "100%", height: "65%", paddingVertical: 5 }}>
+          <FlatList
+            data={transactionItem.detail.assignedTime}
+            keyExtractor={item =>
+              libary.formatDate(item.toDate()) +
+              libary.formatTime(item.toDate())
+            }
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
+                <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                  <ThaiRegText style={{ fontSize: 18 }}>
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.soft_secondary
+                      }}
+                    >
+                      {libary.formatDate(item.toDate())}
+                    </ThaiMdText>
+                    {` `}
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.soft_secondary
+                      }}
+                    >
+                      {libary.formatTime(item.toDate())}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              );
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "35%",
+            flexDirection: "row",
+            justifyContent: "flex-end"
           }}
-        />
+        >
+          <CustomButton
+            disable={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? false //not disabled
+                : true
+            }
+            style={{
+              width: "40%",
+              height: "100%",
+              maxHeight: 40,
+              borderRadius: 5
+            }}
+            btnColor={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            btnTitleColor={
+              transactionItem.detail.chosenTime != undefined &&
+              transactionItem.detail.txStatus === 1
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.disabled.btnText
+            }
+            onPress={acceptPreferedtimeHandler}
+            btnTitleFontSize={12}
+          >
+            <MaterialCommunityIcons
+              name={"calendar-multiple-check"}
+              color={Colors.button.submit_primary_bright.btnText}
+              size={12}
+            />
+            <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
+          </CustomButton>
+        </View>
       </View>
       <View style={{ width: "100%", height: "5%" }}>
         <ThaiMdText
@@ -273,7 +331,7 @@ export default SellingTransactionDetailScreen = props => {
             style={{
               width: "40%",
               height: "100%",
-              maxHeight: 60,
+              maxHeight: 50,
               borderRadius: 5
             }}
             btnColor={Colors.button.cancel.btnBackground}
@@ -293,7 +351,7 @@ export default SellingTransactionDetailScreen = props => {
             style={{
               width: "40%",
               height: "100%",
-              maxHeight: 60,
+              maxHeight: 50,
               borderRadius: 5
             }}
             btnColor={Colors.button.danger_operation.btnBackground}
