@@ -441,8 +441,8 @@ const ShowAllUserTrashScreen = props => {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "15%",
-            paddingBottom: getStatusBarHeight()
+            height: "15%"
+            // paddingBottom: getStatusBarHeight() //unable it in future
           }}
         >
           <View
@@ -452,9 +452,11 @@ const ShowAllUserTrashScreen = props => {
               flexDirection: "row",
               justifyContent: "space-around",
               alignItems: "center"
+              // backgroundColor: "red"
             }}
           >
             <CustomButton
+              style={{ width: "40%", height: 50, borderRadius: 5 }}
               btnColor={
                 editingMode
                   ? Colors.button.cancel.btnBackground
@@ -467,12 +469,12 @@ const ShowAllUserTrashScreen = props => {
                   : Colors.button.submit_primary_bright.btnText
               }
               btnTitleFontSize={14}
-              style={{ ...styles.navigateBtn }}
             >
               {editingMode ? "ยกเลิก" : "ขายขยะ"}
             </CustomButton>
 
             <CustomButton
+              style={{ width: "40%", height: 50, borderRadius: 5 }}
               btnColor={
                 editingMode
                   ? Colors.button.finish_operation_info.btnBackground
@@ -489,9 +491,6 @@ const ShowAllUserTrashScreen = props => {
                   : Colors.button.start_operation_info.btnText
               }
               btnTitleFontSize={14}
-              style={{
-                ...styles.navigateBtn
-              }}
             >
               <ThaiRegText style={{ fontSize: 12 }}>
                 {editingMode ? "ยืนยันการแก้ไข" : "แก้ไขขยะ"}
@@ -508,13 +507,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  navigateBtn: {
-    width: "40%",
-    height: "80%",
-    borderRadius: 5,
-    marginVertical: 5
-  }
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });
 
 export default ShowAllUserTrashScreen;

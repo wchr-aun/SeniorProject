@@ -139,13 +139,13 @@ export default TrashCardForSell = props => {
               ? Colors.button.submit_primary_bright.btnText
               : Colors.button.submit_primary_dark.btnText
           }
-          btnTitleFontSize={10}
+          btnTitleFontSize={12}
           disable={false}
         >
-          <ThaiBoldText style={{ fontSize: 10 }}>เลือก </ThaiBoldText>
+          <ThaiBoldText style={{ fontSize: 14 }}>เลือก </ThaiBoldText>
           <MaterialIcons
             name={props.selected ? "check-box" : "check-box-outline-blank"}
-            size={12}
+            size={10}
             color={
               props.selected
                 ? Colors.button.submit_primary_bright.btnText

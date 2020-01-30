@@ -302,11 +302,20 @@ export default SellingTrashScreen = props => {
                 alignItems: "center"
               }}
             >
-              <ThaiRegText style={{ fontSize: 12 }}>
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                  color: Colors.on_primary_bright.low_constrast
+                }}
+              >
                 ค้นหาผู้รับซื้อในระยะ{" "}
               </ThaiRegText>
               <TextInput
-                style={{ fontSize: 12, textAlign: "center" }}
+                style={{
+                  fontSize: 14,
+                  textAlign: "center",
+                  color: Colors.on_primary_bright.high_constrast
+                }}
                 value={distance}
                 selectTextOnFocus={true}
                 onChangeText={value => {
@@ -314,7 +323,15 @@ export default SellingTrashScreen = props => {
                 }}
                 keyboardType="number-pad"
               />
-              <ThaiRegText style={{ fontSize: 12 }}> กิโลเมตร</ThaiRegText>
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                  color: Colors.on_primary_bright.low_constrast
+                }}
+              >
+                {" "}
+                กิโลเมตร
+              </ThaiRegText>
             </View>
 
             <View
@@ -323,8 +340,7 @@ export default SellingTrashScreen = props => {
                 width: "100%",
                 flexDirection: "row",
                 justifyContent: "space-around",
-                alignItems: "center",
-                backgroundColor: "red"
+                alignItems: "center"
               }}
             >
               <CustomButton
