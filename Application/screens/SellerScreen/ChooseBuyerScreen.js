@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -23,6 +23,7 @@ import * as navigationBehaviorAction from "../../store/actions/navigationBehavio
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
+import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 const BuyerChoice = props => {
   return (
@@ -245,16 +246,37 @@ export default ChooseBuyerScreen = props => {
       }}
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
+      <CustomStatusBar />
       <View
         style={{
-          paddingTop: getStatusBarHeight(),
           width: wp("100%"),
-          height: hp("100%") + getStatusBarHeight(),
+          height: hp("100%"),
           backgroundColor: Colors.secondary,
           borderRadius: 10
         }}
       >
-        <View style={{ width: "100%", height: hp("60%") }}>
+        <View
+          style={{
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center"
+          }}
+        >
+          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 20
+              }}
+            >
+              เลือกผู้รับซื้อ
+            </ThaiBoldText>
+          </View>
+        </View>
+        <View style={{ width: "100%", height: "70%" }}>
           <FlatList
             data={buyerListRedux}
             keyExtractor={item => item.id}
@@ -278,34 +300,69 @@ export default ChooseBuyerScreen = props => {
             }}
           />
         </View>
-        <View style={{ width: wp("90%"), height: hp("30") }}>
-          {datepickerShow ? (
-            <DateTimePicker
-              mode="date"
-              isVisible={datepickerShow}
-              onConfirm={handleDatePicked}
-              onCancel={hideDateTimePicker}
+        {datepickerShow ? (
+          <DateTimePicker
+            mode="date"
+            isVisible={datepickerShow}
+            onConfirm={handleDatePicked}
+            onCancel={hideDateTimePicker}
+          />
+        ) : null}
+
+        <View
+          style={{
+            height: "20%",
+            maxHeight: 100,
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-around"
+          }}
+        >
+          <CustomButton
+            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            btnColor={Colors.button.cancel.btnBackground}
+            onPress={() => props.navigation.goBack()}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={14}
+          >
+            <Ionicons
+              name={"ios-arrow-back"}
+              size={12}
+              color={Colors.button.cancel.btnText}
             />
-          ) : null}
-          <View style={{ width: "100%", height: 100 }}>
-            <CustomButton
-              style={{ width: "90%", height: "100%" }}
-              btnColor={Colors.primary_dark}
-              onPress={quickSellHandler}
-              btnTitleColor={Colors.on_primary}
-              btnTitleFontSize={14}
+            <ThaiRegText
+              style={{
+                fontSize: 12
+              }}
             >
-              ขายด่วน
-            </CustomButton>
-          </View>
+              {` ย้อนกลับ`}
+            </ThaiRegText>
+          </CustomButton>
+
+          <CustomButton
+            style={{ width: "40%", height: "100%", borderRadius: 8 }}
+            btnColor={Colors.button.start_operation_info.btnBackground}
+            onPress={quickSellHandler}
+            btnTitleColor={Colors.button.start_operation_info.btnText}
+            btnTitleFontSize={14}
+          >
+            <MaterialCommunityIcons
+              name={"account-search"}
+              size={12}
+              color={Colors.button.start_operation_info.btnText}
+            />
+            <ThaiRegText
+              style={{
+                fontSize: 12
+              }}
+            >
+              {` ขายด่วน`}
+            </ThaiRegText>
+          </CustomButton>
         </View>
       </View>
     </KeyboardAvoidingView>
   );
-};
-
-ChooseBuyerScreen.navigationOptions = {
-  headerTitle: "เลือกผู้รับซื้อขยะ"
 };
 
 const styles = StyleSheet.create({

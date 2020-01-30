@@ -131,7 +131,12 @@ export default UserAuthenScreen = props => {
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
         <View style={{ marginVertical: wp("5%") }}>
-          <ThaiMdText style={{ color: Colors.on_primary }}>
+          <ThaiMdText
+            style={{
+              color: Colors.on_primary_bright.high_constrast,
+              fontSize: 24
+            }}
+          >
             ลงชื่อเข้าใช้
           </ThaiMdText>
         </View>
@@ -193,7 +198,10 @@ export default UserAuthenScreen = props => {
                 }}
               >
                 {isLoading ? (
-                  <ActivityIndicator size="small" color={Colors.primary} />
+                  <ActivityIndicator
+                    size="small"
+                    color={Colors.on_primary_bright.high_constrast}
+                  />
                 ) : (
                   <CustomButton
                     style={{
@@ -205,8 +213,8 @@ export default UserAuthenScreen = props => {
                     onPress={() => {
                       authHandler();
                     }}
-                    btnColor={Colors.primary}
-                    btnTitleColor={Colors.on_primary}
+                    btnColor={Colors.button.submit_primary_bright.btnBackground}
+                    btnTitleColor={Colors.button.submit_primary_bright.btnText}
                     btnTitleFontSize={14}
                   >
                     ลงชื่อเข้าใช้
@@ -233,20 +241,20 @@ export default UserAuthenScreen = props => {
                     borderRadius: 10,
                     margin: wp("1.25%"),
                     borderWidth: 1,
-                    borderColor: Colors.primary
+                    borderColor: Colors.button.submit_primary_dark.btnText
                   }}
                   onPress={() => {
                     props.navigation.navigate("UserSignupScreen");
                   }}
-                  btnColor={Colors.screen}
-                  btnTitleColor={Colors.primary}
+                  btnColor={Colors.button.submit_primary_dark.btnBackground}
+                  btnTitleColor={Colors.button.submit_primary_dark.btnText}
                   btnTitleFontSize={14}
                 >
                   ลงทะเบียน{" "}
                   <MaterialCommunityIcons
                     name="account-plus"
                     size={14}
-                    color={Colors.primary}
+                    color={Colors.button.submit_primary_dark.btnText}
                   />
                 </CustomButton>
               </View>
