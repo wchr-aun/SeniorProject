@@ -8,13 +8,13 @@
         <div class="block is-size-6">
           <b>Including On-Hold Items</b>
         </div>
-        <pie-chart :height="300" :chart-data="datacollection[0]"></pie-chart>
+        <pie-chart :height="250" :chart-data="datacollection[0]"></pie-chart>
       </div>
       <div class="column">
         <div class="block is-size-6">
           <b>Only Items on Completed Transactions</b>
         </div>
-        <pie-chart ref="charts" :height="300" :chart-data="datacollection[1]"></pie-chart>
+        <pie-chart ref="charts" :height="250" :chart-data="datacollection[1]"></pie-chart>
       </div>
     </div>
     
