@@ -6,7 +6,8 @@ import {
   ActivityIndicator,
   BackHandler,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  Button
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -310,7 +311,7 @@ const ShowAllUserTrashScreen = props => {
             alignItems: "center"
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
@@ -343,8 +344,8 @@ const ShowAllUserTrashScreen = props => {
               >
                 <CustomButton
                   btnColor={Colors.button.submit_primary_dark.btnBackground}
-                  onPress={() => setModalVisible(true)}
                   btnTitleColor={Colors.button.submit_primary_dark.btnText}
+                  onPress={() => setModalVisible(true)}
                   btnTitleFontSize={14}
                 >
                   <ThaiRegText style={{ fontSize: 10 }}>เพิ่มขยะ </ThaiRegText>

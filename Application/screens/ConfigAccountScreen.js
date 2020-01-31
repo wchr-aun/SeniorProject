@@ -1,34 +1,24 @@
 import React, { useReducer, useCallback, useState, useEffect } from "react";
-import {
-  ScrollView,
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Button,
-  Text,
-  AsyncStorage
-} from "react-native";
+import { View, KeyboardAvoidingView, StyleSheet, Button } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { toggleSearch, editBuyerInfo } from "../utils/firebaseFunctions";
-import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 import { useDispatch, useSelector } from "react-redux";
 import * as authAction from "../store/actions/authAction";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
 import Colors from "../constants/Colors";
+import ThaiBoldText from "../components/ThaiBoldText";
 
 export default ConfigAccountScreen = props => {
   const [switchSearch, setSwitchSearch] = useState(false);
   const dispatch = useDispatch();
-  const addr = useSelector(state => state.user.userProfile.addr)
+  const addr = useSelector(state => state.user.userProfile.addr);
 
   const configHandler = role => {
     dispatch(authAction.changeRole(role)).then(() => {
-      if (role == "seller")
-        props.navigation.navigate("SellerNavigator");
-      else
-        props.navigation.navigate("BuyerNavigator");
-    })
+      if (role == "seller") props.navigation.navigate("SellerNavigator");
+      else props.navigation.navigate("BuyerNavigator");
+    });
   };
 
   return (
@@ -37,28 +27,52 @@ export default ConfigAccountScreen = props => {
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={["#ffffff", "#fafafa"]} style={styles.gradient}>
+      <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
         <Card style={styles.authContainer} titleVar="title">
-          <ScrollView keyboardShouldPersistTaps="handled">
+          <View style={{ width: "100%", height: "50%", alignItems: "center" }}>
+            <ThaiBoldText style={{ fontSize: 18, color: Colors.primary_dark }}>
+              คุณเป็นผู้ใช้ประเภทใด
+            </ThaiBoldText>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "100%",
+              height: "50%"
+            }}
+          >
             <View
-              style={{
-                flexDirection: "row",
-                alignContent: "center",
-                justifyContent: "space-around"
-              }}
+              style={{ width: "50%", height: "100%", alignItems: "center" }}
             >
-              <Button
-                title="Seller"
-                color={Colors.primary}
-                onPress={() => configHandler("seller")}
+              <MaterialCommunityIcons
+                name="account"
+                color={Colors.primary_bright_variant}
+                size={36}
               />
               <Button
-                title="Buyer"
-                color={Colors.primary}
+                title="ผู้ขาย"
+                color={Colors.primary_bright_variant}
+                onPress={() => configHandler("seller")}
+              />
+            </View>
+
+            <View
+              style={{ width: "50%", height: "100%", alignItems: "center" }}
+            >
+              <MaterialCommunityIcons
+                name="car-pickup"
+                color={Colors.primary_bright}
+                size={36}
+              />
+              <Button
+                title="ผู้รับซื้อ"
+                color={Colors.primary_bright}
                 onPress={() => configHandler("buyer")}
               />
             </View>
-          </ScrollView>
+          </View>
         </Card>
       </LinearGradient>
     </KeyboardAvoidingView>
@@ -76,9 +90,11 @@ const styles = StyleSheet.create({
   },
   authContainer: {
     width: "80%",
-    maxWidth: 400,
-    maxHeight: 400,
-    padding: 20
+    height: "50%",
+    maxWidth: 300,
+    maxHeight: 300,
+    padding: 20,
+    justifyContent: "center"
   },
   buttonContainer: {
     marginTop: 10

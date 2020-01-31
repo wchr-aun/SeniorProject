@@ -297,7 +297,9 @@ export default EditingUserprofileScreen = props => {
             padding: wp("3%"),
             height: "15%",
             paddingTop: getStatusBarHeight(),
-            alignSelf: "center"
+            alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
           <ThaiMdText
@@ -710,8 +712,8 @@ export default EditingUserprofileScreen = props => {
                     onPress={() => {
                       editConfirmHandler();
                     }}
-                    btnColor={Colors.button.submit_primary_dark.btnBackground}
-                    btnTitleColor={Colors.button.submit_primary_dark.btnText}
+                    btnColor={Colors.button.submit_primary_bright.btnBackground}
+                    btnTitleColor={Colors.button.submit_primary_bright.btnText}
                     btnTitleFontSize={14}
                   >
                     ยืนยันการแก้ไข

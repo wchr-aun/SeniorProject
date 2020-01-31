@@ -99,6 +99,27 @@ export default ModalShowInteractMap = props => {
         <View
           style={{
             width: "100%",
+            height: "5%",
+            flexDirection: "row",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center"
+          }}
+        >
+          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 15
+              }}
+            >
+              เลือกตำแหน่งของคุณ
+            </ThaiBoldText>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
             height: "85%"
           }}
         >
@@ -138,25 +159,57 @@ export default ModalShowInteractMap = props => {
             )}
           </MapView>
         </View>
-        <View style={{ width: "100%", height: "10%", flexDirection: "row" }}>
-          <View
-            style={{ width: "40%", height: "100%", paddingVertical: wp("3%") }}
+        <View
+          style={{
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            backgroundColor: Colors.hard_primary_dark
+          }}
+        >
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 50
+            }}
+            btnColor={Colors.button.cancel.btnBackground}
+            onPress={() => props.setModalVisible(false)}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={14}
           >
-            <Button
-              title="ยกเลิก"
-              onPress={() => props.setModalVisible(false)}
-              color={Colors.primary_dark}
-            />
-          </View>
-          <View
-            style={{ width: "40%", height: "100%", paddingVertical: wp("3%") }}
+            <ThaiRegText
+              style={{
+                fontSize: 12
+              }}
+            >
+              ปิดหน้าต่าง
+            </ThaiRegText>
+          </CustomButton>
+
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              borderRadius: 8,
+              maxHeight: 50
+            }}
+            btnColor={Colors.button.submit_primary_bright.btnBackground}
+            onPress={confirmLocationHandler}
+            btnTitleColor={Colors.button.submit_primary_bright.btnText}
+            btnTitleFontSize={14}
           >
-            <Button
-              title="ยืนยัน"
-              onPress={confirmLocationHandler}
-              color={Colors.primary_bright}
-            />
-          </View>
+            <ThaiRegText
+              style={{
+                fontSize: 12
+              }}
+            >
+              ยืนยัน
+            </ThaiRegText>
+          </CustomButton>
         </View>
       </View>
     </Modal>

@@ -111,8 +111,7 @@ export default BuyingTransactionDetailScreen = props => {
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%",
-        paddingHorizontal: 10
+        height: "100%"
       }}
     >
       <CustomStatusBar />
@@ -149,7 +148,7 @@ export default BuyingTransactionDetailScreen = props => {
             avariableWidth={wp("25%")}
           />
         </View>
-        <View style={{ width: "100%", height: "40%" }}>
+        <View style={{ width: "100%", height: "40%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -182,7 +181,8 @@ export default BuyingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "5%"
+          height: "5%",
+          paddingHorizontal: 10
         }}
       >
         <ThaiMdText
@@ -197,10 +197,11 @@ export default BuyingTransactionDetailScreen = props => {
           height: "20%",
           backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
-          padding: 5
+          padding: 5,
+          paddingHorizontal: 10
         }}
       >
-        <View style={{ width: "100%", height: "65%", paddingVertical: 5 }}>
+        <View style={{ width: "100%", height: "100%", paddingVertical: 5 }}>
           <FlatList
             data={transactionItem.detail.assignedTime}
             keyExtractor={item =>
@@ -247,7 +248,7 @@ export default BuyingTransactionDetailScreen = props => {
             }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             width: "100%",
             height: "35%",
@@ -269,30 +270,40 @@ export default BuyingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.disabled.btnBackground
+              // transactionItem.detail.chosenTime != undefined &&
+              // transactionItem.detail.txStatus === 1
+              //   ? Colors.button.submit_primary_bright.btnBackground
+              //   : Colors.button.disabled.btnBackground
+              "#414141"
             }
             btnTitleColor={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.disabled.btnText
+              // transactionItem.detail.chosenTime != undefined &&
+              // transactionItem.detail.txStatus === 1
+              //   ? Colors.button.submit_primary_bright.btnText
+              //   : Colors.button.disabled.btnText
+              "#272727"
             }
             onPress={preferTimeHandler}
             btnTitleFontSize={12}
           >
             <MaterialCommunityIcons
               name={"calendar-multiple-check"}
-              color={Colors.button.submit_primary_bright.btnText}
+              // color={Colors.button.submit_primary_bright.btnText}
+              color={"#414141"}
               size={12}
             />
             <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
           </CustomButton>
-        </View>
+        </View> */}
       </View>
-      <View style={{ width: "100%", height: "5%", padding: 2 }}>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          padding: 2,
+          paddingHorizontal: 10
+        }}
+      >
         <ThaiMdText
           style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
         >
@@ -304,7 +315,8 @@ export default BuyingTransactionDetailScreen = props => {
           width: "100%",
           height: "20%",
           backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5
+          borderRadius: 5,
+          paddingHorizontal: 10
         }}
       >
         <FlatList

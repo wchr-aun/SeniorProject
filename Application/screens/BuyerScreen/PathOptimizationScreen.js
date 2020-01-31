@@ -12,6 +12,7 @@ import ModalShowInteractMap from "../../components/ModalShowInteractMap";
 import { fetchTransactionForPathOp } from "../../store/actions/transactionAction";
 import libary from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
+import { LinearGradient } from "expo-linear-gradient";
 
 const destinationReducer = (state, action) => {
   let geopoint = state.geopoint;
@@ -105,8 +106,35 @@ export default UserSignupScreen = props => {
   }
 
   return (
-    <View>
-      <View style={{ width: "100%", height: hp("60%s") }}>
+    <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientB}>
+      <View
+        style={{
+          width: "100%",
+          height: "10%",
+          flexDirection: "row",
+          backgroundColor: Colors.primary_bright,
+          paddingVertical: 10,
+          alignItems: "center"
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center"
+          }}
+        >
+          <ThaiBoldText
+            style={{
+              color: Colors.on_primary_bright.high_constrast,
+              fontSize: 20
+            }}
+          >
+            เลือกคำขอที่ต้องการหาเส้นทาง
+          </ThaiBoldText>
+        </View>
+      </View>
+      <View style={{ width: "100%", height: "80%" }}>
         <FlatList
           data={transactions}
           keyExtractor={item => item.txId}
@@ -114,9 +142,7 @@ export default UserSignupScreen = props => {
             return (
               <SellTransactionCard
                 amountOfType={item.detail.saleList.length}
-                imgUrl={
-                  "https://scontent.fbkk17-1.fna.fbcdn.net/v/t1.0-9/393181_101079776715663_1713951835_n.jpg?_nc_cat=107&_nc_eui2=AeEfWDFdtSlGFFjF6BoDJHuxELzTu9FOooinuAkIpIjHImVL2HwARq_OuEI4p63j_X6uN7Pe8CsdOxkg9MFPW9owggtWs3f23aW46Lbk_7ahHw&_nc_oc=AQnoUrFNQsOv1dtrGlQO9cJdPhjxF0yXadmYTrwMAXz2C3asf9CIw59tbNDL8jPKHhI&_nc_ht=scontent.fbkk17-1.fna&oh=4b6bbf9f1d83cffd20a9e028d3967bdd&oe=5E65C748"
-                }
+                imgUrl={""}
                 userName={item.detail.seller}
                 txStatus={item.detail.txStatus}
                 meetDate={libary.formatDate(
@@ -130,22 +156,31 @@ export default UserSignupScreen = props => {
           }}
         />
       </View>
-      <CustomButton
-        disable={isSelected}
+      <View
         style={{
-          width: wp("40%"),
-          height: hp("6%"),
-          borderRadius: 10,
-          margin: wp("1.25%"),
-          alignSelf: "center"
+          width: "100%",
+          height: "10%",
+          justifyContent: "center",
+          padding: 10
         }}
-        onPress={searchMapHandler}
-        btnColor={Colors.on_primary}
-        btnTitleColor={isSelected ? Colors.lineSeparate : Colors.primary_dark}
-        btnTitleFontSize={14}
       >
-        ค้นหาเส้นทาง
-      </CustomButton>
-    </View>
+        <CustomButton
+          disable={isSelected}
+          style={{
+            width: "40%",
+            height: "100%",
+            borderRadius: 10,
+            margin: wp("1.25%"),
+            alignSelf: "center"
+          }}
+          onPress={searchMapHandler}
+          btnColor={Colors.button.start_operation_info.btnBackground}
+          btnTitleColor={Colors.button.start_operation_info.btnText}
+          btnTitleFontSize={14}
+        >
+          ค้นหาเส้นทาง
+        </CustomButton>
+      </View>
+    </LinearGradient>
   );
 };

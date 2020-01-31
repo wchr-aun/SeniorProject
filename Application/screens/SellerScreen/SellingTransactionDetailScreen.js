@@ -29,8 +29,6 @@ export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
   console.log(transactionItem);
-  console.log(transactionItem.detail.chosenTime != undefined);
-  console.log(transactionItem.detail.txStatus === 1);
   const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(
@@ -63,8 +61,7 @@ export default SellingTransactionDetailScreen = props => {
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%",
-        paddingHorizontal: 10
+        height: "100%"
       }}
     >
       <CustomStatusBar />
@@ -85,7 +82,7 @@ export default SellingTransactionDetailScreen = props => {
               fontSize: 26
             }}
           >
-            รายละเอียดการขาย
+            รายละเอียดคำขอขายขยะ
           </ThaiBoldText>
         </View>
         <View
@@ -93,7 +90,8 @@ export default SellingTransactionDetailScreen = props => {
             width: "100%",
             height: "40%",
             padding: 5,
-            alignItems: "center"
+            alignItems: "center",
+            paddingHorizontal: 10
           }}
         >
           <ImageCircle
@@ -101,7 +99,7 @@ export default SellingTransactionDetailScreen = props => {
             avariableWidth={wp("25%")}
           />
         </View>
-        <View style={{ width: "100%", height: "40%" }}>
+        <View style={{ width: "100%", height: "40%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -110,7 +108,10 @@ export default SellingTransactionDetailScreen = props => {
           >
             {`สถานะ `}
             <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              style={{
+                fontSize: 14,
+                color: libary.getColorTxStatus(transactionItem.detail.txStatus)
+              }}
             >
               {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
             </ThaiMdText>
@@ -147,7 +148,8 @@ export default SellingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "5%"
+          height: "5%",
+          paddingHorizontal: 10
         }}
       >
         <ThaiMdText
@@ -162,7 +164,8 @@ export default SellingTransactionDetailScreen = props => {
           height: "20%",
           backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
-          padding: 5
+          padding: 5,
+          paddingHorizontal: 10
         }}
       >
         <View style={{ width: "100%", height: "65%", paddingVertical: 5 }}>
@@ -176,11 +179,24 @@ export default SellingTransactionDetailScreen = props => {
             renderItem={({ item }) => {
               return (
                 <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
-                  <ThaiRegText style={{ fontSize: 18 }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 18,
+                      color:
+                        transactionItem.detail.chosenTime.seconds ===
+                        item.seconds
+                          ? Colors.soft_primary_bright
+                          : Colors.soft_secondary
+                    }}
+                  >
                     <ThaiMdText
                       style={{
                         fontSize: 18,
-                        color: Colors.soft_secondary
+                        color:
+                          transactionItem.detail.chosenTime.seconds ===
+                          item.seconds
+                            ? Colors.soft_primary_bright
+                            : Colors.soft_secondary
                       }}
                     >
                       {libary.formatDate(item.toDate())}
@@ -189,7 +205,11 @@ export default SellingTransactionDetailScreen = props => {
                     <ThaiMdText
                       style={{
                         fontSize: 18,
-                        color: Colors.soft_secondary
+                        color:
+                          transactionItem.detail.chosenTime.seconds ===
+                          item.seconds
+                            ? Colors.soft_primary_bright
+                            : Colors.soft_secondary
                       }}
                     >
                       {libary.formatTime(item.toDate())}
@@ -209,12 +229,12 @@ export default SellingTransactionDetailScreen = props => {
           }}
         >
           <CustomButton
-            disable={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? false //not disabled
-                : true
-            }
+            // disable={
+            //   transactionItem.detail.chosenTime != undefined &&
+            //   transactionItem.detail.txStatus === 1
+            //     ? false //not disabled
+            //     : true
+            // }
             style={{
               width: "40%",
               height: "100%",
@@ -222,30 +242,33 @@ export default SellingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.disabled.btnBackground
+              // transactionItem.detail.chosenTime != undefined &&
+              // transactionItem.detail.txStatus === 1
+              //   ? Colors.button.submit_primary_bright.btnBackground
+              //   : Colors.button.disabled.btnBackground
+              "#191919"
             }
             btnTitleColor={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.disabled.btnText
+              // transactionItem.detail.chosenTime != undefined &&
+              // transactionItem.detail.txStatus === 1
+              //   ? Colors.button.submit_primary_bright.btnText
+              //   : Colors.button.disabled.btnText
+              "#272727"
             }
             onPress={acceptPreferedtimeHandler}
             btnTitleFontSize={12}
           >
             <MaterialCommunityIcons
               name={"calendar-multiple-check"}
-              color={Colors.button.submit_primary_bright.btnText}
+              // color={Colors.button.submit_primary_bright.btnText}
+              color={"#272727"}
               size={12}
             />
             <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
           </CustomButton>
         </View>
       </View>
-      <View style={{ width: "100%", height: "5%" }}>
+      <View style={{ width: "100%", height: "5%", paddingHorizontal: 10 }}>
         <ThaiMdText
           style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
         >
@@ -257,7 +280,8 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "20%",
           backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5
+          borderRadius: 5,
+          paddingHorizontal: 10
         }}
       >
         <FlatList

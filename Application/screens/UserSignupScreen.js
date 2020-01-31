@@ -281,7 +281,12 @@ export default UserSignupScreen = props => {
             paddingTop: getStatusBarHeight()
           }}
         >
-          <ThaiMdText style={{ color: Colors.on_primary }}>
+          <ThaiMdText
+            style={{
+              color: Colors.on_primary_bright.high_constrast,
+              fontSize: 18
+            }}
+          >
             สร้างบัญชีผู้ใช้
           </ThaiMdText>
         </View>
@@ -458,7 +463,7 @@ export default UserSignupScreen = props => {
                   <MaterialIcons
                     name={currentAddr ? "check-box" : "check-box-outline-blank"}
                     size={15}
-                    color={Colors.primary}
+                    color={Colors.primary_dark}
                   />
                   <ThaiRegText style={{ fontSize: 10, textAlign: "center" }}>
                     ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
@@ -564,13 +569,15 @@ export default UserSignupScreen = props => {
                 style={{
                   fontSize: 12,
                   color:
-                    currentAddr === true ? Colors.on_primary : Colors.primary
+                    currentAddr === true
+                      ? Colors.secondary
+                      : Colors.primary_dark
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
               </ThaiRegText>
               <CustomButton
-                disable={currentAddr}
+                // disable={currentAddr}
                 style={{
                   width: wp("40%"),
                   height: hp("6%"),
@@ -579,9 +586,15 @@ export default UserSignupScreen = props => {
                   alignSelf: "center"
                 }}
                 onPress={searchMapHandler}
-                btnColor={Colors.on_primary}
+                btnColor={
+                  currentAddr
+                    ? Colors.button.disabled.btnBackground
+                    : Colors.button.start_operation_info.btnBackground
+                }
                 btnTitleColor={
-                  currentAddr ? Colors.lineSeparate : Colors.primary
+                  currentAddr
+                    ? Colors.button.disabled.btnText
+                    : Colors.button.start_operation_info.btnText
                 }
                 btnTitleFontSize={14}
               >
@@ -611,7 +624,7 @@ export default UserSignupScreen = props => {
               />
               <View style={styles.buttonContainer}>
                 {isLoading ? (
-                  <ActivityIndicator size="small" color={Colors.primary} />
+                  <ActivityIndicator size="small" color={Colors.primary_dark} />
                 ) : (
                   <CustomButton
                     style={{
@@ -624,8 +637,8 @@ export default UserSignupScreen = props => {
                     onPress={() => {
                       signupHandler();
                     }}
-                    btnColor={Colors.primary}
-                    btnTitleColor={Colors.on_primary}
+                    btnColor={Colors.button.submit_primary_dark.btnBackground}
+                    btnTitleColor={Colors.button.submit_primary_dark.btnText}
                     btnTitleFontSize={14}
                   >
                     ยืนยันลงทะเบียน
@@ -651,19 +664,19 @@ export default UserSignupScreen = props => {
               margin: wp("1.25%"),
               alignSelf: "flex-start",
               borderWidth: 1,
-              borderColor: Colors.on_secondary
+              borderColor: Colors.button.cancel.btnText
             }}
             onPress={() => {
               props.navigation.navigate("UserSigninScreen");
             }}
-            btnColor={Colors.on_primary}
-            btnTitleColor={Colors.primary}
+            btnColor={Colors.button.cancel.btnBackground}
+            btnTitleColor={Colors.button.cancel.btnText}
             btnTitleFontSize={14}
           >
             <MaterialIcons
               name="chevron-left"
               size={12}
-              color={Colors.primary}
+              color={Colors.button.cancel.btnText}
             />{" "}
             ย้อนกลับ
           </CustomButton>

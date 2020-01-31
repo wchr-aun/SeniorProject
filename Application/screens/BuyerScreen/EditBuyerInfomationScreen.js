@@ -68,7 +68,7 @@ export default EditBuyerInfomationScreen = props => {
           height: hp("100%") - AppVariableSetting.bottomBarHeight
         }}
         behavior="padding"
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={0}
       >
         <View
           style={{

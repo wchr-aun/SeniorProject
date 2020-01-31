@@ -66,10 +66,10 @@ export default {
   txStatus: {
     zero: "#149c6a",
     one: "#fcba03",
-    two: "#3797f0",
-    three: "#a9fc03",
+    two: "#8c0b04",
+    three: "#ff386d",
     four: "#B3B3B3",
-    five: "#90B37B"
+    five: "#3797f0"
   }
 };
 //   Transaction Status
