@@ -5,15 +5,18 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import MapView, { Marker } from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
-import { GOOGLE_API_KEY } from "react-native-dotenv";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import libary from "../utils/libary";
+import { useReducer } from "react";
 
 const ASPECT_RATIO = wp("100%") / hp("100%");
 const LATITUDE_DELTA = 0.005; //adjust this for initial zoomin-zoomout
 const LONGTITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const polylineReducer = (state, action) => {
+  return {coords: action}
+};
 
 export default ModalShowInteractMap = props => {
   const [zoomCord, setZoomCord] = useState({
@@ -26,15 +29,22 @@ export default ModalShowInteractMap = props => {
     latitude: props.origin.latitude,
     longitude: props.origin.longitude
   });
+  const [polylineState, dispatchPolyline] = useReducer(
+    polylineReducer,
+    { coords: [] }
+  );
+
+  const isPathOptimize = props.pathOptimize ? true : false;
 
   useEffect(() => {
     setSelectedLocation({
       lat: props.origin.latitude,
       lng: props.origin.longitude
     });
+    libary.getDirections(props.origin, props.destination).then(polyline => {
+      dispatchPolyline(polyline)
+    })
   }, []);
-
-  const isPathOptimize = props.pathOptimize ? true : false;
 
   const mapRegion = {
     latitude: markerCoordinates.latitude
@@ -109,19 +119,11 @@ export default ModalShowInteractMap = props => {
           >
             {isPathOptimize ? (
               <>
-                {props.destination.map(destination => (
-                  <MapViewDirections
-                    key={destination.txId}
-                    origin={markerCoordinates}
-                    destination={{
-                      latitude: destination.latitude,
-                      longitude: destination.longitude
-                    }}
-                    apikey={GOOGLE_API_KEY}
-                    strokeWidth={3}
-                    strokeColor="hotpink"
-                  />
-                ))}
+                <Polyline
+                  coordinates={polylineState.coords}
+                  strokeWidth={4}
+                  strokeColor="hotpink"
+                />
                 {props.destination.map(destination => (
                   <Marker
                     key={destination.txId}

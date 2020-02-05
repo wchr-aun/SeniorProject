@@ -20,9 +20,8 @@ const destinationReducer = (state, action) => {
       let newGeopoint = [];
       newGeopoint = geopoint.splice(0, index);
       geopoint.shift();
-      newGeopoint.concat(geopoint);
       return {
-        geopoint: newGeopoint
+        geopoint: newGeopoint.concat(geopoint)
       };
     }
   }
