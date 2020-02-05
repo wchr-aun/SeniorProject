@@ -75,6 +75,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
     const addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
     const zipcode = data.addr.zipcode
     const txType = data.txType
+    const img = data.img
     if (txType == 0 || txType == 1) {
       return sellerDB.doc(context.auth.uid).get().then(doc => {
         if (doc.exists) {
@@ -105,7 +106,8 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               zipcode,
               createTimestamp: new Date(),
               assignedTime,
-              txStatus: 0
+              txStatus: 0,
+              img
             }).then(() => {
               const message = getTitleAndBody({
                 uid: context.auth.uid,
