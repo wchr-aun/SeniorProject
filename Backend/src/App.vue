@@ -1,11 +1,9 @@
 <template>
   <div id="app">
-    <Navbar />
-    <div id="main">
       <section class="section">
+        <Navbar />
         <router-view/>
       </section>
-    </div>
   </div>
 </template>
 
@@ -32,5 +30,8 @@ export default {
 }
 #main {
   flex: 1 0 auto;
+}
+#section {
+  padding-top: 0;
 }
 </style>

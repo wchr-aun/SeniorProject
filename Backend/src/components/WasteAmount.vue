@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns">
       <div class="column">
-        <AutoComZipcode/>
+        <AutoComZipcode :title="title" :loading="loading" />
       </div>
     </div>
     <div class="columns">
@@ -26,7 +26,8 @@
 <script>
   import BarChart from './BarChart.js'
   import AutoComZipcode from './AutoComZipcode'
-  import { getRandomColor } from "../library"
+  import { getRandomColor, queryWastesInAnArea } from "../library"
+  import { wasteAmountDC } from '../variables'
 
   export default {
     components: {
@@ -35,6 +36,7 @@
     },
     data () {
       return {
+        title: "Find Waste Amount by Zipcode",
         datacollection: {
           labels: [],
           datasets: []
@@ -52,10 +54,31 @@
               stacked: true
             }]
           }
-        }
+        },
+        loading: false
       }
     },
     methods: {
+      getZipcode (zipcode) {
+        if (zipcode == "00000" || zipcode == null) return alert("Please enter zipcode")
+        this.loading = true
+        if (wasteAmountDC[zipcode] == undefined) {
+          queryWastesInAnArea(zipcode).then(wasteAmount => {
+            if (Object.keys(wasteAmount).length == 0) {
+              this.danger()
+              this.clearData()
+              this.loading = false
+            }
+            wasteAmountDC[zipcode] = this.fetchData(wasteAmount)
+            this.fillData(wasteAmountDC[zipcode])
+            this.loading = false
+          })
+        }
+        else {
+          this.fillData(wasteAmountDC[zipcode])
+          this.loading = false
+        }
+      },
       fillData (datasets) {
         this.datacollection = JSON.parse(JSON.stringify(datasets))
       },
@@ -85,6 +108,14 @@
           labels: [],
           datasets: []
         }
+      },
+      danger () {
+        this.$buefy.toast.open({
+          duration: 3000,
+          message: `No data was found!`,
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
       }
     }
   }

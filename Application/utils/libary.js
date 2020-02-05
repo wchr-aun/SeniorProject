@@ -7,6 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import firebase from "firebase";
 const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
+import { GOOGLE_API_KEY } from "react-native-dotenv";
 
 import {
   getCurrentPositionAsync,
@@ -275,6 +276,35 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
   }
 };
 
+const getDirections = (originCoords, destinationCoords) => {
+  if (destinationCoords.length >= 10 || destinationCoords.length <= 0) return false
+  const mode = "driving";
+  const lastIndex = destinationCoords.length - 1
+  const origin = String(originCoords.latitude) + "," + String(originCoords.longitude);
+  const destination = String(destinationCoords[lastIndex].latitude) + "," + String(destinationCoords[lastIndex].longitude);
+  let waypoints = ""
+
+  if (destinationCoords.length)
+    for (let i = 0; i < destinationCoords.length - 1; i++)
+      waypoints += String(destinationCoords[i].latitude) + "," + String(destinationCoords[i].longitude)
+  
+  const url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&waypoints=" + waypoints + "&destination=" + destination + "&key=" + GOOGLE_API_KEY + "&mode=" + mode;
+  return fetch(url)
+    .then(response => response.json())
+    .then(responseJson => {
+      return decode(responseJson.routes[0].overview_polyline.points)
+    }).catch(err => {
+      throw err;
+    });
+}
+
+const decode = (t,e) => {
+  for(var n,o,u=0,l=0,r=0,d= [],h=0,i=0,a=null,c=Math.pow(10,e||5);u<t.length;){
+    a=null,h=0,i=0;do a=t.charCodeAt(u++)-63,i|=(31&a)<<h,h+=5;while(a>=32);n=1&i?~(i>>1):i>>1,h=i=0;do a=t.charCodeAt(u++)-63,i|=(31&a)<<h,h+=5;while(a>=32);o=1&i?~(i>>1):i>>1,l+=n,r+=o,d.push([l/c,r/c])
+  }return d=d.map(function(t){return{latitude:t[0],longitude:t[1]}})
+}
+
+
 export default {
   formatDate,
   getTransactionList,
@@ -285,6 +315,7 @@ export default {
   getDisableStatusForBuyer,
   getDisableStatusForSeller,
   toDate,
+  getDirections
   takeImgForGetprediction,
   uploadingImg,
   takeAnImg

@@ -112,3 +112,18 @@ export const queryTotalWastes = () => {
     })
   })
 }
+
+export const queryBuyerInAnArea = (zipcode) => {
+  return buyerDb.where("zipcode", "==", Number(zipcode)).get().then(querySnapshot => {
+    let markers = []
+    querySnapshot.forEach(buyer => {
+      markers.push({
+        position: {
+          lat: buyer.data().addr_geopoint.geopoint.latitude,
+          lng: buyer.data().addr_geopoint.geopoint.longitude
+        }
+      })
+    })
+    return markers
+  })
+}
