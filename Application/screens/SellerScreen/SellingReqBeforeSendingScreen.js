@@ -157,7 +157,7 @@ export default SellingReqBeforeSendingScreen = props => {
           <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
         </CustomButton>
       </View>
-      <View style={{ height: "20%", width: "100%" }}>
+      <View style={{ height: "10%", width: "100%" }}>
         <View style={{ width: "100%", height: "100%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
@@ -204,13 +204,18 @@ export default SellingReqBeforeSendingScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5,
-          padding: 5,
-          marginHorizontal: 5
+          padding: 10
         }}
       >
-        <View style={{ width: "100%", height: "100%", paddingVertical: 5 }}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            paddingVertical: 5,
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 10
+          }}
+        >
           <FlatList
             data={sellReq.assignedTime}
             keyExtractor={item =>
@@ -224,13 +229,13 @@ export default SellingReqBeforeSendingScreen = props => {
                   <ThaiRegText
                     style={{
                       fontSize: 18,
-                      color: Colors.soft_secondary
+                      color: Colors.primary_bright_variant
                     }}
                   >
                     <ThaiMdText
                       style={{
                         fontSize: 18,
-                        color: Colors.soft_secondary
+                        color: Colors.primary_bright_variant
                       }}
                     >
                       {libary.formatDate(new Date(item))}
@@ -262,62 +267,78 @@ export default SellingReqBeforeSendingScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5,
-          marginHorizontal: 5
+          padding: 10
         }}
       >
-        <FlatList
-          data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
-          keyExtractor={item => item.subtype}
-          style={{ flex: 1 }}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  height: 30,
-                  padding: 3,
-                  alignSelf: "center",
-                  flexDirection: "row"
-                }}
-              >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 10
+          }}
+        >
+          <FlatList
+            data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
+            keyExtractor={item => item.subtype}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
                 <View
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center"
+                    height: 30,
+                    padding: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
                   }}
                 >
-                  <ThaiRegText
-                    style={{ fontSize: 18, color: Colors.soft_secondary }}
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center"
+                    }}
                   >
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    <ThaiRegText
+                      style={{ fontSize: 18, color: Colors.soft_secondary }}
                     >
-                      {item.type}
-                    </ThaiMdText>
-                    {` ประเภท `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.subtype}
-                    </ThaiMdText>
-                    {` จำนวน `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.amount.amount}
-                    </ThaiMdText>
-                  </ThaiRegText>
+                      <ThaiMdText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.type}
+                      </ThaiMdText>
+                      {` ประเภท `}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.subtype}
+                      </ThaiMdText>
+                      {` จำนวน `}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.amount.amount}
+                      </ThaiMdText>
+                    </ThaiRegText>
+                  </View>
                 </View>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
-          height: "30%",
+          height: "40%",
           width: "100%",
           padding: 5,
           paddingBottom: getStatusBarHeight()
@@ -335,8 +356,8 @@ export default SellingReqBeforeSendingScreen = props => {
               return (
                 <View
                   style={{
-                    width: 150,
-                    height: 150,
+                    width: 200,
+                    height: 200,
                     borderRadius: 5,
                     paddingHorizontal: 2
                   }}
@@ -405,7 +426,8 @@ export default SellingReqBeforeSendingScreen = props => {
 const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    alignSelf: "center",
+    alignItems: "center"
   },
   userInfo: {
     alignItems: "center"

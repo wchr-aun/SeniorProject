@@ -36,6 +36,7 @@ export default SellTransactionCard = props => {
     <TouchableComponent onPress={props.onPress}>
       <View
         style={{
+          ...styles.shadow,
           width: wp("95%"),
           height: 100,
           backgroundColor: Colors.on_primary_dark.low_constrast,
@@ -142,5 +143,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderRadius: 5,
     marginVertical: 5
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3
   }
 });

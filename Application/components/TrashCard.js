@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Dimensions,
   TextInput,
   Text
@@ -33,13 +34,7 @@ export default TrashCard = props => {
         marginVertical: 5,
         overflow: "hidden",
         backgroundColor: Colors.secondary,
-        borderRadius: 10,
-        borderWidth: !props.cameraMode ? (props.editingMode ? 3 : null) : null,
-        borderColor: !props.cameraMode
-          ? props.editingMode
-            ? Colors.primary_bright_variant
-            : ""
-          : ""
+        borderRadius: 10
       }}
     >
       <View
@@ -182,12 +177,7 @@ export default TrashCard = props => {
             alignItems: "center",
             justifyContent: "space-around",
             borderRadius: 8,
-            backgroundColor: Colors.soft_secondary,
-            borderColor:
-              props.cameraMode || props.editingMode
-                ? Colors.hard_secondary
-                : "",
-            borderWidth: props.cameraMode || props.editingMode ? 3 : null
+            backgroundColor: Colors.soft_secondary
           }}
         >
           {/* + */}
@@ -196,25 +186,19 @@ export default TrashCard = props => {
               width: "100%",
               height: "30%",
               alignItems: "center",
-              justifyContent: "center",
-              borderBottomColor:
-                props.cameraMode || props.editingMode
-                  ? Colors.hard_secondary
-                  : "",
-              borderBottomWidth:
-                props.cameraMode || props.editingMode ? 0.5 : null
+              justifyContent: "center"
             }}
           >
             {!props.selected &&
             !props.editingMode &&
             !props.cameraMode ? null : (
-              <TouchableWithoutFeedback onPress={props.onIncrease}>
+              <TouchableOpacity onPress={props.onIncrease}>
                 <AntDesign
                   name="plus"
                   size={24}
                   color={Colors.hard_secondary}
                 />
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             )}
           </View>
           {/* number */}
@@ -223,7 +207,8 @@ export default TrashCard = props => {
               width: "100%",
               height: "30%",
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
+              ...styles.shadow
             }}
           >
             {props.editingMode ? (
@@ -247,24 +232,19 @@ export default TrashCard = props => {
               width: "100%",
               height: "30%",
               alignItems: "center",
-              justifyContent: "center",
-              borderTopColor:
-                props.cameraMode || props.editingMode
-                  ? Colors.hard_secondary
-                  : "",
-              borderTopWidth: props.cameraMode || props.editingMode ? 0.5 : null
+              justifyContent: "center"
             }}
           >
             {!props.selected &&
             !props.editingMode &&
             !props.cameraMode ? null : (
-              <TouchableWithoutFeedback onPress={props.onDecrease}>
+              <TouchableOpacity onPress={props.onDecrease}>
                 <AntDesign
                   name="minus"
                   size={24}
                   color={Colors.hard_secondary}
                 />
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             )}
           </View>
         </View>

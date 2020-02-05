@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  TextInput
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { Entypo, Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import ThaiMdText from "./ThaiMdText";
 import ThaiRegText from "./ThaiRegText";
 import Colors from "../constants/Colors";
@@ -56,41 +51,6 @@ const AmountOfTrash = props => {
     </View>
   );
 };
-
-// const AdjustAmountOfTrash = props => {
-//   return (
-//     <View style={{ ...props.style, flexDirection: "row" }}>
-//       <View style={styles.plusAndMinusCircle}>
-//         {!props.selected ? null : (
-//           <TouchableWithoutFeedback onPress={props.onDecrease}>
-//             <Entypo name="circle-with-minus" size={24} color={Colors.primary} />
-//           </TouchableWithoutFeedback>
-//         )}
-//       </View>
-//       <View style={{ width: 30 }}>
-//         {props.selected ? (
-//           <TextInput
-//             selectTextOnFocus={true}
-//             keyboardType="numeric"
-// onChangeText={props.onEdit}
-// value={(props.oldAmount + props.changeAmount <= 0
-//   ? 0
-//   : props.oldAmount + props.changeAmount
-// ).toString()}
-//             style={{ textAlign: "center" }}
-//           />
-//         ) : null}
-//       </View>
-//       <View style={styles.plusAndMinusCircle}>
-//         {!props.selected ? null : (
-//           <TouchableWithoutFeedback onPress={props.onIncrease}>
-//             <Entypo name="circle-with-plus" size={24} color={Colors.primary} />
-//           </TouchableWithoutFeedback>
-//         )}
-//       </View>
-//     </View>
-//   );
-// };
 
 export default TrashCardForSell = props => {
   return (
@@ -277,21 +237,16 @@ export default TrashCardForSell = props => {
                 height: "30%",
                 alignItems: "center",
                 justifyContent: "center"
-                // borderBottomColor: props.editingMode
-                //   ? Colors.hard_secondary
-                //   : "",
-                // borderBottomWidth: props.editingMode ? 0.5 : null,
-                // ...styles.shadow
               }}
             >
               {!props.selected ? null : (
-                <TouchableWithoutFeedback onPress={props.onIncrease}>
+                <TouchableOpacity onPress={props.onIncrease}>
                   <AntDesign
                     name="plus"
                     size={24}
                     color={Colors.hard_secondary}
                   />
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
               )}
             </View>
             {/* number */}
@@ -323,19 +278,17 @@ export default TrashCardForSell = props => {
                 height: "30%",
                 alignItems: "center",
                 justifyContent: "center",
-                // borderTopColor: props.editingMode ? Colors.hard_secondary : "",
-                // borderTopWidth: props.editingMode ? 0.5 : null,
                 ...styles.shadow
               }}
             >
               {!props.selected ? null : (
-                <TouchableWithoutFeedback onPress={props.onDecrease}>
+                <TouchableOpacity onPress={props.onDecrease}>
                   <AntDesign
                     name="minus"
                     size={24}
                     color={Colors.hard_secondary}
                   />
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
               )}
             </View>
           </View>

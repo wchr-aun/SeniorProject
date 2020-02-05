@@ -138,13 +138,13 @@ const BuyerChoice = props => {
               width: "100%",
               height: "100%",
               borderRadius: 8,
-              backgroundColor: Colors.secondary,
+              backgroundColor: Colors.soft_secondary,
               justifyContent: "space-around",
               alignItems: "center"
             }}
           >
             <ThaiRegText
-              style={{ color: Colors.on_primary_bright.high_constrast }}
+              style={{ color: Colors.on_primary_bright.low_constrast }}
             >{`ราคารวม`}</ThaiRegText>
             <ThaiBoldText
               style={{

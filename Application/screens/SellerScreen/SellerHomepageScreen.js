@@ -24,6 +24,7 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import * as transactionAction from "../../store/actions/transactionAction";
 
 import libary from "../../utils/libary";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default SellerHomepageScreen = props => {
   // Loading effect
@@ -105,14 +106,14 @@ export default SellerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
             />
-            <View
+            <LinearGradient
+              colors={Colors.linearGradientBright}
               style={{
                 width: "100%",
                 height: "60%",
                 alignSelf: "center",
                 alignItems: "center",
                 paddingVertical: 10,
-                backgroundColor: Colors.primary_bright,
                 paddingBottom: getStatusBarHeight(),
                 borderTopRightRadius: 15,
                 borderTopLeftRadius: 15
@@ -162,7 +163,7 @@ export default SellerHomepageScreen = props => {
                   );
                 }}
               />
-            </View>
+            </LinearGradient>
           </>
         )}
       </View>
