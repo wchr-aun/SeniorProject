@@ -26,26 +26,32 @@ import {
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default SellingReqBeforeSendingScreen = props => {
   const sellReq = props.navigation.getParam("sellReq");
-  console.log("sellReq");
-  console.log(sellReq);
 
   const dispatch = useDispatch();
+  const sellerName = useSelector(state => state.user.userProfile.name);
 
   const [imgs, setImgs] = useState([]);
   const [imgsName, setImgsName] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const takeImgHandler = async () => {
     const img = await libary.takeAnImg();
+    if (!img) {
+      return;
+    }
     let updatedImgs = [...imgs];
 
     // get img name
-    const imgName = img.uri.split("/").pop();
+    // const imgName = img.uri.split("/").pop();
+    const imgName = `${sellerName}${sellReq.buyerInfomation.buyerName}${sellReq.assignedTime[0]}${imgs.length}.jpg`; //sellername+buyername+datetime.getsec+length+1
     let updatedImgsName = [...imgsName];
     updatedImgs.push(img);
     updatedImgsName.push(imgName);
+    console.log("imgName");
+    console.log(imgName);
     setImgs(updatedImgs);
     setImgsName(updatedImgsName);
   };
@@ -57,8 +63,8 @@ export default SellingReqBeforeSendingScreen = props => {
 
   const acceptHandler = async () => {
     // upload img
-    for (let img of imgs) {
-      libary.uploadingImg(img);
+    for (let i = 0; i < imgs.length; i++) {
+      libary.uploadingImg(imgs[i], imgsName[i]);
     }
 
     await dispatch(sellerItemsAction.sellRequest(sellReq, imgsName));
@@ -72,7 +78,8 @@ export default SellingReqBeforeSendingScreen = props => {
   };
 
   return (
-    <View
+    <LinearGradient
+      colors={Colors.linearGradientDark}
       style={{
         ...styles.infoContainerCard,
         width: "100%",
@@ -80,13 +87,40 @@ export default SellingReqBeforeSendingScreen = props => {
       }}
     >
       <CustomStatusBar />
-      <View style={{ height: "20%", width: "100%" }}>
+      <View
+        style={{
+          height: "10%",
+          width: "100%",
+          flexDirection: "row",
+          backgroundColor: Colors.soft_primary_dark,
+          paddingVertical: 10,
+          justifyContent: "space-around",
+          alignItems: "center"
+        }}
+      >
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={Colors.button.cancel.btnBackground}
+          onPress={backHandler}
+          btnTitleColor={Colors.button.cancel.btnText}
+          btnTitleFontSize={10}
+        >
+          <Ionicons
+            name={"ios-arrow-back"}
+            color={Colors.button.cancel.btnText}
+            size={10}
+          />
+          <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
+        </CustomButton>
         <View
           style={{
-            width: "100%",
-            height: "50%",
-            backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 10,
+            width: "50%",
+            height: "100%",
             alignItems: "center",
             justifyContent: "center"
           }}
@@ -94,13 +128,37 @@ export default SellingReqBeforeSendingScreen = props => {
           <ThaiBoldText
             style={{
               color: Colors.on_primary_dark.low_constrast,
-              fontSize: 26
+              fontSize: 18
             }}
           >
-            รายละเอียดคำขอขายขยะ
+            รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <View style={{ width: "100%", height: "50%", paddingHorizontal: 10 }}>
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={
+            imgs.length > 0
+              ? Colors.button.submit_primary_bright.btnBackground
+              : Colors.button.submit_primary_bright.btnBackgroundDisabled
+          }
+          onPress={imgs.length > 0 ? acceptHandler : null}
+          btnTitleColor={
+            imgs.length > 0
+              ? Colors.button.submit_primary_bright.btnText
+              : Colors.button.submit_primary_bright.btnTextDisabled
+          }
+          btnTitleFontSize={10}
+        >
+          <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
+        </CustomButton>
+      </View>
+      <View style={{ height: "20%", width: "100%" }}>
+        <View style={{ width: "100%", height: "100%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -149,7 +207,7 @@ export default SellingReqBeforeSendingScreen = props => {
           backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
           padding: 5,
-          paddingHorizontal: 10
+          marginHorizontal: 5
         }}
       >
         <View style={{ width: "100%", height: "100%", paddingVertical: 5 }}>
@@ -206,7 +264,7 @@ export default SellingReqBeforeSendingScreen = props => {
           height: "15%",
           backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
-          paddingHorizontal: 10
+          marginHorizontal: 5
         }}
       >
         <FlatList
@@ -259,102 +317,88 @@ export default SellingReqBeforeSendingScreen = props => {
       </View>
       <View
         style={{
-          height: "25%",
+          height: "30%",
           width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-around"
-        }}
-      >
-        {/* image */}
-        <CustomButton
-          style={{
-            width: "40%",
-            height: "100%",
-            maxHeight: 35,
-            borderRadius: 5
-          }}
-          btnColor={Colors.button.cancel.btnBackground}
-          onPress={takeImgHandler}
-          btnTitleColor={Colors.button.cancel.btnText}
-          btnTitleFontSize={18}
-        >
-          <Ionicons
-            name={"md-camera"}
-            size={14}
-            color={Colors.button.cancel.btnText}
-          />
-          <ThaiMdText style={{ fontSize: 12 }}> ถ่ายภาพ</ThaiMdText>
-        </CustomButton>
-        <View style={{ width: "50%", height: "100%" }}>
-          <ThaiBoldText
-            style={{
-              fontSize: 10,
-              color: Colors.on_primary_dark.high_constrast
-            }}
-          >{`จำนวนภาพตอนนี้ ${imgs.length}`}</ThaiBoldText>
-        </View>
-      </View>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "15%",
           padding: 5,
           paddingBottom: getStatusBarHeight()
         }}
       >
+        {/* image */}
+        <View style={{ width: "100%", height: "60%" }}>
+          <FlatList
+            data={imgs}
+            keyExtractor={item => item.uri}
+            style={{ flex: 1 }}
+            horizontal={true}
+            renderItem={({ item }) => {
+              console.log(item);
+              return (
+                <View
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 5,
+                    paddingHorizontal: 2
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri: item.uri }}
+                  />
+                </View>
+              );
+            }}
+          />
+        </View>
+        {/* Btn + number of pic */}
         <View
           style={{
             width: "100%",
-            height: "100%",
+            height: "40%",
             flexDirection: "row",
-            justifyContent: "space-around",
+            justifyContent: "center",
             alignItems: "center"
           }}
         >
           <CustomButton
             style={{
-              width: "40%",
+              width: "50%",
+              maxWidth: 100,
               height: "100%",
-              maxHeight: 50,
-              borderRadius: 5
+              maxHeight: 35,
+              borderRadius: 5,
+              marginRight: 10
             }}
             btnColor={Colors.button.cancel.btnBackground}
-            onPress={backHandler}
+            onPress={takeImgHandler}
             btnTitleColor={Colors.button.cancel.btnText}
             btnTitleFontSize={18}
           >
             <Ionicons
-              name={"ios-arrow-back"}
+              name={"md-camera"}
               size={14}
               color={Colors.button.cancel.btnText}
             />
-            <ThaiMdText style={{ fontSize: 18 }}> ย้อนกลับ</ThaiMdText>
+            <ThaiMdText style={{ fontSize: 12 }}> ถ่ายภาพ</ThaiMdText>
           </CustomButton>
-
-          <CustomButton
+          <View
             style={{
-              width: "40%",
+              width: "50%",
               height: "100%",
-              maxHeight: 50,
-              borderRadius: 5
+              maxHeight: 20,
+              alignItems: "center"
             }}
-            btnColor={Colors.button.submit_primary_bright.btnBackground}
-            onPress={acceptHandler}
-            btnTitleColor={Colors.button.submit_primary_bright.btnText}
-            btnTitleFontSize={18}
           >
-            <MaterialIcons
-              name={"cancel"}
-              color={Colors.button.submit_primary_bright.btnText}
-              size={14}
-            />
-            <ThaiMdText style={{ fontSize: 18 }}> ยืนยันการขาย</ThaiMdText>
-          </CustomButton>
+            <ThaiBoldText
+              style={{
+                fontSize: 12,
+                color: Colors.on_primary_dark.high_constrast
+              }}
+            >{`จำนวนภาพ ${imgs.length}`}</ThaiBoldText>
+          </View>
         </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 

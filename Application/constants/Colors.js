@@ -26,10 +26,6 @@ export default {
       btnBackground: "#f2f2f2",
       btnText: "#e6e6e6"
     },
-    // cancel: {
-    //   btnBackground: "#ffffff",
-    //   btnText: "#272727"
-    // },
     cancel: {
       btnBackground: "#e3e3e3",
       btnText: "#272727"
@@ -44,24 +40,34 @@ export default {
     },
     submit_primary_dark: {
       btnBackground: "#272727",
-      btnText: "#f0f0f0"
+      btnBackgroundDisabled: "#424242",
+      btnText: "#f0f0f0",
+      btnTextDisabled: "#636363"
     },
     submit_soft_primary_dark: {
       btnBackground: "#414141",
-      btnText: "#f0f0f0"
+      btnText: "#f0f0f0",
+      btnBackgroundDisabled: "#525252",
+      btnTextDisabled: "#5e5e5e"
     },
     submit_primary_bright: {
       btnBackground: "#149c6a",
-      btnText: "#ffffff"
+      btnText: "#ffffff",
+      btnBackgroundDisabled: "#083d2a",
+      btnTextDisabled: "#05291c"
     },
     danger_operation: {
       btnBackground: "#ff386d",
-      btnText: "#ffffff"
+      btnText: "#ffffff",
+      btnBackgroundDisabled: "#781a33",
+      btnTextDisabled: "#470e1d"
     }
   },
   error: "#8c0b04",
   linearGradient: ["#149c6a", "#0084ff"],
   linearGradientB: ["#2abfbf", "#3797f0"],
+  linearGradientDark: ["#474747", "#191919"],
+  linearGradientBright: ["#ffffff", "#d4d4d4"],
   // txStatus
   txStatus: {
     zero: "#149c6a",

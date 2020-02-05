@@ -105,8 +105,14 @@ export default TrashCardForSell = props => {
         marginVertical: 5,
         overflow: "hidden",
         backgroundColor: Colors.secondary,
-        borderWidth: props.selected ? 3 : null,
-        borderColor: props.selected ? Colors.primary_bright : ""
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: props.selected ? 5 : 1
+        },
+        shadowOpacity: props.selected ? 0.34 : 0.18,
+        shadowRadius: props.selected ? 6.27 : 1.0,
+        elevation: props.selected ? 10 : 1
       }}
     >
       <View
@@ -363,6 +369,17 @@ const styles = StyleSheet.create({
   trashCard: {
     flexDirection: "row",
     borderRadius: 10
+  },
+  selectedTrashCard: {
+    shadowColor: Colors.primary_bright,
+    shadowOffset: {
+      width: 0,
+      height: 7
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+
+    elevation: 14
   },
   descriptionRow: {
     flexDirection: "row",

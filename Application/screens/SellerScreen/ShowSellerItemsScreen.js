@@ -293,7 +293,7 @@ const ShowAllUserTrashScreen = props => {
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <CustomStatusBar />
       <LinearGradient
-        colors={Colors.linearGradientB}
+        colors={Colors.linearGradientBright}
         style={{
           ...styles.screen,
           width: wp("100%"),
@@ -343,6 +343,7 @@ const ShowAllUserTrashScreen = props => {
                 }}
               >
                 <CustomButton
+                  style={{ borderRadius: 5 }}
                   btnColor={Colors.button.submit_primary_dark.btnBackground}
                   btnTitleColor={Colors.button.submit_primary_dark.btnText}
                   onPress={() => setModalVisible(true)}
@@ -377,6 +378,7 @@ const ShowAllUserTrashScreen = props => {
             renderItem={({ item }) => {
               return (
                 <TrashCard
+                  style={{ ...styles.eachSellerItemCard }}
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
                   type={item.type}
                   subtype={item.subtype}
@@ -508,7 +510,14 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  eachSellerItemCard: {
+    shadowColor: "black",
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 1
+  }
 });
 
 export default ShowAllUserTrashScreen;

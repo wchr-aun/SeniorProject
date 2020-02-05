@@ -27,7 +27,7 @@ export default TrashCard = props => {
       style={{
         ...styles.trashCard,
         ...props.style,
-        width: wp("96%"),
+        width: wp("94%"),
         height: hp("20%"),
         alignSelf: "center",
         marginVertical: 5,
@@ -176,6 +176,7 @@ export default TrashCard = props => {
       >
         <View
           style={{
+            ...styles.shadow,
             width: "100%",
             height: "100%",
             alignItems: "center",
@@ -281,5 +282,16 @@ const styles = StyleSheet.create({
   },
   trashDisposal: {
     fontSize: 12
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2
   }
 });

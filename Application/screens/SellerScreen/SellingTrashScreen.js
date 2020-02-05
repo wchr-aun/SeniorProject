@@ -162,7 +162,7 @@ export default SellingTrashScreen = props => {
     <View style={{ flex: 1 }}>
       <CustomStatusBar />
       <LinearGradient
-        colors={Colors.linearGradient}
+        colors={Colors.linearGradientBright}
         style={{
           ...styles.screen,
           width: wp("100%"),
@@ -202,7 +202,6 @@ export default SellingTrashScreen = props => {
               ...styles.allTrashContainer,
               width: "100%",
               height: "70%",
-              padding: 10,
               alignItems: "center"
             }}
           >
@@ -396,8 +395,7 @@ const styles = StyleSheet.create({
   eachTrashCard: {
     marginBottom: 5,
     width: "100%",
-    height: 100,
-    borderRadius: 10
+    height: 100
   },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });

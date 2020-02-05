@@ -109,7 +109,7 @@ export const sellRequest = (sellReq, imgsName) => {
       txType: sellReq.sellMode,
       assignedTime: sellReq.assignedTime,
       unavailableTypes: sellReq.buyerInfomation.unavailableTypes,
-      imgsName
+      img: imgsName
     };
     try {
       if (sellRequest["saleList"]["length"] === 0) {

@@ -18,7 +18,9 @@ const initialState = {
   sellerItemsFlatListFormat: [],
   sellerItemsCamera: [],
   sellerItemsCameraObj: {},
-  buyerList: []
+  buyerList: [],
+  buyerInfomation: "",
+  assignedTime: ""
 };
 
 export default function(state = initialState, action) {
