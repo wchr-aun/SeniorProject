@@ -34,6 +34,7 @@ import AppVariableSetting from "../constants/AppVariableSetting";
 import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransactionDetailScreen";
 import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQuickTransactionDetailScreen";
+import SellingReqBeforeSendingScreen from "../screens/SellerScreen/SellingReqBeforeSendingScreen";
 
 // ************************************* Seller ***********************************
 // for UserHomepageScreen
@@ -65,7 +66,8 @@ const ShowSellerItemsNavigator = createStackNavigator(
       screen: SellingTrashScreen,
       navigationOptions: { headerTitle: "ขายขยะ" }
     },
-    chooseBuyerForSellScreen: ChooseBuyerScreen
+    chooseBuyerForSellScreen: ChooseBuyerScreen,
+    sellReqBeforeSending: SellingReqBeforeSendingScreen
   },
   {
     headerMode: "none",

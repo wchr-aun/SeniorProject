@@ -97,63 +97,19 @@ export const getBuyerList = queryData => {
   };
 };
 
-export const sellRequest = (
-  sellAddr,
-  sellerItems,
-  buyerName,
-  buyerPriceInfo,
-  unavailableTypes,
-  assignedTime,
-  sellMode
-) => {
+export const sellRequest = (sellReq, imgsName) => {
   return async dispatch => {
-    // sell only sellerItem that buyer have
-    let saleList = {};
-    saleList["length"] = 0;
-    for (let type in sellerItems) {
-      if (type != "length" && type != "_count" && type != "_selected") {
-        for (let subtype in sellerItems[type]) {
-          if (unavailableTypes[subtype] != undefined) break;
-          // chooseBuyer sell
-          if (
-            sellMode === 1 &&
-            !sellerItems._selected[type][subtype] == false
-          ) {
-            if (saleList[type] == undefined) {
-              saleList[type] = {};
-            }
-            saleList["length"] += 1;
-            saleList[type][subtype] = {
-              amount: sellerItems[type][subtype]
-            };
-          } else if (
-            !(
-              buyerPriceInfo[type] == undefined ||
-              buyerPriceInfo[type][subtype] == undefined ||
-              sellerItems._selected[type][subtype] == false
-            )
-          ) {
-            if (saleList[type] == undefined) {
-              saleList[type] = {};
-            }
-            saleList["length"] += 1;
-            saleList[type][subtype] = {
-              amount: sellerItems[type][subtype],
-              price: buyerPriceInfo[type][subtype]
-            };
-          }
-        }
-      }
-    }
-
+    console.log("sellReq");
+    console.log(sellReq);
     // do async task
     let sellRequest = {
-      saleList,
-      addr: sellAddr,
-      buyer: sellMode === 0 ? buyerName : "",
-      txType: sellMode,
-      assignedTime: assignedTime,
-      unavailableTypes
+      saleList: sellReq.saleList,
+      addr: sellReq.sellerAddr,
+      buyer: sellReq.sellMode === 0 ? sellReq.buyerInfomation.buyerName : "",
+      txType: sellReq.sellMode,
+      assignedTime: sellReq.assignedTime,
+      unavailableTypes: sellReq.buyerInfomation.unavailableTypes,
+      imgsName
     };
     try {
       if (sellRequest["saleList"]["length"] === 0) {

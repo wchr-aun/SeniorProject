@@ -219,15 +219,20 @@ export default ChooseBuyerScreen = props => {
   };
 
   const [sellMode, setSellMode] = useState(0);
-  const [buyerName, setBuyerName] = useState("");
-  const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
-  const [unavailableTypes, setUnavailableTypes] = useState("");
+  const [buyerInfomation, setBuyerInfomation] = useState("");
+  // const [buyerName, setBuyerName] = useState("");
+  // const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
+  // const [unavailableTypes, setUnavailableTypes] = useState("");
 
   const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
+    // this should set to redux ---
     setSellMode(0);
-    setBuyerName(buyerName);
-    setBuyerPriceInfo(buyerPriceInfo);
-    setUnavailableTypes(unavailableTypes);
+    setBuyerInfomation({
+      buyerName,
+      buyerPriceInfo,
+      unavailableTypes
+    });
+    // ---
     setDatapickerShow(true);
   };
 
@@ -238,42 +243,76 @@ export default ChooseBuyerScreen = props => {
 
   const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
   const [selectedTimes, setSelectedTimes] = useState([]);
-  handleDatePicked = date => {
+
+  const handleDatePicked = date => {
     setDate(date);
     hideDateTimePicker();
     setModalVisible(true);
   };
 
-  const submitSellRequest = useCallback(async () => {
+  const settingSellRequest = useCallback(async () => {
     // ---------> FINAL: send to redux
     try {
-      await dispatch(
-        sellerItemsAction.sellRequest(
-          sellerAddr,
-          sellerItemsForSell,
-          buyerName,
-          buyerPriceInfo,
-          unavailableTypes,
-          selectedTimes,
-          sellMode,
-          buyerListRedux.unavailableTypes
-        )
-      );
+      // sell only sellerItem that buyer have
+      let saleList = {};
+      saleList["length"] = 0;
+      for (let type in sellerItemsForSell) {
+        if (type != "length" && type != "_count" && type != "_selected") {
+          for (let subtype in sellerItemsForSell[type]) {
+            if (buyerInfomation.unavailableTypes[subtype] != undefined) break;
+            // chooseBuyer sell
+            if (
+              sellMode === 1 &&
+              !sellerItemsForSell._selected[type][subtype] == false
+            ) {
+              if (saleList[type] == undefined) {
+                saleList[type] = {};
+              }
+              saleList["length"] += 1;
+              saleList[type][subtype] = {
+                amount: sellerItemsForSell[type][subtype]
+              };
+            } else if (
+              !(
+                buyerInfomation.buyerPriceInfo[type] == undefined ||
+                buyerInfomation.buyerPriceInfo[type][subtype] == undefined ||
+                sellerItemsForSell._selected[type][subtype] == false
+              )
+            ) {
+              if (saleList[type] == undefined) {
+                saleList[type] = {};
+              }
+              saleList["length"] += 1;
+              saleList[type][subtype] = {
+                amount: sellerItemsForSell[type][subtype],
+                price: buyerInfomation.buyerPriceInfo[type][subtype]
+              };
+            }
+          }
+        }
+      }
 
-      await dispatch(transactionAction.fetchTransaction("seller"));
-      await dispatch(sellerItemsAction.fetchSellerItems());
-      dispatch(navigationBehaviorAction.finishOperation());
-      props.navigation.navigate("SellTransaction");
+      props.navigation.navigate({
+        routeName: "sellReqBeforeSending",
+        params: {
+          sellReq: {
+            buyerInfomation,
+            sellMode,
+            assignedTime: selectedTimes,
+            sellerAddr,
+            saleList,
+            sellerAddr
+          }
+        }
+      });
     } catch (err) {
-      Alert.alert("ไม่สามารถขายขยะได้", err.message, [{ text: "OK" }]);
+      Alert.alert("มีข้อผิดพลาดเกิดขึ้น", err.message, [{ text: "OK" }]);
     }
   }, [
     dispatch,
     sellerAddr,
     sellerItemsForSell,
-    buyerName,
-    buyerPriceInfo,
-    unavailableTypes,
+    buyerInfomation,
     selectedTimes
   ]);
 
@@ -283,15 +322,15 @@ export default ChooseBuyerScreen = props => {
       sellerAddr &&
       sellerItemsForSell.length &&
       selectedTimes.length &&
-      buyerName &&
-      buyerPriceInfo
+      buyerInfomation &&
+      sellMode === 0
     ) {
       console.log("choose buyer submit");
-      submitSellRequest();
+      settingSellRequest();
     } else if (sellMode === 1) {
       if (sellerAddr && sellerItemsForSell.length && selectedTimes.length) {
         console.log("quick sell submit");
-        submitSellRequest();
+        settingSellRequest();
       }
     }
   }, [selectedTimes]);
@@ -304,7 +343,6 @@ export default ChooseBuyerScreen = props => {
         modalVisible={modalVisible}
         date={date}
         setSelectedTimes={setSelectedTimes}
-        submitSellRequest={submitSellRequest}
       />
     );
   }

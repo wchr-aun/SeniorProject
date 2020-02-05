@@ -1,10 +1,14 @@
 {
   "expo": {
-    "name": "senior-project",
-    "slug": "senior-project",
+    "name": "Waste Separation Using Image Processing and Trading System to Solve Environmental Problems Occurring from Waste Pollution",
+    "slug": "waste-separation-using-image-processing-and-trading-system-to-solve-environmental-problems-occurring-from-waste-pollution",
     "privacy": "public",
     "sdkVersion": "35.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,9 +20,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": ""
   }
 }

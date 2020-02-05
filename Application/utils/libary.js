@@ -1,6 +1,12 @@
 import firebaseFunctions from "./firebaseFunctions";
-import { verifyLocationPermissions } from "./permissions";
+import {
+  verifyLocationPermissions,
+  verifyCameraPermissions
+} from "./permissions";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import firebase from "firebase";
+const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 
 import {
   getCurrentPositionAsync,
@@ -9,9 +15,61 @@ import {
   Accuracy
 } from "expo-location";
 import Colors from "../constants/Colors";
+import firebaseUtil from "../firebase";
 
 const toDate = dateInSeccond => {
   return new firebase.firestore.Timestamp(dateInSeccond, 0);
+};
+
+const takeImgForGetprediction = async () => {
+  const hasPermission = await verifyCameraPermissions();
+  if (!hasPermission) {
+    return;
+  }
+  const image = await ImagePicker.launchCameraAsync({
+    aspect: [16, 9],
+    quality: 0.5,
+    base64: true
+  });
+
+  let resized =
+    image.height > image.width
+      ? { resize: { width: 600 } }
+      : { resize: { height: 600 } };
+  const resizedImage = await ImageManipulator.manipulateAsync(
+    image.uri,
+    [resized],
+    { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+  );
+  return resizedImage;
+};
+
+const takeAnImg = async () => {
+  const hasPermission = await verifyCameraPermissions();
+  if (!hasPermission) {
+    return;
+  }
+  const image = await ImagePicker.launchCameraAsync({
+    aspect: [16, 9],
+    quality: 0.5
+  });
+  return image;
+};
+
+const uploadingImg = async image => {
+  let uri = image.uri;
+
+  const fileName = uri.split("/").pop();
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  console.log("before sending an img via firebaseStorage");
+  var ref = firebaseUtil
+    .storage()
+    .ref()
+    .child(SELLERITEMS_UPLOAD_FILEDIR + fileName);
+  console.log("after sending an img via firebaseStorage");
+  return ref.put(blob);
 };
 
 const formatDate = date => {
@@ -226,5 +284,8 @@ export default {
   getPostalcodeAddressFromCord,
   getDisableStatusForBuyer,
   getDisableStatusForSeller,
-  toDate
+  toDate,
+  takeImgForGetprediction,
+  uploadingImg,
+  takeAnImg
 };

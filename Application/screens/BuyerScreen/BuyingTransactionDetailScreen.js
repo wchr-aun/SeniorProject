@@ -157,9 +157,14 @@ export default BuyingTransactionDetailScreen = props => {
           >
             {`สถานะ `}
             <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              style={{
+                fontSize: 14,
+                // color: libary.getColorTxStatus(transactionItem.detail.txStatus)
+                color: libary.getColorTxStatus(3)
+              }}
             >
-              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
+              {/* {libary.getReadableTxStatus(transactionItem.detail.txStatus)} */}
+              {libary.getReadableTxStatus(3)}
             </ThaiMdText>
           </ThaiRegText>
           <ThaiRegText
@@ -393,14 +398,14 @@ export default BuyingTransactionDetailScreen = props => {
               maxHeight: 50,
               borderRadius: 5
             }}
-            btnColor={Colors.button.submit_primary_bright.btnBackground}
+            btnColor={Colors.button.disabled.btnBackground}
             onPress={acceptHandler}
-            btnTitleColor={Colors.button.submit_primary_bright.btnText}
+            btnTitleColor={Colors.button.disabled.btnText}
             btnTitleFontSize={18}
           >
             <MaterialIcons
               name={"cancel"}
-              color={Colors.button.submit_primary_bright.btnText}
+              color={Colors.button.disabled.btnText}
               size={14}
             />
             <ThaiMdText style={{ fontSize: 18 }}> ยอมรับ</ThaiMdText>

@@ -3,10 +3,11 @@ import * as FileSystem from "expo-file-system";
 export const SET_PLACES = "SET_PLACES";
 export const GET_PREDICTION = "GET_PREDICTION";
 export const ADD_SELLERITEMS_BYCAMERA = "ADD_SELLERITEMS_BYCAMERA";
-
 export const CONFIRM_SELLERITEMSCAMERA = "CONFIRM_SELLERITEMSCAMERA";
 
+// Image constant
 const PERDICT_LINK = "http://35.197.147.180:5000/predict";
+const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 
 export const confirmSellerItemsCamera = sellerItemsCameraObj => {
   return async dispatch => {
@@ -17,9 +18,27 @@ export const confirmSellerItemsCamera = sellerItemsCameraObj => {
   };
 };
 
+// export const uploadingImg = image => {
+//   return async dispatch => {
+//     console.log("uploadingImg action!");
+//     console.log(image.width + " " + image.height);
+
+//     const fileName = image.uri.split("/").pop();
+
+//     const response = await fetch(uri);
+//     const blob = await response.blob();
+
+//     var ref = firebase
+//       .storage()
+//       .ref()
+//       .child(SELLERITEMS_UPLOAD_FILEDIR + fileName);
+//     return ref.put(blob);
+//   };
+// };
+
 export const getPrediction = (image, wasteTypesDB) => {
   return async dispatch => {
-    console.log("getPrediction is called");
+    console.log("getPrediction action!");
     console.log(image.width + " " + image.height);
 
     // Move to new directory
@@ -52,59 +71,59 @@ export const getPrediction = (image, wasteTypesDB) => {
     console.log("formData, typeof image.base64");
     console.log(typeof image.base64);
 
-    // //tmp
-    dispatch({
-      type: GET_PREDICTION,
-      results: [
-        {
-          class: "PETE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        },
-        {
-          class: "PETE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        },
-        {
-          class: "HDPE",
-          score: "0.9232149",
-          xmax: "410",
-          xmin: "168",
-          ymax: "770",
-          ymin: "32"
-        }
-      ],
-      wasteTypesDB
-    });
+    // // //tmp
+    // dispatch({
+    //   type: GET_PREDICTION,
+    //   results: [
+    //     {
+    //       class: "PETE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     },
+    //     {
+    //       class: "PETE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     },
+    //     {
+    //       class: "HDPE",
+    //       score: "0.9232149",
+    //       xmax: "410",
+    //       xmin: "168",
+    //       ymax: "770",
+    //       ymin: "32"
+    //     }
+    //   ],
+    //   wasteTypesDB
+    // });
 
-    // // send an image
-    // fetch(PERDICT_LINK, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({ photo: image.base64 })
-    // })
-    //   .then(res => {
-    //     return res.json();
-    //   })
-    //   .then(res => {
-    //     console.log("getpredict ! res.results");
-    //     console.log(res.results);
-    //     dispatch({
-    //       type: GET_PREDICTION,
-    //       results: res.results,
-    //       wasteTypesDB
-    //     });
-    //     return res;
-    //   })
-    //   .catch(error => console.log(error));
+    // send an image
+    fetch(PERDICT_LINK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ photo: image.base64 })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(res => {
+        console.log("getpredict ! res.results");
+        console.log(res.results);
+        dispatch({
+          type: GET_PREDICTION,
+          results: res.results,
+          wasteTypesDB
+        });
+        return res;
+      })
+      .catch(error => console.log(error));
   };
 };

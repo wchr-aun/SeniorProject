@@ -3,19 +3,16 @@ import { StyleSheet, FlatList, View, Text, Button } from "react-native";
 import ImagePickerCmp from "../../components/ImagePicker";
 import { useDispatch, useSelector } from "react-redux";
 import * as imgActions from "../../store/actions/imageAction";
-import * as ImagePicker from "expo-image-picker";
-import * as ImageManipulator from "expo-image-manipulator";
-import { verifyCameraPermissions } from "../../utils/permissions";
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import CustomButton from "../../components/UI/CustomButton";
+import libary from "../../utils/libary";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
@@ -95,30 +92,22 @@ export default OptionTrashCheck = props => {
   );
 
   const [pickedImage, setPickedImage] = useState();
-  const takeImageHandler = async () => {
-    const hasPermission = await verifyCameraPermissions();
-    if (!hasPermission) {
-      return;
-    }
-    const image = await ImagePicker.launchCameraAsync({
-      // allowsEditing: true,
-      aspect: [16, 9],
-      quality: 0.5,
-      base64: true
-    });
 
-    let resized =
-      image.height > image.width
-        ? { resize: { width: 600 } }
-        : { resize: { height: 600 } };
-    const resizedImage = await ImageManipulator.manipulateAsync(
-      image.uri,
-      [resized],
-      { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-    );
-    setPickedImage(resizedImage);
-    dispatch(imgActions.getPrediction(resizedImage, wasteTypesDB));
+  // take picture for get prediction
+  const takeImageHandler = async () => {
+    // get img
+    const resultedImg = await libary.takeImgForGetprediction();
+
+    // set react
+    setPickedImage(resultedImg);
+    dispatch(imgActions.getPrediction(resultedImg, wasteTypesDB));
   };
+
+  // const takeImageHandler = async () => {
+  //   const resultedImg = await libary.uploadingImg();
+  //   console.log("resultedImg");
+  //   console.log(resultedImg);
+  // };
 
   const confirmHandler = () => {
     dispatch(imgActions.confirmSellerItemsCamera(sellerItemsCameraObj));
