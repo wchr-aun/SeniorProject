@@ -143,7 +143,7 @@ export default TrashCardForSell = props => {
           btnTitleColor={
             props.selected
               ? Colors.button.submit_primary_bright.btnText
-              : Colors.button.submit_primary_dark.btnText
+              : Colors.primary_dark
           }
           btnTitleFontSize={12}
           disable={false}
@@ -155,7 +155,7 @@ export default TrashCardForSell = props => {
             color={
               props.selected
                 ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.submit_primary_dark.btnText
+                : Colors.primary_dark
             }
           />
         </CustomButton>
@@ -247,27 +247,6 @@ export default TrashCardForSell = props => {
         </View>
       </View>
 
-      {/* <View style={{ width: "50%", height: "100%" }}>
-            <AmountOfTrash
-              style={{ width: "100%", height: "50%" }}
-              changeAmount={props.changeAmount}
-              oldAmount={props.oldAmount}
-              selected={props.selected}
-            />
-            <AdjustAmountOfTrash
-              style={{ alignSelf: "center", alignItems: "center" }}
-              subtype={props.subtype}
-              majortype={props.majortype}
-              changeAmount={props.changeAmount}
-              oldAmount={props.oldAmount}
-              onIncrease={props.onIncrease}
-              onDecrease={props.onDecrease}
-              onEdit={props.onEdit}
-              UI_diff={props.UI_diff}
-              selected={props.selected}
-            />
-          </View> */}
-
       {/* Adjust Component */}
       {!props.selected ? null : (
         <View
@@ -288,8 +267,7 @@ export default TrashCardForSell = props => {
               justifyContent: "space-around",
               borderRadius: 8,
               backgroundColor: Colors.soft_secondary,
-              borderColor: Colors.hard_secondary,
-              borderWidth: 3
+              ...styles.shadow
             }}
           >
             {/* + */}
@@ -298,11 +276,12 @@ export default TrashCardForSell = props => {
                 width: "100%",
                 height: "30%",
                 alignItems: "center",
-                justifyContent: "center",
-                borderBottomColor: props.editingMode
-                  ? Colors.hard_secondary
-                  : "",
-                borderBottomWidth: props.editingMode ? 0.5 : null
+                justifyContent: "center"
+                // borderBottomColor: props.editingMode
+                //   ? Colors.hard_secondary
+                //   : "",
+                // borderBottomWidth: props.editingMode ? 0.5 : null,
+                // ...styles.shadow
               }}
             >
               {!props.selected ? null : (
@@ -344,8 +323,9 @@ export default TrashCardForSell = props => {
                 height: "30%",
                 alignItems: "center",
                 justifyContent: "center",
-                borderTopColor: props.editingMode ? Colors.hard_secondary : "",
-                borderTopWidth: props.editingMode ? 0.5 : null
+                // borderTopColor: props.editingMode ? Colors.hard_secondary : "",
+                // borderTopWidth: props.editingMode ? 0.5 : null,
+                ...styles.shadow
               }}
             >
               {!props.selected ? null : (
@@ -380,6 +360,17 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
 
     elevation: 14
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2
   },
   descriptionRow: {
     flexDirection: "row",

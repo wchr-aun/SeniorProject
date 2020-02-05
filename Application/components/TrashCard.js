@@ -226,14 +226,20 @@ export default TrashCard = props => {
               alignItems: "center"
             }}
           >
-            <TextInput
-              style={{ textAlign: "center" }}
-              selectTextOnFocus={true}
-              keyboardType="numeric"
-              onChangeText={props.onEdit}
-              value={props.editingValue}
-              textAlign={"center"}
-            />
+            {props.editingMode ? (
+              <TextInput
+                style={{ textAlign: "center" }}
+                selectTextOnFocus={true}
+                keyboardType="numeric"
+                onChangeText={props.onEdit}
+                value={props.editingValue}
+                textAlign={"center"}
+              />
+            ) : (
+              <Text style={{ textAlign: "center" }} textAlign={"center"}>
+                {props.editingValue}
+              </Text>
+            )}
           </View>
           {/* - */}
           <View

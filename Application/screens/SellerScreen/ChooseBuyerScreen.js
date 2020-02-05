@@ -39,7 +39,8 @@ const BuyerChoice = props => {
         borderRadius: 10,
         margin: wp("3.75%"),
         justifyContent: "center",
-        padding: 10
+        padding: 10,
+        ...styles.shadow
       }}
       onPress={props.onSelected}
     >
@@ -133,16 +134,17 @@ const BuyerChoice = props => {
         >
           <View
             style={{
+              ...styles.shadow,
               width: "100%",
               height: "100%",
               borderRadius: 8,
-              backgroundColor: Colors.soft_primary_dark,
+              backgroundColor: Colors.secondary,
               justifyContent: "space-around",
               alignItems: "center"
             }}
           >
             <ThaiRegText
-              style={{ color: Colors.on_primary_dark.low_constrast }}
+              style={{ color: Colors.on_primary_bright.high_constrast }}
             >{`ราคารวม`}</ThaiRegText>
             <ThaiBoldText
               style={{
@@ -358,7 +360,7 @@ export default ChooseBuyerScreen = props => {
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
       <LinearGradient
-        colors={Colors.linearGradient}
+        colors={Colors.linearGradientBright}
         style={{
           width: wp("100%"),
           height: hp("100%"),
@@ -490,5 +492,16 @@ export default ChooseBuyerScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3
   }
 });
