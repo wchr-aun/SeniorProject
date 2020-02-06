@@ -229,67 +229,75 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "20%",
-          backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
-          padding: 5,
           paddingHorizontal: 10
         }}
       >
-        <FlatList
-          data={transactionItem.detail.assignedTime}
-          keyExtractor={item =>
-            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
-          }
-          style={{ flex: 1 }}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ height: 25, alignSelf: "center" }}>
-                <ThaiRegText
-                  style={{
-                    fontSize: 18,
-                    color:
-                      transactionItem.detail.chosenTime != undefined
-                        ? transactionItem.detail.chosenTime.seconds ===
-                          item.seconds
-                          ? Colors.soft_primary_bright
-                          : Colors.soft_secondary
-                        : Colors.soft_secondary
-                  }}
-                >
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color:
-                        transactionItem.detail.chosenTime != undefined
-                          ? transactionItem.detail.chosenTime.seconds ===
-                            item.seconds
-                            ? Colors.soft_primary_bright
-                            : Colors.soft_secondary
-                          : Colors.soft_secondary
-                    }}
-                  >
-                    {libary.formatDate(item.toDate())}
-                  </ThaiMdText>
-                  {` `}
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color:
-                        transactionItem.detail.chosenTime != undefined
-                          ? transactionItem.detail.chosenTime.seconds ===
-                            item.seconds
-                            ? Colors.soft_primary_bright
-                            : Colors.soft_secondary
-                          : Colors.soft_secondary
-                    }}
-                  >
-                    {libary.formatTime(item.toDate())}
-                  </ThaiMdText>
-                </ThaiRegText>
-              </View>
-            );
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 5
           }}
-        />
+        >
+          <FlatList
+            data={transactionItem.detail.assignedTime}
+            keyExtractor={item =>
+              libary.formatDate(item.toDate()) +
+              libary.formatTime(item.toDate())
+            }
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
+                <View style={{ height: 25, alignSelf: "center" }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 18,
+                      color:
+                        transactionItem.detail.chosenTime != undefined
+                          ? transactionItem.detail.chosenTime.seconds ===
+                            item.seconds
+                            ? Colors.soft_primary_bright
+                            : Colors.soft_secondary
+                          : Colors.soft_secondary
+                    }}
+                  >
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color:
+                          transactionItem.detail.chosenTime != undefined
+                            ? transactionItem.detail.chosenTime.seconds ===
+                              item.seconds
+                              ? Colors.soft_primary_bright
+                              : Colors.soft_secondary
+                            : Colors.soft_secondary
+                      }}
+                    >
+                      {libary.formatDate(item.toDate())}
+                    </ThaiMdText>
+                    {` `}
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color:
+                          transactionItem.detail.chosenTime != undefined
+                            ? transactionItem.detail.chosenTime.seconds ===
+                              item.seconds
+                              ? Colors.soft_primary_bright
+                              : Colors.soft_secondary
+                            : Colors.soft_secondary
+                      }}
+                    >
+                      {libary.formatTime(item.toDate())}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              );
+            }}
+          />
+        </View>
       </View>
       <View style={{ width: "100%", height: "5%", paddingHorizontal: 10 }}>
         <ThaiMdText
@@ -302,58 +310,66 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "20%",
-          backgroundColor: Colors.soft_primary_dark,
           borderRadius: 5,
           paddingHorizontal: 10
         }}
       >
-        <FlatList
-          data={saleList}
-          keyExtractor={item => item.subtype}
-          style={{ flex: 1 }}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  height: 30,
-                  padding: 3,
-                  alignSelf: "center",
-                  flexDirection: "row"
-                }}
-              >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 5
+          }}
+        >
+          <FlatList
+            data={saleList}
+            keyExtractor={item => item.subtype}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
                 <View
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center"
+                    height: 30,
+                    padding: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
                   }}
                 >
-                  <ThaiRegText
-                    style={{ fontSize: 18, color: Colors.soft_secondary }}
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center"
+                    }}
                   >
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
+                    <ThaiRegText
+                      style={{ fontSize: 18, color: Colors.soft_secondary }}
                     >
-                      {item.type}
-                    </ThaiMdText>
-                    {` ประเภท `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.subtype}
-                    </ThaiMdText>
-                    {` จำนวน `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.amount.amount}
-                    </ThaiMdText>
-                  </ThaiRegText>
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.type}
+                      </ThaiMdText>
+                      {` ประเภท `}
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.subtype}
+                      </ThaiMdText>
+                      {` จำนวน `}
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.amount.amount}
+                      </ThaiMdText>
+                    </ThaiRegText>
+                  </View>
                 </View>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -381,16 +397,24 @@ export default SellingTransactionDetailScreen = props => {
               maxHeight: 40,
               borderRadius: 5
             }}
-            btnColor={Colors.button.danger_operation.btnBackground}
-            onPress={cancelHandler}
-            btnTitleColor={Colors.button.danger_operation.btnText}
+            btnColor={
+              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                ? Colors.button.danger_operation.btnBackgroundDisabled
+                : Colors.button.danger_operation.btnBackground
+            }
+            onPress={
+              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                ? null
+                : cancelHandler
+            }
+            btnTitleColor={
+              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                ? Colors.button.danger_operation.btnTextDisabled
+                : Colors.button.danger_operation.btnText
+            }
             btnTitleFontSize={18}
           >
-            <MaterialIcons
-              name={"cancel"}
-              color={Colors.button.danger_operation.btnText}
-              size={14}
-            />
+            <MaterialIcons name={"cancel"} size={14} />
             <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
           </CustomButton>
 
