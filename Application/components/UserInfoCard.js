@@ -14,7 +14,7 @@ export default UserInfoCard = props => {
         <View style={styles.userInfoContentContainerRow1}>
           <ImageCircle
             imgUrl={props.imgUrl}
-            avariableWidth={props.avariableWidth * 0.3}
+            avariableWidth={props.avariableWidth * 0.2}
           />
           <View
             style={{

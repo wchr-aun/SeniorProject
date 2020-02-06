@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -27,8 +27,9 @@ import libary from "../../utils/libary";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default SellerHomepageScreen = props => {
-  // Loading effect
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(true);
+  const dispatch = useDispatch();
 
   // error handling
   const [error, setError] = useState("");
@@ -41,20 +42,6 @@ export default SellerHomepageScreen = props => {
   // Get user profile
   const userProfile = useSelector(state => state.user.userProfile);
   const userRole = useSelector(state => state.user.userRole);
-  useEffect(() => {
-    setIsLoading(true);
-    if (userProfile.uid) setIsLoading(false);
-  }, [userProfile]);
-
-  const dispatch = useDispatch();
-  // Get transactions for initially
-  useEffect(() => {
-    try {
-      dispatch(transactionAction.fetchTransaction(userRole));
-    } catch (err) {
-      setError(err.message);
-    }
-  }, []);
   const transactions = useSelector(state => state.transactions.transactions);
 
   // For looking into transaction detail
@@ -66,6 +53,35 @@ export default SellerHomepageScreen = props => {
       }
     });
   };
+
+  // --------------- loading section --------------------
+  // load Callback fn
+  const refreshTx = useCallback(async () => {
+    setIsRefreshing(true);
+    await dispatch(transactionAction.fetchTransaction(userRole));
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing]);
+
+  // initially
+  useEffect(() => {
+    // Load sellerItems and wasteType from firebase and store it to redux "initially"
+    setIsLoading(true);
+    refreshTx()
+      .then(() => setIsLoading(false))
+      .catch(err => {
+        setIsLoading(false);
+        setError(err.message);
+      });
+  }, [refreshTx, dispatch]);
+
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -142,6 +158,8 @@ export default SellerHomepageScreen = props => {
               </View>
 
               <FlatList
+                refreshing={isRefreshing}
+                onRefresh={refreshTx}
                 data={transactions ? transactions[0] : []}
                 keyExtractor={item => item.txId}
                 renderItem={({ item }) => {

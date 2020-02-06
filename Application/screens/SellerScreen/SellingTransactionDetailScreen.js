@@ -25,6 +25,33 @@ import {
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
+const getDisableStatusForSeller = (btnType, txStatus) => {
+  /* 
+  preferTime --> 1
+  accept --> 2
+  cancel --> 4
+  */
+  switch (txStatus) {
+    case 0:
+      if (btnType != 4) return true;
+      else return false;
+    case 1:
+      if (btnType != 4 && btnType != 2) return true;
+      else return false;
+    case 2:
+      if (btnType != 4) return true;
+      else return false;
+    case 3:
+      return true;
+    case 4:
+      return true;
+    case 5:
+      return true;
+    default:
+      break;
+  }
+};
+
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
@@ -65,13 +92,40 @@ export default SellingTransactionDetailScreen = props => {
       }}
     >
       <CustomStatusBar />
-      <View style={{ height: "35%", width: "100%" }}>
+      <View
+        style={{
+          height: "10%",
+          width: "100%",
+          flexDirection: "row",
+          backgroundColor: Colors.soft_primary_dark,
+          paddingVertical: 10,
+          justifyContent: "space-around",
+          alignItems: "center"
+        }}
+      >
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={Colors.button.cancel.btnBackground}
+          onPress={backHandler}
+          btnTitleColor={Colors.button.cancel.btnText}
+          btnTitleFontSize={10}
+        >
+          <Ionicons
+            name={"ios-arrow-back"}
+            color={Colors.button.cancel.btnText}
+            size={10}
+          />
+          <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
+        </CustomButton>
         <View
           style={{
-            width: "100%",
-            height: "20%",
-            backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 10,
+            width: "50%",
+            height: "100%",
             alignItems: "center",
             justifyContent: "center"
           }}
@@ -79,16 +133,29 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiBoldText
             style={{
               color: Colors.on_primary_dark.low_constrast,
-              fontSize: 26
+              fontSize: 18
             }}
           >
-            รายละเอียดคำขอขายขยะ
+            รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
+        <View style={{ width: "20%", height: "100%" }}>
+          {/* used for fulfll space */}
+        </View>
+      </View>
+      <View
+        style={{
+          height: "25%",
+          width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around"
+        }}
+      >
         <View
           style={{
-            width: "100%",
-            height: "40%",
+            width: "30%",
+            height: "80%",
             padding: 5,
             alignItems: "center",
             paddingHorizontal: 10
@@ -96,10 +163,10 @@ export default SellingTransactionDetailScreen = props => {
         >
           <ImageCircle
             imgUrl={transactionItem.imgUrl ? transactionItem.imgUrl : ""}
-            avariableWidth={wp("25%")}
+            avariableWidth={wp("20%")}
           />
         </View>
-        <View style={{ width: "100%", height: "40%", paddingHorizontal: 10 }}>
+        <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -168,18 +235,28 @@ export default SellingTransactionDetailScreen = props => {
           paddingHorizontal: 10
         }}
       >
-        <View style={{ width: "100%", height: "65%", paddingVertical: 5 }}>
-          <FlatList
-            data={transactionItem.detail.assignedTime}
-            keyExtractor={item =>
-              libary.formatDate(item.toDate()) +
-              libary.formatTime(item.toDate())
-            }
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
-                  <ThaiRegText
+        <FlatList
+          data={transactionItem.detail.assignedTime}
+          keyExtractor={item =>
+            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
+          }
+          style={{ flex: 1 }}
+          renderItem={({ item }) => {
+            return (
+              <View style={{ height: 25, alignSelf: "center" }}>
+                <ThaiRegText
+                  style={{
+                    fontSize: 18,
+                    color:
+                      transactionItem.detail.chosenTime != undefined
+                        ? transactionItem.detail.chosenTime.seconds ===
+                          item.seconds
+                          ? Colors.soft_primary_bright
+                          : Colors.soft_secondary
+                        : Colors.soft_secondary
+                  }}
+                >
+                  <ThaiMdText
                     style={{
                       fontSize: 18,
                       color:
@@ -191,88 +268,28 @@ export default SellingTransactionDetailScreen = props => {
                           : Colors.soft_secondary
                     }}
                   >
-                    <ThaiMdText
-                      style={{
-                        fontSize: 18,
-                        color:
-                          transactionItem.detail.chosenTime != undefined
-                            ? transactionItem.detail.chosenTime.seconds ===
-                              item.seconds
-                              ? Colors.soft_primary_bright
-                              : Colors.soft_secondary
+                    {libary.formatDate(item.toDate())}
+                  </ThaiMdText>
+                  {` `}
+                  <ThaiMdText
+                    style={{
+                      fontSize: 18,
+                      color:
+                        transactionItem.detail.chosenTime != undefined
+                          ? transactionItem.detail.chosenTime.seconds ===
+                            item.seconds
+                            ? Colors.soft_primary_bright
                             : Colors.soft_secondary
-                      }}
-                    >
-                      {libary.formatDate(item.toDate())}
-                    </ThaiMdText>
-                    {` `}
-                    <ThaiMdText
-                      style={{
-                        fontSize: 18,
-                        color:
-                          transactionItem.detail.chosenTime != undefined
-                            ? transactionItem.detail.chosenTime.seconds ===
-                              item.seconds
-                              ? Colors.soft_primary_bright
-                              : Colors.soft_secondary
-                            : Colors.soft_secondary
-                      }}
-                    >
-                      {libary.formatTime(item.toDate())}
-                    </ThaiMdText>
-                  </ThaiRegText>
-                </View>
-              );
-            }}
-          />
-        </View>
-        <View
-          style={{
-            width: "100%",
-            height: "35%",
-            flexDirection: "row",
-            justifyContent: "flex-end"
+                          : Colors.soft_secondary
+                    }}
+                  >
+                    {libary.formatTime(item.toDate())}
+                  </ThaiMdText>
+                </ThaiRegText>
+              </View>
+            );
           }}
-        >
-          <CustomButton
-            // disable={
-            //   transactionItem.detail.chosenTime != undefined &&
-            //   transactionItem.detail.txStatus === 1
-            //     ? false //not disabled
-            //     : true
-            // }
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 40,
-              borderRadius: 5
-            }}
-            btnColor={
-              // transactionItem.detail.chosenTime != undefined &&
-              // transactionItem.detail.txStatus === 1
-              //   ? Colors.button.submit_primary_bright.btnBackground
-              //   : Colors.button.disabled.btnBackground
-              "#e3e3e3"
-            }
-            btnTitleColor={
-              // transactionItem.detail.chosenTime != undefined &&
-              // transactionItem.detail.txStatus === 1
-              //   ? Colors.button.submit_primary_bright.btnText
-              //   : Colors.button.disabled.btnText
-              "#272727"
-            }
-            onPress={acceptPreferedtimeHandler}
-            btnTitleFontSize={12}
-          >
-            <MaterialCommunityIcons
-              name={"calendar-multiple-check"}
-              // color={Colors.button.submit_primary_bright.btnText}
-              color={"#272727"}
-              size={12}
-            />
-            <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
-          </CustomButton>
-        </View>
+        />
       </View>
       <View style={{ width: "100%", height: "5%", paddingHorizontal: 10 }}>
         <ThaiMdText
@@ -361,27 +378,7 @@ export default SellingTransactionDetailScreen = props => {
             style={{
               width: "40%",
               height: "100%",
-              maxHeight: 50,
-              borderRadius: 5
-            }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={backHandler}
-            btnTitleColor={Colors.button.cancel.btnText}
-            btnTitleFontSize={18}
-          >
-            <Ionicons
-              name={"ios-arrow-back"}
-              size={14}
-              color={Colors.button.cancel.btnText}
-            />
-            <ThaiMdText style={{ fontSize: 18 }}> ย้อนกลับ</ThaiMdText>
-          </CustomButton>
-
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 50,
+              maxHeight: 40,
               borderRadius: 5
             }}
             btnColor={Colors.button.danger_operation.btnBackground}
@@ -395,6 +392,37 @@ export default SellingTransactionDetailScreen = props => {
               size={14}
             />
             <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
+          </CustomButton>
+
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              maxHeight: 40,
+              borderRadius: 5
+            }}
+            btnColor={
+              getDisableStatusForSeller(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_bright.btnBackgroundDisabled
+                : Colors.button.submit_primary_bright.btnBackground
+            }
+            btnTitleColor={
+              getDisableStatusForSeller(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_bright.btnTextDisabled
+                : Colors.button.submit_primary_bright.btnText
+            }
+            onPress={
+              getDisableStatusForSeller(1, transactionItem.detail.txStatus)
+                ? null
+                : acceptPreferedtimeHandler
+            }
+            btnTitleFontSize={12}
+          >
+            <MaterialCommunityIcons
+              name={"calendar-multiple-check"}
+              size={12}
+            />
+            <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
           </CustomButton>
         </View>
       </View>

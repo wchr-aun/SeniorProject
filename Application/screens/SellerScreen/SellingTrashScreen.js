@@ -295,7 +295,7 @@ export default SellingTrashScreen = props => {
             <View
               style={{
                 width: "100%",
-                height: "50%",
+                height: "30%",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center"
@@ -335,15 +335,21 @@ export default SellingTrashScreen = props => {
 
             <View
               style={{
-                height: "50%",
+                height: "70%",
                 width: "100%",
                 flexDirection: "row",
                 justifyContent: "space-around",
-                alignItems: "center"
+                alignItems: "center",
+                padding: 5
               }}
             >
               <CustomButton
-                style={{ width: "40%", height: "100%", borderRadius: 8 }}
+                style={{
+                  width: "40%",
+                  height: "80%",
+                  maxHeight: 40,
+                  borderRadius: 8
+                }}
                 btnColor={Colors.button.cancel.btnBackground}
                 onPress={() => props.navigation.goBack()}
                 btnTitleColor={Colors.button.cancel.btnText}
@@ -364,7 +370,12 @@ export default SellingTrashScreen = props => {
               </CustomButton>
 
               <CustomButton
-                style={{ width: "40%", height: "100%", borderRadius: 8 }}
+                style={{
+                  width: "40%",
+                  height: "80%",
+                  maxHeight: 40,
+                  borderRadius: 8
+                }}
                 btnColor={Colors.button.start_operation_info.btnBackground}
                 onPress={setSellerItemsForSell}
                 btnTitleColor={Colors.button.start_operation_info.btnText}

@@ -162,18 +162,17 @@ const BuyerChoice = props => {
 };
 
 export default ChooseBuyerScreen = props => {
-  useEffect(() => {
-    console.log("Choose Buyer Screen");
-  }, []);
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
   );
-
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
       props.navigation.navigate("ShowSellerItemsScreen");
     }
   };
+  useEffect(() => {
+    console.log("Choose Buyer Screen");
+  }, []);
 
   // required data for sending an transaction
   const sellerAddr = useSelector(state => state.user.userProfile.addr);
@@ -222,9 +221,6 @@ export default ChooseBuyerScreen = props => {
 
   const [sellMode, setSellMode] = useState(0);
   const [buyerInfomation, setBuyerInfomation] = useState("");
-  // const [buyerName, setBuyerName] = useState("");
-  // const [buyerPriceInfo, setBuyerPriceInfo] = useState("");
-  // const [unavailableTypes, setUnavailableTypes] = useState("");
 
   const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
     // this should set to redux ---
@@ -437,7 +433,7 @@ export default ChooseBuyerScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 60
+              maxHeight: 40
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => props.navigation.goBack()}
@@ -463,18 +459,13 @@ export default ChooseBuyerScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 60
+              maxHeight: 40
             }}
             btnColor={Colors.button.submit_primary_dark.btnBackground}
             onPress={quickSellHandler}
             btnTitleColor={Colors.button.submit_primary_dark.btnText}
             btnTitleFontSize={14}
           >
-            {/* <MaterialCommunityIcons
-              name={"account-search"}
-              size={12}
-              color={Colors.button.start_operation_info.btnText}
-            /> */}
             <ThaiRegText
               style={{
                 fontSize: 12

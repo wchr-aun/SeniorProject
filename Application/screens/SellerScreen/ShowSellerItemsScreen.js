@@ -444,8 +444,8 @@ const ShowAllUserTrashScreen = props => {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "15%"
-            // paddingBottom: getStatusBarHeight() //unable it in future
+            height: "15%",
+            paddingBottom: getStatusBarHeight() //unable it in future
           }}
         >
           <View
@@ -455,11 +455,15 @@ const ShowAllUserTrashScreen = props => {
               flexDirection: "row",
               justifyContent: "space-around",
               alignItems: "center"
-              // backgroundColor: "red"
             }}
           >
             <CustomButton
-              style={{ width: "40%", height: 50, borderRadius: 5 }}
+              style={{
+                width: "40%",
+                height: "80%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
               btnColor={
                 editingMode
                   ? Colors.button.cancel.btnBackground
@@ -477,7 +481,12 @@ const ShowAllUserTrashScreen = props => {
             </CustomButton>
 
             <CustomButton
-              style={{ width: "40%", height: 50, borderRadius: 5 }}
+              style={{
+                width: "40%",
+                height: "80%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
               btnColor={
                 editingMode
                   ? Colors.button.finish_operation_info.btnBackground

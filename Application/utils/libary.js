@@ -46,8 +46,11 @@ const takeImgForGetprediction = async () => {
 };
 
 const takeAnImg = async () => {
+  console.log("takeAnImg");
   const hasPermission = await verifyCameraPermissions();
+  console.log("verifyCameraPermissions");
   if (!hasPermission) {
+    console.log("not permit");
     return;
   }
   const image = await ImagePicker.launchCameraAsync({
@@ -251,33 +254,6 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
   }
 };
 
-const getDisableStatusForSeller = (btnType, txStatus) => {
-  /* 
-  preferTime --> 1
-  accept --> 2
-  cancel --> 4
-  */
-  switch (txStatus) {
-    case 0:
-      if (btnType != 4) return true;
-      else return false;
-    case 1:
-      if (btnType != 4 && btnType != 2) return true;
-      else return false;
-    case 2:
-      if (btnType != 4) return true;
-      else return false;
-    case 3:
-      return true;
-    case 4:
-      return true;
-    case 5:
-      return true;
-    default:
-      break;
-  }
-};
-
 const getDirections = (originCoords, destinationCoords) => {
   if (destinationCoords.length >= 10 || destinationCoords.length <= 0)
     return false;
@@ -358,7 +334,6 @@ export default {
   getColorTxStatus,
   getPostalcodeAddressFromCord,
   getDisableStatusForBuyer,
-  getDisableStatusForSeller,
   toDate,
   getDirections,
   takeImgForGetprediction,

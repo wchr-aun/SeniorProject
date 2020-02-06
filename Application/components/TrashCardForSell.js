@@ -109,15 +109,13 @@ export default TrashCardForSell = props => {
           disable={false}
         >
           <ThaiBoldText style={{ fontSize: 14 }}>เลือก </ThaiBoldText>
-          <MaterialIcons
-            name={props.selected ? "check-box" : "check-box-outline-blank"}
-            size={10}
-            color={
-              props.selected
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.primary_dark
-            }
-          />
+          {props.selected ? (
+            <MaterialIcons
+              name={props.selected ? "check-box" : "check-box-outline-blank"}
+              size={10}
+              color={Colors.button.submit_primary_bright.btnText}
+            />
+          ) : null}
         </CustomButton>
         <ImageCircle
           avariableWidth={wp("20%")}

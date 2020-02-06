@@ -27,10 +27,18 @@ import {
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import { LinearGradient } from "expo-linear-gradient";
+import { NavigationEvents } from "react-navigation";
 
 export default SellingReqBeforeSendingScreen = props => {
+  const isOperationCompleted = useSelector(
+    state => state.navigation.isOperationCompleted
+  );
+  const checkIsOperationCompleted = () => {
+    if (isOperationCompleted === true) {
+      props.navigation.navigate("ShowSellerItemsScreen");
+    }
+  };
   const sellReq = props.navigation.getParam("sellReq");
-
   const dispatch = useDispatch();
   const sellerName = useSelector(state => state.user.userProfile.name);
 
@@ -50,8 +58,6 @@ export default SellingReqBeforeSendingScreen = props => {
     let updatedImgsName = [...imgsName];
     updatedImgs.push(img);
     updatedImgsName.push(imgName);
-    console.log("imgName");
-    console.log(imgName);
     setImgs(updatedImgs);
     setImgsName(updatedImgsName);
   };
@@ -71,6 +77,7 @@ export default SellingReqBeforeSendingScreen = props => {
     await dispatch(transactionAction.fetchTransaction("seller"));
     await dispatch(sellerItemsAction.fetchSellerItems());
     await dispatch(navigationBehaviorAction.finishOperation());
+    props.navigation.navigate("SellTransaction");
   };
 
   const backHandler = () => {
@@ -86,6 +93,7 @@ export default SellingReqBeforeSendingScreen = props => {
         height: "100%"
       }}
     >
+      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
       <View
         style={{
@@ -244,7 +252,7 @@ export default SellingReqBeforeSendingScreen = props => {
                     <ThaiMdText
                       style={{
                         fontSize: 18,
-                        color: Colors.soft_secondary
+                        color: Colors.primary_bright_variant
                       }}
                     >
                       {libary.formatTime(new Date(item))}
@@ -345,21 +353,23 @@ export default SellingReqBeforeSendingScreen = props => {
         }}
       >
         {/* image */}
-        <View style={{ width: "100%", height: "60%" }}>
+        <View
+          style={{ width: "100%", height: "60%", justifyContent: "center" }}
+        >
           <FlatList
             data={imgs}
             keyExtractor={item => item.uri}
             style={{ flex: 1 }}
             horizontal={true}
             renderItem={({ item }) => {
-              console.log(item);
               return (
                 <View
                   style={{
                     width: 200,
                     height: 200,
                     borderRadius: 5,
-                    paddingHorizontal: 2
+                    paddingHorizontal: 2,
+                    overflow: "hidden"
                   }}
                 >
                   <Image

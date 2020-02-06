@@ -13,6 +13,7 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import Colors from "../../constants/Colors";
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
@@ -162,7 +163,7 @@ export default OptionTrashCheck = props => {
         <View
           style={{
             width: "100%",
-            height: "35%",
+            height: "25%",
             alignItems: "center"
           }}
         >
@@ -215,11 +216,12 @@ export default OptionTrashCheck = props => {
         </View>
         <View
           style={{
-            height: "10%",
+            height: "20%",
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
+            paddingBottom: getStatusBarHeight()
           }}
         >
           <CustomButton

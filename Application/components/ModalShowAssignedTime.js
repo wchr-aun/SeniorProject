@@ -205,7 +205,7 @@ export default ModalShowSellersItemsScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 60
+              maxHeight: 40
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => {
@@ -222,7 +222,7 @@ export default ModalShowSellersItemsScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 60
+              maxHeight: 40
             }}
             btnColor={Colors.button.submit_primary_bright.btnBackground}
             onPress={() => {
