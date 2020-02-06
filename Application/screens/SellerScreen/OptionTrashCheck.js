@@ -225,7 +225,12 @@ export default OptionTrashCheck = props => {
           }}
         >
           <CustomButton
-            style={{ width: "40%", height: "80%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "80%",
+              borderRadius: 8,
+              maxHeight: 40
+            }}
             btnColor={Colors.button.start_operation_info.btnBackground}
             onPress={takeImageHandler}
             btnTitleColor={Colors.button.start_operation_info.btnText}
@@ -234,7 +239,12 @@ export default OptionTrashCheck = props => {
             ถ่ายรูป
           </CustomButton>
           <CustomButton
-            style={{ width: "40%", height: "80%", borderRadius: 8 }}
+            style={{
+              width: "40%",
+              height: "80%",
+              borderRadius: 8,
+              maxHeight: 40
+            }}
             btnColor={Colors.button.submit_primary_bright.btnBackground}
             onPress={confirmHandler}
             btnTitleColor={Colors.button.submit_primary_bright.btnText}
