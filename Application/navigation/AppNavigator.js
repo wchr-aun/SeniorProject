@@ -250,19 +250,6 @@ const BuyerBottomTabConfig = {
       tabBarColor: Colors.primary_dark
     }
   },
-  EditBuyerInfo: {
-    screen: EditBuyerInfomationScreen,
-    navigationOptions: {
-      tabBarLabel: "จัดการรายการ",
-      tabBarIcon: tabInfo => {
-        return (
-          <Ionicons name="ios-build" size={25} color={tabInfo.tintColor} />
-        );
-      },
-      tabBarColor: Colors.primary_dark
-    }
-  },
-
   searchSellTransaction: {
     screen: SearchQuicksellingNavigator,
     navigationOptions: {
@@ -282,6 +269,18 @@ const BuyerBottomTabConfig = {
       tabBarIcon: tabInfo => {
         return (
           <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
+        );
+      },
+      tabBarColor: Colors.primary_dark
+    }
+  },
+  EditBuyerInfo: {
+    screen: EditBuyerInfomationScreen,
+    navigationOptions: {
+      tabBarLabel: "จัดการรายการ",
+      tabBarIcon: tabInfo => {
+        return (
+          <Ionicons name="ios-build" size={25} color={tabInfo.tintColor} />
         );
       },
       tabBarColor: Colors.primary_dark

@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useCallback, useReducer } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
-
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { Wastes } from "../../models/AllUserTrash";
@@ -21,10 +27,55 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { LinearGradient } from "expo-linear-gradient";
+
+const getDisableStatusForBuyer = (btnType, txStatus) => {
+  /* 
+  preferTime --> 1
+  accept --> 2
+  buyerWillGo --> 3
+  cancel --> 4
+  */
+  switch (txStatus) {
+    case 0:
+      if (btnType != 1 && btnType != 2 && btnType != 4) return true;
+      return false;
+    case 1:
+      if (btnType == 1 || btnType == 2) return true;
+      else return false;
+    case 2:
+      if (btnType != 4 && btnType != 3 && btnType != 1) return true;
+      else return false;
+    case 3:
+      if (btnType == 1 || btnType == 2) return true;
+      else return false;
+    case 4:
+      return true;
+    case 5:
+      return true;
+    default:
+      break;
+  }
+};
 
 export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // load imgs
+  const [imgs, setImgs] = useState([]);
+  const loadImgs = async () => {
+    let imgs = await libary.downloadingImg(transactionItem.detail.img);
+    console.log("setImgs");
+    console.log(imgs);
+    setImgs(imgs);
+  };
+  useEffect(() => {
+    setIsLoading(true);
+    loadImgs();
+    setIsLoading(false);
+  }, []);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -33,7 +84,8 @@ export default BuyingTransactionDetailScreen = props => {
   // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
   const [timeSelected, setTimeSelected] = useState("");
   const onTimeSelectedHandler = timeItem => {
-    setTimeSelected(timeItem);
+    if (timeSelected === timeItem) setTimeSelected("");
+    else setTimeSelected(timeItem);
   };
 
   const dispatch = useDispatch();
@@ -106,8 +158,18 @@ export default BuyingTransactionDetailScreen = props => {
     props.navigation.goBack();
   };
 
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
-    <View
+    <LinearGradient
+      colors={Colors.linearGradientDark}
       style={{
         ...styles.infoContainerCard,
         width: "100%",
@@ -115,13 +177,40 @@ export default BuyingTransactionDetailScreen = props => {
       }}
     >
       <CustomStatusBar />
-      <View style={{ height: "35%", width: "100%" }}>
+      <View
+        style={{
+          height: "10%",
+          width: "100%",
+          flexDirection: "row",
+          backgroundColor: Colors.soft_primary_dark,
+          paddingVertical: 10,
+          justifyContent: "space-around",
+          alignItems: "center"
+        }}
+      >
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={Colors.button.cancel.btnBackground}
+          onPress={backHandler}
+          btnTitleColor={Colors.button.cancel.btnText}
+          btnTitleFontSize={10}
+        >
+          <Ionicons
+            name={"ios-arrow-back"}
+            color={Colors.button.cancel.btnText}
+            size={10}
+          />
+          <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
+        </CustomButton>
         <View
           style={{
-            width: "100%",
-            height: "20%",
-            backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 10,
+            width: "50%",
+            height: "100%",
             alignItems: "center",
             justifyContent: "center"
           }}
@@ -129,16 +218,51 @@ export default BuyingTransactionDetailScreen = props => {
           <ThaiBoldText
             style={{
               color: Colors.on_primary_dark.low_constrast,
-              fontSize: 26
+              fontSize: 18
             }}
           >
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={
+            getDisableStatusForBuyer(3, transactionItem.detail.txStatus)
+              ? Colors.button.submit_primary_bright.btnBackgroundDisabled
+              : Colors.button.submit_primary_bright.btnBackground
+          }
+          onPress={
+            getDisableStatusForBuyer(3, transactionItem.detail.txStatus)
+              ? null
+              : acceptHandler
+          }
+          btnTitleColor={
+            getDisableStatusForBuyer(3, transactionItem.detail.txStatus)
+              ? Colors.button.submit_primary_bright.btnTextDisabled
+              : Colors.button.submit_primary_bright.btnText
+          }
+          btnTitleFontSize={10}
+        >
+          <ThaiMdText style={{ fontSize: 10 }}> กำลังไปรับ</ThaiMdText>
+        </CustomButton>
+      </View>
+      <View
+        style={{
+          height: "20%",
+          width: "100%",
+          flexDirection: "row",
+          alignItems: "center"
+        }}
+      >
         <View
           style={{
-            width: "100%",
-            height: "40%",
+            width: "30%",
+            height: "80%",
             padding: 5,
             alignItems: "center"
           }}
@@ -148,7 +272,7 @@ export default BuyingTransactionDetailScreen = props => {
             avariableWidth={wp("25%")}
           />
         </View>
-        <View style={{ width: "100%", height: "40%", paddingHorizontal: 10 }}>
+        <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -159,12 +283,10 @@ export default BuyingTransactionDetailScreen = props => {
             <ThaiMdText
               style={{
                 fontSize: 14,
-                // color: libary.getColorTxStatus(transactionItem.detail.txStatus)
-                color: libary.getColorTxStatus(3)
+                color: libary.getColorTxStatus(transactionItem.detail.txStatus)
               }}
             >
-              {/* {libary.getReadableTxStatus(transactionItem.detail.txStatus)} */}
-              {libary.getReadableTxStatus(3)}
+              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
             </ThaiMdText>
           </ThaiRegText>
           <ThaiRegText
@@ -199,14 +321,18 @@ export default BuyingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "20%",
-          backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5,
-          padding: 5,
+          height: "15%",
           paddingHorizontal: 10
         }}
       >
-        <View style={{ width: "100%", height: "100%", paddingVertical: 5 }}>
+        <View
+          style={{
+            width: "100%",
+            height: "65%",
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 5
+          }}
+        >
           <FlatList
             data={transactionItem.detail.assignedTime}
             keyExtractor={item =>
@@ -253,7 +379,7 @@ export default BuyingTransactionDetailScreen = props => {
             }}
           />
         </View>
-        {/* <View
+        <View
           style={{
             width: "100%",
             height: "35%",
@@ -262,12 +388,6 @@ export default BuyingTransactionDetailScreen = props => {
           }}
         >
           <CustomButton
-            disable={
-              transactionItem.detail.chosenTime != undefined &&
-              transactionItem.detail.txStatus === 1
-                ? false //not disabled
-                : true
-            }
             style={{
               width: "40%",
               height: "100%",
@@ -275,31 +395,29 @@ export default BuyingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
-              // transactionItem.detail.chosenTime != undefined &&
-              // transactionItem.detail.txStatus === 1
-              //   ? Colors.button.submit_primary_bright.btnBackground
-              //   : Colors.button.disabled.btnBackground
-              "#414141"
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_dark.btnBackgroundDisabled
+                : Colors.button.submit_primary_dark.btnBackground
             }
             btnTitleColor={
-              // transactionItem.detail.chosenTime != undefined &&
-              // transactionItem.detail.txStatus === 1
-              //   ? Colors.button.submit_primary_bright.btnText
-              //   : Colors.button.disabled.btnText
-              "#272727"
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_dark.btnTextDisabled
+                : Colors.button.submit_primary_dark.btnText
             }
-            onPress={preferTimeHandler}
+            onPress={
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? null
+                : preferTimeHandler
+            }
             btnTitleFontSize={12}
           >
             <MaterialCommunityIcons
               name={"calendar-multiple-check"}
-              // color={Colors.button.submit_primary_bright.btnText}
-              color={"#414141"}
               size={12}
             />
             <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
           </CustomButton>
-        </View> */}
+        </View>
       </View>
       <View
         style={{
@@ -318,55 +436,103 @@ export default BuyingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "20%",
-          backgroundColor: Colors.soft_primary_dark,
-          borderRadius: 5,
+          height: "15%",
           paddingHorizontal: 10
         }}
       >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: Colors.soft_primary_dark,
+            borderRadius: 5,
+            paddingVertical: 10
+          }}
+        >
+          <FlatList
+            data={saleList}
+            keyExtractor={item => item.subtype}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    height: 30,
+                    padding: 3,
+                    alignSelf: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center"
+                    }}
+                  >
+                    <ThaiRegText
+                      style={{ fontSize: 18, color: Colors.soft_secondary }}
+                    >
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.type}
+                      </ThaiMdText>
+                      {` ประเภท `}
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.subtype}
+                      </ThaiMdText>
+                      {` จำนวน `}
+                      <ThaiMdText
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
+                      >
+                        {item.amount.amount}
+                      </ThaiMdText>
+                    </ThaiRegText>
+                  </View>
+                </View>
+              );
+            }}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          padding: 2,
+          paddingHorizontal: 10
+        }}
+      >
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
+        </ThaiMdText>
+      </View>
+      <View style={{ width: "100%", height: "10%" }}>
         <FlatList
-          data={saleList}
-          keyExtractor={item => item.subtype}
+          data={imgs}
+          keyExtractor={item => item}
           style={{ flex: 1 }}
-          renderItem={({ item }) => {
+          horizontal={true}
+          renderItem={({ item: uri }) => {
             return (
               <View
                 style={{
-                  height: 30,
-                  padding: 3,
-                  alignSelf: "center",
-                  flexDirection: "row"
+                  width: 200,
+                  height: 200,
+                  borderRadius: 5,
+                  paddingHorizontal: 2,
+                  overflow: "hidden"
                 }}
               >
-                <View
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center"
-                  }}
-                >
-                  <ThaiRegText
-                    style={{ fontSize: 18, color: Colors.soft_secondary }}
-                  >
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.type}
-                    </ThaiMdText>
-                    {` ประเภท `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.subtype}
-                    </ThaiMdText>
-                    {` จำนวน `}
-                    <ThaiMdText
-                      style={{ fontSize: 18, color: Colors.primary_bright }}
-                    >
-                      {item.amount.amount}
-                    </ThaiMdText>
-                  </ThaiRegText>
-                </View>
+                <Image
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri }}
+                />
               </View>
             );
           }}
@@ -393,64 +559,63 @@ export default BuyingTransactionDetailScreen = props => {
         >
           <CustomButton
             style={{
-              width: "30%",
+              width: "40%",
               height: "100%",
-              maxHeight: 50,
+              maxHeight: 40,
               borderRadius: 5
             }}
-            btnColor={Colors.button.disabled.btnBackground}
-            onPress={acceptHandler}
-            btnTitleColor={Colors.button.disabled.btnText}
+            btnColor={
+              getDisableStatusForBuyer(4, transactionItem.detail.txStatus)
+                ? Colors.button.danger_operation.btnBackgroundDisabled
+                : Colors.button.danger_operation.btnBackground
+            }
+            onPress={
+              getDisableStatusForBuyer(4, transactionItem.detail.txStatus)
+                ? null
+                : cancelHandler
+            }
+            btnTitleColor={
+              getDisableStatusForBuyer(4, transactionItem.detail.txStatus)
+                ? Colors.button.danger_operation.btnTextDisabled
+                : Colors.button.danger_operation.btnText
+            }
             btnTitleFontSize={18}
           >
-            <MaterialIcons
-              name={"cancel"}
-              color={Colors.button.disabled.btnText}
-              size={14}
-            />
+            <MaterialIcons name={"cancel"} size={14} />
+            <ThaiMdText style={{ fontSize: 18 }}> ปฎิเสธ</ThaiMdText>
+          </CustomButton>
+          <CustomButton
+            style={{
+              width: "40%",
+              height: "100%",
+              maxHeight: 40,
+              borderRadius: 5
+            }}
+            btnColor={
+              !timeSelected ||
+              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_bright.btnBackgroundDisabled
+                : Colors.button.submit_primary_bright.btnBackground
+            }
+            onPress={
+              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+                ? null
+                : acceptHandler
+            }
+            btnTitleColor={
+              !timeSelected ||
+              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_bright.btnTextDisabled
+                : Colors.button.submit_primary_bright.btnText
+            }
+            btnTitleFontSize={18}
+          >
+            <MaterialIcons name={"check-box"} size={14} />
             <ThaiMdText style={{ fontSize: 18 }}> ยอมรับ</ThaiMdText>
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "30%",
-              height: "100%",
-              maxHeight: 50,
-              borderRadius: 5
-            }}
-            btnColor={Colors.button.danger_operation.btnBackground}
-            onPress={cancelHandler}
-            btnTitleColor={Colors.button.danger_operation.btnText}
-            btnTitleFontSize={18}
-          >
-            <MaterialIcons
-              name={"cancel"}
-              color={Colors.button.danger_operation.btnText}
-              size={14}
-            />
-            <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "30%",
-              height: "100%",
-              maxHeight: 50,
-              borderRadius: 5
-            }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={backHandler}
-            btnTitleColor={Colors.button.cancel.btnText}
-            btnTitleFontSize={18}
-          >
-            <Ionicons
-              name={"ios-arrow-back"}
-              size={14}
-              color={Colors.button.cancel.btnText}
-            />
-            <ThaiMdText style={{ fontSize: 18 }}> ย้อนกลับ</ThaiMdText>
           </CustomButton>
         </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 

@@ -163,7 +163,7 @@ export default SearchQuicksellingScreen = props => {
               fontSize: 12
             }}
           >
-            {` ค้นหาคำขอ`}
+            {` ค้นหาคำขอใหม่`}
           </ThaiRegText>
         </CustomButton>
       </View>

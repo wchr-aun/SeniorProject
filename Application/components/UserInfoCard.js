@@ -5,10 +5,14 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiRegText from "./ThaiRegText";
 import ImageCircle from "./UI/ImageCircle";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default UserInfoCard = props => {
   return (
-    <View style={{ ...styles.userInfoContainer, ...props.style }}>
+    <LinearGradient
+      colors={Colors.linearGradientDark}
+      style={{ ...styles.userInfoContainer, ...props.style }}
+    >
       <View style={styles.userInfoContentContainer}>
         {/* Row 1 */}
         <View style={styles.userInfoContentContainerRow1}>
@@ -18,52 +22,50 @@ export default UserInfoCard = props => {
           />
           <View
             style={{
-              width: props.avariableWidth * 0.7,
+              width: props.avariableWidth * 0.5,
               padding: 20
             }}
           >
             <View style={{ width: "100%", flexDirection: "row" }}>
-              <View style={{ width: "70%" }}>
-                <ThaiRegText
-                  style={{
-                    ...styles.userName,
-                    color: Colors.on_primary_dark.high_constrast
-                  }}
-                >
-                  {props.userName}
-                </ThaiRegText>
-              </View>
-              <View
+              <ThaiRegText
                 style={{
-                  width: "30%",
-                  flexDirection: "row",
-                  justifyContent: "center"
+                  ...styles.userName,
+                  color: Colors.on_primary_dark.high_constrast
                 }}
               >
-                <View
-                  style={{
-                    backgroundColor: Colors.soft_primary_dark,
-                    borderRadius: 5,
-                    width: 35,
-                    height: 35,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}
-                >
-                  <TouchableOpacity onPress={props.onSignout}>
-                    <Ionicons
-                      name="ios-settings"
-                      size={30}
-                      color={Colors.primary_dark}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
+                {props.userName}
+              </ThaiRegText>
             </View>
             <ThaiRegText style={{ color: Colors.soft_secondary }}>
               {props.address}
             </ThaiRegText>
+          </View>
+          <View
+            style={{
+              width: props.avariableWidth * 0.2,
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: Colors.soft_primary_dark,
+                borderRadius: 5,
+                width: 35,
+                height: 35,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity onPress={props.onSignout}>
+                <Ionicons
+                  name="ios-settings"
+                  size={30}
+                  color={Colors.primary_dark}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         {/* Line Separate */}
@@ -88,7 +90,7 @@ export default UserInfoCard = props => {
           </ThaiRegText>
         </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 

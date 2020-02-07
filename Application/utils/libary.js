@@ -73,11 +73,29 @@ const uploadingImg = async (image, fileName) => {
   return ref.put(blob);
 };
 
-const downloadingImg = async () => {
-  firebaseUtil
-    .storage()
-    .ref()
-    .child();
+const downloadingImg = async imgNames => {
+  let allImgs = [];
+  let promises = [];
+  for (let imgName of imgNames) {
+    promises.push(
+      firebaseUtil
+        .storage()
+        .ref()
+        .child("sellReq_imgs/" + imgName)
+        .getDownloadURL()
+        .then(uri => {
+          allImgs.push(uri);
+        })
+        .catch(err => {
+          throw new error(err.message);
+        })
+    );
+  }
+  return Promise.all(promises).then(() => {
+    console.log("allImgs");
+    console.log(allImgs);
+    return allImgs;
+  });
 };
 
 const formatDate = date => {
@@ -226,34 +244,6 @@ export const getManualStringLocation = async address => {
   };
 };
 
-const getDisableStatusForBuyer = (btnType, txStatus) => {
-  /* 
-  preferTime --> 1
-  accept --> 2
-  buyerWillGo --> 3
-  cancel --> 4
-  */
-  switch (txStatus) {
-    case 0:
-      return false;
-    case 1:
-      if (btnType == 1 || btnType == 2) return true;
-      else return false;
-    case 2:
-      if (btnType != 4 && btnType != 3 && btnType != 1) return true;
-      else return false;
-    case 3:
-      if (btnType == 1 || btnType == 2) return true;
-      else return false;
-    case 4:
-      return true;
-    case 5:
-      return true;
-    default:
-      break;
-  }
-};
-
 const getDirections = (originCoords, destinationCoords) => {
   if (destinationCoords.length >= 10 || destinationCoords.length <= 0)
     return false;
@@ -333,10 +323,10 @@ export default {
   getReadableTxStatus,
   getColorTxStatus,
   getPostalcodeAddressFromCord,
-  getDisableStatusForBuyer,
   toDate,
   getDirections,
   takeImgForGetprediction,
   uploadingImg,
-  takeAnImg
+  takeAnImg,
+  downloadingImg
 };

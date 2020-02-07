@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
@@ -54,6 +60,7 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
+  const [isLoading, setIsLoading] = useState(false);
   const transactionItem = props.navigation.getParam("transactionItem");
   console.log(transactionItem);
   const userRole = useSelector(state => state.user.userRole);
@@ -64,6 +71,7 @@ export default SellingTransactionDetailScreen = props => {
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
+    setIsLoading(true);
     await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
@@ -72,6 +80,7 @@ export default SellingTransactionDetailScreen = props => {
       })
     );
     await dispatch(transactionAction.fetchTransaction(userRole));
+    setIsLoading(false);
     props.navigation.goBack();
   };
 
@@ -82,6 +91,15 @@ export default SellingTransactionDetailScreen = props => {
   const acceptPreferedtimeHandler = () => {
     //
   };
+
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View

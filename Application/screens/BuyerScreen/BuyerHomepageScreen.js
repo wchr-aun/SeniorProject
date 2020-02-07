@@ -22,6 +22,7 @@ import * as buyerAction from "../../store/actions/buyerAction";
 import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import libary from "../../utils/libary";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default BuyerHomepageScreen = props => {
   // Loading effect
@@ -78,7 +79,8 @@ export default BuyerHomepageScreen = props => {
       <View
         style={{
           width: wp("100%"),
-          height: hp("100%") - AppVariableSetting.bottomBarHeight
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
+          backgroundColor: Colors.primary_dark
         }}
       >
         {isLoading ? (
@@ -110,7 +112,8 @@ export default BuyerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
             />
-            <View
+            <LinearGradient
+              colors={Colors.linearGradientBright}
               style={{
                 width: "100%",
                 height: "60%",
@@ -118,7 +121,9 @@ export default BuyerHomepageScreen = props => {
                 alignItems: "center",
                 paddingVertical: 10,
                 backgroundColor: Colors.primary_bright,
-                paddingBottom: getStatusBarHeight()
+                paddingBottom: getStatusBarHeight(),
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15
               }}
             >
               <View
@@ -134,7 +139,7 @@ export default BuyerHomepageScreen = props => {
                 >
                   <ThaiMdText
                     style={{
-                      color: Colors.on_primary_bright.high_constrast,
+                      color: Colors.hard_secondary,
                       fontSize: 18
                     }}
                   >
@@ -166,7 +171,7 @@ export default BuyerHomepageScreen = props => {
                   );
                 }}
               />
-            </View>
+            </LinearGradient>
           </>
         )}
       </View>
