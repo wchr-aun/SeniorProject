@@ -5,7 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
-  Image
+  Image,
+  Modal,
+  TouchableHighlight
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -19,7 +21,8 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import {
   MaterialIcons,
   MaterialCommunityIcons,
-  Ionicons
+  Ionicons,
+  FontAwesome
 } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
@@ -58,17 +61,148 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
   }
 };
 
+const ModalShowImg = props => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={props.modalVisible}
+      onRequestClose={props.onRequestClose}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(255,255,255,0.5"
+        }}
+      >
+        <View
+          style={{
+            width: "80%",
+            height: "80%",
+            backgroundColor: "white",
+            borderRadius: 5,
+            padding: 5
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "80%",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 5,
+                overflow: "hidden"
+              }}
+            >
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                source={{ uri: props.uri }}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              height: "15%",
+              justifyContent: "space-around",
+              alignItems: "center",
+              flexDirection: "row"
+            }}
+          >
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 40,
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.submit_primary_dark.btnBackground}
+              onPress={() => {
+                props.slideImg(-1);
+              }}
+              btnTitleColor={Colors.button.submit_primary_dark.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name="ios-arrow-back"
+                color={Colors.button.submit_primary_dark.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> </ThaiMdText>
+            </CustomButton>
+
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 80,
+                height: "100%",
+                maxHeight: 50,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => {
+                props.setIsImgModalVisible(false);
+              }}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={10}
+            >
+              <MaterialIcons
+                name={"cancel"}
+                color={Colors.button.cancel.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> ปิดหน้าต่าง</ThaiMdText>
+            </CustomButton>
+
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 40,
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.submit_primary_dark.btnBackground}
+              onPress={() => props.slideImg(1)}
+              btnTitleColor={Colors.button.submit_primary_dark.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name="ios-arrow-forward"
+                color={Colors.button.submit_primary_dark.btnText}
+                size={10}
+              />
+            </CustomButton>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
   const [isLoading, setIsLoading] = useState(false);
 
   // load imgs
+  const [imgShowInModal, setImgShowInModal] = useState("");
+  const [isImgModalVisible, setIsImgModalVisible] = useState(false);
   const [imgs, setImgs] = useState([]);
   const loadImgs = async () => {
     let imgs = await libary.downloadingImg(transactionItem.detail.img);
-    console.log("setImgs");
-    console.log(imgs);
     setImgs(imgs);
   };
   useEffect(() => {
@@ -76,6 +210,13 @@ export default BuyingTransactionDetailScreen = props => {
     loadImgs();
     setIsLoading(false);
   }, []);
+  const slideImg = indexSlide => {
+    let oldIndex = imgs.indexOf(imgShowInModal);
+    let newIndex = oldIndex + indexSlide;
+    if (newIndex != -1 && newIndex < imgs.length) {
+      setImgShowInModal(imgs[newIndex]);
+    }
+  };
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -177,6 +318,13 @@ export default BuyingTransactionDetailScreen = props => {
       }}
     >
       <CustomStatusBar />
+      <ModalShowImg
+        modalVisible={isImgModalVisible}
+        onRequestClose={() => console.log("modal close")}
+        setIsImgModalVisible={setIsImgModalVisible}
+        uri={imgShowInModal}
+        slideImg={slideImg}
+      />
       <View
         style={{
           height: "10%",
@@ -264,7 +412,8 @@ export default BuyingTransactionDetailScreen = props => {
             width: "30%",
             height: "80%",
             padding: 5,
-            alignItems: "center"
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
           <ImageCircle
@@ -272,7 +421,14 @@ export default BuyingTransactionDetailScreen = props => {
             avariableWidth={wp("25%")}
           />
         </View>
-        <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
+        <View
+          style={{
+            width: "70%",
+            height: "80%",
+            paddingHorizontal: 10,
+            justifyContent: "center"
+          }}
+        >
           <ThaiRegText
             style={{
               fontSize: 14,
@@ -309,14 +465,61 @@ export default BuyingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "5%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between"
         }}
       >
-        <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        <View style={{ width: "50%", height: "100%" }}>
+          <ThaiMdText
+            style={{
+              fontSize: 12,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            เวลาที่ผู้ขายเสนอ
+          </ThaiMdText>
+        </View>
+        <View
+          style={{
+            width: "50%",
+            height: "80%",
+            flexDirection: "row",
+            padding: 5
+          }}
         >
-          วันเวลาที่เสนอขาย (สีขาว) / เลือกวันที่จะไปรับ (สีเขียว)
-        </ThaiMdText>
+          <CustomButton
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 5,
+              alignSelf: "flex-end"
+            }}
+            btnColor={
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_dark.btnBackgroundDisabled
+                : Colors.button.submit_primary_dark.btnBackground
+            }
+            btnTitleColor={
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? Colors.button.submit_primary_dark.btnTextDisabled
+                : Colors.button.submit_primary_dark.btnText
+            }
+            onPress={
+              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
+                ? null
+                : preferTimeHandler
+            }
+            btnTitleFontSize={12}
+          >
+            <MaterialCommunityIcons
+              name={"calendar-multiple-check"}
+              size={12}
+            />
+            <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
+          </CustomButton>
+        </View>
       </View>
       <View
         style={{
@@ -328,7 +531,7 @@ export default BuyingTransactionDetailScreen = props => {
         <View
           style={{
             width: "100%",
-            height: "65%",
+            height: "100%",
             backgroundColor: Colors.soft_primary_dark,
             borderRadius: 5
           }}
@@ -341,7 +544,6 @@ export default BuyingTransactionDetailScreen = props => {
             }
             style={{ flex: 1 }}
             renderItem={({ item }) => {
-              console.log(item);
               return (
                 <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
                   <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
@@ -378,45 +580,6 @@ export default BuyingTransactionDetailScreen = props => {
               );
             }}
           />
-        </View>
-        <View
-          style={{
-            width: "100%",
-            height: "35%",
-            flexDirection: "row",
-            justifyContent: "flex-end"
-          }}
-        >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 40,
-              borderRadius: 5
-            }}
-            btnColor={
-              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_dark.btnBackgroundDisabled
-                : Colors.button.submit_primary_dark.btnBackground
-            }
-            btnTitleColor={
-              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_dark.btnTextDisabled
-                : Colors.button.submit_primary_dark.btnText
-            }
-            onPress={
-              getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
-                ? null
-                : preferTimeHandler
-            }
-            btnTitleFontSize={12}
-          >
-            <MaterialCommunityIcons
-              name={"calendar-multiple-check"}
-              size={12}
-            />
-            <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
-          </CustomButton>
         </View>
       </View>
       <View
@@ -520,20 +683,27 @@ export default BuyingTransactionDetailScreen = props => {
           horizontal={true}
           renderItem={({ item: uri }) => {
             return (
-              <View
-                style={{
-                  width: 200,
-                  height: 200,
-                  borderRadius: 5,
-                  paddingHorizontal: 2,
-                  overflow: "hidden"
+              <TouchableOpacity
+                onPress={() => {
+                  setImgShowInModal(uri);
+                  setIsImgModalVisible(true);
                 }}
               >
-                <Image
-                  style={{ width: "100%", height: "100%" }}
-                  source={{ uri }}
-                />
-              </View>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                    paddingHorizontal: 2,
+                    overflow: "hidden"
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri }}
+                  />
+                </View>
+              </TouchableOpacity>
             );
           }}
         />
