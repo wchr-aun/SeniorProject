@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
+import DateTimePicker from "react-native-modal-datetime-picker";
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
@@ -224,9 +225,52 @@ export default BuyingTransactionDetailScreen = props => {
 
   // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
   const [timeSelected, setTimeSelected] = useState("");
+  const [buyerAssignedTime, setBuyerAssignedTime] = useState("");
+  const [assignedTime, setAssignedTime] = useState(
+    transactionItem.detail.assignedTime
+  );
   const onTimeSelectedHandler = timeItem => {
     if (timeSelected === timeItem) setTimeSelected("");
     else setTimeSelected(timeItem);
+  };
+
+  // date picker
+  const [datepickerShow, setDatapickerShow] = useState(false);
+  showDateTimePicker = () => {
+    setDatapickerShow(true);
+  };
+  hideDateTimePicker = () => {
+    setDatapickerShow(false);
+  };
+  handleDatePicked = date => {
+    let newDateTime = libary.toDate(date.getTime() / 1000);
+    let updatedAssignedTime = [...assignedTime];
+    // delete previous buyer assigned time
+    let oldBuyerDateTimeIndex = updatedAssignedTime.indexOf(buyerAssignedTime);
+    console.log(oldBuyerDateTimeIndex);
+    if (oldBuyerDateTimeIndex != -1)
+      updatedAssignedTime.splice(oldBuyerDateTimeIndex, 1);
+
+    // add the date to assignedTimeList
+    updatedAssignedTime.push(newDateTime);
+    setAssignedTime(updatedAssignedTime);
+
+    // assign new buyer time
+    setBuyerAssignedTime(newDateTime);
+    setTimeSelected(newDateTime);
+    hideDateTimePicker();
+  };
+
+  const preferTimeHandler = () => {
+    // dispatch(
+    //   transactionAction.changeTransactionStatus({
+    //     txID: transactionItem.txId,
+    //     oldStatus: transactionItem.detail.txStatus, //for query
+    //     chosenTime: libary.toDate(datetime),
+    //     newStatus: 1
+    //   })
+    // );
+    // props.navigation.goBack();
   };
 
   const dispatch = useDispatch();
@@ -242,46 +286,31 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   const acceptHandler = () => {
-    dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
-        newStatus: 2,
-        txType: transactionItem.detail.txType
-      })
-    );
+    if (buyerAssignedTime.seconds == timeSelected.seconds) {
+      //buyer select his assignedTime
+      dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          chosenTime: buyerAssignedTime.seconds * 1000, //formattedTime.seconds * 1000
+          newStatus: 1,
+          txType: transactionItem.detail.txType
+        })
+      );
+    } else {
+      //buyer select his client assignedTime
+      dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
+          newStatus: 2,
+          txType: transactionItem.detail.txType
+        })
+      );
+    }
 
     props.navigation.goBack();
-  };
-
-  // date picker
-  const [datepickerShow, setDatapickerShow] = useState(false);
-  showDateTimePicker = () => {
-    setDatapickerShow(true);
-  };
-  hideDateTimePicker = () => {
-    setDatapickerShow(false);
-  };
-  const [datetime, setDatetime] = useState(new Date().getTime()); //date that  will be passed to submit fn.
-  handleDatePicked = date => {
-    console.log("date picked");
-    console.log(date);
-    setDatetime(date);
-    hideDateTimePicker();
-    setModalVisible(true);
-  };
-
-  const preferTimeHandler = () => {
-    // dispatch(
-    //   transactionAction.changeTransactionStatus({
-    //     txID: transactionItem.txId,
-    //     oldStatus: transactionItem.detail.txStatus, //for query
-    //     chosenTime: libary.toDate(datetime),
-    //     newStatus: 1
-    //   })
-    // );
-    // props.navigation.goBack();
   };
 
   const onBuyerWayHandler = () => {
@@ -325,6 +354,14 @@ export default BuyingTransactionDetailScreen = props => {
         uri={imgShowInModal}
         slideImg={slideImg}
       />
+      {datepickerShow ? (
+        <DateTimePicker
+          mode="datetime"
+          isVisible={datepickerShow}
+          onConfirm={handleDatePicked}
+          onCancel={hideDateTimePicker}
+        />
+      ) : null}
       <View
         style={{
           height: "10%",
@@ -471,7 +508,7 @@ export default BuyingTransactionDetailScreen = props => {
           justifyContent: "space-between"
         }}
       >
-        <View style={{ width: "50%", height: "100%" }}>
+        <View style={{ width: "50%", height: "80%" }}>
           <ThaiMdText
             style={{
               fontSize: 12,
@@ -484,7 +521,7 @@ export default BuyingTransactionDetailScreen = props => {
         <View
           style={{
             width: "50%",
-            height: "80%",
+            height: "100%",
             flexDirection: "row",
             padding: 5
           }}
@@ -509,7 +546,7 @@ export default BuyingTransactionDetailScreen = props => {
             onPress={
               getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
                 ? null
-                : preferTimeHandler
+                : () => showDateTimePicker(true)
             }
             btnTitleFontSize={12}
           >
@@ -537,7 +574,7 @@ export default BuyingTransactionDetailScreen = props => {
           }}
         >
           <FlatList
-            data={transactionItem.detail.assignedTime}
+            data={assignedTime}
             keyExtractor={item =>
               libary.formatDate(item.toDate()) +
               libary.formatTime(item.toDate())
@@ -567,7 +604,7 @@ export default BuyingTransactionDetailScreen = props => {
                       </ThaiMdText>
                       <MaterialIcons
                         name={
-                          timeSelected === item
+                          item.seconds === timeSelected.seconds
                             ? "check-box"
                             : "check-box-outline-blank"
                         }
@@ -675,7 +712,14 @@ export default BuyingTransactionDetailScreen = props => {
           รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
         </ThaiMdText>
       </View>
-      <View style={{ width: "100%", height: "10%" }}>
+      <View
+        style={{
+          width: "100%",
+          height: "10%",
+          padding: 2,
+          paddingHorizontal: 10
+        }}
+      >
         <FlatList
           data={imgs}
           keyExtractor={item => item}
