@@ -1,13 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  StyleSheet,
-  FlatList,
-  View,
-  Text,
-  SectionList,
-  ActivityIndicator
-} from "react-native";
+import { StyleSheet, FlatList, View, ActivityIndicator } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import {
   widthPercentageToDP as wp,
@@ -100,9 +93,7 @@ export default SellingTransactionScreen = props => {
           width: "100%",
           height: "100%",
           alignSelf: "center",
-          alignItems: "center",
-          paddingVertical: 10,
-          paddingBottom: getStatusBarHeight()
+          alignItems: "center"
         }}
       >
         <View
@@ -111,11 +102,10 @@ export default SellingTransactionScreen = props => {
             height: "10%",
             flexDirection: "row",
             backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 10,
             alignItems: "center"
           }}
         >
-          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
@@ -124,6 +114,34 @@ export default SellingTransactionScreen = props => {
             >
               รายการการขายขยะของคุณ
             </ThaiBoldText>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "20%",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: getStatusBarHeight()
+          }}
+        >
+          <View
+            style={{
+              ...styles.firstDropdown,
+              width: "60%",
+              height: 80
+            }}
+          >
+            <Dropdown
+              label="ประเภทของรายการ"
+              value={txStatus}
+              data={transactionsDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
+              onChangeText={thisValue => {
+                onTxStatusDropdownChange(thisValue);
+              }}
+              animationDuration={50}
+              dropdownPosition
+            />
           </View>
         </View>
         <View style={{ width: "100%", height: "70%" }}>
@@ -151,74 +169,6 @@ export default SellingTransactionScreen = props => {
             )}
           />
         </View>
-        <View
-          style={{
-            width: "100%",
-            height: "20%",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <View
-            style={{
-              ...styles.firstDropdown,
-              width: "60%",
-              height: 80
-            }}
-          >
-            <Dropdown
-              label="ประเภทของรายการ"
-              value={txStatus}
-              data={transactionsDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
-              onChangeText={thisValue => {
-                onTxStatusDropdownChange(thisValue);
-              }}
-              animationDuration={50}
-            />
-          </View>
-        </View>
-        {/* <SectionList
-          refreshing={isRefreshing}
-          onRefresh={refreshTx}
-          sections={transactionsSectionListFormat}
-          keyExtractor={(item, index) => item + index}
-          renderSectionHeader={({ section: { transactionMode } }) => {
-            return (
-              <View style={{ width: "100%", height: 40, alignItems: "center" }}>
-                <ThaiBoldText
-                  style={{
-                    color: Colors.on_primary_bright.high_constrast,
-                    fontSize: 18
-                  }}
-                >
-                  {transactionMode}
-                </ThaiBoldText>
-                <View
-                  style={{
-                    width: "15%",
-                    borderBottomColor: Colors.soft_primary_bright,
-                    borderBottomWidth: 2
-                  }}
-                ></View>
-              </View>
-            );
-          }}
-          renderItem={({ item }) => (
-            <SellTransactionCard
-              amountOfType={item.detail.saleList.length}
-              imgUrl={""}
-              userName={item.detail.buyer}
-              userRole={userRole}
-              txType={item.detail.txType}
-              txStatus={item.detail.txStatus}
-              meetDate={libary.formatDate(item.detail.assignedTime[0].toDate())}
-              addr={item.detail.addr}
-              onPress={() => {
-                selectedHandler(item);
-              }}
-            />
-          )}
-        /> */}
       </LinearGradient>
     </View>
   );

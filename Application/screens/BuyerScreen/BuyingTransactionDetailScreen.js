@@ -33,6 +33,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
+import { Header } from "react-navigation-stack";
 
 const getDisableStatusForBuyer = (btnType, txStatus) => {
   /* 
@@ -295,6 +296,9 @@ export default BuyingTransactionDetailScreen = props => {
     // props.navigation.goBack();
   };
 
+  console.log("Header.HEIGHT");
+  console.log(Header.HEIGHT);
+
   const dispatch = useDispatch();
   const cancelHandler = async () => {
     dispatch(
@@ -379,7 +383,9 @@ export default BuyingTransactionDetailScreen = props => {
         height: "100%"
       }}
     >
-      <CustomStatusBar />
+      {props.navigation.getParam("haveHeaderHight") ? null : (
+        <CustomStatusBar />
+      )}
       <ModalShowImg
         modalVisible={isImgModalVisible}
         onRequestClose={() => console.log("modal close")}

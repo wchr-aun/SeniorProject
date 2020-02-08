@@ -98,14 +98,12 @@ export default (state = initialState, action) => {
       updatedTransactions[newStatusIndex].push(targetTx);
 
       // update view
-      let transactionsSectionListFormat = getTXSectionListFormat(
-        updatedTransactions
-      );
+      let transactionsDropdownFormat = getTXDropdownFormat(updatedTransactions);
 
       return {
         ...state,
         transactions: [...updatedTransactions],
-        transactionsSectionListFormat: [...transactionsSectionListFormat]
+        transactionsDropdownFormat: [...transactionsDropdownFormat]
       };
     case CHANGE_ROLE:
       return initialState;
