@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -27,6 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 export default BuyerHomepageScreen = props => {
   // Loading effect
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(true);
 
   // error handling
   const [error, setError] = useState("");
@@ -40,23 +41,27 @@ export default BuyerHomepageScreen = props => {
   const userProfile = useSelector(state => state.user.userProfile);
   const userRole = useSelector(state => state.user.userRole);
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (userProfile.uid) setIsLoading(false);
-  }, [userProfile]);
-
   const dispatch = useDispatch();
-  // Get transactions for initially
+  // load Callback fn
+  const refreshTxAndBuyerInfo = useCallback(async () => {
+    setIsRefreshing(true);
+    await dispatch(transactionAction.fetchTransaction(userRole));
+    await dispatch(buyerAction.fetchBuyerInfo());
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing]);
+
+  // initially
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      dispatch(transactionAction.fetchTransaction(userRole));
-      dispatch(buyerAction.fetchBuyerInfo());
-    } catch (err) {
-      setError(err.message);
-    }
-    setIsLoading(false);
-  }, []);
+    // Load sellerItems and wasteType from firebase and store it to redux "initially"
+    setIsLoading(true);
+    refreshTxAndBuyerInfo()
+      .then(() => setIsLoading(false))
+      .catch(err => {
+        setIsLoading(false);
+        setError(err.message);
+      });
+  }, [refreshTxAndBuyerInfo, dispatch]);
+
   const transactions = useSelector(state => state.transactions.transactions);
 
   // For looking into transaction detail
@@ -72,6 +77,15 @@ export default BuyerHomepageScreen = props => {
   useEffect(() => {
     console.log("Buyer homepage!!!");
   });
+
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -148,29 +162,45 @@ export default BuyerHomepageScreen = props => {
                 </TouchableWithoutFeedback>
               </View>
 
-              <FlatList
-                data={transactions ? transactions[0] : []}
-                keyExtractor={item => item.txId}
-                renderItem={({ item }) => {
-                  return (
-                    <SellTransactionCard
-                      amountOfType={item.detail.saleList.length}
-                      userName={item.detail.seller}
-                      userRole={userRole}
-                      txType={item.detail.txType}
-                      txStatus={item.detail.txStatus}
-                      imgUrl={item.imgUrl ? item.imgUrl : ""}
-                      addr={item.detail.addr}
-                      onPress={() => {
-                        selectedHandler(item);
-                      }}
-                      meetDate={libary.formatDate(
-                        item.detail.assignedTime[0].toDate()
-                      )}
-                    />
-                  );
-                }}
-              />
+              <View style={{ width: "100%", height: "90%" }}>
+                {isLoading ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    <ActivityIndicator size="large" color={Colors.primary} />
+                  </View>
+                ) : (
+                  <FlatList
+                    onRefresh={refreshTxAndBuyerInfo}
+                    refreshing={isRefreshing}
+                    data={transactions ? transactions[0] : []}
+                    keyExtractor={item => item.txId}
+                    renderItem={({ item }) => {
+                      return (
+                        <SellTransactionCard
+                          amountOfType={item.detail.saleList.length}
+                          userName={item.detail.seller}
+                          userRole={userRole}
+                          txType={item.detail.txType}
+                          txStatus={item.detail.txStatus}
+                          imgUrl={item.imgUrl ? item.imgUrl : ""}
+                          addr={item.detail.addr}
+                          onPress={() => {
+                            selectedHandler(item);
+                          }}
+                          meetDate={libary.formatDate(
+                            item.detail.assignedTime[0].toDate()
+                          )}
+                        />
+                      );
+                    }}
+                  />
+                )}
+              </View>
             </LinearGradient>
           </>
         )}

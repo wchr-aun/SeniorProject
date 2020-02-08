@@ -175,6 +175,13 @@ const SellerNavigator =
       });
 
 // **************************** For Buyer ****************************
+const BuyerhomepageNavigator = createStackNavigator(
+  {
+    BuyerHomepageScreen,
+    BuyingTransactionDetailScreen
+  },
+  { headerMode: "none" }
+);
 const SearchQuicksellingNavigator = createStackNavigator(
   {
     SearchQuicksellingScreen,
@@ -241,7 +248,7 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
 // Trash Main
 const BuyerBottomTabConfig = {
   Home: {
-    screen: BuyerHomepageScreen,
+    screen: BuyerhomepageNavigator,
     navigationOptions: {
       tabBarLabel: "หน้าหลัก",
       tabBarIcon: tabInfo => {

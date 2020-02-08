@@ -32,6 +32,7 @@ import {
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
+import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 
 const getDisableStatusForBuyer = (btnType, txStatus) => {
   /* 
@@ -225,7 +226,11 @@ export default BuyingTransactionDetailScreen = props => {
 
   // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
   const [timeSelected, setTimeSelected] = useState("");
-  const [buyerAssignedTime, setBuyerAssignedTime] = useState("");
+  const [buyerAssignedTimeFlatList, setBuyerAssignedTimeFlatList] = useState(
+    []
+  );
+  const [buyerAssignedTime, setBuyerAssignedTime] = useState([]);
+  const [modalAssignedTime, setModalAssignedTime] = useState([]);
   const [assignedTime, setAssignedTime] = useState(
     transactionItem.detail.assignedTime
   );
@@ -235,7 +240,11 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   // date picker
+  const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
   const [datepickerShow, setDatapickerShow] = useState(false);
+  const [assignedTimeModalVisible, setAssignedTimeModalVisible] = useState(
+    false
+  );
   showDateTimePicker = () => {
     setDatapickerShow(true);
   };
@@ -243,22 +252,35 @@ export default BuyingTransactionDetailScreen = props => {
     setDatapickerShow(false);
   };
   handleDatePicked = date => {
-    let newDateTime = libary.toDate(date.getTime() / 1000);
-    let updatedAssignedTime = [...assignedTime];
-    // delete previous buyer assigned time
-    let oldBuyerDateTimeIndex = updatedAssignedTime.indexOf(buyerAssignedTime);
-    console.log(oldBuyerDateTimeIndex);
-    if (oldBuyerDateTimeIndex != -1)
-      updatedAssignedTime.splice(oldBuyerDateTimeIndex, 1);
-
-    // add the date to assignedTimeList
-    updatedAssignedTime.push(newDateTime);
-    setAssignedTime(updatedAssignedTime);
-
-    // assign new buyer time
-    setBuyerAssignedTime(newDateTime);
-    setTimeSelected(newDateTime);
+    setDate(date);
     hideDateTimePicker();
+    setAssignedTimeModalVisible(true);
+  };
+  // add modalAssignedTime to buyerAssignedTime when update
+  useEffect(() => {
+    let updatedAssignedTime = [...buyerAssignedTimeFlatList];
+    let updatedModalAssignedTime = [...modalAssignedTime];
+    let updatedBuyerAssignedTime = [];
+
+    updatedModalAssignedTime.forEach((item, index) => {
+      updatedModalAssignedTime[index] = libary.toDate(item / 1000);
+      updatedBuyerAssignedTime.push(item);
+    });
+    updatedAssignedTime = updatedAssignedTime.concat(updatedModalAssignedTime);
+    console.log(updatedAssignedTime);
+    setBuyerAssignedTimeFlatList(updatedAssignedTime);
+    setBuyerAssignedTime(updatedBuyerAssignedTime);
+  }, [modalAssignedTime]);
+
+  const deleteBuyerTimeHandler = datetime => {
+    console.log("datetime");
+    console.log(datetime);
+    let updatedBuyerAssignedTime = [...buyerAssignedTimeFlatList];
+    let deletedTarget = updatedBuyerAssignedTime.indexOf(datetime);
+    if (deletedTarget != -1) {
+      updatedBuyerAssignedTime.splice(deletedTarget, 1);
+    }
+    setBuyerAssignedTimeFlatList(updatedBuyerAssignedTime);
   };
 
   const preferTimeHandler = () => {
@@ -286,15 +308,15 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   const acceptHandler = () => {
-    if (buyerAssignedTime.seconds == timeSelected.seconds) {
+    if (buyerAssignedTimeFlatList.length > 0) {
       //buyer select his assignedTime
       dispatch(
         transactionAction.changeTransactionStatus({
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
-          chosenTime: buyerAssignedTime.seconds * 1000, //formattedTime.seconds * 1000
           newStatus: 1,
-          txType: transactionItem.detail.txType
+          txType: transactionItem.detail.txType,
+          assignedTime: buyerAssignedTime
         })
       );
     } else {
@@ -337,6 +359,17 @@ export default BuyingTransactionDetailScreen = props => {
     );
   }
 
+  if (assignedTimeModalVisible) {
+    return (
+      <ModalShowAssignedTime
+        setModalVisible={setAssignedTimeModalVisible}
+        modalVisible={assignedTimeModalVisible}
+        date={date}
+        setSelectedTimes={setModalAssignedTime}
+      />
+    );
+  }
+
   return (
     <LinearGradient
       colors={Colors.linearGradientDark}
@@ -356,7 +389,7 @@ export default BuyingTransactionDetailScreen = props => {
       />
       {datepickerShow ? (
         <DateTimePicker
-          mode="datetime"
+          mode="date"
           isVisible={datepickerShow}
           onConfirm={handleDatePicked}
           onCancel={hideDateTimePicker}
@@ -508,15 +541,33 @@ export default BuyingTransactionDetailScreen = props => {
           justifyContent: "space-between"
         }}
       >
-        <View style={{ width: "50%", height: "80%" }}>
-          <ThaiMdText
-            style={{
-              fontSize: 12,
-              color: Colors.on_primary_dark.low_constrast
-            }}
-          >
-            เวลาที่ผู้ขายเสนอ
-          </ThaiMdText>
+        <View style={{ width: "50%", height: "80%", padding: 5 }}>
+          {buyerAssignedTimeFlatList.length > 0 ? (
+            <CustomButton
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 5,
+                alignSelf: "flex-end"
+              }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              onPress={() => setBuyerAssignedTimeFlatList([])}
+              btnTitleFontSize={12}
+            >
+              <MaterialIcons name={"cancel"} size={12} />
+              <ThaiMdText style={{ fontSize: 12 }}> ยกเลิกเสนอเวลา</ThaiMdText>
+            </CustomButton>
+          ) : (
+            <ThaiMdText
+              style={{
+                fontSize: 12,
+                color: Colors.on_primary_dark.low_constrast
+              }}
+            >
+              เวลาที่ผู้ขายเสนอ
+            </ThaiMdText>
+          )}
         </View>
         <View
           style={{
@@ -574,21 +625,35 @@ export default BuyingTransactionDetailScreen = props => {
           }}
         >
           <FlatList
-            data={assignedTime}
+            data={
+              buyerAssignedTimeFlatList.length > 0
+                ? buyerAssignedTimeFlatList
+                : assignedTime
+            }
             keyExtractor={item =>
               libary.formatDate(item.toDate()) +
               libary.formatTime(item.toDate())
             }
             style={{ flex: 1 }}
             renderItem={({ item }) => {
+              console.log(buyerAssignedTimeFlatList);
               return (
-                <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
+                <TouchableOpacity
+                  onPress={
+                    buyerAssignedTimeFlatList.length > 0
+                      ? () => deleteBuyerTimeHandler(item)
+                      : () => onTimeSelectedHandler(item)
+                  }
+                >
                   <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
                     <ThaiRegText style={{ fontSize: 18 }}>
                       <ThaiMdText
                         style={{
                           fontSize: 18,
-                          color: Colors.soft_secondary
+                          color:
+                            buyerAssignedTimeFlatList.length > 0
+                              ? Colors.primary_bright
+                              : Colors.soft_secondary
                         }}
                       >
                         {libary.formatDate(item.toDate())}
@@ -597,20 +662,31 @@ export default BuyingTransactionDetailScreen = props => {
                       <ThaiMdText
                         style={{
                           fontSize: 18,
-                          color: Colors.soft_secondary
+                          color:
+                            buyerAssignedTimeFlatList.length > 0
+                              ? Colors.primary_bright
+                              : Colors.soft_secondary
                         }}
                       >
                         {libary.formatTime(item.toDate())}
                       </ThaiMdText>
-                      <MaterialIcons
-                        name={
-                          item.seconds === timeSelected.seconds
-                            ? "check-box"
-                            : "check-box-outline-blank"
-                        }
-                        size={20}
-                        color={Colors.primary_bright}
-                      />
+                      {buyerAssignedTimeFlatList.length > 0 ? (
+                        <MaterialIcons
+                          name={"cancel"}
+                          size={20}
+                          color={Colors.primary_bright}
+                        />
+                      ) : (
+                        <MaterialIcons
+                          name={
+                            item.seconds === timeSelected.seconds
+                              ? "check-box"
+                              : "check-box-outline-blank"
+                          }
+                          size={20}
+                          color={Colors.primary_bright}
+                        />
+                      )}
                     </ThaiRegText>
                   </View>
                 </TouchableOpacity>
@@ -806,18 +882,19 @@ export default BuyingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
-              !timeSelected ||
+              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
               getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnBackgroundDisabled
                 : Colors.button.submit_primary_bright.btnBackground
             }
             onPress={
+              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
               getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? null
                 : acceptHandler
             }
             btnTitleColor={
-              !timeSelected ||
+              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
               getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnTextDisabled
                 : Colors.button.submit_primary_bright.btnText

@@ -8,7 +8,7 @@ import {
   SectionList,
   ActivityIndicator
 } from "react-native";
-
+import { Dropdown } from "react-native-material-dropdown";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -29,8 +29,8 @@ export default SellingTransactionScreen = props => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   // Get transactions for initially
-  const transactionsSectionListFormat = useSelector(
-    state => state.transactions.transactionsSectionListFormat
+  const transactionsDropdownFormat = useSelector(
+    state => state.transactions.transactionsDropdownFormat
   );
   const userRole = useSelector(state => state.user.userRole);
 
@@ -64,6 +64,19 @@ export default SellingTransactionScreen = props => {
       });
   }, [refreshTx, dispatch]);
 
+  const [txStatus, setTxStatus] = useState(transactionsDropdownFormat[0].value);
+  const [txShow, setTxShow] = useState(
+    transactionsDropdownFormat[0].transactions
+  );
+  const onTxStatusDropdownChange = txStatus => {
+    setTxStatus(txStatus);
+
+    targetDropdownSection = transactionsDropdownFormat.filter(
+      eachDropdownSection => eachDropdownSection.value === txStatus
+    )[0];
+    setTxShow(targetDropdownSection.transactions);
+  };
+
   //add spinner loading
   if (isLoading) {
     return (
@@ -82,7 +95,7 @@ export default SellingTransactionScreen = props => {
     >
       <CustomStatusBar />
       <LinearGradient
-        colors={Colors.linearGradientDark}
+        colors={Colors.linearGradientBright}
         style={{
           width: "100%",
           height: "100%",
@@ -92,7 +105,79 @@ export default SellingTransactionScreen = props => {
           paddingBottom: getStatusBarHeight()
         }}
       >
-        <SectionList
+        <View
+          style={{
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.soft_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center"
+          }}
+        >
+          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_dark.low_constrast,
+                fontSize: 26
+              }}
+            >
+              รายการการขายขยะของคุณ
+            </ThaiBoldText>
+          </View>
+        </View>
+        <View style={{ width: "100%", height: "70%" }}>
+          <FlatList
+            refreshing={isRefreshing}
+            onRefresh={refreshTx}
+            data={txShow}
+            keyExtractor={(item, index) => item.value}
+            renderItem={({ item }) => (
+              <SellTransactionCard
+                amountOfType={item.detail.saleList.length}
+                imgUrl={""}
+                userName={item.detail.buyer}
+                userRole={userRole}
+                txType={item.detail.txType}
+                txStatus={item.detail.txStatus}
+                meetDate={libary.formatDate(
+                  item.detail.assignedTime[0].toDate()
+                )}
+                addr={item.detail.addr}
+                onPress={() => {
+                  selectedHandler(item);
+                }}
+              />
+            )}
+          />
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "20%",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <View
+            style={{
+              ...styles.firstDropdown,
+              width: "60%",
+              height: 80
+            }}
+          >
+            <Dropdown
+              label="ประเภทของรายการ"
+              value={txStatus}
+              data={transactionsDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
+              onChangeText={thisValue => {
+                onTxStatusDropdownChange(thisValue);
+              }}
+              animationDuration={50}
+            />
+          </View>
+        </View>
+        {/* <SectionList
           refreshing={isRefreshing}
           onRefresh={refreshTx}
           sections={transactionsSectionListFormat}
@@ -133,7 +218,7 @@ export default SellingTransactionScreen = props => {
               }}
             />
           )}
-        />
+        /> */}
       </LinearGradient>
     </View>
   );

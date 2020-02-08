@@ -12,6 +12,7 @@ initialState = {
   transactions: [],
   quickTransactions: [],
   transactionsSectionListFormat: [],
+  transactionsDropdownFormat: [],
   todayTx: []
 };
 
@@ -31,18 +32,32 @@ const getTXSectionListFormat = transactions => {
   return transactionsSectionListFormat;
 };
 
+const getTXDropdownFormat = alltransactions => {
+  let txDropdownFormat = [];
+  // create sectionList transactions
+  alltransactions.forEach((transactionEachStatus, index) => {
+    let transactions = [];
+    transactionEachStatus.forEach((transaction, index) => {
+      transactions.push(transaction);
+    });
+    txDropdownFormat.push({
+      value: libary.getReadableTxStatus(index),
+      transactions
+    });
+  });
+  return txDropdownFormat;
+};
+
 export default (state = initialState, action) => {
   let updatedTransactions = [];
   switch (action.type) {
     case FETCH_TRANSACTION:
       console.log("FETCH_TRANSACTION");
-      transactionsSectionListFormat = getTXSectionListFormat(
-        action.transactions
-      );
+      transactionsDropdownFormat = getTXDropdownFormat(action.transactions);
       return {
         ...state,
         transactions: [...action.transactions],
-        transactionsSectionListFormat: [...transactionsSectionListFormat]
+        transactionsDropdownFormat: [...transactionsDropdownFormat]
       };
     case FETCH_QUICK_TRANSACTION:
       console.log("FETCH_QUICK_TRANSACTION - Redux");

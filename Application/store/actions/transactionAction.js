@@ -69,15 +69,15 @@ export const changeTransactionStatus = updatedDetail => {
     try {
       await updateTxStatus({
         txID: updatedDetail.txID,
-        chosenTime: updatedDetail.chosenTime,
-        status: updatedDetail.newStatus
+        // chosenTime: updatedDetail.chosenTime,
+        status: updatedDetail.newStatus,
+        assignedTime: updatedDetail.assignedTime
       });
 
       // move that item to new status
       dispatch({ type: CHANGE_TRANSACTION_STATUS, updatedDetail });
     } catch (err) {
       console.log(err.message);
-      dispatch({ type: FETCH_TRANSACTION, transactionMode: [] });
       throw new Error(err.message);
     }
   };
