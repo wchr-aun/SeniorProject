@@ -64,7 +64,7 @@ export default UserSignupScreen = props => {
       setError(err.message);
     }
   }, []);
-  let transactions = useSelector(state => state.transactions.todayTx);
+  const transactions = useSelector(state => state.transactions.todayTx);
 
   useEffect(() => {
     if (error) {
@@ -81,25 +81,48 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    if (Object.keys(isSelected).length == 0) return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ")
-    const location = await getCurrentLocation()
-    setCurrentLocation(location)
+    if (Object.keys(isSelected).length == 0)
+      return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ");
+    const location = await getCurrentLocation();
+    setCurrentLocation(location);
     setAddrModalVisible(true);
   };
 
-  const selectedHandler = tx => {
-    let temp = isSelected
-    if (temp[tx.txId] == undefined) temp[tx.txId] = true
-    else delete temp[tx.txId]
-    setisSelected(temp)
-    dispatchDestination({
-      geopoint: {
-        txId: tx.txId,
-        latitude: tx.detail.addr_geopoint.geopoint.latitude,
-        longitude: tx.detail.addr_geopoint.geopoint.longitude
-      }
-    });
-  };
+  //select unselect tx
+  const [txForShow, setTxForShow] = useState([]);
+  useEffect(() => {
+    console.log("transactions");
+    console.log(transactions);
+    setTxForShow(transactions);
+  }, [transactions]);
+
+  const selectedHandler = useCallback(
+    tx => {
+      let temp = isSelected;
+      if (temp[tx.txId] == undefined) temp[tx.txId] = true;
+      else delete temp[tx.txId];
+      setisSelected(temp);
+      dispatchDestination({
+        geopoint: {
+          txId: tx.txId,
+          latitude: tx.detail.addr_geopoint.geopoint.latitude,
+          longitude: tx.detail.addr_geopoint.geopoint.longitude
+        }
+      });
+
+      //for UI
+      console.log("txForShow");
+      console.log(txForShow);
+      let updatedSelectedTx = [...txForShow];
+
+      // check there is already have that item ?
+      let targetIndex = updatedSelectedTx.indexOf(tx);
+      updatedSelectedTx[targetIndex].selected = !updatedSelectedTx[targetIndex]
+        .selected;
+      setTxForShow(updatedSelectedTx);
+    },
+    [txForShow]
+  );
 
   if (addrModalVisible) {
     return (
@@ -118,25 +141,8 @@ export default UserSignupScreen = props => {
     );
   }
 
-  //select unselect tx
-  const [selectedTx, setSelectedTx] = useState([]);
-  const onSelectedHandler = item => {
-    let updatedSelectedTx = [...selectedTx];
-
-    // check there is already have that item ?
-    let targetIndex = updatedSelectedTx.indexOf(item);
-    if (targetIndex != -1) {
-      //found
-      updatedSelectedTx.splice(targetIndex, 1);
-    } else {
-      // not found
-      updatedSelectedTx.push(item);
-    }
-    setSelectedTx(updatedSelectedTx);
-  };
-
   return (
-    <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientB}>
+    <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientBright}>
       <View
         style={{
           width: "100%",
@@ -166,12 +172,12 @@ export default UserSignupScreen = props => {
       </View>
       <View style={{ width: "100%", height: "80%" }}>
         <FlatList
-          data={transactions}
+          data={txForShow}
           keyExtractor={item => item.txId}
           renderItem={({ item }) => {
             return (
               <SellTransactionCard
-                selected={selectedTx.indexOf(item) != -1 ? true : false} //true --> selected
+                selected={item.selected} //true --> selected
                 amountOfType={item.detail.saleList.length}
                 imgUrl={""}
                 userName={item.detail.seller}
@@ -183,7 +189,6 @@ export default UserSignupScreen = props => {
                 onPress={() => {
                   selectedHandler(item);
                 }}
-                onSelected={() => onSelectedHandler(item)}
               />
             );
           }}

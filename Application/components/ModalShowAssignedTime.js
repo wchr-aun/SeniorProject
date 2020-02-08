@@ -45,7 +45,8 @@ const DATA = [
   { hour: 17, minute: 0, selected: false },
   { hour: 17, minute: 30, selected: false },
   { hour: 18, minute: 0, selected: false },
-  { hour: 18, minute: 30, selected: false }
+  { hour: 18, minute: 30, selected: false },
+  { hour: 23, minute: 0, selected: false }
 ];
 
 const SELECTED = "SELECTED";

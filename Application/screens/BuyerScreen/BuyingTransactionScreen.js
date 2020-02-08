@@ -81,8 +81,6 @@ export default BuyingTransactionScreen = props => {
     );
   }
 
-  console.log("Header.HEIGHT");
-  console.log(Header.HEIGHT);
   return (
     <View
       style={{
