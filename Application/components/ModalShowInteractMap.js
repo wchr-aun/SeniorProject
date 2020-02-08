@@ -5,7 +5,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker, Polyline, Circle } from "react-native-maps";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import libary from "../utils/libary";
 import { useReducer } from "react";
@@ -137,6 +137,9 @@ export default ModalShowInteractMap = props => {
             style={styles.map}
             region={mapRegion}
             onPress={selectLocationHandler}
+            showsMyLocationButton = {true}
+            showsUserLocation = {true}
+            followsUserLocation = {true}
           >
             {isPathOptimize ? (
               <>
@@ -154,7 +157,6 @@ export default ModalShowInteractMap = props => {
                     }}
                   />
                 ))}
-                <Marker coordinate={markerCoordinates} />
               </>
             ) : (
               <Marker coordinate={markerCoordinates} />

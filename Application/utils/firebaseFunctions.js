@@ -167,7 +167,7 @@ export const getTodayTxForPathOp = async () => {
       let tx = [];
       querySnapshot.forEach(doc => {
         if (doc.data().chosenTime.toMillis() < nextDay)
-          tx.push({ txId: doc.id, detail: doc.data() });
+          tx.push({ txId: doc.id, detail: doc.data(), selected: false });
       });
       return tx;
     })
