@@ -383,22 +383,31 @@ const getTitleAndBody = (data) => {
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
   const hour = new Date(milis).getHours() || ""
   const min = new Date(milis).getMinutes() || ""
-  const index = (data.txType + 1) % 2 + data.txStatus
   const title = [
-    "คำร้องขอในบริเวณของคุณ",
-    "คำร้องขอถึงคุณ",
+    ["คำร้องขอถึงคุณ",
+    "มีการร้องขอเปลี่ยนแปลงเวลา",
     "ผู้ซื้อตอบตกลงคำร้องขอ",
     "วันนี้คุณมีนัดซื้อ-ขายขยะ",
-    "ผู้ซื้อกำลังเดินทางมา"
+    "ผู้ซื้อกำลังเดินทางมา"],
+    ["คำร้องขอในบริเวณของคุณ",
+    "",
+    "ผู้ซื้อตอบตกลงคำร้องขอขายด่วน",
+    "วันนี้คุณมีนัดซื้อ-ขายขยะ",
+    "ผู้ซื้อกำลังเดินทางมา"]
   ]
   const body = [
-    uid + " ต้องการขายขยะ",
-    uid + " ต้องการขายขยะให้คุณ",
+    [uid + " ต้องการขายขยะให้คุณ",
+    uid + " ต้องการขอเปลี่ยนแปลงเวลานัดหมายของคุณ",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
-    uid + " กำลังเดินทางมาหาคุณ"
+    uid + " กำลังเดินทางมาหาคุณ"],
+    [uid + " ต้องการขายขยะ",
+    "",
+    uid + " จะเดินทางมาใน" + daysLeft,
+    uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
+    uid + " กำลังเดินทางมาหาคุณ"]
   ]
-  return {title: title[index], body: body[index]}
+  return {title: title[data.txType][data.txStatus], body: body[data.txType][data.txStatus]}
 }
 
 const quickSellingNotification = (center, title, body) => {
