@@ -158,14 +158,14 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
   if (context.auth != null) {
     return firestore.runTransaction(transaction => {
       return transaction.get(txDB.doc(data.txID)).then(doc => {
-        if (data.status == 1 && doc.data().assignedTime[data.chosenTime].toMillis() < new Date())
+        if (data.status == 2 && new Date(data.chosenTime) < new Date())
           return {errorMessage: "The time you chose has already been passed"}
 
         const meesage = getTitleAndBody({
           uid: context.auth.uid,
           txType: doc.data().txType,
           txStatus: data.status,
-          date: doc.data().assignedTime[data.chosenTime]
+          date: data.chosenTime
         })
         return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => {
           if (result.errorMessage != null) return {errorMessage: result.errorMessage}
@@ -178,15 +178,15 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction has already been changed"}
           else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4)
             return {errorMessage: "You cannot complete your own selling transaction"}
-          else if (doc.data().txStatus >= 3)
-            return {errorMessage: "The transaction has already closed"}
           
           if (doc.data().txType == 0 || doc.data().txType == 1) {
             switch (data.status) {
               case 1:
+                let assignedTime = []
+                for (index in data.assignedTime) assignedTime.push(new Date(data.assignedTime[index]))
                 transaction.update(txDB.doc(data.txID), {
                   txStatus: data.status,
-                  assignedTime: data.assignedTime,
+                  assignedTime,
                   buyer: context.auth.uid
                 })
                 break
@@ -377,7 +377,7 @@ exports.querySellers = functions.https.onCall((data,context) => {
 })
 
 const getTitleAndBody = (data) => {
-  const milis = data.date == undefined ? 0 : data.date.toMillis()
+  const milis = data.date == undefined ? 0 : Number(data.date)
   const days = ((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000
   const uid = data.uid
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"

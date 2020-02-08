@@ -16,7 +16,7 @@ import {
 import Colors from "../../constants/Colors";
 import ModalShowInteractMap from "../../components/ModalShowInteractMap";
 import { fetchTransactionForPathOp } from "../../store/actions/transactionAction";
-import libary from "../../utils/libary";
+import libary, { getCurrentLocation } from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -43,11 +43,12 @@ export default UserSignupScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isSelected, setisSelected] = useState(false);
+  const [isSelected, setisSelected] = useState({});
   const [addrModalVisible, setAddrModalVisible] = useState(false);
   const [addrReadable, setAddrReadable] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
   const userProfile = useSelector(state => state.user.userProfile);
+  const [currentLocation, setCurrentLocation] = useState("");
   const [destinationState, dispatchDestination] = useReducer(
     destinationReducer,
     { geopoint: [] }
@@ -63,7 +64,7 @@ export default UserSignupScreen = props => {
       setError(err.message);
     }
   }, []);
-  const transactions = useSelector(state => state.transactions.todayTx);
+  let transactions = useSelector(state => state.transactions.todayTx);
 
   useEffect(() => {
     if (error) {
@@ -80,10 +81,17 @@ export default UserSignupScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
+    if (Object.keys(isSelected).length == 0) return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ")
+    const location = await getCurrentLocation()
+    setCurrentLocation(location)
     setAddrModalVisible(true);
   };
 
   const selectedHandler = tx => {
+    let temp = isSelected
+    if (temp[tx.txId] == undefined) temp[tx.txId] = true
+    else delete temp[tx.txId]
+    setisSelected(temp)
     dispatchDestination({
       geopoint: {
         txId: tx.txId,
@@ -99,8 +107,8 @@ export default UserSignupScreen = props => {
         setModalVisible={setAddrModalVisible}
         modalVisible={addrModalVisible}
         origin={{
-          latitude: userProfile.addr.latitude,
-          longitude: userProfile.addr.longitude
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude
         }}
         destination={destinationState.geopoint}
         pathOptimize={true}
@@ -171,6 +179,7 @@ export default UserSignupScreen = props => {
                 meetDate={libary.formatDate(
                   item.detail.assignedTime[0].toDate()
                 )}
+                selected={isSelected[item.txId]}
                 onPress={() => {
                   selectedHandler(item);
                 }}
@@ -189,7 +198,7 @@ export default UserSignupScreen = props => {
         }}
       >
         <CustomButton
-          disable={isSelected}
+          disable={Boolean(Object.keys(isSelected).length == 0)}
           style={{
             width: "40%",
             height: "100%",
