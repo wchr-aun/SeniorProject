@@ -265,7 +265,7 @@ const ShowAllUserTrashScreen = props => {
   //add spinner loading
   if (isLoading) {
     return (
-      <View style={styles.centered}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
@@ -519,7 +519,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.screen
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   eachSellerItemCard: {
     shadowColor: "black",
     shadowOpacity: 0.26,

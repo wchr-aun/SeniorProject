@@ -133,7 +133,7 @@ export default SellTransactionCard = props => {
                   color: libary.getColorTxStatus(props.txStatus)
                 }}
               >
-                {libary.getReadableTxStatus(props.txStatus)}
+                {libary.getReadableTxStatus(props.txStatus, props.userRole)}
               </ThaiRegText>
             </View>
           </View>

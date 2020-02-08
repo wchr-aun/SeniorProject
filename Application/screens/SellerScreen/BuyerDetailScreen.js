@@ -7,8 +7,7 @@ import {
   ActivityIndicator,
   Image,
   Modal,
-  TouchableHighlight,
-  Alert
+  TouchableHighlight
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -35,35 +34,6 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import { Header } from "react-navigation-stack";
-
-const getDisableStatusForBuyer = (btnType, txStatus) => {
-  /* 
-  preferTime --> 1
-  accept --> 2
-  buyerWillGo --> 3
-  cancel --> 4
-  */
-  switch (txStatus) {
-    case 0:
-      if (btnType != 1 && btnType != 2 && btnType != 4) return true;
-      return false;
-    case 1:
-      if (btnType != 4) return true;
-      else return false;
-    case 2:
-      if (btnType != 4 && btnType != 3) return true;
-      else return false;
-    case 3:
-      if (btnType != 4) return true;
-      else return false;
-    case 4:
-      return true;
-    case 5:
-      return true;
-    default:
-      break;
-  }
-};
 
 const ModalShowImg = props => {
   return (
@@ -196,167 +166,9 @@ const ModalShowImg = props => {
   );
 };
 
-export default BuyingTransactionDetailScreen = props => {
+export default BuyerDetailScreen = props => {
   // Get a parameter that sent from the previous page.
-  const transactionItem = props.navigation.getParam("transactionItem");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // load imgs
-  const [imgShowInModal, setImgShowInModal] = useState("");
-  const [isImgModalVisible, setIsImgModalVisible] = useState(false);
-  const [imgs, setImgs] = useState([]);
-  const loadImgs = async () => {
-    let imgs = await libary.downloadingImg(transactionItem.detail.img);
-    setImgs(imgs);
-  };
-  useEffect(() => {
-    setIsLoading(true);
-    loadImgs();
-    setIsLoading(false);
-  }, []);
-  const slideImg = indexSlide => {
-    let oldIndex = imgs.indexOf(imgShowInModal);
-    let newIndex = oldIndex + indexSlide;
-    if (newIndex != -1 && newIndex < imgs.length) {
-      setImgShowInModal(imgs[newIndex]);
-    }
-  };
-
-  const [saleList, setSetList] = useState(
-    new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
-  );
-
-  // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
-
-  const [buyerAssignedTimeFlatList, setBuyerAssignedTimeFlatList] = useState(
-    []
-  );
-  const [buyerAssignedTime, setBuyerAssignedTime] = useState([]);
-  const [modalAssignedTime, setModalAssignedTime] = useState([]);
-  const [assignedTime, setAssignedTime] = useState(
-    transactionItem.detail.assignedTime
-  );
-  const [timeSelected, setTimeSelected] = useState("");
-  const onTimeSelectedHandler = timeItem => {
-    if (timeSelected === timeItem) setTimeSelected("");
-    else setTimeSelected(timeItem);
-  };
-
-  // date picker
-  const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
-  const [datepickerShow, setDatapickerShow] = useState(false);
-  const [assignedTimeModalVisible, setAssignedTimeModalVisible] = useState(
-    false
-  );
-  showDateTimePicker = () => {
-    setDatapickerShow(true);
-  };
-  hideDateTimePicker = () => {
-    setDatapickerShow(false);
-  };
-  handleDatePicked = date => {
-    setDate(date);
-    hideDateTimePicker();
-    setAssignedTimeModalVisible(true);
-  };
-  // add modalAssignedTime to buyerAssignedTime when update
-  useEffect(() => {
-    let updatedAssignedTime = [...buyerAssignedTimeFlatList];
-    let updatedModalAssignedTime = [...modalAssignedTime];
-    let updatedBuyerAssignedTime = [];
-
-    updatedModalAssignedTime.forEach((item, index) => {
-      updatedModalAssignedTime[index] = libary.toDate(item / 1000);
-      updatedBuyerAssignedTime.push(item);
-    });
-    updatedAssignedTime = updatedAssignedTime.concat(updatedModalAssignedTime);
-    console.log(updatedAssignedTime);
-    setBuyerAssignedTimeFlatList(updatedAssignedTime);
-    setBuyerAssignedTime(updatedBuyerAssignedTime);
-  }, [modalAssignedTime]);
-
-  const deleteBuyerTimeHandler = datetime => {
-    let updatedBuyerAssignedTime = [...buyerAssignedTimeFlatList];
-    let deletedTarget = updatedBuyerAssignedTime.indexOf(datetime);
-    if (deletedTarget != -1) {
-      updatedBuyerAssignedTime.splice(deletedTarget, 1);
-    }
-    setBuyerAssignedTimeFlatList(updatedBuyerAssignedTime);
-  };
-
-  const dispatch = useDispatch();
-  const cancelHandler = async () => {
-    setIsLoading(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 4
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsLoading(false);
-    Alert.alert(
-      "การยกเลิกคำขอเสร็จสิ้น!",
-      "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
-      [{ text: "OK" }]
-    );
-    props.navigation.goBack();
-  };
-
-  const acceptHandler = async () => {
-    setIsLoading(true);
-    if (buyerAssignedTimeFlatList.length > 0) {
-      //buyer select his assignedTime
-      dispatch(
-        transactionAction.changeTransactionStatus({
-          txID: transactionItem.txId,
-          oldStatus: transactionItem.detail.txStatus, //for query
-          newStatus: 1,
-          txType: transactionItem.detail.txType,
-          assignedTime: buyerAssignedTime
-        })
-      );
-    } else {
-      //buyer select his client assignedTime
-      dispatch(
-        transactionAction.changeTransactionStatus({
-          txID: transactionItem.txId,
-          oldStatus: transactionItem.detail.txStatus, //for query
-          chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
-          newStatus: 2,
-          txType: transactionItem.detail.txType
-        })
-      );
-    }
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsLoading(false);
-    Alert.alert(
-      "ยอมรับคำขอเสร็จสิ้น!",
-      "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
-      [{ text: "OK" }]
-    );
-    props.navigation.goBack();
-  };
-
-  const onBuyerWayHandler = async () => {
-    setIsLoading(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 3
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
-    setIsLoading(false);
-    props.navigation.goBack();
-  };
-
-  const backHandler = () => {
-    props.navigation.goBack();
-  };
+  const buyerInfomation = props.navigation.getParam("buyerInfomation");
 
   //add spinner loading
   if (isLoading) {
@@ -364,17 +176,6 @@ export default BuyingTransactionDetailScreen = props => {
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
-    );
-  }
-
-  if (assignedTimeModalVisible) {
-    return (
-      <ModalShowAssignedTime
-        setModalVisible={setAssignedTimeModalVisible}
-        modalVisible={assignedTimeModalVisible}
-        date={date}
-        setSelectedTimes={setModalAssignedTime}
-      />
     );
   }
 
@@ -551,14 +352,7 @@ export default BuyingTransactionDetailScreen = props => {
           justifyContent: "space-between"
         }}
       >
-        <View
-          style={{
-            width: "50%",
-            height: "80%",
-            padding: 5,
-            alignItems: "center"
-          }}
-        >
+        <View style={{ width: "50%", height: "80%", padding: 5 }}>
           {buyerAssignedTimeFlatList.length > 0 ? (
             <CustomButton
               style={{
@@ -626,10 +420,7 @@ export default BuyingTransactionDetailScreen = props => {
               name={"calendar-multiple-check"}
               size={12}
             />
-            <ThaiMdText style={{ fontSize: 12 }}>
-              {" "}
-              {buyerAssignedTime.length ? "เสนอเวลาเพิ่มเติม" : "เสนอเวลาอื่น"}
-            </ThaiMdText>
+            <ThaiMdText style={{ fontSize: 12 }}> เสนอเวลาอื่น</ThaiMdText>
           </CustomButton>
         </View>
       </View>
@@ -668,21 +459,8 @@ export default BuyingTransactionDetailScreen = props => {
                       : () => onTimeSelectedHandler(item)
                   }
                 >
-                  <View
-                    style={{
-                      height: 25,
-                      padding: 3,
-                      alignSelf: "center",
-                      alignItems: "center"
-                    }}
-                  >
-                    <View
-                      style={{
-                        fontSize: 18,
-                        alignItems: "center",
-                        flexDirection: "row"
-                      }}
-                    >
+                  <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                    <ThaiRegText style={{ fontSize: 18 }}>
                       <ThaiMdText
                         style={{
                           fontSize: 18,
@@ -699,6 +477,7 @@ export default BuyingTransactionDetailScreen = props => {
                       >
                         {libary.formatDate(item.toDate())}
                       </ThaiMdText>
+                      {` `}
                       <ThaiMdText
                         style={{
                           fontSize: 18,
@@ -713,7 +492,7 @@ export default BuyingTransactionDetailScreen = props => {
                               : Colors.soft_secondary
                         }}
                       >
-                        {` ${libary.formatTime(item.toDate())}`}
+                        {libary.formatTime(item.toDate())}
                       </ThaiMdText>
                       {buyerAssignedTimeFlatList.length > 0 ? (
                         <MaterialIcons
@@ -732,7 +511,7 @@ export default BuyingTransactionDetailScreen = props => {
                           color={Colors.primary_bright}
                         />
                       ) : null}
-                    </View>
+                    </ThaiRegText>
                   </View>
                 </TouchableOpacity>
               );
@@ -795,22 +574,19 @@ export default BuyingTransactionDetailScreen = props => {
                       style={{ fontSize: 18, color: Colors.soft_secondary }}
                     >
                       <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.soft_secondary }}
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
                       >
                         {item.type}
                       </ThaiMdText>
                       {` ประเภท `}
                       <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.soft_secondary }}
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
                       >
                         {item.subtype}
                       </ThaiMdText>
                       {` จำนวน `}
                       <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color: Colors.primary_bright_variant
-                        }}
+                        style={{ fontSize: 18, color: Colors.primary_bright }}
                       >
                         {item.amount.amount}
                       </ThaiMdText>

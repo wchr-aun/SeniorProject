@@ -313,7 +313,7 @@ export default SellingTrashScreen = props => {
                 style={{
                   fontSize: 14,
                   textAlign: "center",
-                  color: Colors.on_primary_bright.high_constrast
+                  color: Colors.on_primary_bright.low_constrast
                 }}
                 value={distance}
                 selectTextOnFocus={true}

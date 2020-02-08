@@ -77,7 +77,7 @@ export default SellingReqBeforeSendingScreen = props => {
     await dispatch(transactionAction.fetchTransaction("seller"));
     await dispatch(sellerItemsAction.fetchSellerItems());
     await dispatch(navigationBehaviorAction.finishOperation());
-    props.navigation.navigate("SellTransaction");
+    props.navigation.navigate("SellerHomepageScreen");
   };
 
   const backHandler = () => {

@@ -430,18 +430,6 @@ export default EditingUserprofileScreen = props => {
                       }}
                     />
                   </View>
-                  <View
-                    style={{
-                      height: "100%",
-                      width: "70%",
-                      justifyContent: "center",
-                      alignItems: "flex-start"
-                    }}
-                  >
-                    <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
-                      สามารถถูกค้นหาได้
-                    </ThaiRegText>
-                  </View>
                 </View>
               )}
 

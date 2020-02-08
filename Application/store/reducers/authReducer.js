@@ -15,6 +15,8 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
+      console.log("SIGNIN");
+      console.log(action);
       return {
         userProfile: {
           uid: action.userProfile.uid,

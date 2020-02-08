@@ -8,6 +8,7 @@ import ImageCircle from "./UI/ImageCircle";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default UserInfoCard = props => {
+  console.log(props);
   return (
     <LinearGradient
       colors={Colors.linearGradientDark}
@@ -78,7 +79,9 @@ export default UserInfoCard = props => {
               color: Colors.on_primary_dark.low_constrast
             }}
           >
-            การรับซื้อขยะรอบต่อไป
+            {props.userRole === "seller"
+              ? "จำนวนรายการที่รอคุณเลือกเวลา"
+              : "จำนวนคำขอที่ขายขยะให้คุณ"}
           </ThaiRegText>
           <ThaiRegText
             style={{
@@ -86,7 +89,7 @@ export default UserInfoCard = props => {
               color: Colors.on_primary_dark.high_constrast
             }}
           >
-            {props.meetTime}
+            {props.numberOfIncompleteTx}
           </ThaiRegText>
         </View>
       </View>

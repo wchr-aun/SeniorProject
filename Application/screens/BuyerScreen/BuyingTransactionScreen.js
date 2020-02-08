@@ -16,6 +16,7 @@ import libary from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { LinearGradient } from "expo-linear-gradient";
 import { Header } from "react-navigation-stack";
+import ThaiRegText from "../../components/ThaiRegText";
 
 export default BuyingTransactionScreen = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -118,7 +119,7 @@ export default BuyingTransactionScreen = props => {
                 fontSize: 26
               }}
             >
-              รายการการขายขยะของคุณ
+              การรับซื้อขยะของคุณ
             </ThaiBoldText>
           </View>
         </View>
@@ -150,30 +151,41 @@ export default BuyingTransactionScreen = props => {
             />
           </View>
         </View>
-        <View style={{ width: "100%", height: "70%" }}>
-          <FlatList
-            refreshing={isRefreshing}
-            onRefresh={refreshTx}
-            data={txShow}
-            keyExtractor={(item, index) => item.txId}
-            renderItem={({ item }) => (
-              <SellTransactionCard
-                amountOfType={item.detail.saleList.length}
-                imgUrl={""}
-                userName={item.detail.buyer}
-                userRole={userRole}
-                txType={item.detail.txType}
-                txStatus={item.detail.txStatus}
-                meetDate={libary.formatDate(
-                  item.detail.assignedTime[0].toDate()
-                )}
-                addr={item.detail.addr}
-                onPress={() => {
-                  selectedHandler(item);
-                }}
-              />
-            )}
-          />
+        <View
+          style={{
+            width: "100%",
+            height: "70%",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          {txShow.length > 0 ? (
+            <FlatList
+              refreshing={isRefreshing}
+              onRefresh={refreshTx}
+              data={txShow}
+              keyExtractor={(item, index) => item.txId}
+              renderItem={({ item }) => (
+                <SellTransactionCard
+                  amountOfType={item.detail.saleList.length}
+                  imgUrl={""}
+                  userName={item.detail.buyer}
+                  userRole={userRole}
+                  txType={item.detail.txType}
+                  txStatus={item.detail.txStatus}
+                  meetDate={libary.formatDate(
+                    item.detail.assignedTime[0].toDate()
+                  )}
+                  addr={item.detail.addr}
+                  onPress={() => {
+                    selectedHandler(item);
+                  }}
+                />
+              )}
+            />
+          ) : (
+            <ThaiRegText>ยังไม่มีรายการในประเภทนี้</ThaiRegText>
+          )}
         </View>
       </LinearGradient>
     </View>

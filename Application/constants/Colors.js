@@ -72,7 +72,7 @@ export default {
   txStatus: {
     zero: "#149c6a",
     one: "#fcba03",
-    two: "#8c0b04",
+    two: "#c70a00",
     three: "#ff386d",
     four: "#B3B3B3",
     five: "#3797f0"

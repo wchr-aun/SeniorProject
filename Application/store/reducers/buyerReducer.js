@@ -8,7 +8,8 @@ import { LOGOUT, CHANGE_ROLE } from "../actions/authAction";
 initialState = {
   wasteListSectionFormat: [],
   sellerList: [],
-  purchaseList: {}
+  purchaseList: {},
+  enableSearch: false
 };
 
 export default (state = initialState, action) => {
@@ -19,7 +20,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         wasteListSectionFormat: [...action.wasteListSectionFormat],
-        purchaseList: action.purchaseList
+        purchaseList: action.purchaseList,
+        enableSearch: action.buyerInfo.enableSearch
       };
     case EDIT_PURCHASELIST:
       console.log("EDIT_PURCHASELIST - Redux");

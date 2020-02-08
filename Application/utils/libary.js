@@ -131,7 +131,7 @@ const formatTime = date => {
   } น.`;
 };
 
-const getReadableTxStatus = txStatus => {
+const getReadableTxStatus = (txStatus, userRole) => {
   //   Transaction Status
   // 0 - เพิ่งสร้าง
   // 1 - ถูกปฏิเสธ แบบมีเงื่อนไข
@@ -141,15 +141,17 @@ const getReadableTxStatus = txStatus => {
   // 5 - Complete เสร็จสมบูรณ์
   switch (txStatus) {
     case 0:
-      return "รอการตอบกลับ";
+      return userRole === "seller" ? "รอการตอบกลับ" : "รอคุณตอบกลับ";
     case 1:
-      return "มีการเสนอเวลาใหม่";
+      return userRole === "seller"
+        ? "ผู้ซื้อเสนอเวลานัดใหม่"
+        : "คุณเสนอเวลานัดใหม่";
     case 2:
-      return "มีผู้รับซื้อแล้ว";
+      return userRole === "seller" ? "มีผู้รับซื้อแล้ว" : "คุณรับซื้อแล้ว";
     case 3:
-      return "กำลังเดินทางไปรับ";
+      return userRole === "seller" ? "กำลังเดินทางมารับ" : "กำลังเดินทางไปรับ";
     case 4:
-      return "ยกเลิก";
+      return "ถูกยกเลิก";
     case 5:
       return "ดำเนินการเสร็จสิ้น";
     default:
