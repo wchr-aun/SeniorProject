@@ -50,7 +50,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
       if (btnType != 4) return true;
       else return false;
     case 2:
-      if (btnType != 4 && btnType != 3 && btnType != 1) return true;
+      if (btnType != 4 && btnType != 3) return true;
       else return false;
     case 3:
       if (btnType == 1 || btnType == 2) return true;
@@ -283,18 +283,6 @@ export default BuyingTransactionDetailScreen = props => {
       updatedBuyerAssignedTime.splice(deletedTarget, 1);
     }
     setBuyerAssignedTimeFlatList(updatedBuyerAssignedTime);
-  };
-
-  const preferTimeHandler = () => {
-    // dispatch(
-    //   transactionAction.changeTransactionStatus({
-    //     txID: transactionItem.txId,
-    //     oldStatus: transactionItem.detail.txStatus, //for query
-    //     chosenTime: libary.toDate(datetime),
-    //     newStatus: 1
-    //   })
-    // );
-    // props.navigation.goBack();
   };
 
   console.log("Header.HEIGHT");
@@ -576,7 +564,7 @@ export default BuyingTransactionDetailScreen = props => {
                 ? "เวลาที่ผู้ขายเสนอ"
                 : transactionItem.detail.txStatus === 1
                 ? "เวลาที่คุณเสนอ"
-                : "เวลาที่ตกลงกัน"}
+                : "เวลาที่ตกลงกัน(สีเขียว)"}
             </ThaiMdText>
           )}
         </View>
@@ -663,6 +651,11 @@ export default BuyingTransactionDetailScreen = props => {
                           color:
                             buyerAssignedTimeFlatList.length > 0
                               ? Colors.primary_bright
+                              : transactionItem.detail.chosenTime != undefined
+                              ? transactionItem.detail.chosenTime.seconds ===
+                                item.seconds
+                                ? Colors.soft_primary_bright
+                                : Colors.soft_secondary
                               : Colors.soft_secondary
                         }}
                       >
@@ -675,6 +668,11 @@ export default BuyingTransactionDetailScreen = props => {
                           color:
                             buyerAssignedTimeFlatList.length > 0
                               ? Colors.primary_bright
+                              : transactionItem.detail.chosenTime != undefined
+                              ? transactionItem.detail.chosenTime.seconds ===
+                                item.seconds
+                                ? Colors.soft_primary_bright
+                                : Colors.soft_secondary
                               : Colors.soft_secondary
                         }}
                       >

@@ -54,245 +54,246 @@ const AmountOfTrash = props => {
 
 export default TrashCardForSell = props => {
   return (
-    <View
-      style={{
-        ...styles.trashCard,
-        ...props.style,
-        width: wp("95%"),
-        height: hp("20%"),
-        alignSelf: "center",
-        borderRadius: 10,
-        marginVertical: 5,
-        overflow: "hidden",
-        backgroundColor: Colors.secondary,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: props.selected ? 5 : 1
-        },
-        shadowOpacity: props.selected ? 0.34 : 0.18,
-        shadowRadius: props.selected ? 6.27 : 1.0,
-        elevation: props.selected ? 10 : 1
-      }}
-    >
+    <TouchableOpacity onPress={props.onSelected}>
       <View
         style={{
-          ...styles.image,
-          width: "30%",
-          height: "100%",
+          ...styles.trashCard,
+          ...props.style,
+          width: wp("95%"),
+          height: hp("20%"),
+          alignSelf: "center",
+          borderRadius: 10,
+          marginVertical: 5,
+          overflow: "hidden",
           backgroundColor: Colors.secondary,
-          padding: wp("2.5%"),
-          alignItems: "center",
-          justifyContent: "space-around"
-        }}
-      >
-        <CustomButton
-          style={{
-            width: "100%",
-            height: "20%",
-            maxHeight: 40,
-            borderRadius: 8,
-            padding: 10
-          }}
-          btnColor={
-            props.selected
-              ? Colors.button.submit_primary_bright.btnBackground
-              : Colors.hard_secondary
-          }
-          onPress={props.onSelected}
-          btnTitleColor={
-            props.selected
-              ? Colors.button.submit_primary_bright.btnText
-              : Colors.primary_dark
-          }
-          btnTitleFontSize={12}
-          disable={false}
-        >
-          <ThaiBoldText style={{ fontSize: 14 }}>เลือก </ThaiBoldText>
-          {props.selected ? (
-            <MaterialIcons
-              name={props.selected ? "check-box" : "check-box-outline-blank"}
-              size={10}
-              color={Colors.button.submit_primary_bright.btnText}
-            />
-          ) : null}
-        </CustomButton>
-        <ImageCircle
-          avariableWidth={wp("20%")}
-          imgUrl={props.imgUrl}
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.soft_secondary,
-            height: "80%",
-            width: "100%"
-          }}
-        />
-      </View>
-
-      <View
-        style={{
-          ...styles.detailContainer,
-          width: "50%",
-          height: "100%",
-          justifyContent: "space-around"
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: props.selected ? 5 : 1
+          },
+          shadowOpacity: props.selected ? 0.34 : 0.18,
+          shadowRadius: props.selected ? 6.27 : 1.0,
+          elevation: props.selected ? 10 : 1
         }}
       >
         <View
           style={{
-            ...styles.sellerItemNameAndCheckbox,
-            width: "100%",
-            height: "30%",
-            flexDirection: "row"
+            ...styles.image,
+            width: "30%",
+            height: "100%",
+            backgroundColor: Colors.secondary,
+            padding: wp("2.5%"),
+            alignItems: "center",
+            justifyContent: "space-around"
+          }}
+        >
+          <CustomButton
+            style={{
+              width: "100%",
+              height: "20%",
+              maxHeight: 40,
+              borderRadius: 8,
+              padding: 10
+            }}
+            btnColor={
+              props.selected
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.hard_secondary
+            }
+            btnTitleColor={
+              props.selected
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.primary_dark
+            }
+            btnTitleFontSize={12}
+            disable={false}
+          >
+            <ThaiBoldText style={{ fontSize: 14 }}>เลือก </ThaiBoldText>
+            {props.selected ? (
+              <MaterialIcons
+                name={props.selected ? "check-box" : "check-box-outline-blank"}
+                size={10}
+                color={Colors.button.submit_primary_bright.btnText}
+              />
+            ) : null}
+          </CustomButton>
+          <ImageCircle
+            avariableWidth={wp("20%")}
+            imgUrl={props.imgUrl}
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.soft_secondary,
+              height: "80%",
+              width: "100%"
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            ...styles.detailContainer,
+            width: "50%",
+            height: "100%",
+            justifyContent: "space-around"
           }}
         >
           <View
             style={{
-              ...styles.sellerItemName,
-              width: "60%",
-              height: "100%",
-              justifyContent: "space-between"
+              ...styles.sellerItemNameAndCheckbox,
+              width: "100%",
+              height: "30%",
+              flexDirection: "row"
             }}
           >
-            <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
-            <ThaiMdText
+            <View
               style={{
-                ...styles.trashName,
-                color: props.selected
-                  ? Colors.primary_bright_variant
-                  : Colors.hard_secondary,
-                fontSize: 12
+                ...styles.sellerItemName,
+                width: "60%",
+                height: "100%",
+                justifyContent: "space-between"
               }}
             >
-              {props.wasteName}
+              <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
+              <ThaiMdText
+                style={{
+                  ...styles.trashName,
+                  color: props.selected
+                    ? Colors.primary_bright_variant
+                    : Colors.hard_secondary,
+                  fontSize: 12
+                }}
+              >
+                {props.wasteName}
+              </ThaiMdText>
+            </View>
+          </View>
+          <View style={{ width: "100%", height: "30%" }}>
+            <ThaiRegText>ราคารับซื้อ: </ThaiRegText>
+            <View style={{ flexDirection: "row" }}>
+              <ThaiBoldText
+                style={{
+                  color: props.selected
+                    ? Colors.primary_bright
+                    : Colors.hard_secondary,
+                  fontSize: 12
+                }}
+              >
+                {props.sellerItemAdjustPrice}
+              </ThaiBoldText>
+              <ThaiBoldText style={{ fontSize: 12 }}> บาท/กก.</ThaiBoldText>
+            </View>
+          </View>
+          <View style={{ width: "100%", height: "30%" }}>
+            <ThaiRegText>คงเหลือ: </ThaiRegText>
+            <ThaiMdText
+              style={{
+                fontSize: 12,
+                color:
+                  isNaN(props.changeAmount) ||
+                  props.changeAmount === 0 ||
+                  !props.selected
+                    ? Colors.hard_secondary
+                    : props.changeAmount > 0
+                    ? Colors.primary_bright
+                    : Colors.error
+              }}
+            >
+              {props.selected
+                ? props.oldAmount - (props.oldAmount + props.changeAmount)
+                : props.oldAmount}
             </ThaiMdText>
           </View>
         </View>
-        <View style={{ width: "100%", height: "30%" }}>
-          <ThaiRegText>ราคารับซื้อ: </ThaiRegText>
-          <View style={{ flexDirection: "row" }}>
-            <ThaiBoldText
-              style={{
-                color: props.selected
-                  ? Colors.primary_bright
-                  : Colors.hard_secondary,
-                fontSize: 12
-              }}
-            >
-              {props.sellerItemAdjustPrice}
-            </ThaiBoldText>
-            <ThaiBoldText style={{ fontSize: 12 }}> บาท/กก.</ThaiBoldText>
-          </View>
-        </View>
-        <View style={{ width: "100%", height: "30%" }}>
-          <ThaiRegText>คงเหลือ: </ThaiRegText>
-          <ThaiMdText
-            style={{
-              fontSize: 12,
-              color:
-                isNaN(props.changeAmount) ||
-                props.changeAmount === 0 ||
-                !props.selected
-                  ? Colors.hard_secondary
-                  : props.changeAmount > 0
-                  ? Colors.primary_bright
-                  : Colors.error
-            }}
-          >
-            {props.selected
-              ? props.oldAmount - (props.oldAmount + props.changeAmount)
-              : props.oldAmount}
-          </ThaiMdText>
-        </View>
-      </View>
 
-      {/* Adjust Component */}
-      {!props.selected ? null : (
-        <View
-          style={{
-            width: "20%",
-            height: "100%",
-            backgroundColor: Colors.secondary,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 10
-          }}
-        >
+        {/* Adjust Component */}
+        {!props.selected ? null : (
           <View
             style={{
-              width: "100%",
+              width: "20%",
               height: "100%",
+              backgroundColor: Colors.secondary,
               alignItems: "center",
-              justifyContent: "space-around",
-              borderRadius: 8,
-              backgroundColor: Colors.soft_secondary,
-              ...styles.shadow
+              justifyContent: "center",
+              padding: 10
             }}
           >
-            {/* + */}
             <View
               style={{
                 width: "100%",
-                height: "30%",
+                height: "100%",
                 alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              {!props.selected ? null : (
-                <TouchableOpacity onPress={props.onIncrease}>
-                  <AntDesign
-                    name="plus"
-                    size={24}
-                    color={Colors.hard_secondary}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-            {/* number */}
-            <View
-              style={{
-                width: "100%",
-                height: "30%",
-                alignSelf: "center"
-              }}
-            >
-              {props.selected ? (
-                <TextInput
-                  style={{ textAlign: "center" }}
-                  selectTextOnFocus={true}
-                  keyboardType="numeric"
-                  value={(props.oldAmount + props.changeAmount <= 0
-                    ? 0
-                    : props.oldAmount + props.changeAmount
-                  ).toString()}
-                  onChangeText={props.onEdit}
-                  textAlign={"center"}
-                />
-              ) : null}
-            </View>
-            {/* - */}
-            <View
-              style={{
-                width: "100%",
-                height: "30%",
-                alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-around",
+                borderRadius: 8,
+                backgroundColor: Colors.soft_secondary,
                 ...styles.shadow
               }}
             >
-              {!props.selected ? null : (
-                <TouchableOpacity onPress={props.onDecrease}>
-                  <AntDesign
-                    name="minus"
-                    size={24}
-                    color={Colors.hard_secondary}
+              {/* + */}
+              <View
+                style={{
+                  width: "100%",
+                  height: "30%",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                {!props.selected ? null : (
+                  <TouchableOpacity onPress={props.onIncrease}>
+                    <AntDesign
+                      name="plus"
+                      size={24}
+                      color={Colors.hard_secondary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              {/* number */}
+              <View
+                style={{
+                  width: "100%",
+                  height: "30%",
+                  alignSelf: "center"
+                }}
+              >
+                {props.selected ? (
+                  <TextInput
+                    style={{ textAlign: "center" }}
+                    selectTextOnFocus={true}
+                    keyboardType="numeric"
+                    value={(props.oldAmount + props.changeAmount <= 0
+                      ? 0
+                      : props.oldAmount + props.changeAmount
+                    ).toString()}
+                    onChangeText={props.onEdit}
+                    textAlign={"center"}
                   />
-                </TouchableOpacity>
-              )}
+                ) : null}
+              </View>
+              {/* - */}
+              <View
+                style={{
+                  width: "100%",
+                  height: "30%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ...styles.shadow
+                }}
+              >
+                {!props.selected ? null : (
+                  <TouchableOpacity onPress={props.onDecrease}>
+                    <AntDesign
+                      name="minus"
+                      size={24}
+                      color={Colors.hard_secondary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
 

@@ -42,12 +42,12 @@ export default SearchQuicksellingScreen = props => {
 
   // Callback fn
   const [isRefreshing, setIsRefreshing] = useState(true);
+  const [distance, setDistance] = useState("10");
   const loadSeller = useCallback(async () => {
     setIsRefreshing(true);
     await dispatch(
       transactionAction.fetchQuickTransaction({
-        // distance: parseInt(props.navigation.getParam("distance"), 10),
-        distance: parseInt(1000, 10),
+        distance: Number(distance),
         saleList: purchaseList.getObject(),
         addr: buyerAddr
       })
@@ -129,7 +129,8 @@ export default SearchQuicksellingScreen = props => {
               color: Colors.on_primary_dark.high_constrast
             }}
             selectTextOnFocus={true}
-            value={"10"}
+            value={distance}
+            onChangeText={value => setDistance(value)}
             keyboardType="number-pad"
           />
           <ThaiRegText
@@ -152,6 +153,7 @@ export default SearchQuicksellingScreen = props => {
           btnColor={Colors.button.submit_primary_dark.btnBackground}
           btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={14}
+          onPress={loadSeller}
         >
           <MaterialCommunityIcons
             name={"account-search"}

@@ -110,6 +110,23 @@ export default UserSignupScreen = props => {
     );
   }
 
+  //select unselect tx
+  const [selectedTx, setSelectedTx] = useState([]);
+  const onSelectedHandler = item => {
+    let updatedSelectedTx = [...selectedTx];
+
+    // check there is already have that item ?
+    let targetIndex = updatedSelectedTx.indexOf(item);
+    if (targetIndex != -1) {
+      //found
+      updatedSelectedTx.splice(targetIndex, 1);
+    } else {
+      // not found
+      updatedSelectedTx.push(item);
+    }
+    setSelectedTx(updatedSelectedTx);
+  };
+
   return (
     <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientB}>
       <View
@@ -146,6 +163,7 @@ export default UserSignupScreen = props => {
           renderItem={({ item }) => {
             return (
               <SellTransactionCard
+                selected={selectedTx.indexOf(item) != -1 ? true : false} //true --> selected
                 amountOfType={item.detail.saleList.length}
                 imgUrl={""}
                 userName={item.detail.seller}
@@ -156,6 +174,7 @@ export default UserSignupScreen = props => {
                 onPress={() => {
                   selectedHandler(item);
                 }}
+                onSelected={() => onSelectedHandler(item)}
               />
             );
           }}

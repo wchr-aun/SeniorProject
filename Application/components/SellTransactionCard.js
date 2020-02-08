@@ -43,7 +43,15 @@ export default SellTransactionCard = props => {
           alignSelf: "center",
           marginVertical: 5,
           borderRadius: 10,
-          flexDirection: "row"
+          flexDirection: "row",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: props.selected ? 5 : 1
+          },
+          shadowOpacity: props.selected ? 0.34 : 0.18,
+          shadowRadius: props.selected ? 6.27 : 1.0,
+          elevation: props.selected ? 10 : 1
         }}
       >
         <ImageCircle

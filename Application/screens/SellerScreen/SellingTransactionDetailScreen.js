@@ -101,7 +101,8 @@ export default SellingTransactionDetailScreen = props => {
         oldStatus: transactionItem.detail.txStatus, //for query
         chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
         newStatus: 2,
-        txType: transactionItem.detail.txType
+        txType: transactionItem.detail.txType,
+        assignedTime: transactionItem.detail.assignedTime
       })
     );
     props.navigation.goBack();
