@@ -47,7 +47,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
       if (btnType != 1 && btnType != 2 && btnType != 4) return true;
       return false;
     case 1:
-      if (btnType == 1 || btnType == 2) return true;
+      if (btnType != 4) return true;
       else return false;
     case 2:
       if (btnType != 4 && btnType != 3 && btnType != 1) return true;
@@ -226,7 +226,7 @@ export default BuyingTransactionDetailScreen = props => {
   );
 
   // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
-  const [timeSelected, setTimeSelected] = useState("");
+
   const [buyerAssignedTimeFlatList, setBuyerAssignedTimeFlatList] = useState(
     []
   );
@@ -235,6 +235,7 @@ export default BuyingTransactionDetailScreen = props => {
   const [assignedTime, setAssignedTime] = useState(
     transactionItem.detail.assignedTime
   );
+  const [timeSelected, setTimeSelected] = useState("");
   const onTimeSelectedHandler = timeItem => {
     if (timeSelected === timeItem) setTimeSelected("");
     else setTimeSelected(timeItem);
@@ -571,7 +572,11 @@ export default BuyingTransactionDetailScreen = props => {
                 color: Colors.on_primary_dark.low_constrast
               }}
             >
-              เวลาที่ผู้ขายเสนอ
+              {transactionItem.detail.txStatus === 0
+                ? "เวลาที่ผู้ขายเสนอ"
+                : transactionItem.detail.txStatus === 1
+                ? "เวลาที่คุณเสนอ"
+                : "เวลาที่ตกลงกัน"}
             </ThaiMdText>
           )}
         </View>
@@ -642,7 +647,6 @@ export default BuyingTransactionDetailScreen = props => {
             }
             style={{ flex: 1 }}
             renderItem={({ item }) => {
-              console.log(buyerAssignedTimeFlatList);
               return (
                 <TouchableOpacity
                   onPress={
@@ -682,7 +686,7 @@ export default BuyingTransactionDetailScreen = props => {
                           size={20}
                           color={Colors.primary_bright}
                         />
-                      ) : (
+                      ) : transactionItem.detail.txStatus === 0 ? (
                         <MaterialIcons
                           name={
                             item.seconds === timeSelected.seconds
@@ -692,7 +696,7 @@ export default BuyingTransactionDetailScreen = props => {
                           size={20}
                           color={Colors.primary_bright}
                         />
-                      )}
+                      ) : null}
                     </ThaiRegText>
                   </View>
                 </TouchableOpacity>

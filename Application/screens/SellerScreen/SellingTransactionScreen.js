@@ -140,7 +140,7 @@ export default SellingTransactionScreen = props => {
                 onTxStatusDropdownChange(thisValue);
               }}
               animationDuration={50}
-              dropdownPosition
+              dropdownPosition={1}
             />
           </View>
         </View>
@@ -149,7 +149,7 @@ export default SellingTransactionScreen = props => {
             refreshing={isRefreshing}
             onRefresh={refreshTx}
             data={txShow}
-            keyExtractor={(item, index) => item.value}
+            keyExtractor={(item, index) => item.txId}
             renderItem={({ item }) => (
               <SellTransactionCard
                 amountOfType={item.detail.saleList.length}

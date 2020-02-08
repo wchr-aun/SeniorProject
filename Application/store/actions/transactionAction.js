@@ -69,7 +69,7 @@ export const changeTransactionStatus = updatedDetail => {
     try {
       await updateTxStatus({
         txID: updatedDetail.txID,
-        // chosenTime: updatedDetail.chosenTime,
+        chosenTime: updatedDetail.chosenTime,
         status: updatedDetail.newStatus,
         assignedTime: updatedDetail.assignedTime
       });
