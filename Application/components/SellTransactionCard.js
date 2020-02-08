@@ -11,7 +11,7 @@ import {
   TouchableOpacity
 } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import ThaiRegText from "./ThaiRegText";
 import ImageCircle from "./UI/ImageCircle";
@@ -24,6 +24,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
 import AppVariableSetting from "../constants/AppVariableSetting";
+import CustomButton from "./UI/CustomButton";
 
 export default SellTransactionCard = props => {
   // Set-up the touchable view
@@ -54,11 +55,45 @@ export default SellTransactionCard = props => {
           elevation: props.selected ? 10 : 1
         }}
       >
-        <ImageCircle
-          imgUrl={""}
-          avariableWidth={wp("20%")}
-          style={{ marginHorizontal: wp("3%") }}
-        />
+        <View
+          style={{
+            width: wp("20%"),
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "space-around",
+            marginHorizontal: wp("3%")
+          }}
+        >
+          {props.selected ? (
+            <CustomButton
+              style={{
+                width: "100%",
+                maxWidth: 60,
+                height: "20%",
+                maxHeight: 40,
+                borderRadius: 8,
+                padding: 10
+              }}
+              btnColor={
+                props.selected
+                  ? Colors.button.submit_primary_bright.btnBackground
+                  : Colors.hard_secondary
+              }
+              btnTitleColor={
+                props.selected
+                  ? Colors.button.submit_primary_bright.btnText
+                  : Colors.primary_dark
+              }
+              btnTitleFontSize={8}
+              disable={false}
+            >
+              <ThaiBoldText style={{ fontSize: 8 }}>เลือก </ThaiBoldText>
+            </CustomButton>
+          ) : null}
+
+          <ImageCircle imgUrl={""} avariableWidth={wp("18%")} />
+        </View>
+
         <View
           style={{
             width: wp("69%"),
