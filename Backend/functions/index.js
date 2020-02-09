@@ -40,10 +40,20 @@ exports.createAccount = functions.https.onCall((data, context) => {
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       zipcode,
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
+    }).then(() => {
+      buyerDB.doc(userRecord.uid).set({
+        username: userRecord.uid,
+        enableSearch: false
+      }).catch(err => {
+        console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
+        console.log(err)
+        return {errorMessage: err.message}
+      })
     }).catch(err => {
       console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
       console.log(err)
       return {errorMessage: err.message}
+      
     })
   }).then(() => {
     return true
@@ -161,13 +171,27 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
         if (data.status == 2 && new Date(data.chosenTime) < new Date())
           return {errorMessage: "The time you chose has already been passed"}
 
-        const meesage = getTitleAndBody({
-          uid: context.auth.uid,
-          txType: doc.data().txType,
-          txStatus: data.status,
-          date: data.chosenTime
-        })
-        return sendNotification(doc.data().seller, meesage.title, meesage.body).then(result => {
+        let meesage
+        let sendTo
+        if (data.status == 2 && doc.data().txStatus == 1) {
+          meesage = getTitleAndBody({
+            uid: context.auth.uid,
+            txType: doc.data().txType,
+            txStatus: 5,
+            date: data.chosenTime
+          })
+          sendTo = doc.data().buyer
+        }
+        else {
+          meesage = getTitleAndBody({
+            uid: context.auth.uid,
+            txType: doc.data().txType,
+            txStatus: data.status,
+            date: data.chosenTime
+          })
+          sendTo = doc.data().seller
+        }
+        return sendNotification(sendTo, meesage.title, meesage.body).then(result => {
           if (result.errorMessage != null) return {errorMessage: result.errorMessage}
 
           if (doc.data().txStatus >= data.status)
@@ -176,7 +200,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             return {errorMessage: "The transaction status is incorrect"}
           else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid && doc.data().seller != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
-          else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4)
+          else if (doc.data().seller == context.auth.uid && doc.data().txType != 1 && data.status != 4 && data.status != 2)
             return {errorMessage: "You cannot complete your own selling transaction"}
           
           if (doc.data().txType == 0 || doc.data().txType == 1) {
@@ -376,6 +400,15 @@ exports.querySellers = functions.https.onCall((data,context) => {
   else return {errorMessage: "The request is denied because of authetication"}
 })
 
+exports.setFavBuyer = functions.https.onCall((data,context) => {
+  if (context.auth != null) {
+    usersDB.doc(context.auth.uid).update({
+      favBuyers: admin.firestore.FieldValue.arrayUnion(data.favBuyer)
+    })
+  }
+  else return {errorMessage: "The request is denied because of authetication"}
+})
+
 const getTitleAndBody = (data) => {
   const milis = data.date == undefined ? 0 : Number(data.date)
   const days = ((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000
@@ -388,24 +421,28 @@ const getTitleAndBody = (data) => {
     "มีการร้องขอเปลี่ยนแปลงเวลา",
     "ผู้ซื้อตอบตกลงคำร้องขอ",
     "วันนี้คุณมีนัดซื้อ-ขายขยะ",
-    "ผู้ซื้อกำลังเดินทางมา"],
+    "ผู้ซื้อกำลังเดินทางมา",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"],
     ["คำร้องขอในบริเวณของคุณ",
     "",
     "ผู้ซื้อตอบตกลงคำร้องขอขายด่วน",
     "วันนี้คุณมีนัดซื้อ-ขายขยะ",
-    "ผู้ซื้อกำลังเดินทางมา"]
+    "ผู้ซื้อกำลังเดินทางมา",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"]
   ]
   const body = [
     [uid + " ต้องการขายขยะให้คุณ",
     uid + " ต้องการขอเปลี่ยนแปลงเวลานัดหมายของคุณ",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
-    uid + " กำลังเดินทางมาหาคุณ"],
+    uid + " กำลังเดินทางมาหาคุณ",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft],
     [uid + " ต้องการขายขยะ",
     "",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
-    uid + " กำลังเดินทางมาหาคุณ"]
+    uid + " กำลังเดินทางมาหาคุณ",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft]
   ]
   return {title: title[data.txType][data.txStatus], body: body[data.txType][data.txStatus]}
 }

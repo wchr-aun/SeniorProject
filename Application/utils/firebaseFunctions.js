@@ -167,7 +167,7 @@ export const getTodayTxForPathOp = async () => {
       let tx = [];
       querySnapshot.forEach(doc => {
         if (doc.data().chosenTime.toMillis() < nextDay)
-          tx.push({ txId: doc.id, detail: doc.data(), selected: false });
+          tx.push({ txId: doc.id, detail: doc.data() });
       });
       return tx;
     })
@@ -413,3 +413,18 @@ export const querySellers = async queryData => {
       throw new Error(err.message);
     });
 };
+
+// export const searchBuyer = async keywords => {
+//   return firestore
+//     .collection("buyerLists")
+//     .orderBy("username", "asc")
+//     .startAt(keywords)
+//     .limit(5)
+//     .get()
+//     .then(querySnapshot => {
+//       let buyers = []
+//       querySnapshot.forEach(doc => {
+
+//       })
+//     })
+// }
