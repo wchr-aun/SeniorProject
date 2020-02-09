@@ -7,7 +7,11 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
 import StartupScreen from "../screens/UserStartupScreen";
@@ -35,6 +39,7 @@ import EditingUserprofileScreen from "../screens/EditingUserprofileScreen";
 import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransactionDetailScreen";
 import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQuickTransactionDetailScreen";
 import SellingReqBeforeSendingScreen from "../screens/SellerScreen/SellingReqBeforeSendingScreen";
+import SearchBuyerScreen from "../screens/SellerScreen/SearchBuyerScreen";
 
 // ************************************* Seller ***********************************
 // for UserHomepageScreen
@@ -88,7 +93,7 @@ ShowSellerItemsNavigator.navigationOptions = ({ navigation }) => {
   };
 };
 
-SellingTransactionNavigator = createStackNavigator(
+const SellingTransactionNavigator = createStackNavigator(
   {
     SellingTransactionScreen: {
       screen: SellingTransactionScreen,
@@ -100,6 +105,50 @@ SellingTransactionNavigator = createStackNavigator(
     }
   },
   { headerMode: "none" }
+);
+
+const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
+  {
+    SellingTx: {
+      screen: SellingTransactionNavigator,
+      navigationOptions: {
+        tabBarIcon: tabInfo => {
+          return (
+            <MaterialCommunityIcons
+              name="history"
+              size={25}
+              color={Colors.on_primary_dark.low_constrast}
+            />
+          );
+        }
+      }
+    },
+    SearchBuyer: {
+      screen: SearchBuyerScreen,
+      navigationOptions: {
+        tabBarIcon: tabInfo => {
+          return (
+            <MaterialCommunityIcons
+              name="account-search"
+              size={25}
+              color={Colors.on_primary_dark.low_constrast}
+            />
+          );
+        }
+      }
+    }
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: "white",
+      showIcon: true,
+      showLabel: false,
+      style: {
+        backgroundColor: Colors.soft_primary_dark,
+        paddingTop: getStatusBarHeight()
+      }
+    }
+  }
 );
 
 // Trash Main
@@ -136,8 +185,8 @@ const SellerBottomTabConfig = {
       tabBarColor: Colors.primary_dark
     }
   },
-  SellTransaction: {
-    screen: SellingTransactionNavigator,
+  SellingTxAndSearchBuyer: {
+    screen: SellingTxAndSearchBuyerTopNavigator,
     navigationOptions: {
       tabBarLabel: "การขายขยะ",
       tabBarIcon: tabInfo => {

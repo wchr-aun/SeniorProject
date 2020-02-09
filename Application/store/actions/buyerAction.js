@@ -2,7 +2,8 @@ import {
   getSectionListFormatWasteType,
   editBuyerInfo,
   getPurchaseList,
-  querySellers
+  querySellers,
+  getBuyerInfo
 } from "../../utils/firebaseFunctions";
 import { Wastes } from "../../models/AllUserTrash";
 import libary from "../../utils/libary";
@@ -17,11 +18,13 @@ export const fetchBuyerInfo = () => {
     // wasteType
     wasteListSectionFormat = await getSectionListFormatWasteType();
     purchaseList = await getPurchaseList();
+    buyerInfo = await getBuyerInfo();
 
     dispatch({
       type: FETCH_PURCHASELIST,
       wasteListSectionFormat,
-      purchaseList: new Wastes(purchaseList)
+      purchaseList: new Wastes(purchaseList),
+      buyerInfo
     });
   };
 };
@@ -37,7 +40,7 @@ export const editPurchaseList = (type, subtypeIndex, price) => {
   };
 };
 
-export const updatePurchaseList = (purchaseList, desc, addr) => {
+export const updatePurchaseList = (purchaseList, desc, addr, enableSearch) => {
   return async dispatch => {
     /* 
 buyerInfo = {
@@ -55,7 +58,8 @@ buyerInfo = {
     await editBuyerInfo({
       purchaseList: purchaseList.getObject(),
       desc,
-      addr
+      addr,
+      enableSearch
     });
 
     dispatch({ type: CONFIRM_CHANGE_PURCHASELIST, purchaseList });

@@ -125,7 +125,9 @@ export default SellingTransactionDetailScreen = props => {
         height: "100%"
       }}
     >
-      <CustomStatusBar />
+      {props.navigation.getParam("addCustomStatusbar") ? (
+        <CustomStatusBar />
+      ) : null}
       <View
         style={{
           height: "10%",
@@ -214,7 +216,10 @@ export default SellingTransactionDetailScreen = props => {
                 color: libary.getColorTxStatus(transactionItem.detail.txStatus)
               }}
             >
-              {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
+              {libary.getReadableTxStatus(
+                transactionItem.detail.txStatus,
+                "seller"
+              )}
             </ThaiMdText>
           </ThaiRegText>
           <ThaiRegText

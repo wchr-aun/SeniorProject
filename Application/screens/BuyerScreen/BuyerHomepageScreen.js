@@ -4,7 +4,8 @@ import {
   FlatList,
   View,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -112,6 +113,8 @@ export default BuyerHomepageScreen = props => {
         ) : (
           <>
             <UserInfoCard
+              userRole={userRole}
+              numberOfIncompleteTx={transactions ? transactions[0].length : 0}
               avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
@@ -153,11 +156,11 @@ export default BuyerHomepageScreen = props => {
                 >
                   <ThaiMdText
                     style={{
-                      color: Colors.hard_secondary,
+                      color: Colors.primary_dark,
                       fontSize: 18
                     }}
                   >
-                    การรับซื้อขยะล่าสุด
+                    คำขอขายขยะที่ส่งหาคุณ
                   </ThaiMdText>
                 </TouchableWithoutFeedback>
               </View>

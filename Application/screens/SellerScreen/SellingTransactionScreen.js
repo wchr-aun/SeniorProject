@@ -86,7 +86,6 @@ export default SellingTransactionScreen = props => {
         height: hp("100%") - AppVariableSetting.bottomBarHeight
       }}
     >
-      <CustomStatusBar />
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{

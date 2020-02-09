@@ -16,7 +16,8 @@ export const fetchTransaction = role => {
       let transactions = await getTransactions(role);
       dispatch({
         type: FETCH_TRANSACTION,
-        transactions
+        transactions,
+        userRole: role
       });
     } catch (err) {
       console.log(err.message);
@@ -70,8 +71,8 @@ export const changeTransactionStatus = updatedDetail => {
       await updateTxStatus({
         txID: updatedDetail.txID,
         chosenTime: updatedDetail.chosenTime,
-        status: updatedDetail.newStatus
-        // assignedTime: updatedDetail.assignedTime
+        status: updatedDetail.newStatus,
+        assignedTime: updatedDetail.assignedTime
       });
 
       // move that item to new status

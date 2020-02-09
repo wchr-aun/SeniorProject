@@ -19,10 +19,11 @@ import * as buyerAction from "../../store/actions/buyerAction";
 import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 
 import CustomButton from "../../components/UI/CustomButton";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default EditBuyerInfomationScreen = props => {
   // initially fetch
@@ -38,6 +39,9 @@ export default EditBuyerInfomationScreen = props => {
   const buyerUserInfo = useSelector(state => state.user.userProfile);
 
   const [isEditingMode, setIsEditingMode] = useState(false);
+  const [enableSearch, setEnableSearch] = useState(
+    useSelector(state => state.buyerInfo.enableSearch)
+  );
 
   const toggleModeHandler = () => {
     if (isEditingMode) {
@@ -49,7 +53,8 @@ export default EditBuyerInfomationScreen = props => {
         buyerAction.updatePurchaseList(
           purchaseList,
           description,
-          buyerUserInfo.addr
+          buyerUserInfo.addr,
+          enableSearch
         )
       );
       setIsEditingMode(false);
@@ -76,7 +81,7 @@ export default EditBuyerInfomationScreen = props => {
             height: "10%",
             flexDirection: "row",
             backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 10,
+            paddingVertical: 5,
             alignItems: "center"
           }}
         >
@@ -95,7 +100,7 @@ export default EditBuyerInfomationScreen = props => {
           style={{
             width: "100%",
             height: "80%",
-            padding: 10,
+            paddingHorizontal: 10,
             paddingBottom: getStatusBarHeight()
           }}
         >
@@ -233,15 +238,55 @@ export default EditBuyerInfomationScreen = props => {
           style={{
             height: "10%",
             width: "100%",
-            alignSelf: "flex-end",
+            flexDirection: "row",
+            justifyContent: "space-around",
             alignItems: "center",
-            padding: 10
+            paddingHorizontal: 5,
+            backgroundColor: Colors.hard_primary_dark
           }}
         >
           <CustomButton
+            onPress={
+              isEditingMode
+                ? () => setEnableSearch(preState => !preState)
+                : null
+            }
+            style={{
+              width: "50%",
+              height: "80%",
+              maxHeight: 50,
+              borderRadius: 5
+            }}
+            btnColor={
+              enableSearch
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.soft_primary_dark
+            }
+            btnTitleColor={
+              enableSearch
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.primary_dark
+            }
+            btnTitleFontSize={10}
+          >
+            {isEditingMode ? (
+              <MaterialIcons
+                name={enableSearch ? "check-box" : "check-box-outline-blank"}
+                size={14}
+              />
+            ) : null}
+            <ThaiBoldText
+              style={{
+                fontSize: 14
+              }}
+            >
+              {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
+            </ThaiBoldText>
+          </CustomButton>
+          <CustomButton
             style={{
               width: "30%",
-              height: "100%",
+              height: "80%",
               maxHeight: 50,
               marginHorizontal: 5,
               borderRadius: 5,
@@ -263,7 +308,7 @@ export default EditBuyerInfomationScreen = props => {
             }
             btnTitleFontSize={10}
           >
-            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขราคา"}
+            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขข้อมูล"}
           </CustomButton>
         </View>
       </KeyboardAvoidingView>

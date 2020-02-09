@@ -37,6 +37,14 @@ export const getUsers = async () => {
     });
 };
 
+export const getBuyerInfo = async () => {
+  return firestore
+    .collection("buyerLists")
+    .doc(auth.currentUser.uid)
+    .get()
+    .then(doc => doc.data());
+};
+
 // Get firebase document (trashOfUser)
 export const getSellerItems = async () => {
   return firestore
@@ -177,6 +185,7 @@ export const getTodayTxForPathOp = async () => {
 };
 
 export const getFavBuyers = async () => {
+  console.log("getFavBuyers");
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)

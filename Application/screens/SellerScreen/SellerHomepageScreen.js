@@ -108,6 +108,8 @@ export default SellerHomepageScreen = props => {
         ) : (
           <>
             <UserInfoCard
+              userRole={userRole}
+              numberOfIncompleteTx={transactions ? transactions[1].length : 0}
               avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,

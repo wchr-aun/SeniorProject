@@ -32,7 +32,7 @@ const getTXSectionListFormat = transactions => {
   return transactionsSectionListFormat;
 };
 
-const getTXDropdownFormat = alltransactions => {
+const getTXDropdownFormat = (alltransactions, userRole) => {
   let txDropdownFormat = [];
   // create sectionList transactions
   alltransactions.forEach((transactionEachStatus, index) => {
@@ -41,7 +41,7 @@ const getTXDropdownFormat = alltransactions => {
       transactions.push(transaction);
     });
     txDropdownFormat.push({
-      value: libary.getReadableTxStatus(index),
+      value: libary.getReadableTxStatus(index, userRole),
       transactions
     });
   });
@@ -53,7 +53,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_TRANSACTION:
       console.log("FETCH_TRANSACTION");
-      transactionsDropdownFormat = getTXDropdownFormat(action.transactions);
+      transactionsDropdownFormat = getTXDropdownFormat(
+        action.transactions,
+        action.userRole
+      );
       return {
         ...state,
         transactions: [...action.transactions],

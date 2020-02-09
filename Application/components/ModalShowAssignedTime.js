@@ -51,6 +51,7 @@ const DATA = [
 
 const SELECTED = "SELECTED";
 const CONFIRM = "CONFIRM";
+const CLEAR = "CLEAR";
 
 const assignedTimeReducer = (state, action) => {
   let updatedTimes = [...state.times];
@@ -77,6 +78,11 @@ const assignedTimeReducer = (state, action) => {
         ...state,
         selectedTimes: [...selectedTimes]
       };
+    case CLEAR:
+      return {
+        selectedTimes: [],
+        times: []
+      };
     default:
       return state;
   }
@@ -102,6 +108,7 @@ export default ModalShowSellersItemsScreen = props => {
   useEffect(() => {
     if (assignedTime.selectedTimes.length) {
       props.setSelectedTimes(assignedTime.selectedTimes);
+      dispatchAssignedTime({ type: CLEAR });
       props.setModalVisible(false); //should unmound modal after everything finish
     }
   }, [assignedTime.selectedTimes]);

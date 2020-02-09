@@ -111,8 +111,6 @@ export default UserSignupScreen = props => {
       });
 
       //for UI
-      console.log("txForShow");
-      console.log(txForShow);
       let updatedSelectedTx = [...txForShow];
 
       // check there is already have that item ?

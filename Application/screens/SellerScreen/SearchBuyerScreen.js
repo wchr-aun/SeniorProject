@@ -28,13 +28,14 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { getFavBuyers } from "../../utils/firebaseFunctions";
 
 const BuyerChoice = props => {
   return (
     <TouchableOpacity
       style={{
         width: wp("90%"),
-        height: 100,
+        height: hp("15%"),
         backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
@@ -97,30 +98,27 @@ const BuyerChoice = props => {
                       </ThaiMdText>
                       {props.purchaseList[item.type] == undefined ? (
                         <ThaiRegText
-                          style={{ color: Colors.error }}
+                          style={{ fontSize: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
                       ) : props.purchaseList[item.type][item.subtype] ==
                         undefined ? (
                         <ThaiRegText
-                          style={{ color: Colors.error }}
+                          style={{ fontSize: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
                       ) : (
                         `  ${item.amount} X ${
                           props.purchaseList[item.type][item.subtype]
                         } บาท/ชิ้น. = `
                       )}
-                      {props.purchaseList[item.type][item.subtype] ==
-                      undefined ? null : (
-                        <ThaiMdText
-                          style={{
-                            fontSize: 10,
-                            color: Colors.primary_bright_variant
-                          }}
-                        >
-                          {item.amount *
-                            props.purchaseList[item.type][item.subtype]}
-                        </ThaiMdText>
-                      )}
+                      <ThaiMdText
+                        style={{
+                          fontSize: 10,
+                          color: Colors.primary_bright_variant
+                        }}
+                      >
+                        {item.amount *
+                          props.purchaseList[item.type][item.subtype]}
+                      </ThaiMdText>
                     </ThaiRegText>
                   </View>
                 );
@@ -165,7 +163,7 @@ const BuyerChoice = props => {
   );
 };
 
-export default ChooseBuyerScreen = props => {
+export default SearchBuyerScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const dispatch = useDispatch();
@@ -181,179 +179,27 @@ export default ChooseBuyerScreen = props => {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
-    console.log("Choose Buyer Screen");
+    console.log("Search Buyer Screen");
   }, []);
 
-  // required data for sending an transaction
-  const sellerAddr = useSelector(state => state.user.userProfile.addr);
-  const sellerItemsForSell = useSelector(
-    state => state.sellerItems.sellerItemsForSell
-  );
-  const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
-
   // Callback fn
+  const [buyerList, setBuyerList] = useState([]);
   const loadBuyer = useCallback(async () => {
     setIsRefreshing(true);
-    // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
-    await dispatch(
-      sellerItemsAction.getBuyerList({
-        distance: parseInt(props.navigation.getParam("distance"), 10),
-        wasteType: sellerItemsForSell.getSelected(),
-        addr: sellerAddr
-      })
-    );
+    let buyerInfo = await getFavBuyers();
+    setBuyerList(buyerInfo);
     setIsRefreshing(false);
-  }, [dispatch, setIsRefreshing, sellerAddr]);
+  }, [dispatch, setIsRefreshing]);
 
   // Load sellerItems from firebase and store it to redux "initially"
   useEffect(() => {
     setIsLoading(true);
-    if (sellerAddr && sellerItemsForSell) {
-      loadBuyer().then(() => {
-        setIsLoading(false);
-      });
-    }
-  }, [loadBuyer, sellerAddr]);
-
-  // date picker
-  const [datepickerShow, setDatapickerShow] = useState(false);
-  showDateTimePicker = () => {
-    setDatapickerShow(true);
-  };
-  hideDateTimePicker = () => {
-    setDatapickerShow(false);
-  };
-
-  const [sellMode, setSellMode] = useState(0);
-  const [buyerInfomation, setBuyerInfomation] = useState("");
-
-  const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
-    // this should set to redux ---
-    setSellMode(0);
-    setBuyerInfomation({
-      buyerName,
-      buyerPriceInfo,
-      unavailableTypes
+    loadBuyer().then(() => {
+      setIsLoading(false);
     });
-    // ---
-    setDatapickerShow(true);
-  };
-
-  const quickSellHandler = () => {
-    setSellMode(1);
-    setDatapickerShow(true);
-  };
-
-  const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
-  const [selectedTimes, setSelectedTimes] = useState([]);
-
-  const handleDatePicked = date => {
-    setDate(date);
-    hideDateTimePicker();
-    setModalVisible(true);
-  };
-
-  const settingSellRequest = useCallback(async () => {
-    // ---------> FINAL: send to redux
-    try {
-      // sell only sellerItem that buyer have
-      let saleList = {};
-      saleList["length"] = 0;
-
-      for (let type in sellerItemsForSell) {
-        if (type != "length" && type != "_count" && type != "_selected") {
-          for (let subtype in sellerItemsForSell[type]) {
-            // quick sell
-            if (sellMode === 1) {
-              if (!sellerItemsForSell._selected[type][subtype] == false) {
-                if (saleList[type] == undefined) {
-                  saleList[type] = {};
-                }
-                saleList["length"] += 1;
-                saleList[type][subtype] = {
-                  amount: sellerItemsForSell[type][subtype]
-                };
-              }
-            }
-            // chooseBuyer sell
-            else {
-              if (
-                !(
-                  buyerInfomation.buyerPriceInfo[type] == undefined ||
-                  buyerInfomation.buyerPriceInfo[type][subtype] == undefined ||
-                  sellerItemsForSell._selected[type][subtype] == false
-                )
-              ) {
-                // if (buyerInfomation.unavailableTypes[subtype] != undefined) break;
-                if (saleList[type] == undefined) {
-                  saleList[type] = {};
-                }
-                saleList["length"] += 1;
-                saleList[type][subtype] = {
-                  amount: sellerItemsForSell[type][subtype],
-                  price: buyerInfomation.buyerPriceInfo[type][subtype]
-                };
-              }
-            }
-          }
-        }
-      }
-
-      props.navigation.navigate({
-        routeName: "sellReqBeforeSending",
-        params: {
-          sellReq: {
-            buyerInfomation,
-            sellMode,
-            assignedTime: selectedTimes,
-            sellerAddr,
-            saleList,
-            sellerAddr
-          }
-        }
-      });
-    } catch (err) {
-      Alert.alert("มีข้อผิดพลาดเกิดขึ้น", err.message, [{ text: "OK" }]);
-    }
-  }, [
-    dispatch,
-    sellerAddr,
-    sellerItemsForSell,
-    buyerInfomation,
-    selectedTimes
-  ]);
-
-  // When 'assignedTime.selectedTimes' show it
-  useEffect(() => {
-    if (
-      sellerAddr &&
-      sellerItemsForSell.length &&
-      selectedTimes.length &&
-      buyerInfomation &&
-      sellMode === 0
-    ) {
-      console.log("choose buyer submit");
-      settingSellRequest();
-    } else if (sellMode === 1) {
-      if (sellerAddr && sellerItemsForSell.length && selectedTimes.length) {
-        console.log("quick sell submit");
-        settingSellRequest();
-      }
-    }
-  }, [selectedTimes]);
-
-  const [modalVisible, setModalVisible] = useState(false);
-  if (modalVisible) {
-    return (
-      <ModalShowAssignedTime
-        setModalVisible={setModalVisible}
-        modalVisible={modalVisible}
-        date={date}
-        setSelectedTimes={setSelectedTimes}
-      />
-    );
-  }
+  }, [loadBuyer]);
 
   if (isLoading) {
     return (
@@ -372,7 +218,6 @@ export default ChooseBuyerScreen = props => {
       }}
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
-      <CustomStatusBar />
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{
@@ -399,45 +244,39 @@ export default ChooseBuyerScreen = props => {
                 fontSize: 20
               }}
             >
-              เลือกผู้รับซื้อ
+              ค้นหาผู้รับซื้อ
             </ThaiBoldText>
           </View>
         </View>
         <View style={{ width: "100%", height: "70%" }}>
           <FlatList
-            data={buyerListRedux}
+            data={buyerList}
             keyExtractor={item => item.id}
             onRefresh={loadBuyer}
             refreshing={isRefreshing}
             renderItem={({ item }) => {
+              console.log(item);
               return (
-                <BuyerChoice
-                  sellerItemsForSell={sellerItemsForSell}
-                  onSelected={() =>
-                    buyerSelectHandler(
-                      item.id,
-                      item.purchaseList,
-                      item.unavailableTypes
-                    )
-                  }
-                  buyerName={item.id}
-                  purchaseList={item.purchaseList}
-                  totalPrice={item.totalPrice}
-                />
+                // <BuyerChoice
+                //   sellerItemsForSell={sellerItemsForSell}
+                //   onSelected={() =>
+                //     buyerSelectHandler(
+                //       item.id,
+                //       item.purchaseList,
+                //       item.unavailableTypes
+                //     )
+                //   }
+                //   buyerName={item.id}
+                //   purchaseList={item.purchaseList}
+                //   totalPrice={item.totalPrice}
+                // />
+                <></>
               );
             }}
           />
         </View>
-        {datepickerShow ? (
-          <DateTimePicker
-            mode="date"
-            isVisible={datepickerShow}
-            onConfirm={handleDatePicked}
-            onCancel={hideDateTimePicker}
-          />
-        ) : null}
 
-        <View
+        {/* <View
           style={{
             height: "20%",
             width: "100%",
@@ -492,7 +331,7 @@ export default ChooseBuyerScreen = props => {
               {` ขายด่วน`}
             </ThaiRegText>
           </CustomButton>
-        </View>
+        </View> */}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
