@@ -31,6 +31,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
+import ModalLoading from "../../components/ModalLoading";
 
 const getDisableStatusForSeller = (btnType, txStatus) => {
   /* 
@@ -60,7 +61,7 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
 
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
-  const [isLoading, setIsLoading] = useState(false);
+  const [isInOperation, setIsInOperation] = useState(false);
   const transactionItem = props.navigation.getParam("transactionItem");
   const userRole = useSelector(state => state.user.userRole);
 
@@ -76,7 +77,7 @@ export default SellingTransactionDetailScreen = props => {
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
-    setIsLoading(true);
+    setIsInOperation(true);
     await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
@@ -85,7 +86,7 @@ export default SellingTransactionDetailScreen = props => {
       })
     );
     await dispatch(transactionAction.fetchTransaction(userRole));
-    setIsLoading(false);
+    setIsInOperation(false);
     props.navigation.goBack();
   };
 
@@ -93,8 +94,9 @@ export default SellingTransactionDetailScreen = props => {
     props.navigation.goBack();
   };
 
-  const acceptPreferedtimeHandler = () => {
-    dispatch(
+  const acceptPreferedtimeHandler = async () => {
+    setIsInOperation(true);
+    await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
@@ -104,17 +106,9 @@ export default SellingTransactionDetailScreen = props => {
         assignedTime: transactionItem.detail.assignedTime
       })
     );
+    setIsInOperation(false);
     props.navigation.goBack();
   };
-
-  //add spinner loading
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
 
   return (
     <View
@@ -127,6 +121,7 @@ export default SellingTransactionDetailScreen = props => {
       {props.navigation.getParam("addCustomStatusbar") ? (
         <CustomStatusBar />
       ) : null}
+      <ModalLoading modalVisible={isInOperation} userRole="seller" />
       <View
         style={{
           height: "10%",

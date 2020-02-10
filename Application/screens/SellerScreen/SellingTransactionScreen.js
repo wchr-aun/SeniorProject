@@ -66,7 +66,7 @@ export default SellingTransactionScreen = props => {
     let txOld = transactionsDropdownFormat.filter(
       txs => txs.value === txStatus
     )[0];
-    setTxShow(txOld.transactions);
+    setTxShow(txOld.transactions.length > 0 ? txOld.transactions : []);
   }, [transactionsDropdownFormat]);
 
   const onTxStatusDropdownChange = txStatus => {
@@ -82,7 +82,7 @@ export default SellingTransactionScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }

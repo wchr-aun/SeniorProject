@@ -83,7 +83,7 @@ export default BuyerHomepageScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -108,7 +108,10 @@ export default BuyerHomepageScreen = props => {
               justifyContent: "center"
             }}
           >
-            <ActivityIndicator size="large" color={Colors.primary_dark} />
+            <ActivityIndicator
+              size="large"
+              color={Colors.primary_bright_variant}
+            />
           </View>
         ) : (
           <>
@@ -130,7 +133,7 @@ export default BuyerHomepageScreen = props => {
               }}
             />
             <LinearGradient
-              colors={Colors.linearGradientBright}
+              colors={Colors.linearGradientDark}
               style={{
                 width: "100%",
                 height: "60%",
@@ -156,7 +159,7 @@ export default BuyerHomepageScreen = props => {
                 >
                   <ThaiMdText
                     style={{
-                      color: Colors.primary_dark,
+                      color: Colors.soft_primary_bright,
                       fontSize: 18
                     }}
                   >
@@ -174,7 +177,10 @@ export default BuyerHomepageScreen = props => {
                       alignItems: "center"
                     }}
                   >
-                    <ActivityIndicator size="large" color={Colors.primary} />
+                    <ActivityIndicator
+                      size="large"
+                      color={Colors.primary_bright_variant}
+                    />
                   </View>
                 ) : (
                   <FlatList

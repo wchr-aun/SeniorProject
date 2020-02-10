@@ -26,9 +26,9 @@ import libary from "../../utils/libary";
 import ThaiRegText from "../../components/ThaiRegText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import ThaiBoldText from "../../components/ThaiBoldText";
-import ThaiMdText from "../../components/ThaiMdText";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default SearchQuicksellingScreen = props => {
   const dispatch = useDispatch();
@@ -169,14 +169,14 @@ export default SearchQuicksellingScreen = props => {
           </ThaiRegText>
         </CustomButton>
       </View>
-      <View
+      <LinearGradient
+        colors={Colors.linearGradientDark}
         style={{
           width: "100%",
           height: "80%",
           alignSelf: "center",
           alignItems: "center",
-          paddingVertical: 10,
-          backgroundColor: Colors.primary_bright
+          paddingVertical: 10
         }}
       >
         <FlatList
@@ -204,7 +204,7 @@ export default SearchQuicksellingScreen = props => {
             );
           }}
         />
-      </View>
+      </LinearGradient>
     </View>
   );
 };

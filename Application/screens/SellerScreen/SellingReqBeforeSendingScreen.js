@@ -14,22 +14,16 @@ import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import {
-  Ionicons,
-  MaterialIcons,
-  MaterialCommunityIcons
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import { LinearGradient } from "expo-linear-gradient";
 import { NavigationEvents } from "react-navigation";
+import ModalLoading from "../../components/ModalLoading";
 
 export default SellingReqBeforeSendingScreen = props => {
+  const [isInOperation, setIsInOperation] = useState(false);
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
   );
@@ -44,7 +38,6 @@ export default SellingReqBeforeSendingScreen = props => {
 
   const [imgs, setImgs] = useState([]);
   const [imgsName, setImgsName] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const takeImgHandler = async () => {
     const img = await libary.takeAnImg();
     if (!img) {
@@ -53,7 +46,6 @@ export default SellingReqBeforeSendingScreen = props => {
     let updatedImgs = [...imgs];
 
     // get img name
-    // const imgName = img.uri.split("/").pop();
     const imgName = `${sellerName}${sellReq.buyerInfomation.buyerName}${sellReq.assignedTime[0]}${imgs.length}.jpg`; //sellername+buyername+datetime.getsec+length+1
     let updatedImgsName = [...imgsName];
     updatedImgs.push(img);
@@ -62,21 +54,18 @@ export default SellingReqBeforeSendingScreen = props => {
     setImgsName(updatedImgsName);
   };
 
-  // const deleteImgHandler = async () => {
-  //   // const img = await libary.takeAnImg();
-  //   // setImg(img)
-  // };
-
   const acceptHandler = async () => {
+    setIsInOperation(true);
     // upload img
     for (let i = 0; i < imgs.length; i++) {
-      libary.uploadingImg(imgs[i], imgsName[i]);
+      libary.uploadingImg(imgs[i], imgsName[i], "tx");
     }
 
     await dispatch(sellerItemsAction.sellRequest(sellReq, imgsName));
     await dispatch(transactionAction.fetchTransaction("seller"));
     await dispatch(sellerItemsAction.fetchSellerItems());
     await dispatch(navigationBehaviorAction.finishOperation());
+    setIsInOperation(false);
     props.navigation.navigate("SellerHomepageScreen");
   };
 
@@ -95,6 +84,7 @@ export default SellingReqBeforeSendingScreen = props => {
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
+      <ModalLoading modalVisible={isInOperation} userRole="seller" />
       <View
         style={{
           height: "10%",
@@ -102,8 +92,8 @@ export default SellingReqBeforeSendingScreen = props => {
           flexDirection: "row",
           backgroundColor: Colors.soft_primary_dark,
           paddingVertical: 10,
-          justifyContent: "space-around",
-          alignItems: "center"
+          alignItems: "center",
+          justifyContent: "space-around"
         }}
       >
         <CustomButton
@@ -127,9 +117,9 @@ export default SellingReqBeforeSendingScreen = props => {
         </CustomButton>
         <View
           style={{
-            width: "50%",
+            width: "70%",
             height: "100%",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center"
           }}
         >
@@ -142,28 +132,6 @@ export default SellingReqBeforeSendingScreen = props => {
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <CustomButton
-          style={{
-            width: "20%",
-            height: "100%",
-            maxHeight: 30,
-            borderRadius: 5
-          }}
-          btnColor={
-            imgs.length > 0
-              ? Colors.button.submit_primary_bright.btnBackground
-              : Colors.button.submit_primary_bright.btnBackgroundDisabled
-          }
-          onPress={imgs.length > 0 ? acceptHandler : null}
-          btnTitleColor={
-            imgs.length > 0
-              ? Colors.button.submit_primary_bright.btnText
-              : Colors.button.submit_primary_bright.btnTextDisabled
-          }
-          btnTitleFontSize={10}
-        >
-          <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
-        </CustomButton>
       </View>
       <View style={{ height: "10%", width: "100%" }}>
         <View style={{ width: "100%", height: "100%", paddingHorizontal: 10 }}>
@@ -313,7 +281,7 @@ export default SellingReqBeforeSendingScreen = props => {
                       <ThaiMdText
                         style={{
                           fontSize: 18,
-                          color: Colors.primary_bright_variant
+                          color: Colors.soft_secondary
                         }}
                       >
                         {item.type}
@@ -322,7 +290,7 @@ export default SellingReqBeforeSendingScreen = props => {
                       <ThaiMdText
                         style={{
                           fontSize: 18,
-                          color: Colors.primary_bright_variant
+                          color: Colors.soft_secondary
                         }}
                       >
                         {item.subtype}
@@ -387,7 +355,7 @@ export default SellingReqBeforeSendingScreen = props => {
             width: "100%",
             height: "40%",
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "space-around",
             alignItems: "center"
           }}
         >
@@ -410,23 +378,41 @@ export default SellingReqBeforeSendingScreen = props => {
               size={14}
               color={Colors.button.cancel.btnText}
             />
-            <ThaiMdText style={{ fontSize: 12 }}> ถ่ายภาพ</ThaiMdText>
+            <ThaiMdText style={{ fontSize: 12 }}>
+              {" "}
+              ถ่ายภาพ
+              <ThaiBoldText
+                style={{
+                  fontSize: 12,
+                  color: Colors.on_primary_dark.high_constrast
+                }}
+              >{` ${imgs.length}`}</ThaiBoldText>
+            </ThaiMdText>
           </CustomButton>
-          <View
+          <CustomButton
             style={{
               width: "50%",
+              maxWidth: 100,
               height: "100%",
-              maxHeight: 20,
-              alignItems: "center"
+              maxHeight: 35,
+              borderRadius: 5,
+              marginRight: 10
             }}
+            btnColor={
+              imgs.length > 0
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.submit_primary_bright.btnBackgroundDisabled
+            }
+            onPress={imgs.length > 0 ? acceptHandler : null}
+            btnTitleColor={
+              imgs.length > 0
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.submit_primary_bright.btnTextDisabled
+            }
+            btnTitleFontSize={10}
           >
-            <ThaiBoldText
-              style={{
-                fontSize: 12,
-                color: Colors.on_primary_dark.high_constrast
-              }}
-            >{`จำนวนภาพ ${imgs.length}`}</ThaiBoldText>
-          </View>
+            <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
+          </CustomButton>
         </View>
       </View>
     </LinearGradient>

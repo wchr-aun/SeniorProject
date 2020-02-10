@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
           surname: action.userProfile.surname,
           addr: action.userProfile.addr,
           enableSearch: action.userProfile.enableSearch,
-          photoURL: action.userProfile.photoURL,
+          img: action.userProfile.img,
           phoneNo: action.userProfile.phoneNo
         },
         userRole: action.userRole

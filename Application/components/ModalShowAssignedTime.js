@@ -64,24 +64,19 @@ const assignedTimeReducer = (state, action) => {
         times: [...updatedTimes]
       };
     case CONFIRM:
-      let date = state.date.getTime();
-      let selectedTimes = [];
-      updatedTimes.forEach((item, index) => {
-        if (item.selected) {
-          let dateTmp = new Date(date);
-          dateTmp.setHours(item.hour);
-          dateTmp.setMinutes(item.minute);
-          selectedTimes.push(dateTmp.getTime());
-        }
-      });
+      console.log("CONFIRM");
+
       return {
         ...state,
-        selectedTimes: [...selectedTimes]
+        selectedTimes: []
       };
     case CLEAR:
+      console.log("CLEAR");
+      updatedTimes.forEach((item, index) => {
+        item.selected = false;
+      });
       return {
-        selectedTimes: [],
-        times: []
+        selectedTimes: []
       };
     default:
       return state;
@@ -101,17 +96,30 @@ export default ModalShowSellersItemsScreen = props => {
   };
 
   confirmAssignedtime = () => {
+    let date = assignedTime.date.getTime();
+    let selectedTimes = [];
+    assignedTime.times.forEach((item, index) => {
+      if (item.selected) {
+        let dateTmp = new Date(date);
+        dateTmp.setHours(item.hour);
+        dateTmp.setMinutes(item.minute);
+        selectedTimes.push(dateTmp.getTime());
+        item.selected = false;
+      }
+    });
+    props.setSelectedTimes(selectedTimes);
     dispatchAssignedTime({ type: CONFIRM });
+    props.setModalVisible(false); //should unmound modal after everything finish
   };
 
-  // When 'assignedTime.selectedTimes' got update (After CONFIRM) set back to ChooseBuyerScreen
-  useEffect(() => {
-    if (assignedTime.selectedTimes.length) {
-      props.setSelectedTimes(assignedTime.selectedTimes);
-      dispatchAssignedTime({ type: CLEAR });
-      props.setModalVisible(false); //should unmound modal after everything finish
-    }
-  }, [assignedTime.selectedTimes]);
+  // // When 'assignedTime.selectedTimes' got update (After CONFIRM) set back to ChooseBuyerScreen
+  // useEffect(() => {
+  //   if (assignedTime.selectedTimes.length) {
+  //     props.setSelectedTimes(assignedTime.selectedTimes);
+  //     dispatchAssignedTime({ type: CLEAR });
+  //     props.setModalVisible(false); //should unmound modal after everything finish
+  //   }
+  // }, [assignedTime.selectedTimes]);
 
   return (
     <Modal
@@ -119,6 +127,7 @@ export default ModalShowSellersItemsScreen = props => {
       presentationStyle={"overFullScreen"}
       visible={props.modalVisible}
       onRequestClose={() => {
+        dispatchAssignedTime({ type: CLEAR });
         Alert.alert("Modal has been closed.");
       }}
     >
@@ -217,6 +226,7 @@ export default ModalShowSellersItemsScreen = props => {
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => {
+              dispatchAssignedTime({ type: CLEAR });
               props.setModalVisible(false);
             }}
             btnTitleColor={Colors.button.cancel.btnText}

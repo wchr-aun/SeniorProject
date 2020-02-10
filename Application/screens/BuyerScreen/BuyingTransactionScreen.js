@@ -64,6 +64,13 @@ export default BuyingTransactionScreen = props => {
   const [txShow, setTxShow] = useState(
     transactionsDropdownFormat[0].transactions
   );
+  useEffect(() => {
+    let txOld = transactionsDropdownFormat.filter(
+      txs => txs.value === txStatus
+    )[0];
+    setTxShow(txOld.transactions.length > 0 ? txOld.transactions : []);
+  }, [transactionsDropdownFormat]);
+
   const onTxStatusDropdownChange = txStatus => {
     setTxStatus(txStatus);
 
@@ -77,7 +84,7 @@ export default BuyingTransactionScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -95,7 +102,7 @@ export default BuyingTransactionScreen = props => {
     >
       {/* <CustomStatusBar /> */}
       <LinearGradient
-        colors={Colors.linearGradientBright}
+        colors={Colors.linearGradientDark}
         style={{
           width: "100%",
           height: "100%",
@@ -112,7 +119,7 @@ export default BuyingTransactionScreen = props => {
             alignItems: "center"
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "100%", height: "70%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
@@ -126,7 +133,7 @@ export default BuyingTransactionScreen = props => {
         <View
           style={{
             width: "100%",
-            height: "20%",
+            height: "15%",
             justifyContent: "center",
             alignItems: "center"
           }}
@@ -147,13 +154,19 @@ export default BuyingTransactionScreen = props => {
               }}
               animationDuration={50}
               dropdownPosition={1}
+              textColor={Colors.soft_secondary}
+              itemColor={Colors.primary_dark}
+              selectedItemColor={Colors.primary_bright}
+              //               itemColor	Dropdown item text color (inactive item)	String	rgba(0, 0, 0, .54)
+              // selectedItemColor	Dropdown item text color (active item)	String	rgba(0, 0, 0, .87)
+              // disabledItemColor	Dropdown item text color (disabled item)	String	rgba(0, 0, 0, .38)
             />
           </View>
         </View>
         <View
           style={{
             width: "100%",
-            height: "70%",
+            height: "75%",
             justifyContent: "center",
             alignItems: "center",
             paddingBottom: getStatusBarHeight() * 2

@@ -31,8 +31,12 @@ import Input from "../components/UI/Input";
 import Colors from "../constants/Colors";
 import ThaiMdText from "../components/ThaiMdText";
 import ThaiRegText from "../components/ThaiRegText";
-import { getCurrentLocation, getManualStringLocation } from "../utils/libary";
+import libary, {
+  getCurrentLocation,
+  getManualStringLocation
+} from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
+import ImageCircle from "../components/UI/ImageCircle";
 
 // CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -200,19 +204,10 @@ export default EditingUserprofileScreen = props => {
     setIsAddrModalVisible(true);
   };
 
-  const changeRoleHandler = async role => {
+  const changeRoleHandler = role => {
     // UI
     setUserRole(role);
-    dispatch(authAction.changeRole(role));
-    // await toggleSearch(isEnableSearch)
-    //   .then(() => {
-    //     AsyncStorage.setItem("CONFIG_ROLE", role).catch(err => {
-    //       console.log(err);
-    //     });
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+    // dispatch(authAction.changeRole(role));
   };
 
   // firebase call cloud function
@@ -240,6 +235,7 @@ export default EditingUserprofileScreen = props => {
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
+    dispatch(authAction.changeRole(role));
     editUserInfo(user)
       .then(() => {
         AsyncStorage.clear()
@@ -279,10 +275,15 @@ export default EditingUserprofileScreen = props => {
     dispatch(authAction.signout());
   };
 
-  // check
+  //User image
+  const [userImg, setUserImg] = useState("");
   useEffect(() => {
-    console.log(!userRole === "buyer");
-  });
+    loadUserImg();
+  }, []);
+  const loadUserImg = async () => {
+    let imgUri = await libary.downloadingImg([userProfile.img], "user");
+    setUserImg(imgUri[0]);
+  };
 
   return (
     <View
@@ -328,6 +329,9 @@ export default EditingUserprofileScreen = props => {
             keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
+              <View>
+                <ImageCircle avariableWidth={120} imgUrl={userImg} />
+              </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -386,52 +390,6 @@ export default EditingUserprofileScreen = props => {
                   <ThaiRegText>คนซื้อ</ThaiRegText>
                 </TouchableOpacity>
               </View>
-              {!userRole == "buyer" ? null : (
-                <View
-                  style={{
-                    width: "50%",
-                    height: 50,
-                    marginVertical: 3,
-                    alignItems: "center",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    alignSelf: "flex-end"
-                  }}
-                >
-                  <View
-                    style={{
-                      height: "100%",
-                      width: "30%",
-                      justifyContent: "center",
-                      alignItems: "flex-end",
-                      marginRight: 3
-                    }}
-                  >
-                    <SwitchToggle
-                      switchOn={isEnableSearch}
-                      onPress={() => setIsEnableSearch(!isEnableSearch)}
-                      duration={150}
-                      backgroundColorOn="#5fdba7"
-                      backgroundColorOff="#808080"
-                      circleColorOff="#ffffff"
-                      circleColorOn="#ffffff"
-                      containerStyle={{
-                        width: 36,
-                        height: 16,
-                        borderRadius: 25,
-                        backgroundColor: "#ccc",
-                        padding: 5
-                      }}
-                      circleStyle={{
-                        width: 12,
-                        height: 12,
-                        borderRadius: 19,
-                        backgroundColor: "white" // rgb(102,134,205)
-                      }}
-                    />
-                  </View>
-                </View>
-              )}
 
               <Input
                 editable={true}
@@ -687,7 +645,10 @@ export default EditingUserprofileScreen = props => {
               </CustomButton>
               <View style={styles.buttonContainer}>
                 {isLoading ? (
-                  <ActivityIndicator size="small" color={Colors.primary_dark} />
+                  <ActivityIndicator
+                    size="small"
+                    color={Colors.primary_bright_variant}
+                  />
                 ) : (
                   <CustomButton
                     style={{

@@ -33,6 +33,16 @@ export default SellTransactionCard = props => {
     TouchableComponent = TouchableNativeFeedback;
   }
 
+  //User image
+  const [userImg, setUserImg] = useState("");
+  useEffect(() => {
+    loadUserImg();
+  }, []);
+  const loadUserImg = async () => {
+    let imgUri = await libary.downloadingImg([`${props.userName}.jpg`], "user");
+    setUserImg(imgUri[0]);
+  };
+
   return (
     <TouchableComponent onPress={props.onPress}>
       <View
@@ -40,7 +50,8 @@ export default SellTransactionCard = props => {
           ...styles.shadow,
           width: wp("95%"),
           height: 100,
-          backgroundColor: Colors.on_primary_dark.low_constrast,
+          backgroundColor:
+            props.userRole === "seller" ? "white" : Colors.primary_dark,
           alignSelf: "center",
           marginVertical: 5,
           borderRadius: 10,
@@ -91,7 +102,7 @@ export default SellTransactionCard = props => {
             </CustomButton>
           ) : null}
 
-          <ImageCircle imgUrl={""} avariableWidth={wp("18%")} />
+          <ImageCircle imgUrl={userImg} avariableWidth={wp("18%")} />
         </View>
 
         <View
@@ -109,7 +120,13 @@ export default SellTransactionCard = props => {
           >
             <View style={{ width: "60%" }}>
               <ThaiRegText
-                style={{ fontSize: 10, color: Colors.soft_primary_dark }}
+                style={{
+                  fontSize: 10,
+                  color:
+                    props.userRole === "seller"
+                      ? Colors.soft_primary_dark
+                      : Colors.soft_secondary
+                }}
               >
                 {props.userRole === "seller" ? "ผู้รับซื้อ: " : "ผู้ขาย: "}{" "}
                 <ThaiMdText
@@ -145,18 +162,52 @@ export default SellTransactionCard = props => {
             }}
           >
             <View style={{ width: "100%" }}>
-              <ThaiRegText style={{ fontSize: 8 }}>{props.addr}</ThaiRegText>
+              <ThaiRegText
+                style={{
+                  fontSize: 8,
+                  color:
+                    props.userRole === "seller"
+                      ? Colors.primary_dark
+                      : Colors.soft_secondary
+                }}
+              >
+                {props.addr}
+              </ThaiRegText>
             </View>
           </View>
           <View style={{ ...styles.description, width: "50%" }}>
             <View style={{ ...styles.amountOfType, width: "100%" }}>
-              <Ionicons name="md-trash" size={20} color={Colors.primary_dark} />
-              <ThaiRegText style={{ fontSize: 12 }}>
+              <Ionicons
+                name="md-trash"
+                size={20}
+                color={
+                  props.userRole === "seller"
+                    ? Colors.primary_dark
+                    : Colors.soft_secondary
+                }
+              />
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                  color:
+                    props.userRole === "seller"
+                      ? Colors.primary_dark
+                      : Colors.soft_secondary
+                }}
+              >
                 {props.amountOfType} ประเภท
               </ThaiRegText>
             </View>
             <View style={{ width: "100%" }}>
-              <ThaiRegText style={{ fontSize: 12 }}>
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                  color:
+                    props.userRole === "seller"
+                      ? Colors.primary_dark
+                      : Colors.soft_secondary
+                }}
+              >
                 {props.meetDate}
               </ThaiRegText>
             </View>

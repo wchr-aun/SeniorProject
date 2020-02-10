@@ -40,6 +40,9 @@ import BuyingTransactionDetailScreen from "../screens/BuyerScreen/BuyingTransact
 import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQuickTransactionDetailScreen";
 import SellingReqBeforeSendingScreen from "../screens/SellerScreen/SellingReqBeforeSendingScreen";
 import SearchBuyerScreen from "../screens/SellerScreen/SearchBuyerScreen";
+import firebaseUtil from "../firebase";
+
+const auth = firebaseUtil.auth();
 
 // ************************************* Seller ***********************************
 // for UserHomepageScreen

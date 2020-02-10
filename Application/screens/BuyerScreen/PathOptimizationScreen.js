@@ -138,13 +138,13 @@ export default UserSignupScreen = props => {
   }
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientBright}>
+    <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientDark}>
       <View
         style={{
           width: "100%",
           height: "10%",
           flexDirection: "row",
-          backgroundColor: Colors.primary_bright,
+          backgroundColor: Colors.soft_primary_dark,
           paddingVertical: 10,
           alignItems: "center"
         }}
@@ -208,8 +208,8 @@ export default UserSignupScreen = props => {
             alignSelf: "center"
           }}
           onPress={searchMapHandler}
-          btnColor={Colors.button.start_operation_info.btnBackground}
-          btnTitleColor={Colors.button.start_operation_info.btnText}
+          btnColor={Colors.button.submit_primary_dark.btnBackground}
+          btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={14}
         >
           ค้นหาเส้นทาง

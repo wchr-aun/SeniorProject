@@ -7,6 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import firebase from "firebase";
 const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
+const USER_FILEDIR = "profile_pictures/";
 import { GOOGLE_API_KEY } from "react-native-dotenv";
 
 import {
@@ -60,7 +61,7 @@ const takeAnImg = async () => {
   return !image.cancelled ? image : null;
 };
 
-const uploadingImg = async (image, fileName) => {
+const uploadingImg = async (image, fileName, mode) => {
   let uri = image.uri;
 
   const response = await fetch(uri);
@@ -69,11 +70,13 @@ const uploadingImg = async (image, fileName) => {
   var ref = firebaseUtil
     .storage()
     .ref()
-    .child(SELLERITEMS_UPLOAD_FILEDIR + fileName);
+    .child(
+      mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR + fileName
+    );
   return ref.put(blob);
 };
 
-const downloadingImg = async imgNames => {
+const downloadingImg = async (imgNames, mode) => {
   let allImgs = [];
   let promises = [];
   for (let imgName of imgNames) {
@@ -81,19 +84,19 @@ const downloadingImg = async imgNames => {
       firebaseUtil
         .storage()
         .ref()
-        .child("sellReq_imgs/" + imgName)
+        .child(
+          mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR + imgName
+        )
         .getDownloadURL()
         .then(uri => {
           allImgs.push(uri);
         })
         .catch(err => {
-          throw new error(err.message);
+          throw new Error(err.message);
         })
     );
   }
   return Promise.all(promises).then(() => {
-    console.log("allImgs");
-    console.log(allImgs);
     return allImgs;
   });
 };

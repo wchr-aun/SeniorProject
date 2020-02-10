@@ -204,7 +204,7 @@ export default SearchBuyerScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }

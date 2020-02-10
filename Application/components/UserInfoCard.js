@@ -8,15 +8,28 @@ import ImageCircle from "./UI/ImageCircle";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default UserInfoCard = props => {
-  console.log(props);
   return (
     <LinearGradient
-      colors={Colors.linearGradientDark}
+      colors={
+        props.userRole === "seller"
+          ? ["#ffffff", "#fcfcfc"]
+          : Colors.linearGradientDark
+      }
       style={{ ...styles.userInfoContainer, ...props.style }}
     >
-      <View style={styles.userInfoContentContainer}>
+      <View
+        style={{
+          ...styles.userInfoContentContainer,
+          backgroundColor:
+            props.userRole === "seller"
+              ? Colors.soft_secondary
+              : Colors.primary_dark
+        }}
+      >
         {/* Row 1 */}
-        <View style={styles.userInfoContentContainerRow1}>
+        <View
+          style={{ ...styles.userInfoContentContainerRow1, ...styles.shadow }}
+        >
           <ImageCircle
             imgUrl={props.imgUrl}
             avariableWidth={props.avariableWidth * 0.25}
@@ -31,13 +44,23 @@ export default UserInfoCard = props => {
               <ThaiRegText
                 style={{
                   ...styles.userName,
-                  color: Colors.on_primary_dark.high_constrast
+                  color:
+                    props.userRole === "seller"
+                      ? Colors.on_secondary.high_constrast
+                      : Colors.on_primary_dark.low_constrast
                 }}
               >
                 {props.userName}
               </ThaiRegText>
             </View>
-            <ThaiRegText style={{ color: Colors.soft_secondary }}>
+            <ThaiRegText
+              style={{
+                color:
+                  props.userRole === "seller"
+                    ? Colors.on_secondary.high_constrast
+                    : Colors.on_primary_dark.low_constrast
+              }}
+            >
               {props.address}
             </ThaiRegText>
           </View>
@@ -50,33 +73,50 @@ export default UserInfoCard = props => {
           >
             <View
               style={{
-                backgroundColor: Colors.soft_primary_dark,
+                backgroundColor:
+                  props.userRole === "seller"
+                    ? "white"
+                    : Colors.soft_primary_dark,
                 borderRadius: 5,
                 width: 35,
                 height: 35,
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                ...styles.shadow
               }}
             >
               <TouchableOpacity onPress={props.onSignout}>
                 <Ionicons
                   name="ios-settings"
                   size={30}
-                  color={Colors.primary_dark}
+                  color={
+                    props.userRole === "seller"
+                      ? Colors.hard_secondary
+                      : Colors.hard_primary_dark
+                  }
                 />
               </TouchableOpacity>
             </View>
           </View>
         </View>
-        {/* Line Separate */}
-        <View style={styles.lineSeparate} />
         {/* Row 2 */}
-        <View style={styles.userInfoContentContainerRow2}>
+        <View
+          style={{
+            ...styles.userInfoContentContainerRow2,
+            backgroundColor:
+              props.userRole === "seller"
+                ? Colors.soft_secondary
+                : Colors.hard_primary_dark
+          }}
+        >
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color:
+                props.userRole === "seller"
+                  ? Colors.on_secondary.high_constrast
+                  : Colors.on_primary_dark.low_constrast
             }}
           >
             {props.userRole === "seller"
@@ -100,21 +140,23 @@ export default UserInfoCard = props => {
 const styles = StyleSheet.create({
   userInfoContainer: {
     backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    alignSelf: "center",
+    width: "100%"
   },
   userInfoContentContainer: {
-    flex: 1,
-    margin: 10,
-    height: "100%"
+    flex: 1
   },
   imgContainer: {
     width: "30%",
     height: "100%"
   },
   userInfoContentContainerRow1: {
-    height: "50%",
+    height: "60%",
     width: "100%",
-    flexDirection: "row"
+    flexDirection: "row",
+    borderBottomRightRadius: 3,
+    borderBottomLeftRadius: 3,
+    padding: 10
   },
   userInfoContentContainerRow2: {
     height: "40%",
@@ -134,8 +176,6 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   lineSeparate: {
-    backgroundColor: Colors.hard_primary_dark,
-    borderBottomColor: Colors.soft_primary_dark,
     borderBottomWidth: 1,
     borderRadius: 5,
     marginVertical: 5,
@@ -147,5 +187,16 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOpacity: 0.26,
     elevation: 5 //for android
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1
   }
 });

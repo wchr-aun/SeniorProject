@@ -5,7 +5,7 @@ export default {
   primary_dark: "#272727",
   primary_bright: "#149c6a",
   primary_bright_variant: "#0084ff",
-  secondary: "#f0f0f0",
+  secondary: "#f5f5f5",
   soft_primary_dark: "#414141",
   soft_primary_bright: "#1ac989",
   soft_secondary: "#f4f4f4",
@@ -66,7 +66,7 @@ export default {
   error: "#8c0b04",
   linearGradient: ["#149c6a", "#0084ff"],
   linearGradientB: ["#2abfbf", "#3797f0"],
-  linearGradientDark: ["#474747", "#191919"],
+  linearGradientDark: ["#333333", "#191919"],
   linearGradientBright: ["#ffffff", "#d4d4d4"],
   // txStatus
   txStatus: {
