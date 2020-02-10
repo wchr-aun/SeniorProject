@@ -12,7 +12,6 @@ const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 export const confirmSellerItemsCamera = sellerItemsCameraObj => {
   return async dispatch => {
     console.log("confirmSellerItemsCamera");
-    console.log(sellerItemsCameraObj);
 
     dispatch({ type: CONFIRM_SELLERITEMSCAMERA, sellerItemsCameraObj });
   };
@@ -39,7 +38,6 @@ export const confirmSellerItemsCamera = sellerItemsCameraObj => {
 export const getPrediction = (image, wasteTypesDB) => {
   return async dispatch => {
     console.log("getPrediction action!");
-    console.log(image.width + " " + image.height);
 
     // Move to new directory
     const fileName = image.uri.split("/").pop();
@@ -67,9 +65,6 @@ export const getPrediction = (image, wasteTypesDB) => {
       name: fileName,
       type
     });
-
-    console.log("formData, typeof image.base64");
-    console.log(typeof image.base64);
 
     // // //tmp
     // dispatch({
@@ -115,8 +110,6 @@ export const getPrediction = (image, wasteTypesDB) => {
         return res.json();
       })
       .then(res => {
-        console.log("getpredict ! res.results");
-        console.log(res.results);
         dispatch({
           type: GET_PREDICTION,
           results: res.results,

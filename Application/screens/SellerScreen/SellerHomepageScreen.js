@@ -49,7 +49,8 @@ export default SellerHomepageScreen = props => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
       params: {
-        transactionItem
+        transactionItem,
+        addCustomStatusbar: true
       }
     });
   };

@@ -66,8 +66,6 @@ export const clearSellerItemsCamera = () => {
 
 export const setSellerItemsForSell = sellerItemsForSell => {
   return async dispatch => {
-    console.log("sellerItemsForSell");
-    console.log(sellerItemsForSell);
     return dispatch({
       type: SET_WASTE_FOR_SELL,
       sellerItemsForSell
@@ -79,12 +77,8 @@ export const getBuyerList = queryData => {
   return async dispatch => {
     try {
       // search buyer
-      console.log("queryData in QueryBuyer");
-      console.log(queryData);
 
       let buyerList = await queryBuyers(queryData);
-      console.log("buyerList");
-      console.log(buyerList);
 
       // dispatch
       dispatch({
@@ -99,8 +93,6 @@ export const getBuyerList = queryData => {
 
 export const sellRequest = (sellReq, imgsName) => {
   return async dispatch => {
-    console.log("sellReq");
-    console.log(sellReq);
     // do async task
     let sellRequest = {
       saleList: sellReq.saleList,
@@ -115,8 +107,6 @@ export const sellRequest = (sellReq, imgsName) => {
       if (sellRequest["saleList"]["length"] === 0) {
         return;
       }
-      console.log("sellRequest");
-      console.log(sellRequest);
       await sellWaste(sellRequest);
       // update redux store
       dispatch({

@@ -255,7 +255,6 @@ export default SearchBuyerScreen = props => {
             onRefresh={loadBuyer}
             refreshing={isRefreshing}
             renderItem={({ item }) => {
-              console.log(item);
               return (
                 // <BuyerChoice
                 //   sellerItemsForSell={sellerItemsForSell}

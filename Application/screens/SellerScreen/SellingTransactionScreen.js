@@ -15,6 +15,7 @@ import ThaiBoldText from "../../components/ThaiBoldText";
 import { LinearGradient } from "expo-linear-gradient";
 import * as transactionAction from "../../store/actions/transactionAction";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
+import { Header } from "react-navigation-stack";
 
 export default SellingTransactionScreen = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -61,6 +62,13 @@ export default SellingTransactionScreen = props => {
   const [txShow, setTxShow] = useState(
     transactionsDropdownFormat[0].transactions
   );
+  useEffect(() => {
+    let txOld = transactionsDropdownFormat.filter(
+      txs => txs.value === txStatus
+    )[0];
+    setTxShow(txOld.transactions);
+  }, [transactionsDropdownFormat]);
+
   const onTxStatusDropdownChange = txStatus => {
     setTxStatus(txStatus);
 
@@ -83,7 +91,11 @@ export default SellingTransactionScreen = props => {
     <View
       style={{
         width: wp("100%"),
-        height: hp("100%") - AppVariableSetting.bottomBarHeight
+        height:
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight -
+          Header.HEIGHT +
+          getStatusBarHeight()
       }}
     >
       <LinearGradient
@@ -120,8 +132,7 @@ export default SellingTransactionScreen = props => {
             width: "100%",
             height: "20%",
             justifyContent: "center",
-            alignItems: "center",
-            paddingBottom: getStatusBarHeight()
+            alignItems: "center"
           }}
         >
           <View
@@ -143,7 +154,13 @@ export default SellingTransactionScreen = props => {
             />
           </View>
         </View>
-        <View style={{ width: "100%", height: "70%" }}>
+        <View
+          style={{
+            width: "100%",
+            height: "70%",
+            paddingBottom: getStatusBarHeight() * 2
+          }}
+        >
           <FlatList
             refreshing={isRefreshing}
             onRefresh={refreshTx}

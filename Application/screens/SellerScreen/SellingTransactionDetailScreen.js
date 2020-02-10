@@ -62,7 +62,6 @@ export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const [isLoading, setIsLoading] = useState(false);
   const transactionItem = props.navigation.getParam("transactionItem");
-  console.log(transactionItem);
   const userRole = useSelector(state => state.user.userRole);
 
   const [saleList, setSetList] = useState(

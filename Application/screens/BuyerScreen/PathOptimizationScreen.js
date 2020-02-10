@@ -91,8 +91,6 @@ export default UserSignupScreen = props => {
   //select unselect tx
   const [txForShow, setTxForShow] = useState([]);
   useEffect(() => {
-    console.log("transactions");
-    console.log(transactions);
     setTxForShow(transactions);
   }, [transactions]);
 

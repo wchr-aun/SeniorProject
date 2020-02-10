@@ -333,11 +333,9 @@ export default ChooseBuyerScreen = props => {
       buyerInfomation &&
       sellMode === 0
     ) {
-      console.log("choose buyer submit");
       settingSellRequest();
     } else if (sellMode === 1) {
       if (sellerAddr && sellerItemsForSell.length && selectedTimes.length) {
-        console.log("quick sell submit");
         settingSellRequest();
       }
     }

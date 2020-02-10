@@ -88,9 +88,9 @@ export default BuyingTransactionScreen = props => {
         width: wp("100%"),
         height:
           hp("100%") -
-          AppVariableSetting.bottomBarHeight +
-          getStatusBarHeight() -
-          Header.HEIGHT
+          AppVariableSetting.bottomBarHeight -
+          Header.HEIGHT +
+          getStatusBarHeight()
       }}
     >
       {/* <CustomStatusBar /> */}
@@ -128,8 +128,7 @@ export default BuyingTransactionScreen = props => {
             width: "100%",
             height: "20%",
             justifyContent: "center",
-            alignItems: "center",
-            paddingBottom: getStatusBarHeight()
+            alignItems: "center"
           }}
         >
           <View
@@ -156,7 +155,8 @@ export default BuyingTransactionScreen = props => {
             width: "100%",
             height: "70%",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            paddingBottom: getStatusBarHeight() * 2
           }}
         >
           {txShow.length > 0 ? (

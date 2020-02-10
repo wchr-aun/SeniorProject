@@ -261,16 +261,17 @@ export default BuyingTransactionDetailScreen = props => {
   };
   // add modalAssignedTime to buyerAssignedTime when update
   useEffect(() => {
+    console.log("useEffect --> buying");
+
     let updatedAssignedTime = [...buyerAssignedTimeFlatList];
+    let updatedBuyerAssignedTime = [...buyerAssignedTime];
     let updatedModalAssignedTime = [...modalAssignedTime];
-    let updatedBuyerAssignedTime = [];
 
     updatedModalAssignedTime.forEach((item, index) => {
       updatedModalAssignedTime[index] = libary.toDate(item / 1000);
       updatedBuyerAssignedTime.push(item);
     });
     updatedAssignedTime = updatedAssignedTime.concat(updatedModalAssignedTime);
-    console.log(updatedAssignedTime);
     setBuyerAssignedTimeFlatList(updatedAssignedTime);
     setBuyerAssignedTime(updatedBuyerAssignedTime);
   }, [modalAssignedTime]);
@@ -332,7 +333,9 @@ export default BuyingTransactionDetailScreen = props => {
     await dispatch(transactionAction.fetchTransaction("buyer"));
     setIsLoading(false);
     Alert.alert(
-      "ยอมรับคำขอเสร็จสิ้น!",
+      buyerAssignedTimeFlatList.length === 0
+        ? "ยอมรับคำขอสำเร็จ"
+        : "นัดวันไปรับขยะให้ผู้ขายสำเร็จ",
       "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
       [{ text: "OK" }]
     );
@@ -950,7 +953,10 @@ export default BuyingTransactionDetailScreen = props => {
             btnTitleFontSize={18}
           >
             <MaterialIcons name={"check-box"} size={14} />
-            <ThaiMdText style={{ fontSize: 18 }}> ยอมรับ</ThaiMdText>
+            <ThaiMdText style={{ fontSize: 18 }}>
+              {" "}
+              {buyerAssignedTimeFlatList.length === 0 ? "ยอมรับ" : "เสนอวัน"}
+            </ThaiMdText>
           </CustomButton>
         </View>
       </View>
