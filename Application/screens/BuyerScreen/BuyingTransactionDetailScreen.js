@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Alert
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
 import { useSelector, useDispatch } from "react-redux";
 
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -54,7 +55,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
       if (btnType != 4 && btnType != 3) return true;
       else return false;
     case 3:
-      if (btnType != 4) return true;
+      if (btnType != 4 && btnType != 5) return true;
       else return false;
     case 4:
       return true;
@@ -200,13 +201,23 @@ export default BuyingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
   const [isLoading, setIsLoading] = useState(false);
+  const [isInOperation, setIsInOperation] = useState(false);
+  const isOperationCompleted = useSelector(
+    state => state.navigation.isOperationCompleted
+  );
+  // for refreshing
+  const checkIsOperationCompleted = () => {
+    if (isOperationCompleted === true) {
+      props.navigation.goBack();
+    }
+  };
 
   // load imgs
   const [imgShowInModal, setImgShowInModal] = useState("");
   const [isImgModalVisible, setIsImgModalVisible] = useState(false);
   const [imgs, setImgs] = useState([]);
   const loadImgs = async () => {
-    let imgs = await libary.downloadingImg(transactionItem.detail.img);
+    let imgs = await libary.downloadingImg(transactionItem.detail.img, "tx");
     setImgs(imgs);
   };
   useEffect(() => {
@@ -225,8 +236,6 @@ export default BuyingTransactionDetailScreen = props => {
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
-
-  // const [timeState, dispatchTimeState] = useReducer(timeReducer, {timeSelected})
 
   const [buyerAssignedTimeFlatList, setBuyerAssignedTimeFlatList] = useState(
     []
@@ -261,16 +270,17 @@ export default BuyingTransactionDetailScreen = props => {
   };
   // add modalAssignedTime to buyerAssignedTime when update
   useEffect(() => {
+    console.log("useEffect --> buying");
+
     let updatedAssignedTime = [...buyerAssignedTimeFlatList];
+    let updatedBuyerAssignedTime = [...buyerAssignedTime];
     let updatedModalAssignedTime = [...modalAssignedTime];
-    let updatedBuyerAssignedTime = [];
 
     updatedModalAssignedTime.forEach((item, index) => {
       updatedModalAssignedTime[index] = libary.toDate(item / 1000);
       updatedBuyerAssignedTime.push(item);
     });
     updatedAssignedTime = updatedAssignedTime.concat(updatedModalAssignedTime);
-    console.log(updatedAssignedTime);
     setBuyerAssignedTimeFlatList(updatedAssignedTime);
     setBuyerAssignedTime(updatedBuyerAssignedTime);
   }, [modalAssignedTime]);
@@ -286,7 +296,7 @@ export default BuyingTransactionDetailScreen = props => {
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
-    setIsLoading(true);
+    setIsInOperation(true);
     await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
@@ -295,7 +305,7 @@ export default BuyingTransactionDetailScreen = props => {
       })
     );
     await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsLoading(false);
+    setIsInOperation(false);
     Alert.alert(
       "การยกเลิกคำขอเสร็จสิ้น!",
       "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
@@ -305,7 +315,7 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   const acceptHandler = async () => {
-    setIsLoading(true);
+    setIsInOperation(true);
     if (buyerAssignedTimeFlatList.length > 0) {
       //buyer select his assignedTime
       dispatch(
@@ -330,9 +340,11 @@ export default BuyingTransactionDetailScreen = props => {
       );
     }
     await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsLoading(false);
+    setIsInOperation(false);
     Alert.alert(
-      "ยอมรับคำขอเสร็จสิ้น!",
+      buyerAssignedTimeFlatList.length === 0
+        ? "ยอมรับคำขอสำเร็จ"
+        : "นัดวันไปรับขยะให้ผู้ขายสำเร็จ",
       "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
       [{ text: "OK" }]
     );
@@ -340,7 +352,7 @@ export default BuyingTransactionDetailScreen = props => {
   };
 
   const onBuyerWayHandler = async () => {
-    setIsLoading(true);
+    setIsInOperation(true);
     await dispatch(
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
@@ -350,7 +362,22 @@ export default BuyingTransactionDetailScreen = props => {
     );
     await dispatch(transactionAction.fetchTransaction("buyer"));
     Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
-    setIsLoading(false);
+    setIsInOperation(false);
+    props.navigation.goBack();
+  };
+
+  const finishHandler = async () => {
+    setIsInOperation(true);
+    await dispatch(
+      transactionAction.changeTransactionStatus({
+        txID: transactionItem.txId,
+        oldStatus: transactionItem.detail.txStatus, //for query
+        newStatus: 5
+      })
+    );
+    await dispatch(transactionAction.fetchTransaction("buyer"));
+    Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
+    setIsInOperation(false);
     props.navigation.goBack();
   };
 
@@ -362,7 +389,7 @@ export default BuyingTransactionDetailScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -390,6 +417,8 @@ export default BuyingTransactionDetailScreen = props => {
       {props.navigation.getParam("haveHeaderHight") ? null : (
         <CustomStatusBar />
       )}
+      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
+      <ModalLoading modalVisible={isInOperation} userRole="buyer" />
       <ModalShowImg
         modalVisible={isImgModalVisible}
         onRequestClose={() => console.log("modal close")}
@@ -930,27 +959,47 @@ export default BuyingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
-              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
-              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+              transactionItem.detail.txStatus === 3
+                ? getDisableStatusForBuyer(5, transactionItem.detail.txStatus)
+                  ? Colors.button.submit_primary_bright.btnBackgroundDisabled
+                  : Colors.button.submit_primary_bright.btnBackground
+                : (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
+                  getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnBackgroundDisabled
                 : Colors.button.submit_primary_bright.btnBackground
             }
             onPress={
-              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
-              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+              transactionItem.detail.txStatus === 3
+                ? finishHandler
+                : (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
+                  getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? null
                 : acceptHandler
             }
             btnTitleColor={
-              (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
-              getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
+              transactionItem.detail.txStatus === 3
+                ? getDisableStatusForBuyer(5, transactionItem.detail.txStatus)
+                  ? Colors.button.submit_primary_bright.btnTextDisabled
+                  : Colors.button.submit_primary_bright.btnText
+                : (!timeSelected && buyerAssignedTimeFlatList.length === 0) ||
+                  getDisableStatusForBuyer(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnTextDisabled
                 : Colors.button.submit_primary_bright.btnText
             }
             btnTitleFontSize={18}
           >
             <MaterialIcons name={"check-box"} size={14} />
-            <ThaiMdText style={{ fontSize: 18 }}> ยอมรับ</ThaiMdText>
+            <ThaiMdText style={{ fontSize: 18 }}>
+              {transactionItem.detail.txStatus === 1 ||
+              transactionItem.detail.txStatus === 2
+                ? "กำลังไปรับ"
+                : transactionItem.detail.txStatus === 3
+                ? "รับขยะเสร็จสิ้น"
+                : buyerAssignedTimeFlatList.length === 0 &&
+                  transactionItem.detail.txStatus === 0
+                ? " รับข้อเสนอ"
+                : " เสนอวัน"}
+            </ThaiMdText>
           </CustomButton>
         </View>
       </View>

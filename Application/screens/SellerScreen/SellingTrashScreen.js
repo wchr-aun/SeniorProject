@@ -11,6 +11,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { NavigationEvents } from "react-navigation";
 import {
   AntDesign,
   MaterialCommunityIcons,
@@ -26,6 +27,7 @@ import { TextInput, ScrollView } from "react-native-gesture-handler";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import { LinearGradient } from "expo-linear-gradient";
+import ModalLoading from "../../components/ModalLoading";
 
 const SELECT_ITEM = "SELECT_ITEM";
 const ADD_AMOUNT_FORSELL = "ADD_AMOUNT_FORSELL";
@@ -96,6 +98,34 @@ const trashSellingReducer = (state, action) => {
 };
 
 export default SellingTrashScreen = props => {
+  const [isInOperation, setIsInOperation] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const isOperationCompleted = useSelector(
+    state => state.navigation.isOperationCompleted
+  );
+
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
+      </View>
+    );
+  }
+
+  // for refreshing
+  const checkIsOperationCompleted = () => {
+    if (isOperationCompleted === true) {
+      props.navigation.navigate("ShowSellerItemsScreen");
+    } else {
+      setIsLoading(true);
+      refreshSellerItems();
+      setIsLoading(false);
+    }
+  };
+
+  const dispatch = useDispatch();
   // For back behavior
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -108,8 +138,6 @@ export default SellingTrashScreen = props => {
   });
 
   // Get data from redux
-  // Get User trash
-  // Get sellerItems and wasteTyp from redux
   const [distance, setDistance] = useState("10");
   const sellerItemsForSell = useSelector(state => {
     return state.sellerItems.sellerItemsForSell;
@@ -128,7 +156,6 @@ export default SellingTrashScreen = props => {
     }
   );
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
   // Callback fn
   const refreshSellerItems = useCallback(async () => {
     setIsRefreshing(true);
@@ -136,11 +163,13 @@ export default SellingTrashScreen = props => {
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing]);
 
-  const setSellerItemsForSell = useCallback(() => {
+  const setSellerItemsForSell = useCallback(async () => {
     trashsState.sellerItemsForSell.confirmValue();
-    dispatch(
+    setIsInOperation(true);
+    await dispatch(
       sellerItemsAction.setSellerItemsForSell(trashsState.sellerItemsForSell)
     );
+    setIsInOperation(false);
     props.navigation.navigate({
       routeName: "chooseBuyerForSellScreen",
       params: { distance }
@@ -157,10 +186,11 @@ export default SellingTrashScreen = props => {
       });
     }
   }, [sellerItemsForSell, sellerItemsFlatListFormat]);
-  const dispatch = useDispatch();
+
   return (
     <View style={{ flex: 1 }}>
       <CustomStatusBar />
+      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{
@@ -170,6 +200,7 @@ export default SellingTrashScreen = props => {
           alignItems: "center"
         }}
       >
+        <ModalLoading modalVisible={isInOperation} userRole="seller" />
         <KeyboardAvoidingView
           style={{ width: "100%", height: "100%" }}
           behavior={"padding"}

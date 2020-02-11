@@ -26,9 +26,7 @@ export const getUsers = async () => {
           },
           email: auth.currentUser.email,
           phoneNo: doc.data().phoneNo,
-          photoURL:
-            auth.currentUser.photoURL ||
-            "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb"
+          photoURL: doc.data().photoURL || ""
         };
       } else throw new Error("The document doesn't exist");
     })
@@ -309,14 +307,10 @@ export const editUserInfo = async newInfo => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
-        console.log("----1 -----result.data.errorMessage in editUserInfo");
-        console.log(result.data.errorMessage);
         throw new Error(result.data.errorMessage);
       }
     })
     .catch(err => {
-      console.log("----2 -----result.data.errorMessage in editUserInfo");
-      console.log(err.message);
       throw new Error(err.message);
     });
 };
@@ -362,7 +356,6 @@ buyerInfo = {
 } */
 
 export const editBuyerInfo = async buyerInfo => {
-  console.log(buyerInfo);
   return functions
     .httpsCallable("editBuyerInfo")(buyerInfo)
     .then(result => {

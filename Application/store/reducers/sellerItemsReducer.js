@@ -116,7 +116,6 @@ export default function(state = initialState, action) {
         state.sellerItems
       );
       // reduce sellerItems
-      console.log(action.sellRequest);
       for (let type in action.sellRequest["saleList"]) {
         if (type !== "_count" && type !== "length") {
           // got object

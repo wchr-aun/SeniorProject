@@ -28,6 +28,7 @@ import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import ModalLoading from "../../components/ModalLoading";
 
 const BuyerChoice = props => {
   return (
@@ -168,6 +169,7 @@ const BuyerChoice = props => {
 export default ChooseBuyerScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
@@ -195,7 +197,6 @@ export default ChooseBuyerScreen = props => {
   // Callback fn
   const loadBuyer = useCallback(async () => {
     setIsRefreshing(true);
-    // await dispatch(sellerItemsAction.getBuyerList(TEMP_QUERY_BUYER));
     await dispatch(
       sellerItemsAction.getBuyerList({
         distance: parseInt(props.navigation.getParam("distance"), 10),
@@ -333,11 +334,9 @@ export default ChooseBuyerScreen = props => {
       buyerInfomation &&
       sellMode === 0
     ) {
-      console.log("choose buyer submit");
       settingSellRequest();
     } else if (sellMode === 1) {
       if (sellerAddr && sellerItemsForSell.length && selectedTimes.length) {
-        console.log("quick sell submit");
         settingSellRequest();
       }
     }
@@ -358,7 +357,7 @@ export default ChooseBuyerScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -373,6 +372,7 @@ export default ChooseBuyerScreen = props => {
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
+      <ModalLoading modalVisible={isInOperation} userRole={"seller"} />
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{

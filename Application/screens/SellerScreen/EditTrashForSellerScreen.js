@@ -27,21 +27,15 @@ export default EditTrashForSellerScreen = props => {
 
     let addWaste = firebaseUtil.functions().httpsCallable("addWaste");
     // Call firebase cloud functio
-    return addWaste(newTrash)
-      .then(function(result) {
-        // Read result of the Cloud Function.
-        console.log("From EditTrashForSeller: addWaste added");
-        console.log(result);
-      })
-      .catch(function(error) {
-        // Getting the Error details.
-        var code = error.code;
-        var message = error.message;
-        var details = error.details;
-        console.log("From EditTrashForSeller: error code :" + code);
-        console.log("From EditTrashForSeller: error message :" + message);
-        console.log("From EditTrashForSeller: error details :" + details);
-      });
+    return addWaste(newTrash).catch(function(error) {
+      // Getting the Error details.
+      var code = error.code;
+      var message = error.message;
+      var details = error.details;
+      console.log("From EditTrashForSeller: error code :" + code);
+      console.log("From EditTrashForSeller: error message :" + message);
+      console.log("From EditTrashForSeller: error details :" + details);
+    });
   };
 
   return (
@@ -56,7 +50,6 @@ export default EditTrashForSellerScreen = props => {
             { value: "wasteType/PP" }
           ]}
           onChangeText={thisValue => {
-            console.log(thisValue);
             setWasteType(thisValue);
           }}
         />
@@ -64,7 +57,6 @@ export default EditTrashForSellerScreen = props => {
       <View style={styles.input}>
         <TextInput
           onChangeText={thisValue => {
-            console.log(thisValue);
             setAmount(thisValue);
           }}
         ></TextInput>

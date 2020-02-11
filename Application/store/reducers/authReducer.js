@@ -16,7 +16,6 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
       console.log("SIGNIN");
-      console.log(action);
       return {
         userProfile: {
           uid: action.userProfile.uid,
@@ -24,14 +23,13 @@ export default (state = initialState, action) => {
           surname: action.userProfile.surname,
           addr: action.userProfile.addr,
           enableSearch: action.userProfile.enableSearch,
-          photoURL: action.userProfile.photoURL,
+          img: action.userProfile.img,
           phoneNo: action.userProfile.phoneNo
         },
         userRole: action.userRole
       };
     case CHANGE_ROLE:
       console.log("CHANGE_ROLE");
-      console.log(action);
 
       return {
         ...state,
@@ -39,8 +37,6 @@ export default (state = initialState, action) => {
       };
     case LOGOUT:
       console.log("LOGOUT");
-      console.log(state);
-      console.log(initialState);
       return initialState;
     default:
       return state;

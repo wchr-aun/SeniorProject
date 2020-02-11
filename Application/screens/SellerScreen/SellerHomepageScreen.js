@@ -5,7 +5,8 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
-  Alert
+  Alert,
+  RefreshControl
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,13 +19,14 @@ import UserInfoCard from "../../components/UserInfoCard";
 import ThaiTitleText from "../../components/ThaiBoldText";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import * as transactionAction from "../../store/actions/transactionAction";
 
 import libary from "../../utils/libary";
-import { LinearGradient } from "expo-linear-gradient";
+import CustomButton from "../../components/UI/CustomButton";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import { Ionicons } from "@expo/vector-icons";
 
 export default SellerHomepageScreen = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,14 +51,22 @@ export default SellerHomepageScreen = props => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
       params: {
-        transactionItem
+        transactionItem,
+        addCustomStatusbar: true
       }
     });
   };
 
   // --------------- loading section --------------------
+  //User image
+  const [userImg, setUserImg] = useState("");
+  const loadUserImg = async () => {
+    let imgUri = await libary.downloadingImg([userProfile.img], "user");
+    setUserImg(imgUri[0]);
+  };
   // load Callback fn
   const refreshTx = useCallback(async () => {
+    console.log("refreshTx -- sellerHomepageScreen");
     setIsRefreshing(true);
     await dispatch(transactionAction.fetchTransaction(userRole));
     setIsRefreshing(false);
@@ -66,6 +76,7 @@ export default SellerHomepageScreen = props => {
   useEffect(() => {
     // Load sellerItems and wasteType from firebase and store it to redux "initially"
     setIsLoading(true);
+    loadUserImg();
     refreshTx()
       .then(() => setIsLoading(false))
       .catch(err => {
@@ -78,7 +89,7 @@ export default SellerHomepageScreen = props => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -90,7 +101,8 @@ export default SellerHomepageScreen = props => {
         style={{
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary_dark
+          backgroundColor:
+            userRole === "seller" ? Colors.soft_secondary : Colors.primary_dark
         }}
       >
         {isLoading ? (
@@ -103,7 +115,10 @@ export default SellerHomepageScreen = props => {
               justifyContent: "center"
             }}
           >
-            <ActivityIndicator size="large" color={Colors.primary_dark} />
+            <ActivityIndicator
+              size="large"
+              color={Colors.primary_bright_variant}
+            />
           </View>
         ) : (
           <>
@@ -116,7 +131,7 @@ export default SellerHomepageScreen = props => {
                 height: "40%",
                 width: "100%"
               }}
-              imgUrl={userProfile.imgUrl ? userProfile.imgUrl : ""}
+              imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
@@ -124,8 +139,7 @@ export default SellerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
             />
-            <LinearGradient
-              colors={Colors.linearGradientBright}
+            <View
               style={{
                 width: "100%",
                 height: "60%",
@@ -134,20 +148,23 @@ export default SellerHomepageScreen = props => {
                 paddingVertical: 10,
                 paddingBottom: getStatusBarHeight(),
                 borderTopRightRadius: 15,
-                borderTopLeftRadius: 15
+                borderTopLeftRadius: 15,
+                ...styles.shadow,
+                backgroundColor:
+                  userRole === "seller" ? "white" : Colors.primary_dark
               }}
             >
               <View
                 style={{
                   alignSelf: "flex-start",
-                  paddingLeft: Dimensions.get("window").width * 0.03
+                  paddingHorizontal: Dimensions.get("window").width * 0.03,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  height: 60
                 }}
               >
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setGoToUITestingScreen(preState => preState + 1);
-                  }}
-                >
+                <View style={{ width: "60%", height: "80%" }}>
                   <ThaiTitleText
                     style={{
                       color: Colors.soft_primary_bright,
@@ -156,34 +173,75 @@ export default SellerHomepageScreen = props => {
                   >
                     การรับซื้อขยะล่าสุด
                   </ThaiTitleText>
-                </TouchableWithoutFeedback>
+                </View>
+                <CustomButton
+                  style={{
+                    width: "30%",
+                    height: "80%",
+                    maxHeight: 40,
+                    borderRadius: 5
+                  }}
+                  btnColor={Colors.button.submit_primary_bright.btnBackground}
+                  onPress={refreshTx}
+                  btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                  btnTitleFontSize={10}
+                >
+                  <Ionicons name={"md-refresh"} size={10} />
+                  <ThaiMdText style={{ fontSize: 10 }}>
+                    {" "}
+                    อัปเดตข้อมูล
+                  </ThaiMdText>
+                </CustomButton>
               </View>
-
-              <FlatList
-                refreshing={isRefreshing}
-                onRefresh={refreshTx}
-                data={transactions ? transactions[0] : []}
-                keyExtractor={item => item.txId}
-                renderItem={({ item }) => {
-                  return (
-                    <SellTransactionCard
-                      amountOfType={item.detail.saleList.length}
-                      userName={item.detail.buyer}
-                      userRole={userRole}
-                      txType={item.detail.txType}
-                      txStatus={item.detail.txStatus}
-                      meetDate={libary.formatDate(
-                        item.detail.assignedTime[0].toDate()
-                      )}
-                      addr={item.detail.addr}
-                      onPress={() => {
-                        selectedHandler(item);
-                      }}
+              {transactions[0].length > 0 ? (
+                <FlatList
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={isRefreshing}
+                      onRefresh={refreshTx}
                     />
-                  );
-                }}
-              />
-            </LinearGradient>
+                  }
+                  refreshing={isRefreshing}
+                  onRefresh={refreshTx}
+                  data={transactions[0]}
+                  keyExtractor={item => item.txId}
+                  renderItem={({ item }) => {
+                    return (
+                      <SellTransactionCard
+                        amountOfType={item.detail.saleList.length}
+                        userName={item.detail.buyer}
+                        userRole={userRole}
+                        txType={item.detail.txType}
+                        txStatus={item.detail.txStatus}
+                        meetDate={libary.formatDate(
+                          item.detail.assignedTime[0].toDate()
+                        )}
+                        addr={item.detail.addr}
+                        onPress={() => {
+                          selectedHandler(item);
+                        }}
+                      />
+                    );
+                  }}
+                />
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignSelf: "center"
+                  }}
+                >
+                  <ThaiBoldText
+                    style={{ color: Colors.hard_secondary, fontSize: 14 }}
+                  >
+                    {isLoading
+                      ? "กำลังโหลดข้อมูล..."
+                      : "ยังไม่มีรายการที่ท่านกำลังสนใจ"}
+                  </ThaiBoldText>
+                </View>
+              )}
+            </View>
           </>
         )}
       </View>
@@ -194,5 +252,16 @@ export default SellerHomepageScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.secondary
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2
   }
 });

@@ -10,10 +10,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
 export default UserAuthenScreen = props => {
-  useEffect(() => {
-    console.log("Template");
-  }, []);
-
   return (
     <KeyboardAvoidingView
       behavior="padding"

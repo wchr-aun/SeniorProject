@@ -26,6 +26,7 @@ import AppVariableSetting from "../../constants/AppVariableSetting";
 import TrashCard from "../../components/TrashCard";
 import Colors from "../../constants/Colors";
 import ThaiBoldText from "../../components/ThaiBoldText";
+import ModalLoading from "../../components/ModalLoading";
 
 import CustomButton from "../../components/UI/CustomButton";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
@@ -111,6 +112,9 @@ const trashsModifyingReducer = (state, action) => {
 };
 
 const ShowAllUserTrashScreen = props => {
+  const [isInOperation, setIsInOperation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   // For back behavior + auto refresh
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -204,8 +208,6 @@ const ShowAllUserTrashScreen = props => {
     dispatchAmountTrashsState
   ]);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   // error alert handling
@@ -224,7 +226,7 @@ const ShowAllUserTrashScreen = props => {
   // For 'addWaste' handler
   const confirmHandler = useCallback(async () => {
     setEditingMode(false);
-    setIsRefreshing(true);
+    setIsInOperation(true);
 
     trashsState.sellerItems.confirmValue();
     // update new wasteData on local redux
@@ -237,7 +239,7 @@ const ShowAllUserTrashScreen = props => {
     );
     // clear input data in sellerItemsCamera
     dispatch(sellerItemsAction.clearSellerItemsCamera());
-    setIsRefreshing(false);
+    setIsInOperation(false);
   }, [trashsState, dispatchAmountTrashsState]);
 
   const cancelHandler = () => {
@@ -259,14 +261,13 @@ const ShowAllUserTrashScreen = props => {
   useEffect(() => {
     props.navigation.setParams({ editingMode });
     props.navigation.setParams({ setModalVisible });
-    // props.navigation.setParams({ confirmHandlerTricker });
   }, [editingMode, setModalVisible]);
 
   //add spinner loading
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
       </View>
     );
   }
@@ -301,6 +302,7 @@ const ShowAllUserTrashScreen = props => {
           alignItems: "center"
         }}
       >
+        <ModalLoading modalVisible={isInOperation} userRole="seller" />
         <View
           style={{
             width: "100%",
@@ -315,7 +317,7 @@ const ShowAllUserTrashScreen = props => {
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
-                fontSize: 26
+                fontSize: 18
               }}
             >
               จำนวนขยะที่คุณมี
