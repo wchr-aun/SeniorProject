@@ -25,7 +25,7 @@ export const getUsers = async () => {
             zipcode: doc.data().zipcode
           },
           email: auth.currentUser.email,
-          phoneNo: auth.currentUser.phoneNumber,
+          phoneNo: doc.data().phoneNo,
           photoURL:
             auth.currentUser.photoURL ||
             "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb"
@@ -423,17 +423,15 @@ export const querySellers = async queryData => {
     });
 };
 
-// export const searchBuyer = async keywords => {
-//   return firestore
-//     .collection("buyerLists")
-//     .orderBy("username", "asc")
-//     .startAt(keywords)
-//     .limit(5)
-//     .get()
-//     .then(querySnapshot => {
-//       let buyers = []
-//       querySnapshot.forEach(doc => {
-
-//       })
-//     })
-// }
+export const searchBuyer = async uid => {
+  return firestore
+    .collection("buyerLists")
+    .doc(uid)
+    .get()
+    .then(doc => {
+      if (doc.exists)
+        return ({ txId: doc.id, detail: doc.data() });
+      else
+        return "No such users"
+    })
+}

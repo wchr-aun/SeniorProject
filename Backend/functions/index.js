@@ -27,6 +27,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
   const addr = data.addr.readable
   const notificationToken = data.notificationToken || false
   const zipcode = data.zipcode
+  const phoneNo = data.phoneNo
   return auth.createUser({
     uid: data.username,
     email: data.email,
@@ -39,6 +40,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
       addr,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
       zipcode,
+      phoneNo,
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).then(() => {
       buyerDB.doc(userRecord.uid).set({
@@ -196,7 +198,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
 
           if (doc.data().txStatus >= data.status)
             return {errorMessage: "The transaction has already passed the state"}
-          else if (data.status < 1 || data.status > 4)
+          else if (data.status < 1 || data.status > 5)
             return {errorMessage: "The transaction status is incorrect"}
           else if (doc.data().buyer != "" && doc.data().buyer != undefined && doc.data().buyer != context.auth.uid && doc.data().seller != context.auth.uid)
             return {errorMessage: "The transaction has already been changed"}
@@ -276,16 +278,17 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     const surname = data.surname
     const addr = data.addr.readable
     const zipcode = data.addr.zipcode
+    const phoneNo = data.phoneNo
     return usersDB.doc(context.auth.uid).update({
       name,
       surname,
       addr,
       zipcode,
+      phoneNo,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude)
     }).then(() => {
       auth.updateUser(context.auth.uid, {
-        phoneNumber: data.phoneNo,
-        photoURL: data.photoURL
+        phoneNumber: phoneNo
       })
     }).catch(err => {
       console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.uid)
