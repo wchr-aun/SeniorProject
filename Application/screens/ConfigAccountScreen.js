@@ -10,9 +10,7 @@ import Colors from "../constants/Colors";
 import ThaiBoldText from "../components/ThaiBoldText";
 
 export default ConfigAccountScreen = props => {
-  const [switchSearch, setSwitchSearch] = useState(false);
   const dispatch = useDispatch();
-  const addr = useSelector(state => state.user.userProfile.addr);
 
   const configHandler = role => {
     dispatch(authAction.changeRole(role)).then(() => {

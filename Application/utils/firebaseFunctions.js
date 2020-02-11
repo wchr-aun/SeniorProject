@@ -26,7 +26,9 @@ export const getUsers = async () => {
           },
           email: auth.currentUser.email,
           phoneNo: auth.currentUser.phoneNumber,
-          img: doc.data().img
+          photoURL:
+            auth.currentUser.photoURL ||
+            "https://firebasestorage.googleapis.com/v0/b/senior-project-83de1.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=bf6d0624-ce7b-42e7-8703-a155cb6e84eb"
         };
       } else throw new Error("The document doesn't exist");
     })

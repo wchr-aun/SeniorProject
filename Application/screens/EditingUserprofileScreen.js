@@ -282,7 +282,10 @@ export default EditingUserprofileScreen = props => {
     loadUserImg();
   }, []);
   const loadUserImg = async () => {
-    let imgUri = await libary.downloadingImg([userProfile.img], "user");
+    let imgUri = await libary.downloadingImg(
+      [`${userProfile.uid}.jpg`],
+      "user"
+    );
     setUserImg(imgUri[0]);
   };
 

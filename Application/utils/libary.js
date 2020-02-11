@@ -34,6 +34,9 @@ const takeImgForGetprediction = async () => {
     base64: true
   });
 
+  if (image.cancelled) {
+    return;
+  }
   let resized =
     image.height > image.width
       ? { resize: { width: 600 } }
@@ -107,7 +110,8 @@ const downloadingImg = async (imgNames, mode) => {
           allImgs.push(uri);
         })
         .catch(err => {
-          throw new Error(err.message);
+          // throw new Error(err.message);
+          return [""];
         })
     );
   }

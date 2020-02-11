@@ -387,7 +387,11 @@ export default BuyingTransactionDetailScreen = props => {
       })
     );
     await dispatch(transactionAction.fetchTransaction("buyer"));
-    Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
+    Alert.alert(
+      "การดำเนินการทุกอย่างเสร็จสิ้น!",
+      "สามารถตรวจสอบข้อมูลเพิ่มเติมได้ที่หน้าโชว์ข้อมูลการซื้อขาย",
+      [{ text: "OK" }]
+    );
     setIsInOperation(false);
     props.navigation.goBack();
   };
