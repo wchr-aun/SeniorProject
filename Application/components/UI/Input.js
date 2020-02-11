@@ -72,7 +72,11 @@ export default Input = props => {
 
   return (
     <View
-      style={{ ...styles.formControl, ...props.style, alignSelf: "center" }}
+      style={{
+        ...styles.formControl,
+        ...props.style,
+        alignSelf: "center"
+      }}
     >
       <Text
         style={{

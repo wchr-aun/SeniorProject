@@ -38,6 +38,8 @@ import libary, {
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 import ImageCircle from "../components/UI/ImageCircle";
 import CustomButton from "../components/UI/CustomButton";
+import ThaiBoldText from "../components/ThaiBoldText";
+import { auth } from "firebase";
 
 // CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -208,31 +210,27 @@ export default EditingUserprofileScreen = props => {
   const changeRoleHandler = role => {
     // UI
     setUserRole(role);
-    // dispatch(authAction.changeRole(role));
+    dispatch(authAction.changeRole(role));
   };
 
   // firebase call cloud function
   const editConfirmHandler = async () => {
     setIsLoading(true);
 
+    console.log("------> formState");
+    console.log(formState);
+
     if (!formState.allFormIsValid) {
       setError("โปรดกรอกข้อมูลให้ครบถ้วน");
       setIsLoading(false);
       return;
     }
-    console.log("------> formState");
-    console.log(formState);
-
-    // passed to toggleSearch
-    console.log("isEnableSearch");
-    console.log(isEnableSearch);
 
     // passed to editUserInfo()
     let user = {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
       addr: userAddrObj,
-      photoURL: formState.inputValues.photoURL,
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
@@ -278,22 +276,29 @@ export default EditingUserprofileScreen = props => {
 
   //User image
   const [userImg, setUserImg] = useState("");
+  const [userImgUri, setUserImgUri] = useState("");
   useEffect(() => {
     loadUserImg();
   }, []);
   const loadUserImg = async () => {
-    let imgUri = await libary.downloadingImg(
-      [`${userProfile.uid}.jpg`],
-      "user"
-    );
-    setUserImg(imgUri[0]);
+    let imgs = await libary.downloadingImg([`${userProfile.uid}.jpg`], "user");
+    setUserImgUri(imgs.length > 0 ? imgs[0] : "");
   };
-
+  const [isImgEdit, setIsImgEdit] = useState(false);
   const pickImage = async () => {
+    setIsImgEdit(true);
     let img = await libary.pickedAnImg();
-    setUserImg(img.uri);
+    if (img) {
+      setUserImg(img);
+      setUserImgUri(img.uri);
+    }
   };
-
+  const uploadImage = async () => {
+    // upload img
+    console.log(userImg);
+    libary.uploadingImg(userImg, `${userProfile.uid}.jpg`, "user");
+    setIsImgEdit(false);
+  };
   return (
     <View
       style={{
@@ -301,7 +306,7 @@ export default EditingUserprofileScreen = props => {
         width: wp("100%")
       }}
     >
-      <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
+      <LinearGradient colors={Colors.linearGradientDark}>
         <View
           style={{
             padding: wp("3%"),
@@ -309,27 +314,66 @@ export default EditingUserprofileScreen = props => {
             paddingTop: getStatusBarHeight(),
             alignSelf: "center",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "space-around",
+            flexDirection: "row"
           }}
         >
-          <ThaiMdText
+          <CustomButton
             style={{
-              color: Colors.on_primary_bright.high_constrast,
-              fontSize: 20
+              width: "20%",
+              height: "80%",
+              maxHeight: 40,
+              borderRadius: 10
             }}
+            onPress={() => {
+              props.navigation.navigate("StartupScreen");
+            }}
+            btnColor={Colors.button.cancel.btnBackground}
+            btnTitleColor={Colors.button.cancel.btnText}
+            btnTitleFontSize={8}
           >
-            ตั้งค่าข้อมูลผู้ใช้งาน
-          </ThaiMdText>
+            <MaterialIcons
+              name="chevron-left"
+              size={12}
+              color={Colors.button.cancel.btnText}
+            />{" "}
+            ย้อนกลับ
+          </CustomButton>
+          <View style={{ width: "40%", height: "50%" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_primary_bright.high_constrast,
+                fontSize: 14
+              }}
+            >
+              ตั้งค่าข้อมูลผู้ใช้งาน
+            </ThaiBoldText>
+          </View>
+          <CustomButton
+            style={{
+              width: "20%",
+              height: "80%",
+              borderRadius: 10,
+              maxHeight: 40
+            }}
+            onPress={signOutHandler}
+            btnColor={Colors.button.submit_primary_dark.btnBackground}
+            btnTitleColor={Colors.button.submit_primary_dark.btnText}
+            btnTitleFontSize={8}
+          >
+            ลงชื่อออก
+          </CustomButton>
         </View>
         <View
           style={{
             ...styles.authContainer,
             width: "100%",
-            height: "75%",
+            height: "85%",
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%"),
             borderRadius: 3,
-            backgroundColor: "white"
+            backgroundColor: "white",
+            paddingBottom: getStatusBarHeight()
           }}
         >
           <KeyboardAvoidingView
@@ -338,22 +382,8 @@ export default EditingUserprofileScreen = props => {
             keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
-              <View style={{ width: "100%", flexDirection: "row" }}>
-                <ImageCircle avariableWidth={120} imgUrl={userImg} />
-                <CustomButton
-                  style={{
-                    width: "40%",
-                    height: "100%",
-                    maxHeight: 40,
-                    borderRadius: 5
-                  }}
-                  onPress={pickImage}
-                  btnTitleFontSize={18}
-                  btnColor={Colors.hard_secondary}
-                  btnTitleColor={Colors.primary_dark}
-                >
-                  เลือกรูปภ่าพ
-                </CustomButton>
+              <View style={{ width: "100%", height: 40 }}>
+                <ThaiMdText>เลือกบทบาทของคุณ</ThaiMdText>
               </View>
               <View
                 style={{
@@ -412,6 +442,46 @@ export default EditingUserprofileScreen = props => {
                   />
                   <ThaiRegText>คนซื้อ</ThaiRegText>
                 </TouchableOpacity>
+              </View>
+
+              <View style={{ width: "100%", height: 40 }}>
+                <ThaiMdText>รูปประจำตัว</ThaiMdText>
+              </View>
+              <View
+                style={{
+                  width: "50%",
+                  height: 200,
+                  alignItems: "center",
+                  borderRadius: 8,
+                  backgroundColor: Colors.secondary,
+                  alignSelf: "center",
+                  justifyContent: "space-around"
+                }}
+              >
+                <ImageCircle avariableWidth={120} imgUrl={userImgUri} />
+                <CustomButton
+                  style={{
+                    width: "80%",
+                    height: "100%",
+                    maxHeight: 40,
+                    borderRadius: 5,
+                    padding: 5
+                  }}
+                  onPress={isImgEdit ? uploadImage : pickImage}
+                  btnTitleFontSize={14}
+                  btnColor={
+                    isImgEdit
+                      ? Colors.button.submit_primary_bright.btnBackground
+                      : Colors.button.submit_soft_primary_dark.btnBackground
+                  }
+                  btnTitleColor={
+                    isImgEdit
+                      ? Colors.button.submit_primary_bright.btnText
+                      : Colors.button.submit_soft_primary_dark.btnText
+                  }
+                >
+                  {isImgEdit ? "อัพโหลด" : "เลือกรูปภาพ"}
+                </CustomButton>
               </View>
 
               <Input
@@ -483,22 +553,13 @@ export default EditingUserprofileScreen = props => {
                   width: "100%",
                   marginTop: 15,
                   marginBottom: 10,
-                  alignSelf: "center"
+                  alignSelf: "center",
+                  ...styles.shadow
                 }}
               >
                 <ThaiRegText style={{ textAlign: "center", fontSize: 16 }}>
                   ที่อยู่ในการจัดส่ง
                 </ThaiRegText>
-              </View>
-
-              <View
-                style={{
-                  width: "100%",
-                  marginTop: 15,
-                  marginBottom: 10,
-                  alignSelf: "center"
-                }}
-              >
                 <ThaiRegText
                   style={{
                     textAlign: "center",
@@ -516,7 +577,6 @@ export default EditingUserprofileScreen = props => {
                 onPress={() => {
                   console.log(isCurrentAddr);
                   setIsCurrentAddr(preState => !preState);
-                  // getCurrentLocationHandler();
                 }}
               >
                 <View
@@ -524,7 +584,8 @@ export default EditingUserprofileScreen = props => {
                     width: "100%",
                     marginVertical: 3,
                     alignSelf: "center",
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    alignItems: "center"
                   }}
                 >
                   <SwitchToggle
@@ -536,9 +597,11 @@ export default EditingUserprofileScreen = props => {
                     circleColorOn="#ffffff"
                     onPress={() => setIsCurrentAddr(preState => !preState)}
                   />
-                  <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
-                    ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
-                  </ThaiRegText>
+                  <View style={{ paddingHorizontal: 3 }}>
+                    <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
+                      ใช้ที่อยู่ปัจจุบันเป็นที่อยู่ในการจัดส่ง
+                    </ThaiRegText>
+                  </View>
                 </View>
               </TouchableOpacity>
 
@@ -695,58 +758,21 @@ export default EditingUserprofileScreen = props => {
             </ScrollView>
           </KeyboardAvoidingView>
         </View>
-        <View
-          style={{
-            width: wp("100%"),
-            height: "10%",
-            justifyContent: "center",
-            flexDirection: "row",
-            paddingBottom: getStatusBarHeight()
-          }}
-        >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 10,
-              margin: wp("1.25%"),
-              borderWidth: 1,
-              borderColor: Colors.secondary
-            }}
-            onPress={() => {
-              props.navigation.navigate("StartupScreen");
-            }}
-            btnColor={Colors.button.cancel.btnBackground}
-            btnTitleColor={Colors.button.cancel.btnText}
-            btnTitleFontSize={14}
-          >
-            <MaterialIcons
-              name="chevron-left"
-              size={12}
-              color={Colors.button.cancel.btnText}
-            />{" "}
-            ย้อนกลับ
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 10,
-              margin: wp("1.25%"),
-              borderWidth: 1,
-              borderColor: Colors.button.submit_primary_dark.btnText
-            }}
-            onPress={signOutHandler}
-            btnColor={Colors.button.submit_primary_dark.btnBackground}
-            btnTitleColor={Colors.button.submit_primary_dark.btnText}
-            btnTitleFontSize={14}
-          >
-            ลงชื่อออก
-          </CustomButton>
-        </View>
       </LinearGradient>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3
+  }
+});

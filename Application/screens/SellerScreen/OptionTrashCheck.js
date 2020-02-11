@@ -192,7 +192,7 @@ export default OptionTrashCheck = props => {
                   }
                   editingValue={item.amount.toString()}
                   trashAdjustPrice={
-                    item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
+                    wasteTypesDB[item.type][item.subtype]["price"]
                   }
                   cameraMode={true}
                   onIncrease={() =>

@@ -170,15 +170,15 @@ export default SearchBuyerScreen = props => {
   const isOperationCompleted = useSelector(
     state => state.navigation.isOperationCompleted
   );
-  const checkIsOperationCompleted = () => {
-    if (isOperationCompleted === true) {
-      props.navigation.navigate("ShowSellerItemsScreen");
-    } else {
-      setIsLoading(true);
-      loadBuyer();
-      setIsLoading(false);
-    }
-  };
+  // const checkIsOperationCompleted = () => {
+  //   if (isOperationCompleted === true) {
+  //     props.navigation.navigate("ShowSellerItemsScreen");
+  //   } else {
+  //     setIsLoading(true);
+  //     loadBuyer();
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     console.log("Search Buyer Screen");

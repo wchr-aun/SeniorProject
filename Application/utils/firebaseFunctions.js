@@ -422,9 +422,7 @@ export const searchBuyer = async uid => {
     .doc(uid)
     .get()
     .then(doc => {
-      if (doc.exists)
-        return ({ txId: doc.id, detail: doc.data() });
-      else
-        return "No such users"
-    })
-}
+      if (doc.exists) return { txId: doc.id, detail: doc.data() };
+      else return "No such users";
+    });
+};

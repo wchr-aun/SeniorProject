@@ -6,7 +6,7 @@ export const ADD_SELLERITEMS_BYCAMERA = "ADD_SELLERITEMS_BYCAMERA";
 export const CONFIRM_SELLERITEMSCAMERA = "CONFIRM_SELLERITEMSCAMERA";
 
 // Image constant
-const PERDICT_LINK = "http://35.197.147.180:5000/predict";
+const PERDICT_LINK = "http://34.87.39.76:5000/predict";
 const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 
 export const confirmSellerItemsCamera = sellerItemsCameraObj => {

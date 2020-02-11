@@ -409,7 +409,7 @@ const ShowAllUserTrashScreen = props => {
                     : 0
                   ).toString()}
                   trashAdjustPrice={
-                    item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
+                    wasteTypes[item.type][item.subtype]["price"]
                   }
                   editingMode={editingMode}
                   onIncrease={() =>

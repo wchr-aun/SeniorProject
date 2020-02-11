@@ -26,7 +26,7 @@ export default ModalLoading = props => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#112000000"
+          backgroundColor: "rgba(0,0,0,0.2)"
         }}
       >
         <View
