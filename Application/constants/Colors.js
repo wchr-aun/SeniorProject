@@ -66,7 +66,7 @@ export default {
   error: "#8c0b04",
   linearGradient: ["#149c6a", "#0084ff"],
   linearGradientB: ["#2abfbf", "#3797f0"],
-  linearGradientDark: ["#333333", "#191919"],
+  linearGradientDark: ["#333333", "#2b2b2b"],
   linearGradientBright: ["#ffffff", "#d4d4d4"],
   // txStatus
   txStatus: {

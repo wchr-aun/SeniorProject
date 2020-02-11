@@ -404,29 +404,35 @@ export default ChooseBuyerScreen = props => {
           </View>
         </View>
         <View style={{ width: "100%", height: "70%" }}>
-          <FlatList
-            data={buyerListRedux}
-            keyExtractor={item => item.id}
-            onRefresh={loadBuyer}
-            refreshing={isRefreshing}
-            renderItem={({ item }) => {
-              return (
-                <BuyerChoice
-                  sellerItemsForSell={sellerItemsForSell}
-                  onSelected={() =>
-                    buyerSelectHandler(
-                      item.id,
-                      item.purchaseList,
-                      item.unavailableTypes
-                    )
-                  }
-                  buyerName={item.id}
-                  purchaseList={item.purchaseList}
-                  totalPrice={item.totalPrice}
-                />
-              );
-            }}
-          />
+          {buyerListRedux.length > 0 ? (
+            <FlatList
+              data={buyerListRedux}
+              keyExtractor={item => item.id}
+              onRefresh={loadBuyer}
+              refreshing={isRefreshing}
+              renderItem={({ item }) => {
+                return (
+                  <BuyerChoice
+                    sellerItemsForSell={sellerItemsForSell}
+                    onSelected={() =>
+                      buyerSelectHandler(
+                        item.id,
+                        item.purchaseList,
+                        item.unavailableTypes
+                      )
+                    }
+                    buyerName={item.id}
+                    purchaseList={item.purchaseList}
+                    totalPrice={item.totalPrice}
+                  />
+                );
+              }}
+            />
+          ) : (
+            <View>
+              <ThaiMdText>ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้ </ThaiMdText>
+            </View>
+          )}
         </View>
         {datepickerShow ? (
           <DateTimePicker

@@ -40,7 +40,7 @@ export default SellTransactionCard = props => {
   }, []);
   const loadUserImg = async () => {
     let imgUri = await libary.downloadingImg([`${props.userName}.jpg`], "user");
-    setUserImg(imgUri[0]);
+    setUserImg(imgUri[0] ? imgUri[0] : "");
   };
 
   return (

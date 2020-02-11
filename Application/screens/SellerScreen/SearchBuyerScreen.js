@@ -186,20 +186,20 @@ export default SearchBuyerScreen = props => {
 
   // Callback fn
   const [buyerList, setBuyerList] = useState([]);
-  const loadBuyer = useCallback(async () => {
-    setIsRefreshing(true);
-    let buyerInfo = await getFavBuyers();
-    setBuyerList(buyerInfo);
-    setIsRefreshing(false);
-  }, [dispatch, setIsRefreshing]);
+  // const loadBuyer = useCallback(async () => {
+  //   setIsRefreshing(true);
+  //   // let buyerInfo = await getFavBuyers();
+  //   setBuyerList(buyerInfo);
+  //   setIsRefreshing(false);
+  // }, [dispatch, setIsRefreshing]);
 
-  // Load sellerItems from firebase and store it to redux "initially"
-  useEffect(() => {
-    setIsLoading(true);
-    loadBuyer().then(() => {
-      setIsLoading(false);
-    });
-  }, [loadBuyer]);
+  // // Load sellerItems from firebase and store it to redux "initially"
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   loadBuyer().then(() => {
+  //     setIsLoading(false);
+  //   });
+  // }, [loadBuyer]);
 
   if (isLoading) {
     return (
@@ -248,7 +248,7 @@ export default SearchBuyerScreen = props => {
             </ThaiBoldText>
           </View>
         </View>
-        <View style={{ width: "100%", height: "70%" }}>
+        {/* <View style={{ width: "100%", height: "70%" }}>
           <FlatList
             data={buyerList}
             keyExtractor={item => item.id}
@@ -273,7 +273,7 @@ export default SearchBuyerScreen = props => {
               );
             }}
           />
-        </View>
+        </View> */}
 
         {/* <View
           style={{

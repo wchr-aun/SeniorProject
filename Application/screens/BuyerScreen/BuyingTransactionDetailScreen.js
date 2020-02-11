@@ -212,7 +212,7 @@ export default BuyingTransactionDetailScreen = props => {
     }
   };
 
-  // load imgs
+  // load sellerItem imgs
   const [imgShowInModal, setImgShowInModal] = useState("");
   const [isImgModalVisible, setIsImgModalVisible] = useState(false);
   const [imgs, setImgs] = useState([]);
@@ -220,11 +220,6 @@ export default BuyingTransactionDetailScreen = props => {
     let imgs = await libary.downloadingImg(transactionItem.detail.img, "tx");
     setImgs(imgs);
   };
-  useEffect(() => {
-    setIsLoading(true);
-    loadImgs();
-    setIsLoading(false);
-  }, []);
   const slideImg = indexSlide => {
     let oldIndex = imgs.indexOf(imgShowInModal);
     let newIndex = oldIndex + indexSlide;
@@ -232,6 +227,22 @@ export default BuyingTransactionDetailScreen = props => {
       setImgShowInModal(imgs[newIndex]);
     }
   };
+
+  // load seller img
+  const [userImg, setUserImg] = useState("");
+  const loadSellerImg = async () => {
+    let imgUri = await libary.downloadingImg(
+      [`${transactionItem.detail.seller}.jpg`],
+      "user"
+    );
+    setUserImg(imgUri[0] ? imgUri[0] : "");
+  };
+  useEffect(() => {
+    setIsLoading(true);
+    loadImgs();
+    loadSellerImg();
+    setIsLoading(false);
+  }, []);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -525,10 +536,7 @@ export default BuyingTransactionDetailScreen = props => {
             justifyContent: "center"
           }}
         >
-          <ImageCircle
-            imgUrl={transactionItem.imgUrl ? transactionItem.imgUrl : ""}
-            avariableWidth={wp("25%")}
-          />
+          <ImageCircle imgUrl={userImg} avariableWidth={wp("25%")} />
         </View>
         <View
           style={{

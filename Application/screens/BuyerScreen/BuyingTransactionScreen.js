@@ -146,6 +146,7 @@ export default BuyingTransactionScreen = props => {
             }}
           >
             <Dropdown
+              style={{ color: Colors.soft_secondary }}
               label="ประเภทของรายการ"
               value={txStatus}
               data={transactionsDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
@@ -157,9 +158,6 @@ export default BuyingTransactionScreen = props => {
               textColor={Colors.soft_secondary}
               itemColor={Colors.primary_dark}
               selectedItemColor={Colors.primary_bright}
-              //               itemColor	Dropdown item text color (inactive item)	String	rgba(0, 0, 0, .54)
-              // selectedItemColor	Dropdown item text color (active item)	String	rgba(0, 0, 0, .87)
-              // disabledItemColor	Dropdown item text color (disabled item)	String	rgba(0, 0, 0, .38)
             />
           </View>
         </View>
@@ -181,8 +179,7 @@ export default BuyingTransactionScreen = props => {
               renderItem={({ item }) => (
                 <SellTransactionCard
                   amountOfType={item.detail.saleList.length}
-                  imgUrl={""}
-                  userName={item.detail.buyer}
+                  userName={item.detail.seller}
                   userRole={userRole}
                   txType={item.detail.txType}
                   txStatus={item.detail.txStatus}
@@ -197,7 +194,9 @@ export default BuyingTransactionScreen = props => {
               )}
             />
           ) : (
-            <ThaiRegText>ยังไม่มีรายการในประเภทนี้</ThaiRegText>
+            <ThaiRegText style={{ color: Colors.soft_secondary }}>
+              ยังไม่มีรายการในประเภทนี้
+            </ThaiRegText>
           )}
         </View>
       </LinearGradient>

@@ -37,6 +37,7 @@ import libary, {
 } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 import ImageCircle from "../components/UI/ImageCircle";
+import CustomButton from "../components/UI/CustomButton";
 
 // CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -285,6 +286,11 @@ export default EditingUserprofileScreen = props => {
     setUserImg(imgUri[0]);
   };
 
+  const pickImage = async () => {
+    let img = await libary.pickedAnImg();
+    setUserImg(img.uri);
+  };
+
   return (
     <View
       style={{
@@ -329,8 +335,22 @@ export default EditingUserprofileScreen = props => {
             keyboardVerticalOffset={Platform.OS === "android" ? 100 : 0}
           >
             <ScrollView keyboardShouldPersistTaps={"handled"}>
-              <View>
+              <View style={{ width: "100%", flexDirection: "row" }}>
                 <ImageCircle avariableWidth={120} imgUrl={userImg} />
+                <CustomButton
+                  style={{
+                    width: "40%",
+                    height: "100%",
+                    maxHeight: 40,
+                    borderRadius: 5
+                  }}
+                  onPress={pickImage}
+                  btnTitleFontSize={18}
+                  btnColor={Colors.hard_secondary}
+                  btnTitleColor={Colors.primary_dark}
+                >
+                  เลือกรูปภ่าพ
+                </CustomButton>
               </View>
               <View
                 style={{

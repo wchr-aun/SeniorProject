@@ -61,7 +61,10 @@ export default SellerHomepageScreen = props => {
   //User image
   const [userImg, setUserImg] = useState("");
   const loadUserImg = async () => {
-    let imgUri = await libary.downloadingImg([userProfile.img], "user");
+    let imgUri = await libary.downloadingImg(
+      [`${userProfile.uid}.jpg`],
+      "user"
+    );
     setUserImg(imgUri[0]);
   };
   // load Callback fn

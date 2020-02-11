@@ -79,6 +79,19 @@ export default BuyerHomepageScreen = props => {
     console.log("Buyer homepage!!!");
   });
 
+  //User image
+  const [userImg, setUserImg] = useState("");
+  useEffect(() => {
+    loadUserImg();
+  }, []);
+  const loadUserImg = async () => {
+    let imgUri = await libary.downloadingImg(
+      [`${userProfile.uid}.jpg`],
+      "user"
+    );
+    setUserImg(imgUri[0] ? imgUri[0] : "");
+  };
+
   //add spinner loading
   if (isLoading) {
     return (
@@ -124,7 +137,7 @@ export default BuyerHomepageScreen = props => {
                 height: "40%",
                 width: "100%"
               }}
-              imgUrl={userProfile.imgUrl ? userProfile.imgUrl : ""}
+              imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
               meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}

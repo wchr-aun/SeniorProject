@@ -98,10 +98,18 @@ export default (state = initialState, action) => {
       }
 
       // insert new tx in new status array
+      console.log("before updated status");
+      console.log(targetTx);
+      targetTx.txStatus = newStatusIndex;
+      console.log("after updated status");
+      console.log(targetTx);
       updatedTransactions[newStatusIndex].push(targetTx);
 
       // update view
-      let transactionsDropdownFormat = getTXDropdownFormat(updatedTransactions);
+      let transactionsDropdownFormat = getTXDropdownFormat(
+        updatedTransactions,
+        action.updatedDetail.userRole
+      );
 
       return {
         ...state,

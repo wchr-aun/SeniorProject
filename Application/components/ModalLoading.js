@@ -31,8 +31,8 @@ export default ModalLoading = props => {
       >
         <View
           style={{
-            width: 200,
-            height: 150,
+            width: 150,
+            height: 120,
             backgroundColor:
               props.userRole === "seller" ? "white" : Colors.primary_dark,
             borderRadius: 10,

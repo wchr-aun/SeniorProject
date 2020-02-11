@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
   StyleSheet,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -32,6 +33,137 @@ import {
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ModalLoading from "../../components/ModalLoading";
+
+const ModalShowImg = props => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={props.modalVisible}
+      onRequestClose={props.onRequestClose}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(255,255,255,0.5"
+        }}
+      >
+        <View
+          style={{
+            width: "80%",
+            height: "80%",
+            backgroundColor: "white",
+            borderRadius: 5,
+            padding: 5
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "80%",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 5,
+                overflow: "hidden"
+              }}
+            >
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                source={{ uri: props.uri }}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              height: "15%",
+              justifyContent: "space-around",
+              alignItems: "center",
+              flexDirection: "row"
+            }}
+          >
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 40,
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.submit_primary_dark.btnBackground}
+              onPress={() => {
+                props.slideImg(-1);
+              }}
+              btnTitleColor={Colors.button.submit_primary_dark.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name="ios-arrow-back"
+                color={Colors.button.submit_primary_dark.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> </ThaiMdText>
+            </CustomButton>
+
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 80,
+                height: "100%",
+                maxHeight: 50,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => {
+                props.setIsImgModalVisible(false);
+              }}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={10}
+            >
+              <MaterialIcons
+                name={"cancel"}
+                color={Colors.button.cancel.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> ปิดหน้าต่าง</ThaiMdText>
+            </CustomButton>
+
+            <CustomButton
+              style={{
+                width: "30%",
+                maxWidth: 40,
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5
+              }}
+              btnColor={Colors.button.submit_primary_dark.btnBackground}
+              onPress={() => props.slideImg(1)}
+              btnTitleColor={Colors.button.submit_primary_dark.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name="ios-arrow-forward"
+                color={Colors.button.submit_primary_dark.btnText}
+                size={10}
+              />
+            </CustomButton>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 const getDisableStatusForSeller = (btnType, txStatus) => {
   /* 
@@ -62,6 +194,15 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
 export default SellingTransactionDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const [isInOperation, setIsInOperation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  //add spinner loading
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
+      </View>
+    );
+  }
   const transactionItem = props.navigation.getParam("transactionItem");
   const userRole = useSelector(state => state.user.userRole);
 
@@ -82,7 +223,8 @@ export default SellingTransactionDetailScreen = props => {
       transactionAction.changeTransactionStatus({
         txID: transactionItem.txId,
         oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 4
+        newStatus: 4,
+        userRole
       })
     );
     await dispatch(transactionAction.fetchTransaction(userRole));
@@ -103,12 +245,49 @@ export default SellingTransactionDetailScreen = props => {
         chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
         newStatus: 2,
         txType: transactionItem.detail.txType,
-        assignedTime: transactionItem.detail.assignedTime
+        assignedTime: transactionItem.detail.assignedTime,
+        userRole
       })
     );
     setIsInOperation(false);
     props.navigation.goBack();
   };
+
+  // load sellerItem imgs
+  const [imgShowInModal, setImgShowInModal] = useState("");
+  const [isImgModalVisible, setIsImgModalVisible] = useState(false);
+  const [imgs, setImgs] = useState([]);
+  const loadImgs = async () => {
+    let imgs = await libary.downloadingImg(transactionItem.detail.img, "tx");
+    setImgs(imgs);
+  };
+  const slideImg = indexSlide => {
+    let oldIndex = imgs.indexOf(imgShowInModal);
+    let newIndex = oldIndex + indexSlide;
+    if (newIndex != -1 && newIndex < imgs.length) {
+      setImgShowInModal(imgs[newIndex]);
+    }
+  };
+  // load seller img
+  const [userImg, setUserImg] = useState("");
+  const loadBuyerImg = async () => {
+    let imgUri = "";
+    if (transactionItem.detail.buyer) {
+      imgUri = await libary.downloadingImg(
+        [`${transactionItem.detail.buyer}.jpg`],
+        "user"
+      );
+    }
+    setUserImg(imgUri != "" ? imgUri[0] : "");
+  };
+
+  // Run loading
+  useEffect(() => {
+    setIsLoading(true);
+    loadImgs();
+    loadBuyerImg();
+    setIsLoading(false);
+  }, []);
 
   return (
     <View
@@ -122,6 +301,13 @@ export default SellingTransactionDetailScreen = props => {
         <CustomStatusBar />
       ) : null}
       <ModalLoading modalVisible={isInOperation} userRole="seller" />
+      <ModalShowImg
+        modalVisible={isImgModalVisible}
+        onRequestClose={() => console.log("modal close")}
+        setIsImgModalVisible={setIsImgModalVisible}
+        uri={imgShowInModal}
+        slideImg={slideImg}
+      />
       <View
         style={{
           height: "10%",
@@ -175,7 +361,7 @@ export default SellingTransactionDetailScreen = props => {
       </View>
       <View
         style={{
-          height: "25%",
+          height: "20%",
           width: "100%",
           flexDirection: "row",
           alignItems: "center",
@@ -191,10 +377,7 @@ export default SellingTransactionDetailScreen = props => {
             paddingHorizontal: 10
           }}
         >
-          <ImageCircle
-            imgUrl={transactionItem.imgUrl ? transactionItem.imgUrl : ""}
-            avariableWidth={wp("20%")}
-          />
+          <ImageCircle imgUrl={userImg} avariableWidth={wp("20%")} />
         </View>
         <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
           <ThaiRegText
@@ -265,7 +448,7 @@ export default SellingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "20%",
+          height: "15%",
           borderRadius: 5,
           paddingHorizontal: 10
         }}
@@ -359,7 +542,7 @@ export default SellingTransactionDetailScreen = props => {
       <View
         style={{
           width: "100%",
-          height: "20%",
+          height: "15%",
           borderRadius: 5,
           paddingHorizontal: 10
         }}
@@ -420,6 +603,60 @@ export default SellingTransactionDetailScreen = props => {
             }}
           />
         </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          padding: 2,
+          paddingHorizontal: 10
+        }}
+      >
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+        >
+          รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "10%",
+          padding: 2,
+          paddingHorizontal: 10
+        }}
+      >
+        <FlatList
+          data={imgs}
+          keyExtractor={item => item}
+          style={{ flex: 1 }}
+          horizontal={true}
+          renderItem={({ item: uri }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setImgShowInModal(uri);
+                  setIsImgModalVisible(true);
+                }}
+              >
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                    paddingHorizontal: 2,
+                    overflow: "hidden"
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri }}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
       </View>
       <View
         style={{

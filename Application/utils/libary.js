@@ -46,6 +46,19 @@ const takeImgForGetprediction = async () => {
   return resizedImage;
 };
 
+const pickedAnImg = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    quality: 1
+  });
+
+  console.log(result);
+
+  if (!result.cancelled) {
+    return result;
+  }
+};
+
 const takeAnImg = async () => {
   console.log("takeAnImg");
   const hasPermission = await verifyCameraPermissions();
@@ -71,7 +84,7 @@ const uploadingImg = async (image, fileName, mode) => {
     .storage()
     .ref()
     .child(
-      mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR + fileName
+      `${mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR}${fileName}`
     );
   return ref.put(blob);
 };
@@ -85,7 +98,9 @@ const downloadingImg = async (imgNames, mode) => {
         .storage()
         .ref()
         .child(
-          mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR + imgName
+          `${
+            mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR
+          }${imgName}`
         )
         .getDownloadURL()
         .then(uri => {
@@ -338,5 +353,6 @@ export default {
   takeImgForGetprediction,
   uploadingImg,
   takeAnImg,
-  downloadingImg
+  downloadingImg,
+  pickedAnImg
 };
