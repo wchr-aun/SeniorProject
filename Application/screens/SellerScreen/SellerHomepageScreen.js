@@ -65,8 +65,7 @@ export default SellerHomepageScreen = props => {
       [`${userProfile.uid}.jpg`],
       "user"
     );
-    console.log("-- sellerHomepageScreen -- " + imgUri);
-    setUserImg(imgUri[0]);
+    setUserImg(imgUri.length > 0 ? imgUri[0] : "");
   };
   // load Callback fn
   const refreshTx = useCallback(async () => {

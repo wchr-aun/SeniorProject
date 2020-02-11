@@ -12,12 +12,17 @@ import ThaiBoldText from "../components/ThaiBoldText";
 export default ConfigAccountScreen = props => {
   const dispatch = useDispatch();
 
-  const configHandler = role => {
-    dispatch(authAction.changeRole(role)).then(() => {
-      if (role == "seller") props.navigation.navigate("SellerNavigator");
-      else props.navigation.navigate("BuyerNavigator");
-    });
+  const configHandler = async role => {
+    dispatch(authAction.changeRole(role));
   };
+
+  const userRole = useSelector(state => state.user.userRole);
+  useEffect(() => {
+    if (userRole) {
+      if (userRole == "seller") props.navigation.navigate("SellerNavigator");
+      else if (userRole == "buyer") props.navigation.navigate("BuyerNavigator");
+    }
+  }, [userRole]);
 
   return (
     <KeyboardAvoidingView

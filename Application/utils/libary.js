@@ -110,8 +110,7 @@ const downloadingImg = async (imgNames, mode) => {
           allImgs.push(uri);
         })
         .catch(err => {
-          // throw new Error(err.message);
-          return [""];
+          console.log(err.message);
         })
     );
   }
