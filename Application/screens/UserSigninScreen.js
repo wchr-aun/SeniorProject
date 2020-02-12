@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   ActivityIndicator,
+  AsyncStorage,
   Alert,
   Text,
   Platform
@@ -97,11 +98,18 @@ export default UserAuthenScreen = props => {
       : sha256("sha256");
 
     // do async task
+    let recent_login = await AsyncStorage.getItem("RECENT_LOGIN")
+    if (recent_login != email) {
+      await AsyncStorage.clear()
+      await AsyncStorage.setItem("RECENT_LOGIN", email)
+    }
     await firebaseUtil
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        updateNotificationToken();
+        updateNotificationToken().then(() => {
+          props.navigation.navigate("StartupScreen");
+        })
       })
       .catch(err => {
         setIsLoading(false);

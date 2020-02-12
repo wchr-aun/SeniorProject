@@ -12,30 +12,23 @@ export default UserStartupScreen = props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("startup");
     verifyNotificationsPermissions();
-    firebaseUtil.auth().onAuthStateChanged(user => {
-      console.log("startup-afterOnAuth");
-      console.time("Startup-Navigate");
+    return firebaseUtil.auth().onAuthStateChanged(user => {
       if (user != null) {
-        dispatch(authAction.signin())
-          .then(dispatch(wasteTypeAction.fetchWasteType()))
-          .then(() => {
-            AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
-              dispatch(authAction.setUserRole(config_role));
-              console.timeEnd("Startup-Navigate");
-              console.log("startup-beforeNavigate");
-              if (config_role == "seller")
-                props.navigation.navigate("SellerNavigator");
-              else if (config_role == "buyer") {
-                props.navigation.navigate("BuyerNavigator");
-              } else props.navigation.navigate("ConfigAccountScreen");
-            });
+        return dispatch(authAction.signin())
+        .then(() => {
+          return AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
+            dispatch(authAction.setUserRole(config_role));
+            if (config_role == "seller")
+              props.navigation.navigate("SellerNavigator");
+            else if (config_role == "buyer") {
+              props.navigation.navigate("BuyerNavigator");
+            } else props.navigation.navigate("ConfigAccountScreen");
           });
+        });
       } else {
-        console.timeEnd("Startup-Navigate");
-        console.log("startup-beforeNavigatetoLogin");
         props.navigation.navigate("UserAuthenNavigator");
+        return
       }
     });
   }, []);

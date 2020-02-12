@@ -138,10 +138,6 @@ export default UserSignupScreen = props => {
 
   // firebase call cloud function
   const signupHandler = async () => {
-    console.log("===================================");
-    console.log(formState);
-    console.log(sellerAddr);
-    console.log("===================================");
     setIsLoading(true);
     if (!formState.allFormIsValid) {
       setError("โปรดเติมข้อมูลให้ครบสมบูรณ์");
@@ -178,11 +174,13 @@ export default UserSignupScreen = props => {
               .auth()
               .signInWithEmailAndPassword(user.email, user.password)
               .then(() => {
-                editBuyerInfo({ addr: user.addr, enableSearch: false }).then(
-                  () => {
-                    props.navigation.navigate("ConfigAccountScreen");
-                  }
-                );
+                AsyncStorage.setItem("RECENT_LOGIN", user.email).then(() => {
+                  editBuyerInfo({ addr: user.addr, enableSearch: false }).then(
+                    () => {
+                      props.navigation.navigate("ConfigAccountScreen");
+                    }
+                  );
+                })
               });
           })
           .catch(err => {
