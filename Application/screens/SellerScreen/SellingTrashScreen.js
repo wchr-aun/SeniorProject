@@ -273,7 +273,7 @@ export default SellingTrashScreen = props => {
                       }
                       oldAmount={item.amount}
                       sellerItemAdjustPrice={
-                        item.adjustedPrice ? item.adjustedPrice : "0.7-0.9"
+                        wasteTypes[item.type][item.subtype]["price"]
                       }
                       style={styles.eachTrashCard}
                       onIncrease={() =>

@@ -95,6 +95,10 @@ export default SellerHomepageScreen = props => {
       });
   }, [refreshTx, dispatch]);
 
+  const goAllTxQuickly = () => {
+    props.navigation.navigate("SellingTransactionScreen");
+  };
+
   //add spinner loading
   if (isLoading) {
     return (
@@ -134,7 +138,6 @@ export default SellerHomepageScreen = props => {
           <>
             <UserInfoCard
               userRole={userRole}
-              // numberOfIncompleteTx={transactions ? transactions[1].length : 0}
               avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
@@ -148,6 +151,7 @@ export default SellerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
+              goAllTxQuickly={goAllTxQuickly}
             />
             <View
               style={{
@@ -203,7 +207,6 @@ export default SellerHomepageScreen = props => {
                   </ThaiMdText>
                 </CustomButton>
               </View>
-              {/* {transactions[0].length > 0 ? ( */}
               {txShow.length > 0 ? (
                 <FlatList
                   refreshControl={
@@ -214,7 +217,6 @@ export default SellerHomepageScreen = props => {
                   }
                   refreshing={isRefreshing}
                   onRefresh={refreshTx}
-                  // data={transactions[0]}
                   data={txShow}
                   keyExtractor={item => item.txId}
                   renderItem={({ item }) => {

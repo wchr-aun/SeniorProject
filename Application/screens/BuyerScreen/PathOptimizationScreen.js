@@ -101,13 +101,6 @@ export default PathOptimizationScreen = props => {
     if (Object.keys(isSelected).length == 0)
       return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ");
     console.log("-- searchMapHandler");
-    console.log(setAddrModalVisible);
-    console.log(addrModalVisible);
-    console.log(currentLocation.latitude);
-    console.log(currentLocation.longitude);
-    console.log(destinationState.geopoint);
-    console.log(setSellerAddr);
-    console.log(addrReadable);
     setAddrModalVisible(true);
 
     if (isBuyerOnTheWay) {
@@ -148,14 +141,6 @@ export default PathOptimizationScreen = props => {
   );
 
   if (addrModalVisible && currentLocation) {
-    console.log(currentLocation);
-    // print
-    // Object {
-    //   "latitude": 13.6524973,
-    //   "longitude": 100.4932321,
-    //   "readable": "91 กรุงเทพมหานคร ประเทศไทย 10140",
-    //   "zipcode": 10140,
-    // }
     return (
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}

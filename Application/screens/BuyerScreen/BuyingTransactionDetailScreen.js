@@ -308,92 +308,109 @@ export default BuyingTransactionDetailScreen = props => {
   const dispatch = useDispatch();
   const cancelHandler = async () => {
     setIsInOperation(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 4
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsInOperation(false);
-    Alert.alert(
-      "การยกเลิกคำขอเสร็จสิ้น!",
-      "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
-      [{ text: "OK" }]
-    );
-    props.navigation.goBack();
+    try {
+      await dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          newStatus: 4
+        })
+      );
+      await dispatch(transactionAction.fetchTransaction("buyer"));
+      setIsInOperation(false);
+      Alert.alert(
+        "การยกเลิกคำขอเสร็จสิ้น!",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
+      );
+      props.navigation.goBack();
+    } catch (err) {
+      Alert.alert("เกิดปัญหาบางอย่าง!", err.message, [{ text: "OK" }]);
+    }
   };
 
   const acceptHandler = async () => {
     setIsInOperation(true);
-    if (buyerAssignedTimeFlatList.length > 0) {
-      //buyer select his assignedTime
-      dispatch(
-        transactionAction.changeTransactionStatus({
-          txID: transactionItem.txId,
-          oldStatus: transactionItem.detail.txStatus, //for query
-          newStatus: 1,
-          txType: transactionItem.detail.txType,
-          assignedTime: buyerAssignedTime
-        })
+    try {
+      if (buyerAssignedTimeFlatList.length > 0) {
+        //buyer select his assignedTime
+        dispatch(
+          transactionAction.changeTransactionStatus({
+            txID: transactionItem.txId,
+            oldStatus: transactionItem.detail.txStatus, //for query
+            newStatus: 1,
+            txType: transactionItem.detail.txType,
+            assignedTime: buyerAssignedTime
+          })
+        );
+      } else {
+        //buyer select his client assignedTime
+        dispatch(
+          transactionAction.changeTransactionStatus({
+            txID: transactionItem.txId,
+            oldStatus: transactionItem.detail.txStatus, //for query
+            chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
+            newStatus: 2,
+            txType: transactionItem.detail.txType
+          })
+        );
+      }
+      await dispatch(transactionAction.fetchTransaction("buyer"));
+      setIsInOperation(false);
+      Alert.alert(
+        buyerAssignedTimeFlatList.length === 0
+          ? "ยอมรับคำขอสำเร็จ"
+          : "นัดวันไปรับขยะให้ผู้ขายสำเร็จ",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
       );
-    } else {
-      //buyer select his client assignedTime
-      dispatch(
-        transactionAction.changeTransactionStatus({
-          txID: transactionItem.txId,
-          oldStatus: transactionItem.detail.txStatus, //for query
-          chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
-          newStatus: 2,
-          txType: transactionItem.detail.txType
-        })
-      );
+      props.navigation.goBack();
+    } catch (err) {
+      Alert.alert("เกิดปัญหาบางอย่าง!", err.message, [{ text: "OK" }]);
     }
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    setIsInOperation(false);
-    Alert.alert(
-      buyerAssignedTimeFlatList.length === 0
-        ? "ยอมรับคำขอสำเร็จ"
-        : "นัดวันไปรับขยะให้ผู้ขายสำเร็จ",
-      "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
-      [{ text: "OK" }]
-    );
-    props.navigation.goBack();
   };
 
   const onBuyerWayHandler = async () => {
     setIsInOperation(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 3
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
-    setIsInOperation(false);
-    props.navigation.goBack();
+    try {
+      await dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          newStatus: 3
+        })
+      );
+      await dispatch(transactionAction.fetchTransaction("buyer"));
+
+      setIsInOperation(false);
+      Alert.alert("ระบบได้แจ้งเตือนผู้ขายแล้ว!", "", [{ text: "OK" }]);
+      props.navigation.goBack();
+    } catch (err) {
+      Alert.alert("เกิดปัญหาบางอย่าง!", err.message, [{ text: "OK" }]);
+    }
   };
 
   const finishHandler = async () => {
     setIsInOperation(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 5
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction("buyer"));
-    Alert.alert(
-      "การดำเนินการทุกอย่างเสร็จสิ้น!",
-      "สามารถตรวจสอบข้อมูลเพิ่มเติมได้ที่หน้าโชว์ข้อมูลการซื้อขาย",
-      [{ text: "OK" }]
-    );
-    setIsInOperation(false);
-    props.navigation.goBack();
+    try {
+      await dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          newStatus: 5
+        })
+      );
+      await dispatch(transactionAction.fetchTransaction("buyer"));
+      Alert.alert(
+        "การดำเนินการทุกอย่างเสร็จสิ้น!",
+        "สามารถตรวจสอบข้อมูลเพิ่มเติมได้ที่หน้าโชว์ข้อมูลการซื้อขาย",
+        [{ text: "OK" }]
+      );
+      setIsInOperation(false);
+      props.navigation.goBack();
+    } catch (err) {
+      Alert.alert("เกิดปัญหาบางอย่าง!", err.message, [{ text: "OK" }]);
+    }
   };
 
   const backHandler = () => {

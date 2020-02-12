@@ -108,22 +108,22 @@ export default UserInfoCard = props => {
             backgroundColor:
               props.userRole === "seller"
                 ? Colors.soft_secondary
-                : Colors.hard_primary_dark
+                : Colors.hard_primary_dark,
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
           <View
             style={{
               width: "80%",
               flexDirection: "row",
-              paddingLeft: widthPercentageToDP("15%"),
               alignItems: "center"
             }}
           >
             <ThaiRegText
               style={{
                 fontSize: 20,
-                color: Colors.on_primary_dark.high_constrast,
-                fontAlign: "center"
+                color: Colors.on_primary_dark.high_constrast
               }}
             >
               {`${
@@ -153,7 +153,6 @@ export default UserInfoCard = props => {
             style={{
               width: "80%",
               flexDirection: "row",
-              paddingLeft: widthPercentageToDP("15%"),
               alignItems: "center"
             }}
           >

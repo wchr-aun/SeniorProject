@@ -218,9 +218,7 @@ export default EditingUserprofileScreen = props => {
   // firebase call cloud function
   const editConfirmHandler = async () => {
     setIsLoading(true);
-
-    console.log("------> formState");
-    console.log(formState);
+    setIsInOperation(true);
 
     if (!formState.allFormIsValid) {
       setError("โปรดกรอกข้อมูลให้ครบถ้วน");
@@ -250,6 +248,7 @@ export default EditingUserprofileScreen = props => {
       // }) //this will fire an error
       .catch(err => {
         setIsLoading(false);
+        setIsInOperation(false);
         setError(err.message);
       });
   };

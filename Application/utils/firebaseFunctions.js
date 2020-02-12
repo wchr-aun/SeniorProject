@@ -1,6 +1,7 @@
 import firebaseUtil from "../firebase";
 import { Notifications } from "expo";
 import { Wastes } from "../models/AllUserTrash";
+import { Alert } from "react-native";
 
 const firestore = firebaseUtil.firestore();
 const functions = firebaseUtil.functions();
@@ -30,6 +31,11 @@ export const getUsers = async () => {
       } else throw new Error("The document doesn't exist");
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -54,6 +60,11 @@ export const getSellerItems = async () => {
       } else return [];
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -82,6 +93,11 @@ export const getWasteType = async () => {
       };
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -123,6 +139,11 @@ export const getPurchaseList = async () => {
       } else throw new Error("The document doesn't exist --- getPurchaseList!");
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -146,6 +167,11 @@ export const getTransactions = async role => {
           allTx[status] = tx;
         })
         .catch(err => {
+          Alert.alert(
+            "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+            err.message,
+            [{ text: "OK" }]
+          );
           throw new error(err.message);
         })
     );
@@ -177,6 +203,11 @@ export const getTodayTxForPathOp = async () => {
       return tx;
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new error(err.message);
     });
 };
@@ -210,6 +241,11 @@ export const getFavBuyers = async () => {
       return buyersInfo;
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new error(err.message);
     });
 };
@@ -220,6 +256,13 @@ export const addWaste = async items => {
     .then(result => {
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
+    })
+    .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     });
 };
 
@@ -230,6 +273,13 @@ export const sellWaste = async transaction => {
       // Read result of the Cloud Function.
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
+    })
+    .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     });
 };
 
@@ -242,6 +292,13 @@ export const toggleSearch = async toggleSearch => {
         console.log(result.data);
         return true;
       } else throw new Error(result.data.errorMessage);
+    })
+    .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     });
 };
 
@@ -254,6 +311,11 @@ export const createAccount = async user => {
       } else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -282,6 +344,11 @@ export const updateTxStatus = async updatedTx => {
       else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -312,6 +379,11 @@ export const editUserInfo = async newInfo => {
       }
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -325,6 +397,11 @@ export const updateNotificationToken = async () => {
       else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -338,6 +415,11 @@ export const removeNotificationToken = async () => {
       else throw new Error(result.data.errorMessage);
     })
     .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -368,7 +450,11 @@ export const editBuyerInfo = async buyerInfo => {
       }
     })
     .catch(err => {
-      console.log(err.message);
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -396,7 +482,11 @@ export const queryBuyers = async queryData => {
       }
     })
     .catch(err => {
-      console.log(err.message);
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -412,7 +502,11 @@ export const querySellers = async queryData => {
       }
     })
     .catch(err => {
-      console.log(err.message);
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
       throw new Error(err.message);
     });
 };
@@ -425,5 +519,12 @@ export const searchBuyer = async uid => {
     .then(doc => {
       if (doc.exists) return { txId: doc.id, detail: doc.data() };
       else return "No such users";
+    })
+    .catch(err => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     });
 };

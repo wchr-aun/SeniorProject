@@ -6,7 +6,8 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  Modal
+  Modal,
+  Alert
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,6 +21,7 @@ import { Wastes } from "../../models/AllUserTrash";
 import * as transactionAction from "../../store/actions/transactionAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import ImageCircle from "../../components/UI/ImageCircle";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 
 import {
   Ionicons,
@@ -219,17 +221,30 @@ export default SellingTransactionDetailScreen = props => {
   const dispatch = useDispatch();
   const cancelHandler = async () => {
     setIsInOperation(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        newStatus: 4,
-        userRole
-      })
-    );
-    await dispatch(transactionAction.fetchTransaction(userRole));
-    setIsInOperation(false);
-    props.navigation.goBack();
+    try {
+      await dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          newStatus: 4,
+          userRole
+        })
+      );
+      await dispatch(transactionAction.fetchTransaction(userRole));
+      setIsInOperation(false);
+      Alert.alert(
+        "ยกเลิกคำขอสำเร็จ",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
+      );
+      props.navigation.goBack();
+    } catch (err) {
+      Alert.alert(
+        "ยกเลิกคำขอไม่สำเร็จ",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
+      );
+    }
   };
 
   const backHandler = () => {
@@ -238,19 +253,30 @@ export default SellingTransactionDetailScreen = props => {
 
   const acceptPreferedtimeHandler = async () => {
     setIsInOperation(true);
-    await dispatch(
-      transactionAction.changeTransactionStatus({
-        txID: transactionItem.txId,
-        oldStatus: transactionItem.detail.txStatus, //for query
-        chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
-        newStatus: 2,
-        txType: transactionItem.detail.txType,
-        assignedTime: transactionItem.detail.assignedTime,
-        userRole
-      })
-    );
-    setIsInOperation(false);
-    props.navigation.goBack();
+    try {
+      await dispatch(
+        transactionAction.changeTransactionStatus({
+          txID: transactionItem.txId,
+          oldStatus: transactionItem.detail.txStatus, //for query
+          chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
+          newStatus: 2,
+          txType: transactionItem.detail.txType,
+          assignedTime: transactionItem.detail.assignedTime,
+          userRole
+        })
+      );
+      setIsInOperation(false);
+      props.navigation.goBack();
+      Alert.alert(
+        "ยอมรับวันที่เสนอสำเร็จ",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
+      );
+    } catch (err) {
+      Alert.alert("ยอมรับข้อเสนอไม่สำเร็จ", "โปรดตรวจสอบข้อมูลอีกครั้ง", [
+        { text: "OK" }
+      ]);
+    }
   };
 
   // load sellerItem imgs
@@ -289,6 +315,8 @@ export default SellingTransactionDetailScreen = props => {
     setIsLoading(false);
   }, []);
 
+  const [confirmCancleVisible, setConfirmCancleVisible] = useState(false);
+
   return (
     <View
       style={{
@@ -301,6 +329,24 @@ export default SellingTransactionDetailScreen = props => {
         <CustomStatusBar />
       ) : null}
       <ModalLoading modalVisible={isInOperation} userRole="seller" />
+      <ConfirmDialog
+        title="ยกเลิกการซื้อขายนี้"
+        message="คุณต้องการยกเลิกคำสั่งซื้อขายนี้หรือไม่"
+        visible={confirmCancleVisible}
+        onTouchOutside={() => setConfirmCancleVisible(false)}
+        positiveButton={{
+          title: "ลบ",
+          onPress: () => {
+            setConfirmCancleVisible(false);
+          }
+        }}
+        negativeButton={{
+          title: "ยกเลิก",
+          onPress: () => {
+            setConfirmCancleVisible(false);
+          }
+        }}
+      />
       <ModalShowImg
         modalVisible={isImgModalVisible}
         onRequestClose={() => console.log("modal close")}
