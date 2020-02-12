@@ -19,6 +19,8 @@ const polylineReducer = (state, action) => {
 };
 
 export default ModalShowInteractMap = props => {
+  console.log("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
+  console.log(props)
   const [zoomCord, setZoomCord] = useState({
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGTITUDE_DELTA
@@ -41,9 +43,10 @@ export default ModalShowInteractMap = props => {
       lat: props.origin.latitude,
       lng: props.origin.longitude
     });
-    libary.getDirections(props.origin, props.destination).then(polyline => {
-      dispatchPolyline(polyline)
-    })
+    if (isPathOptimize)
+      libary.getDirections(props.origin, props.destination).then(polyline => {
+        dispatchPolyline(polyline)
+      })
   }, []);
 
   const mapRegion = {
