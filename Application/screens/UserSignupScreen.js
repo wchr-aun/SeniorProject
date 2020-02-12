@@ -175,11 +175,7 @@ export default UserSignupScreen = props => {
               .signInWithEmailAndPassword(user.email, user.password)
               .then(() => {
                 AsyncStorage.setItem("RECENT_LOGIN", user.email).then(() => {
-                  editBuyerInfo({ addr: user.addr, enableSearch: false }).then(
-                    () => {
-                      props.navigation.navigate("ConfigAccountScreen");
-                    }
-                  );
+                  editBuyerInfo({ addr: user.addr, enableSearch: false })
                 })
               });
           })
