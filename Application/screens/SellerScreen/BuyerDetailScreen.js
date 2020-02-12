@@ -40,6 +40,10 @@ export default BuyerDetailScreen = props => {
   const buyerInfomation = props.navigation.getParam("buyerInfomation");
   console.log("-- BuyerDetail Screen buyerInfomation");
   console.log(buyerInfomation);
+
+  const backHandler = () => {
+    props.navigation.goBack();
+  };
   return (
     <LinearGradient
       colors={Colors.linearGradientDark}
@@ -49,24 +53,9 @@ export default BuyerDetailScreen = props => {
         height: "100%"
       }}
     >
-      {props.navigation.getParam("haveHeaderHight") ? null : (
+      {/* {props.navigation.getParam("haveHeaderHight") ? null : (
         <CustomStatusBar />
-      )}
-      <ModalShowImg
-        modalVisible={isImgModalVisible}
-        onRequestClose={() => console.log("modal close")}
-        setIsImgModalVisible={setIsImgModalVisible}
-        uri={imgShowInModal}
-        slideImg={slideImg}
-      />
-      {datepickerShow ? (
-        <DateTimePicker
-          mode="date"
-          isVisible={datepickerShow}
-          onConfirm={handleDatePicked}
-          onCancel={hideDateTimePicker}
-        />
-      ) : null}
+      )} */}
       <View
         style={{
           height: "10%",
@@ -99,7 +88,7 @@ export default BuyerDetailScreen = props => {
         </CustomButton>
         <View
           style={{
-            width: "50%",
+            width: "70%",
             height: "100%",
             alignItems: "center",
             justifyContent: "center"
@@ -111,30 +100,11 @@ export default BuyerDetailScreen = props => {
               fontSize: 18
             }}
           >
-            รายละเอียดคำขอ
+            รายละเอียดผู้รับซื้อ
           </ThaiBoldText>
         </View>
-        <CustomButton
-          style={{
-            width: "20%",
-            height: "100%",
-            maxHeight: 30,
-            borderRadius: 5
-          }}
-          btnColor={Colors.button.cancel.btnBackground}
-          onPress={onBuyerDetail}
-          btnTitleColor={Colors.button.cancel.btnText}
-          btnTitleFontSize={10}
-        >
-          <Ionicons
-            name={"ios-arrow-back"}
-            color={Colors.button.cancel.btnText}
-            size={10}
-          />
-          <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
-        </CustomButton>
       </View>
-      <View
+      {/* <View
         style={{
           height: "20%",
           width: "100%",
@@ -514,7 +484,7 @@ export default BuyerDetailScreen = props => {
             <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
           </CustomButton>
         </View>
-      </View>
+      </View> */}
     </LinearGradient>
   );
 };

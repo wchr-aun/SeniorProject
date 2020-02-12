@@ -118,13 +118,6 @@ const downloadingImg = async (imgNames, mode) => {
         .then(uri => {
           allImgs.push(uri);
         })
-        .catch(err => {
-          Alert.alert(
-            "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-            err.message,
-            [{ text: "OK" }]
-          );
-        })
     );
   }
   return Promise.all(promises).then(() => {
