@@ -2,7 +2,8 @@ import { FETCH_WASTETYPE } from "../actions/wasteTypeAction";
 import { LOGOUT } from "../actions/authAction";
 
 initialState = {
-  wasteTypes: []
+  wasteTypes: [],
+  wasteListSectionFormat: []
 };
 
 export default (state = initialState, action) => {
@@ -12,7 +13,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         wasteTypes: action.wasteTypes,
-        wasteTypeDropdownFormat: action.wasteTypeDropdownFormat
+        wasteTypeDropdownFormat: action.wasteTypeDropdownFormat,
+        wasteListSectionFormat: action.wasteListSectionFormat
       };
     case LOGOUT:
       return initialState;
