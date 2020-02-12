@@ -713,16 +713,19 @@ export default SellingTransactionDetailScreen = props => {
               borderRadius: 5
             }}
             btnColor={
+              !timeSelected ||
               getDisableStatusForSeller(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnBackgroundDisabled
                 : Colors.button.submit_primary_bright.btnBackground
             }
             btnTitleColor={
+              !timeSelected ||
               getDisableStatusForSeller(2, transactionItem.detail.txStatus)
                 ? Colors.button.submit_primary_bright.btnTextDisabled
                 : Colors.button.submit_primary_bright.btnText
             }
             onPress={
+              !timeSelected ||
               getDisableStatusForSeller(2, transactionItem.detail.txStatus)
                 ? null
                 : acceptPreferedtimeHandler

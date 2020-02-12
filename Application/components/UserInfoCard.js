@@ -6,6 +6,7 @@ import Colors from "../constants/Colors";
 import ThaiRegText from "./ThaiRegText";
 import ImageCircle from "./UI/ImageCircle";
 import { LinearGradient } from "expo-linear-gradient";
+import { widthPercentageToDP } from "react-native-responsive-screen";
 
 export default UserInfoCard = props => {
   return (
@@ -112,9 +113,10 @@ export default UserInfoCard = props => {
         >
           <View
             style={{
-              width: "50%",
+              width: "80%",
               flexDirection: "row",
-              justifyContent: "center"
+              paddingLeft: widthPercentageToDP("15%"),
+              alignItems: "center"
             }}
           >
             <ThaiRegText
@@ -149,9 +151,10 @@ export default UserInfoCard = props => {
 
           <View
             style={{
-              width: "50%",
+              width: "80%",
               flexDirection: "row",
-              justifyContent: "center"
+              paddingLeft: widthPercentageToDP("15%"),
+              alignItems: "center"
             }}
           >
             <ThaiRegText
