@@ -24,6 +24,8 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import libary from "../../utils/libary";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+import CustomButton from "../../components/UI/CustomButton";
 
 export default BuyerHomepageScreen = props => {
   // Loading effect
@@ -80,6 +82,10 @@ export default BuyerHomepageScreen = props => {
         transactionItem: transactionItem
       }
     });
+  };
+
+  const goAllTxQuickly = () => {
+    props.navigation.navigate("SellingTransactionScreen");
   };
 
   useEffect(() => {
@@ -150,6 +156,7 @@ export default BuyerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
+              goAllTxQuickly={goAllTxQuickly}
             />
             <LinearGradient
               colors={Colors.linearGradientDark}
@@ -168,14 +175,14 @@ export default BuyerHomepageScreen = props => {
               <View
                 style={{
                   alignSelf: "flex-start",
-                  paddingLeft: Dimensions.get("window").width * 0.03
+                  paddingHorizontal: Dimensions.get("window").width * 0.03,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  height: 60
                 }}
               >
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setGoToUITestingScreen(preState => preState + 1);
-                  }}
-                >
+                <View style={{ width: "60%", height: "80%" }}>
                   <ThaiMdText
                     style={{
                       color: Colors.soft_primary_bright,
@@ -184,10 +191,35 @@ export default BuyerHomepageScreen = props => {
                   >
                     คำขอขายขยะที่ส่งหาคุณ
                   </ThaiMdText>
-                </TouchableWithoutFeedback>
+                </View>
+                <CustomButton
+                  style={{
+                    width: "30%",
+                    height: "80%",
+                    maxHeight: 40,
+                    borderRadius: 5
+                  }}
+                  btnColor={Colors.button.submit_primary_bright.btnBackground}
+                  onPress={refreshTxAndBuyerInfo}
+                  btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                  btnTitleFontSize={10}
+                >
+                  <Ionicons name={"md-refresh"} size={10} />
+                  <ThaiMdText style={{ fontSize: 10 }}>
+                    {" "}
+                    อัปเดตข้อมูล
+                  </ThaiMdText>
+                </CustomButton>
               </View>
 
-              <View style={{ width: "100%", height: "90%" }}>
+              <View
+                style={{
+                  width: "100%",
+                  height: "90%",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
                 {isLoading ? (
                   <View
                     style={{
@@ -230,7 +262,9 @@ export default BuyerHomepageScreen = props => {
                   />
                 ) : (
                   <View style={{ width: "50%", height: "50%" }}>
-                    <ThaiMdText>ยังไม่มีรายการที่ท่านสนใจ</ThaiMdText>
+                    <ThaiMdText style={{ color: Colors.secondary }}>
+                      ยังไม่มีรายการที่ท่านสนใจ
+                    </ThaiMdText>
                   </View>
                 )}
               </View>

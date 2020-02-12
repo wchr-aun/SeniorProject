@@ -108,14 +108,15 @@ export default UserInfoCard = props => {
             backgroundColor:
               props.userRole === "seller"
                 ? Colors.soft_secondary
-                : Colors.hard_primary_dark
+                : Colors.hard_primary_dark,
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
           <View
             style={{
               width: "80%",
               flexDirection: "row",
-              paddingLeft: widthPercentageToDP("15%"),
               alignItems: "center"
             }}
           >
@@ -152,7 +153,6 @@ export default UserInfoCard = props => {
             style={{
               width: "80%",
               flexDirection: "row",
-              paddingLeft: widthPercentageToDP("15%"),
               alignItems: "center"
             }}
           >

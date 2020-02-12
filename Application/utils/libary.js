@@ -69,6 +69,12 @@ const takeAnImg = async () => {
   const image = await ImagePicker.launchCameraAsync({
     aspect: [16, 9],
     quality: 0.5
+  }).catch(err => {
+    Alert.alert(
+      "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+      err.message,
+      [{ text: "OK" }]
+    );
   });
   return !image.cancelled ? image : null;
 };
@@ -85,7 +91,13 @@ const uploadingImg = async (image, fileName, mode) => {
     .child(
       `${mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR}${fileName}`
     );
-  return ref.put(blob);
+  return ref.put(blob).catch(err => {
+    Alert.alert(
+      "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+      err.message,
+      [{ text: "OK" }]
+    );
+  });
 };
 
 const downloadingImg = async (imgNames, mode) => {
@@ -106,8 +118,10 @@ const downloadingImg = async (imgNames, mode) => {
           allImgs.push(uri);
         })
         .catch(err => {
-          console.log(
-            err.message + " but it not hurt our application, just console.log"
+          Alert.alert(
+            "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+            err.message,
+            [{ text: "OK" }]
           );
         })
     );
@@ -212,6 +226,11 @@ const getTransactionList = async role => {
         allTx.push(eachTxStatus);
       })
       .catch(error => {
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          err.message,
+          [{ text: "OK" }]
+        );
         throw new error("Error getting document:", error);
       });
   }
@@ -246,11 +265,18 @@ export const getCurrentLocation = async () => {
         zipcode: parseInt(locationInfo[0].postalCode, 10)
       };
     } catch (err) {
-      console.log("Could not reverseGeocodeAsync");
-      console.log(err);
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     }
   } catch (err) {
-    console.log("Could not getCurrentPositionAsync");
+    Alert.alert(
+      "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+      err.message,
+      [{ text: "OK" }]
+    );
   }
 };
 
@@ -258,6 +284,12 @@ export const getPostalcodeAddressFromCord = async (lat, long) => {
   const locationInfo = await reverseGeocodeAsync({
     latitude: lat,
     longitude: long
+  }).catch(err => {
+    Alert.alert(
+      "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+      err.message,
+      [{ text: "OK" }]
+    );
   });
   return locationInfo;
 };
@@ -307,7 +339,11 @@ const getDirections = (originCoords, destinationCoords) => {
       return decode(responseJson.routes[0].overview_polyline.points);
     })
     .catch(err => {
-      throw err;
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
     });
 };
 

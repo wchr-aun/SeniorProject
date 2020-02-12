@@ -110,8 +110,9 @@ const BuyerChoice = props => {
                           props.purchaseList[item.type][item.subtype]
                         } บาท/ชิ้น. = `
                       )}
-                      {props.purchaseList[item.type][item.subtype] ==
-                      undefined ? null : (
+                      {props.purchaseList[item.type] == undefined ? null : props
+                          .purchaseList[item.type][item.subtype] ==
+                        undefined ? null : (
                         <ThaiMdText
                           style={{
                             fontSize: 10,

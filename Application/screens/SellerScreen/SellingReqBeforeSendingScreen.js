@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, FlatList } from "react-native";
+import { View, Image, StyleSheet, Alert, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
@@ -61,12 +61,23 @@ export default SellingReqBeforeSendingScreen = props => {
       libary.uploadingImg(imgs[i], imgsName[i], "tx");
     }
 
-    await dispatch(sellerItemsAction.sellRequest(sellReq, imgsName));
-    await dispatch(transactionAction.fetchTransaction("seller"));
-    await dispatch(sellerItemsAction.fetchSellerItems());
-    await dispatch(navigationBehaviorAction.finishOperation());
-    setIsInOperation(false);
-    props.navigation.navigate("SellerHomepageScreen");
+    try {
+      await dispatch(sellerItemsAction.sellRequest(sellReq, imgsName));
+      await dispatch(transactionAction.fetchTransaction("seller"));
+      await dispatch(sellerItemsAction.fetchSellerItems());
+      await dispatch(navigationBehaviorAction.finishOperation());
+      setIsInOperation(false);
+      Alert.alert(
+        "ส่งคำร้องขอขายขยะ",
+        "คุณสามารถตรวจสอบรายการได้ที่หน้ารายการรับซื้อขยะ",
+        [{ text: "OK" }]
+      );
+      props.navigation.navigate("SellerHomepageScreen");
+    } catch (err) {
+      Alert.alert("ยอมรับข้อเสนอไม่สำเร็จ", "โปรดตรวจสอบข้อมูลอีกครั้ง", [
+        { text: "OK" }
+      ]);
+    }
   };
 
   const backHandler = () => {
