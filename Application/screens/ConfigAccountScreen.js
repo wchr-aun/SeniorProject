@@ -13,9 +13,7 @@ export default ConfigAccountScreen = props => {
   const dispatch = useDispatch();
 
   const configHandler = async role => {
-    dispatch(authAction.changeRole(role)).then(() => {
-      props.navigation.navigate("StartupScreen");
-    })
+    dispatch(authAction.changeRole(role));
   };
 
   const userRole = useSelector(state => state.user.userRole);

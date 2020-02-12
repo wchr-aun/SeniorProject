@@ -27,8 +27,7 @@ export default UserStartupScreen = props => {
           });
         });
       } else {
-        props.navigation.navigate("UserAuthenNavigator");
-        return
+        return props.navigation.navigate("UserAuthenNavigator");
       }
     });
   }, []);
