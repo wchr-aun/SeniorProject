@@ -41,6 +41,10 @@ export default BuyerDetailScreen = props => {
   console.log("-- BuyerDetail Screen buyerInfomation");
   console.log(buyerInfomation);
 
+  const wasteTypeDropdownFormat = useSelector(state => {
+    return state.wasteType.wasteListSectionFormat;
+  });
+
   const backHandler = () => {
     props.navigation.goBack();
   };

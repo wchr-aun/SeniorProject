@@ -9,10 +9,12 @@ export const UPDATE_PURCHASELIST = "UPDATE_PURCHASELIST";
 export const fetchWasteType = () => {
   return async dispatch => {
     let result = await getWasteType();
+    let wasteListSectionFormat = await getSectionListFormatWasteType();
     dispatch({
       type: FETCH_WASTETYPE,
       wasteTypes: result.wasteTypes,
-      wasteTypeDropdownFormat: result.wasteTypeDropdownFormat
+      wasteTypeDropdownFormat: result.wasteTypeDropdownFormat,
+      wasteListSectionFormat
     });
   };
 };
