@@ -9,6 +9,7 @@ import firebase from "firebase";
 const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 const USER_FILEDIR = "profile_pictures/";
 import { GOOGLE_API_KEY } from "react-native-dotenv";
+import { Alert } from "react-native";
 
 import {
   getCurrentPositionAsync,

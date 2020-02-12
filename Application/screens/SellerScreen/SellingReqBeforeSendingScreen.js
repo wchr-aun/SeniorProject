@@ -14,7 +14,7 @@ import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
@@ -84,6 +84,13 @@ export default SellingReqBeforeSendingScreen = props => {
     props.navigation.goBack();
   };
 
+  const goBuyerDetail = () => {
+    props.navigation.navigate({
+      routeName: "BuyerDetailScreen",
+      params: { buyerInfomation: sellReq.buyerInfomation }
+    });
+  };
+
   return (
     <LinearGradient
       colors={Colors.linearGradientDark}
@@ -126,9 +133,10 @@ export default SellingReqBeforeSendingScreen = props => {
           />
           <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
         </CustomButton>
+
         <View
           style={{
-            width: "70%",
+            width: "20%",
             height: "100%",
             alignItems: "flex-start",
             justifyContent: "center"
@@ -143,6 +151,25 @@ export default SellingReqBeforeSendingScreen = props => {
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={Colors.button.submit_primary_bright.btnBackground}
+          onPress={goBuyerDetail}
+          btnTitleColor={Colors.button.submit_primary_bright.btnText}
+          btnTitleFontSize={10}
+        >
+          <MaterialCommunityIcons
+            name={"account-card-details"}
+            color={Colors.button.cancel.btnText}
+            size={10}
+          />
+          <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้ซื้อ</ThaiMdText>
+        </CustomButton>
       </View>
       <View style={{ height: "10%", width: "100%" }}>
         <View style={{ width: "100%", height: "100%", paddingHorizontal: 10 }}>

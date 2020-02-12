@@ -247,6 +247,10 @@ export default SellingTransactionDetailScreen = props => {
     }
   };
 
+  const onBuyerDetail = () => {
+    props.navigation.navigate("");
+  };
+
   const backHandler = () => {
     props.navigation.goBack();
   };
@@ -401,9 +405,25 @@ export default SellingTransactionDetailScreen = props => {
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <View style={{ width: "20%", height: "100%" }}>
-          {/* used for fulfll space */}
-        </View>
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5
+          }}
+          btnColor={Colors.button.submit_primary_bright.btnBackground}
+          onPress={onBuyerDetail}
+          btnTitleColor={Colors.button.submit_primary_bright.btnText}
+          btnTitleFontSize={10}
+        >
+          <MaterialCommunityIcons
+            name={"account-card-details"}
+            color={Colors.button.cancel.btnText}
+            size={10}
+          />
+          <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
+        </CustomButton>
       </View>
       <View
         style={{

@@ -306,7 +306,7 @@ export default ChooseBuyerScreen = props => {
         routeName: "sellReqBeforeSending",
         params: {
           sellReq: {
-            buyerInfomation,
+            buyerInfomation, //purchaseList same
             sellMode,
             assignedTime: selectedTimes,
             sellerAddr,

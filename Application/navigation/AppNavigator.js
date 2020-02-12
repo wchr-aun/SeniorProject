@@ -42,6 +42,7 @@ import SellingReqBeforeSendingScreen from "../screens/SellerScreen/SellingReqBef
 import SearchBuyerScreen from "../screens/SellerScreen/SearchBuyerScreen";
 import firebaseUtil from "../firebase";
 import WasteDetailScreen from "../screens/SellerScreen/WasteDetailScreen";
+import BuyerDetailScreen from "../screens/SellerScreen/BuyerDetailScreen";
 
 const auth = firebaseUtil.auth();
 
@@ -50,7 +51,8 @@ const auth = firebaseUtil.auth();
 const SellerhomepageNavigator = createStackNavigator(
   {
     SellerHomepageScreen: SellerHomepageScreen,
-    SellingTransactionDetailScreen: SellingTransactionDetailScreen
+    SellingTransactionDetailScreen: SellingTransactionDetailScreen,
+    BuyerDetailScreen
   },
   { headerMode: "none" }
 );
@@ -79,7 +81,8 @@ const ShowSellerItemsNavigator = createStackNavigator(
       navigationOptions: { headerTitle: "ขายขยะ" }
     },
     chooseBuyerForSellScreen: ChooseBuyerScreen,
-    sellReqBeforeSending: SellingReqBeforeSendingScreen
+    sellReqBeforeSending: SellingReqBeforeSendingScreen,
+    BuyerDetailScreen
   },
   {
     headerMode: "none",
@@ -109,7 +112,8 @@ const SellingTransactionNavigator = createStackNavigator(
     SellingTransactionDetailScreen: {
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" }
-    }
+    },
+    BuyerDetailScreen
   },
   { headerMode: "none" }
 );
