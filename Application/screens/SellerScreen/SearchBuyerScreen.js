@@ -217,7 +217,7 @@ export default SearchBuyerScreen = props => {
         flex: 1
       }}
     >
-      <NavigationEvents onWillFocus={checkIsOperationCompleted} />
+      {/* <NavigationEvents onWillFocus={checkIsOperationCompleted} /> */}
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{

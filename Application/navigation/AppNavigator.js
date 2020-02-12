@@ -41,6 +41,7 @@ import BuyingQuickTransactionDetailScreen from "../screens/BuyerScreen/BuyingQui
 import SellingReqBeforeSendingScreen from "../screens/SellerScreen/SellingReqBeforeSendingScreen";
 import SearchBuyerScreen from "../screens/SellerScreen/SearchBuyerScreen";
 import firebaseUtil from "../firebase";
+import WasteDetailScreen from "../screens/SellerScreen/WasteDetailScreen";
 
 const auth = firebaseUtil.auth();
 
@@ -69,6 +70,9 @@ const ShowSellerItemsNavigator = createStackNavigator(
   {
     ShowSellerItemsScreen: {
       screen: ShowSellerItemsScreen
+    },
+    WasteDetailScreen: {
+      screen: WasteDetailScreen
     },
     SellingTrashScreen: {
       screen: SellingTrashScreen,

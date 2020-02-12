@@ -73,7 +73,7 @@ const formReducer = (state, action) => {
         inputValues: updatedValues,
         inputValidities: updatedValidities,
         allFormIsValid: updatedAllFormIsValid,
-        addrFormIsValide: updatedAddrFormIsValid
+        addrFormIsValid: updatedAddrFormIsValid
       };
     case "CHOOSE_CURRENT_TIME":
       return {
@@ -123,10 +123,9 @@ export default EditingUserprofileScreen = props => {
       district: "",
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
-      photoURL: userProfile.photoURL,
       phoneNo: userProfile.phoneNo
-        ? userProfile.phoneNo.replace("+66", "0")
-        : userProfile.phoneNo
+        ? userProfile.phoneNo.replace("+660", "0")
+        : ""
     },
     inputValidities: {
       name: true,
@@ -136,11 +135,10 @@ export default EditingUserprofileScreen = props => {
       district: true,
       province: true,
       postalCode: true,
-      photoURL: true,
       phoneNo: true
     },
     allFormIsValid: true,
-    addrFormIsValide: true
+    addrFormIsValid: true
   });
 
   const inputChangeHandler = useCallback(
@@ -171,7 +169,9 @@ export default EditingUserprofileScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    if (!formState.addrFormIsValide) {
+    console.log("searhMapHandler -- editUserScreen");
+    console.log(formState.addrFormIsValid);
+    if (!formState.addrFormIsValid) {
       setError("Please fill all the addresses");
       return;
     }
@@ -199,6 +199,7 @@ export default EditingUserprofileScreen = props => {
         formState.inputValues.province +
         " " +
         formState.inputValues.postalCode;
+    console.log(userAddrString);
     setAddrReadable(userAddrString);
     let result = await getManualStringLocation(userAddrString);
     console.log("result");
@@ -234,19 +235,18 @@ export default EditingUserprofileScreen = props => {
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
-    dispatch(authAction.changeRole(role));
     editUserInfo(user)
-      .then(() => {
-        AsyncStorage.clear()
-          .then(() => {
-            setIsLoading(false);
-            props.navigation.navigate("ConfigAccountScreen");
-          })
-          .catch(err => {
-            setIsLoading(false);
-            setError(err.message);
-          });
-      })
+      // .then(() => {
+      //   AsyncStorage.clear()
+      //     .then(() => {
+      //       setIsLoading(false);
+      //       props.navigation.navigate("ConfigAccountScreen");
+      //     })
+      //     .catch(err => {
+      //       setIsLoading(false);
+      //       setError(err.message);
+      //     });
+      // }) //this will fire an error
       .catch(err => {
         setIsLoading(false);
         setError(err.message);
@@ -339,7 +339,7 @@ export default EditingUserprofileScreen = props => {
             />{" "}
             ย้อนกลับ
           </CustomButton>
-          <View style={{ width: "40%", height: "50%" }}>
+          <View style={{ width: "40%", height: "50%", paddingHorizontal: 5 }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_bright.high_constrast,

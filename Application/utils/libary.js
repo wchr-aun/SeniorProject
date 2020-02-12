@@ -55,17 +55,13 @@ const pickedAnImg = async () => {
     quality: 1
   });
 
-  console.log(result);
-
   if (!result.cancelled) {
     return result;
   }
 };
 
 const takeAnImg = async () => {
-  console.log("takeAnImg");
   const hasPermission = await verifyCameraPermissions();
-  console.log("verifyCameraPermissions");
   if (!hasPermission) {
     console.log("not permit");
     return;

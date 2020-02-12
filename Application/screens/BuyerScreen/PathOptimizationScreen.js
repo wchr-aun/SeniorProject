@@ -7,6 +7,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 
 import {
   widthPercentageToDP as wp,
@@ -19,69 +20,9 @@ import { fetchTransactionForPathOp } from "../../store/actions/transactionAction
 import libary, { getCurrentLocation } from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { LinearGradient } from "expo-linear-gradient";
-
-export const ModalBuyerOntheway = props => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={props.modalVisible}
-      onRequestClose={props.onRequestClose}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.05)"
-        }}
-      >
-        <View
-          style={{
-            width: 150,
-            height: 120,
-            backgroundColor:
-              props.userRole === "seller" ? "white" : Colors.primary_dark,
-            borderRadius: 10,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <View
-            style={{
-              width: "100%",
-              height: "50%",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              ...styles.shadow,
-              paddingBottom: 3
-            }}
-          >
-            <ActivityIndicator size="large" color={Colors.primary_bright} />
-          </View>
-          <View
-            style={{
-              width: "100%",
-              height: "50%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              paddingTop: 3
-            }}
-          >
-            <ThaiBoldText
-              style={{
-                color:
-                  props.userRole === "seller" ? Colors.primary_bright : "white"
-              }}
-            >
-              กำลังดำเนินการ
-            </ThaiBoldText>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+import ModalLoading from "../../components/ModalLoading";
+import * as transactionAction from "../../store/actions/transactionAction";
+import ThaiRegText from "../../components/ThaiRegText";
 
 const destinationReducer = (state, action) => {
   let geopoint = state.geopoint;
@@ -101,7 +42,7 @@ const destinationReducer = (state, action) => {
   };
 };
 
-export default UserSignupScreen = props => {
+export default PathOptimizationScreen = props => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -142,18 +83,24 @@ export default UserSignupScreen = props => {
   }, [userProfile]);
 
   // Search map from user input form
-  const searchMapHandler = async () => {
+  const searchMapHandler = async isBuyerOnTheWay => {
     // do async task
     if (Object.keys(isSelected).length == 0)
       return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ");
     const location = await getCurrentLocation();
     setCurrentLocation(location);
     setAddrModalVisible(true);
+
+    if (isBuyerOnTheWay) {
+      changeTxStatus();
+    }
   };
 
   //select unselect tx
   const [txForShow, setTxForShow] = useState([]);
   useEffect(() => {
+    console.log("transactions change");
+    console.log(transactions);
     setTxForShow(transactions);
   }, [transactions]);
 
@@ -200,8 +147,59 @@ export default UserSignupScreen = props => {
     );
   }
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [isInOperation, setIsInOperation] = useState(false);
+
+  const changeTxStatus = async () => {
+    setIsInOperation(true);
+    try {
+      let promises = [];
+      for (let index = 0; index < txForShow.length; index++) {
+        if (txForShow[index].selected) {
+          promises.push(
+            dispatch(
+              transactionAction.changeTransactionStatus({
+                txID: transactions[index].txId,
+                oldStatus: transactions[index].detail.txStatus, //for query
+                newStatus: 3
+              })
+            )
+          );
+        }
+      }
+      await Promise.all(promises).then(() => {
+        dispatch(transactionAction.fetchTransaction("buyer"));
+        dispatch(fetchTransactionForPathOp());
+        setIsInOperation(false);
+      });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <LinearGradient style={{ flex: 1 }} colors={Colors.linearGradientDark}>
+      <ModalLoading modalVisible={isInOperation} />
+      <ConfirmDialog
+        title="เพื่อความรวดเร็ว"
+        message="คุณต้องการแจ้งเตือนผู้ขายทันทีว่ากำลังไปรับหรือไม่?"
+        visible={confirmVisible}
+        onTouchOutside={() => setConfirmVisible(false)}
+        positiveButton={{
+          title: "ตกลง",
+          onPress: () => {
+            setConfirmVisible(false);
+            searchMapHandler(true);
+          }
+        }}
+        negativeButton={{
+          title: "เปลี่ยนด้วยตัวเอง",
+          onPress: () => {
+            setConfirmVisible(false);
+            searchMapHandler(false);
+          }
+        }}
+      />
       <View
         style={{
           width: "100%",
@@ -230,28 +228,40 @@ export default UserSignupScreen = props => {
         </View>
       </View>
       <View style={{ width: "100%", height: "80%" }}>
-        <FlatList
-          data={txForShow}
-          keyExtractor={item => item.txId}
-          renderItem={({ item }) => {
-            return (
-              <SellTransactionCard
-                selected={item.selected} //true --> selected
-                amountOfType={item.detail.saleList.length}
-                imgUrl={""}
-                userName={item.detail.seller}
-                txStatus={item.detail.txStatus}
-                meetDate={libary.formatDate(
-                  item.detail.assignedTime[0].toDate()
-                )}
-                selected={isSelected[item.txId]}
-                onPress={() => {
-                  selectedHandler(item);
-                }}
-              />
-            );
-          }}
-        />
+        {txForShow ? (
+          <FlatList
+            data={txForShow.length > 0 ? txForShow : []}
+            keyExtractor={item => item.txId}
+            renderItem={({ item }) => {
+              return (
+                <SellTransactionCard
+                  selected={item.selected} //true --> selected
+                  amountOfType={item.detail.saleList.length}
+                  imgUrl={""}
+                  userName={item.detail.seller}
+                  txStatus={item.detail.txStatus}
+                  meetDate={libary.formatDate(
+                    item.detail.assignedTime[0].toDate()
+                  )}
+                  selected={isSelected[item.txId]}
+                  onPress={() => {
+                    selectedHandler(item);
+                  }}
+                />
+              );
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              alignSelf: "center",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <ThaiRegText>ยังไม่มีรายการที่ต้องไปรับในวันนี้</ThaiRegText>
+          </View>
+        )}
       </View>
       <View
         style={{
@@ -270,7 +280,8 @@ export default UserSignupScreen = props => {
             margin: wp("1.25%"),
             alignSelf: "center"
           }}
-          onPress={searchMapHandler}
+          // onPress={searchMapHandler}
+          onPress={() => setConfirmVisible(true)}
           btnColor={Colors.button.submit_primary_dark.btnBackground}
           btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={14}

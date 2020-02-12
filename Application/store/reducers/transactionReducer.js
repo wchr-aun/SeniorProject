@@ -98,11 +98,7 @@ export default (state = initialState, action) => {
       }
 
       // insert new tx in new status array
-      console.log("before updated status");
-      console.log(targetTx);
-      targetTx.txStatus = newStatusIndex;
-      console.log("after updated status");
-      console.log(targetTx);
+      targetTx.detail.txStatus = newStatusIndex;
       updatedTransactions[newStatusIndex].push(targetTx);
 
       // update view

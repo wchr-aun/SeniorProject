@@ -25,8 +25,7 @@ export const getUsers = async () => {
             zipcode: doc.data().zipcode
           },
           email: auth.currentUser.email,
-          phoneNo: doc.data().phoneNo,
-          photoURL: doc.data().photoURL || ""
+          phoneNo: doc.data().phoneNo
         };
       } else throw new Error("The document doesn't exist");
     })
@@ -301,12 +300,14 @@ newInfo = {
 } */
 
 export const editUserInfo = async newInfo => {
+  console.log(newInfo);
   return functions
     .httpsCallable("editUserInfo")(newInfo)
     .then(result => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
+        console.log("error this -- firebaseFunction -- editUserInfo");
         throw new Error(result.data.errorMessage);
       }
     })

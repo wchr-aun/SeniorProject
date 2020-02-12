@@ -170,7 +170,7 @@ export default BuyingTransactionScreen = props => {
             paddingBottom: getStatusBarHeight() * 2
           }}
         >
-          {txShow.length > 0 ? (
+          {txShow ? (
             <FlatList
               refreshing={isRefreshing}
               onRefresh={refreshTx}

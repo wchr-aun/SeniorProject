@@ -256,6 +256,15 @@ const ShowAllUserTrashScreen = props => {
     });
   };
 
+  const onSelectedHandler = waste => {
+    props.navigation.navigate({
+      routeName: "WasteDetailScreen",
+      params: {
+        waste
+      }
+    });
+  };
+
   // provide for editing button when operation mode is changed to editing mode
   const [editingMode, setEditingMode] = useState(false);
   useEffect(() => {
@@ -380,6 +389,19 @@ const ShowAllUserTrashScreen = props => {
             renderItem={({ item }) => {
               return (
                 <TrashCard
+                  onPress={() =>
+                    onSelectedHandler({
+                      imgUrl: wasteTypes[item.type][item.subtype]["imgUrl"],
+                      majorType: item.type,
+                      subType: item.subType,
+                      wasteName: wasteTypes[item.type][item.subtype]["name"],
+                      wasteDisposal:
+                        wasteTypes[item.type][item.subtype]["disposal"],
+                      wasteDescription:
+                        wasteTypes[item.type][item.subtype]["description"],
+                      price: wasteTypes[item.type][item.subtype]["price"]
+                    })
+                  }
                   style={{ ...styles.eachSellerItemCard }}
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
                   type={item.type}
@@ -391,6 +413,7 @@ const ShowAllUserTrashScreen = props => {
                   wasteDescription={
                     wasteTypes[item.type][item.subtype]["description"]
                   }
+                  wasteTag={wasteTypes[item.type][item.subtype]["trashTag"]}
                   changeAmount={
                     trashsState.sellerItems._count[item.type]
                       ? trashsState.sellerItems._count[item.type][item.subtype]
