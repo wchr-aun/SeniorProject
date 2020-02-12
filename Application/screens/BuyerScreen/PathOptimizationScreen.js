@@ -1,13 +1,10 @@
 import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
   View,
-  StyleSheet,
   Alert,
-  FlatList,
-  ActivityIndicator
+  FlatList
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { ConfirmDialog } from "react-native-simple-dialogs";
 
 import {
   widthPercentageToDP as wp,
@@ -20,9 +17,8 @@ import { fetchTransactionForPathOp } from "../../store/actions/transactionAction
 import libary, { getCurrentLocation } from "../../utils/libary";
 import SellTransactionCard from "../../components/SellTransactionCard";
 import { LinearGradient } from "expo-linear-gradient";
-import ModalLoading from "../../components/ModalLoading";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 import * as transactionAction from "../../store/actions/transactionAction";
-import ThaiRegText from "../../components/ThaiRegText";
 
 const destinationReducer = (state, action) => {
   let geopoint = state.geopoint;
@@ -57,13 +53,8 @@ export default PathOptimizationScreen = props => {
     destinationReducer,
     { geopoint: [] }
   );
-
-  const loadCurrentLocation = async () => {
-    setIsInOperation(true);
-    const location = await getCurrentLocation();
-    setCurrentLocation(location);
-    setIsInOperation(false);
-  };
+  const [isInOperation, setIsInOperation] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const loadTodayTx = async () => {
     setIsInOperation(true);
@@ -71,11 +62,9 @@ export default PathOptimizationScreen = props => {
     setIsInOperation(false);
   };
 
-  // 'formState (state snapshot) will be updated when state changed
   useEffect(() => {
     console.log("path optimize");
     try {
-      loadCurrentLocation();
       loadTodayTx();
     } catch (err) {
       setError(err.message);
@@ -96,66 +85,27 @@ export default PathOptimizationScreen = props => {
   }, [userProfile]);
 
   // Search map from user input form
-  const searchMapHandler = async isBuyerOnTheWay => {
-    // do async task
-    if (Object.keys(isSelected).length == 0)
-      return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ");
-    console.log("-- searchMapHandler");
-    console.log(setAddrModalVisible);
-    console.log(addrModalVisible);
-    console.log(currentLocation.latitude);
-    console.log(currentLocation.longitude);
-    console.log(destinationState.geopoint);
-    console.log(setSellerAddr);
-    console.log(addrReadable);
+  const searchMapHandler = async () => {
+    const location = await getCurrentLocation();
+    setCurrentLocation(location);
     setAddrModalVisible(true);
-
-    if (isBuyerOnTheWay) {
-      changeTxStatus();
-    }
   };
 
-  //select unselect tx
-  const [txForShow, setTxForShow] = useState([]);
-  useEffect(() => {
-    setTxForShow(transactions);
-  }, [transactions]);
+  const selectedHandler = tx => {
+    let temp = isSelected;
+    if (temp[tx.txId] == undefined) temp[tx.txId] = true;
+    else delete temp[tx.txId];
+    setisSelected(temp);
+    dispatchDestination({
+      geopoint: {
+        txId: tx.txId,
+        latitude: tx.detail.addr_geopoint.geopoint.latitude,
+        longitude: tx.detail.addr_geopoint.geopoint.longitude
+      }
+    });
+  }
 
-  const selectedHandler = useCallback(
-    tx => {
-      let temp = isSelected;
-      if (temp[tx.txId] == undefined) temp[tx.txId] = true;
-      else delete temp[tx.txId];
-      setisSelected(temp);
-      dispatchDestination({
-        geopoint: {
-          txId: tx.txId,
-          latitude: tx.detail.addr_geopoint.geopoint.latitude,
-          longitude: tx.detail.addr_geopoint.geopoint.longitude
-        }
-      });
-
-      //for UI
-      let updatedSelectedTx = [...txForShow];
-
-      // check there is already have that item ?
-      let targetIndex = updatedSelectedTx.indexOf(tx);
-      updatedSelectedTx[targetIndex].selected = !updatedSelectedTx[targetIndex]
-        .selected;
-      setTxForShow(updatedSelectedTx);
-    },
-    [txForShow]
-  );
-
-  if (addrModalVisible && currentLocation) {
-    console.log(currentLocation);
-    // print
-    // Object {
-    //   "latitude": 13.6524973,
-    //   "longitude": 100.4932321,
-    //   "readable": "91 กรุงเทพมหานคร ประเทศไทย 10140",
-    //   "zipcode": 10140,
-    // }
+  if (addrModalVisible) {
     return (
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
@@ -172,25 +122,20 @@ export default PathOptimizationScreen = props => {
     );
   }
 
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [isInOperation, setIsInOperation] = useState(false);
-
   const changeTxStatus = async () => {
     setIsInOperation(true);
     try {
       let promises = [];
-      for (let index = 0; index < txForShow.length; index++) {
-        if (txForShow[index].selected) {
-          promises.push(
-            dispatch(
-              transactionAction.changeTransactionStatus({
-                txID: transactions[index].txId,
-                oldStatus: transactions[index].detail.txStatus, //for query
-                newStatus: 3
-              })
-            )
-          );
-        }
+      for (let txID in isSelected) {
+        promises.push(
+          dispatch(
+            transactionAction.changeTransactionStatus({
+              txID,
+              oldStatus: 2,
+              newStatus: 3
+            })
+          )
+        );
       }
       await Promise.all(promises).then(() => {
         dispatch(transactionAction.fetchTransaction("buyer"));
@@ -214,14 +159,15 @@ export default PathOptimizationScreen = props => {
           title: "ตกลง",
           onPress: () => {
             setConfirmVisible(false);
-            searchMapHandler(true);
+            changeTxStatus();
+            searchMapHandler();
           }
         }}
         negativeButton={{
           title: "เปลี่ยนด้วยตัวเอง",
           onPress: () => {
             setConfirmVisible(false);
-            searchMapHandler(false);
+            searchMapHandler();
           }
         }}
       />
@@ -252,7 +198,7 @@ export default PathOptimizationScreen = props => {
           </ThaiBoldText>
         </View>
       </View>
-      <View
+      <View 
         style={{
           width: "100%",
           height: "80%",
@@ -260,32 +206,30 @@ export default PathOptimizationScreen = props => {
           alignItems: "center"
         }}
       >
-        {txForShow ? (
-          txForShow.length > 0 ? (
-            <FlatList
-              onRefresh={loadTodayTx}
-              refreshing={isInOperation}
-              data={txForShow}
-              keyExtractor={item => item.txId}
-              renderItem={({ item }) => {
-                return (
-                  <SellTransactionCard
-                    selected={item.selected} //true --> selected
-                    amountOfType={item.detail.saleList.length}
-                    imgUrl={""}
-                    userName={item.detail.seller}
-                    txStatus={item.detail.txStatus}
-                    meetDate={libary.formatDate(
-                      item.detail.assignedTime[0].toDate()
-                    )}
-                    selected={isSelected[item.txId]}
-                    onPress={() => {
-                      selectedHandler(item);
-                    }}
-                  />
-                );
-              }}
-            />
+        {transactions && transactions.length > 0 ? (
+          <FlatList
+            onRefresh={loadTodayTx}
+            refreshing={isInOperation}
+            data={transactions}
+            keyExtractor={item => item.txId}
+            renderItem={({ item }) => {
+              return (
+                <SellTransactionCard
+                  amountOfType={item.detail.saleList.length}
+                  imgUrl={""}
+                  userName={item.detail.seller}
+                  txStatus={item.detail.txStatus}
+                  meetDate={libary.formatDate(
+                    item.detail.assignedTime[0].toDate()
+                  )}
+                  selected={isSelected[item.txId]}
+                  onPress={() => {
+                    selectedHandler(item);
+                  }}
+                />
+              );
+            }}
+          />
           ) : (
             <View
               style={{
@@ -300,20 +244,7 @@ export default PathOptimizationScreen = props => {
               </ThaiRegText>
             </View>
           )
-        ) : (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              height: 60
-            }}
-          >
-            <ThaiRegText style={{ color: Colors.secondary }}>
-              ยังไม่มีรายการที่ต้องไปรับในวันนี้
-            </ThaiRegText>
-          </View>
-        )}
+        }
       </View>
       <View
         style={{
@@ -333,7 +264,10 @@ export default PathOptimizationScreen = props => {
             alignSelf: "center"
           }}
           // onPress={searchMapHandler}
-          onPress={() => setConfirmVisible(true)}
+          onPress={() => {
+            if (Object.keys(isSelected).length != 0)
+              setConfirmVisible(true)}
+          }
           btnColor={Colors.button.submit_primary_dark.btnBackground}
           btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={14}

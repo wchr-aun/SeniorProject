@@ -122,8 +122,7 @@ export default UserInfoCard = props => {
             <ThaiRegText
               style={{
                 fontSize: 20,
-                color: Colors.on_primary_dark.high_constrast,
-                fontAlign: "center"
+                color: Colors.on_primary_dark.high_constrast
               }}
             >
               {`${

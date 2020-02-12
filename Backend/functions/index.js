@@ -44,7 +44,6 @@ exports.createAccount = functions.https.onCall((data, context) => {
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).then(() => {
       buyerDB.doc(userRecord.uid).set({
-        username: userRecord.uid,
         enableSearch: false
       }).catch(err => {
         console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
@@ -107,7 +106,11 @@ exports.sellWaste = functions.https.onCall((data, context) => {
           }
           return sellerDB.doc(context.auth.uid).set({items: newItems}, {merge: true}).then(() => {
             let assignedTime = []
-            for (index in data.assignedTime) assignedTime.push(new Date(data.assignedTime[index]))
+            for (index in data.assignedTime) {
+              if (new Date(data.assignedTime[index]) > new Date())
+                assignedTime.push(new Date(data.assignedTime[index]))
+              else return {errorMessage: "The date has already passed"}
+            }
             return txDB.add({
               txType,
               buyer,
@@ -173,16 +176,25 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
         if (data.status == 2 && new Date(data.chosenTime) < new Date())
           return {errorMessage: "The time you chose has already been passed"}
 
-        let meesage
+        let meesage = {}
         let sendTo
         if (data.status == 2 && doc.data().txStatus == 1) {
           meesage = getTitleAndBody({
             uid: context.auth.uid,
             txType: doc.data().txType,
-            txStatus: 5,
+            txStatus: 6,
             date: data.chosenTime
           })
           sendTo = doc.data().buyer
+        }
+        else if (data.status == 4) {
+          meesage = getTitleAndBody({
+            uid: context.auth.uid,
+            txType: doc.data().txType,
+            txStatus: data.status,
+            date: data.chosenTime
+          })
+          sendTo = doc.data().seller
         }
         else {
           meesage = getTitleAndBody({
@@ -191,7 +203,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
             txStatus: data.status,
             date: data.chosenTime
           })
-          sendTo = doc.data().seller
+          sendTo = (context.auth.uid == doc.data().seller) ? doc.data().buyer : doc.data().seller
         }
         return sendNotification(sendTo, meesage.title, meesage.body).then(result => {
           if (result.errorMessage != null) return {errorMessage: result.errorMessage}
@@ -225,6 +237,31 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
                 break
               case 3:
                 transaction.update(txDB.doc(data.txID), { txStatus: data.status })
+                break
+              case 4:
+                transaction.update(txDB.doc(data.txID), {
+                  txStatus: data.status,
+                  completedTime: new Date()
+                })
+                sellerDB.doc(doc.data().seller).get().then(item => {
+                  let items = item.data().items
+                  for (let i in doc.data().saleList) {
+                    if (items[i]) {
+                      for (let j in doc.data().saleList[i]) {
+                        if (items[i][j])
+                          items[i][j] += doc.data().saleList[i][j].amount
+                        else items[i][j] = doc.data().saleList[i][j].amount
+                      }
+                    }
+                    else {
+                      items[i] = doc.data().saleList[i]
+                      for (let j in items[i]) delete items[i][j].price
+                    }
+                  }
+                  sellerDB.doc(doc.data().seller).update({
+                    items
+                  })
+                })
                 break
               default:
                 transaction.update(txDB.doc(data.txID), {
@@ -414,7 +451,7 @@ exports.setFavBuyer = functions.https.onCall((data,context) => {
 
 const getTitleAndBody = (data) => {
   const milis = data.date == undefined ? 0 : Number(data.date)
-  const days = ((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000
+  const days = Math.floor(((milis - milis % 86400000) - (new Date() - (new Date().getTime() + 25200000) % 86400000)) / 86400000)
   const uid = data.uid
   const daysLeft = (days != 0) ? "อีก " + days + " วัน" : "วันนี้"
   const hour = new Date(milis).getHours() || ""
@@ -423,29 +460,33 @@ const getTitleAndBody = (data) => {
     ["คำร้องขอถึงคุณ",
     "มีการร้องขอเปลี่ยนแปลงเวลา",
     "ผู้ซื้อตอบตกลงคำร้องขอ",
-    "วันนี้คุณมีนัดซื้อ-ขายขยะ",
     "ผู้ซื้อกำลังเดินทางมา",
-    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"],
+    "คำขอร้องถูกยกเลิก",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว",
+    ""],
     ["คำร้องขอในบริเวณของคุณ",
     "",
     "ผู้ซื้อตอบตกลงคำร้องขอขายด่วน",
-    "วันนี้คุณมีนัดซื้อ-ขายขยะ",
     "ผู้ซื้อกำลังเดินทางมา",
-    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"]
+    "คำขอร้องถูกยกเลิก",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว",
+    ""]
   ]
   const body = [
     [uid + " ต้องการขายขยะให้คุณ",
     uid + " ต้องการขอเปลี่ยนแปลงเวลานัดหมายของคุณ",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
-    uid + " กำลังเดินทางมาหาคุณ",
-    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft],
+    uid + " ได้ทำการยกเลิกคำขอซื้อ-ขายกับคุณแล้ว",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft,
+    ""],
     [uid + " ต้องการขายขยะ",
     "",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
-    uid + " กำลังเดินทางมาหาคุณ",
-    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft]
+    uid + " ได้ทำการยกเลิกคำขอซื้อ-ขายกับคุณแล้ว",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft,
+    ""]
   ]
   return {title: title[data.txType][data.txStatus], body: body[data.txType][data.txStatus]}
 }
@@ -467,8 +508,10 @@ const quickSellingNotification = (center, title, body) => {
 const sendNotification = (uid, title, body) => {
   return usersDB.doc(uid).get().then(doc => {
     if (doc.exists) return doc.data().notificationToken
+    else if (uid == "") return ""
     else throw "Seller doesn't exist"
   }).then(tokens => {
+    if (title == "" || body == "" || tokens == "") return false
     tokens.forEach(token => {
       fetch("https://exp.host/--/api/v2/push/send", {
         method: 'POST',
