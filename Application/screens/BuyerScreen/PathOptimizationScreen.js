@@ -58,12 +58,25 @@ export default PathOptimizationScreen = props => {
     { geopoint: [] }
   );
 
-  // 'formState (state snapshot) will be updated when state changed
+  const loadCurrentLocation = async () => {
+    setIsInOperation(true);
+    const location = await getCurrentLocation();
+    setCurrentLocation(location);
+    setIsInOperation(false);
+  };
 
+  const loadTodayTx = async () => {
+    setIsInOperation(true);
+    await dispatch(fetchTransactionForPathOp());
+    setIsInOperation(false);
+  };
+
+  // 'formState (state snapshot) will be updated when state changed
   useEffect(() => {
     console.log("path optimize");
     try {
-      dispatch(fetchTransactionForPathOp());
+      loadCurrentLocation();
+      loadTodayTx();
     } catch (err) {
       setError(err.message);
     }
@@ -87,8 +100,14 @@ export default PathOptimizationScreen = props => {
     // do async task
     if (Object.keys(isSelected).length == 0)
       return setError("กรุณาเลือก Transaction ที่จะไปรับขยะ");
-    const location = await getCurrentLocation();
-    setCurrentLocation(location);
+    console.log("-- searchMapHandler");
+    console.log(setAddrModalVisible);
+    console.log(addrModalVisible);
+    console.log(currentLocation.latitude);
+    console.log(currentLocation.longitude);
+    console.log(destinationState.geopoint);
+    console.log(setSellerAddr);
+    console.log(addrReadable);
     setAddrModalVisible(true);
 
     if (isBuyerOnTheWay) {
@@ -99,8 +118,6 @@ export default PathOptimizationScreen = props => {
   //select unselect tx
   const [txForShow, setTxForShow] = useState([]);
   useEffect(() => {
-    console.log("transactions change");
-    console.log(transactions);
     setTxForShow(transactions);
   }, [transactions]);
 
@@ -130,7 +147,15 @@ export default PathOptimizationScreen = props => {
     [txForShow]
   );
 
-  if (addrModalVisible) {
+  if (addrModalVisible && currentLocation) {
+    console.log(currentLocation);
+    // print
+    // Object {
+    //   "latitude": 13.6524973,
+    //   "longitude": 100.4932321,
+    //   "readable": "91 กรุงเทพมหานคร ประเทศไทย 10140",
+    //   "zipcode": 10140,
+    // }
     return (
       <ModalShowInteractMap
         setModalVisible={setAddrModalVisible}
@@ -227,39 +252,66 @@ export default PathOptimizationScreen = props => {
           </ThaiBoldText>
         </View>
       </View>
-      <View style={{ width: "100%", height: "80%" }}>
+      <View
+        style={{
+          width: "100%",
+          height: "80%",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
         {txForShow ? (
-          <FlatList
-            data={txForShow.length > 0 ? txForShow : []}
-            keyExtractor={item => item.txId}
-            renderItem={({ item }) => {
-              return (
-                <SellTransactionCard
-                  selected={item.selected} //true --> selected
-                  amountOfType={item.detail.saleList.length}
-                  imgUrl={""}
-                  userName={item.detail.seller}
-                  txStatus={item.detail.txStatus}
-                  meetDate={libary.formatDate(
-                    item.detail.assignedTime[0].toDate()
-                  )}
-                  selected={isSelected[item.txId]}
-                  onPress={() => {
-                    selectedHandler(item);
-                  }}
-                />
-              );
-            }}
-          />
+          txForShow.length > 0 ? (
+            <FlatList
+              onRefresh={loadTodayTx}
+              refreshing={isInOperation}
+              data={txForShow}
+              keyExtractor={item => item.txId}
+              renderItem={({ item }) => {
+                return (
+                  <SellTransactionCard
+                    selected={item.selected} //true --> selected
+                    amountOfType={item.detail.saleList.length}
+                    imgUrl={""}
+                    userName={item.detail.seller}
+                    txStatus={item.detail.txStatus}
+                    meetDate={libary.formatDate(
+                      item.detail.assignedTime[0].toDate()
+                    )}
+                    selected={isSelected[item.txId]}
+                    onPress={() => {
+                      selectedHandler(item);
+                    }}
+                  />
+                );
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: 60
+              }}
+            >
+              <ThaiRegText style={{ color: Colors.secondary }}>
+                ยังไม่มีรายการที่ต้องไปรับในวันนี้
+              </ThaiRegText>
+            </View>
+          )
         ) : (
           <View
             style={{
-              alignSelf: "center",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              width: "100%",
+              height: 60
             }}
           >
-            <ThaiRegText>ยังไม่มีรายการที่ต้องไปรับในวันนี้</ThaiRegText>
+            <ThaiRegText style={{ color: Colors.secondary }}>
+              ยังไม่มีรายการที่ต้องไปรับในวันนี้
+            </ThaiRegText>
           </View>
         )}
       </View>

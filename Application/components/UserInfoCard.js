@@ -110,27 +110,78 @@ export default UserInfoCard = props => {
                 : Colors.hard_primary_dark
           }}
         >
-          <ThaiRegText
+          <View
             style={{
-              fontSize: 14,
-              color:
-                props.userRole === "seller"
-                  ? Colors.on_secondary.high_constrast
-                  : Colors.on_primary_dark.low_constrast
+              width: "50%",
+              flexDirection: "row",
+              justifyContent: "center"
             }}
           >
-            {props.userRole === "seller"
-              ? "จำนวนรายการที่รอคุณเลือกเวลา"
-              : "จำนวนคำขอที่ขายขยะให้คุณ"}
-          </ThaiRegText>
-          <ThaiRegText
+            <ThaiRegText
+              style={{
+                fontSize: 20,
+                color: Colors.on_primary_dark.high_constrast,
+                fontAlign: "center"
+              }}
+            >
+              {`${
+                props.transactions
+                  ? props.userRole === "seller"
+                    ? props.transactions[1].length
+                    : props.transactions[3].length
+                  : ""
+              } `}
+            </ThaiRegText>
+            <ThaiRegText
+              style={{
+                fontSize: 14,
+                color:
+                  props.userRole === "seller"
+                    ? Colors.on_secondary.high_constrast
+                    : Colors.on_primary_dark.low_constrast
+              }}
+            >
+              {props.userRole === "seller"
+                ? "รายการที่ผู้รับซื้อเสนอเวลาใหม่"
+                : "รายการที่คุณกำลังเดินทางไปรับ"}
+            </ThaiRegText>
+          </View>
+
+          <View
             style={{
-              fontSize: 20,
-              color: Colors.on_primary_dark.high_constrast
+              width: "50%",
+              flexDirection: "row",
+              justifyContent: "center"
             }}
           >
-            {props.numberOfIncompleteTx}
-          </ThaiRegText>
+            <ThaiRegText
+              style={{
+                fontSize: 20,
+                color: Colors.on_primary_dark.high_constrast
+              }}
+            >
+              {`${
+                props.transactions
+                  ? props.userRole === "seller"
+                    ? props.transactions[3].length
+                    : props.transactions[0].length
+                  : ""
+              } `}
+            </ThaiRegText>
+            <ThaiRegText
+              style={{
+                fontSize: 14,
+                color:
+                  props.userRole === "seller"
+                    ? Colors.on_secondary.high_constrast
+                    : Colors.on_primary_dark.low_constrast
+              }}
+            >
+              {props.userRole === "seller"
+                ? "รายการที่ผู้รับซื้อกำลังเดินทางมารับ"
+                : "รายการที่ร้องขอถึงคุณ"}
+            </ThaiRegText>
+          </View>
         </View>
       </View>
     </LinearGradient>

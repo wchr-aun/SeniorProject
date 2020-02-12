@@ -40,6 +40,7 @@ import ImageCircle from "../components/UI/ImageCircle";
 import CustomButton from "../components/UI/CustomButton";
 import ThaiBoldText from "../components/ThaiBoldText";
 import { auth } from "firebase";
+import ModalLoading from "../components/ModalLoading";
 
 // CHOOSE_CURRENT_TIME
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -268,10 +269,13 @@ export default EditingUserprofileScreen = props => {
   }
 
   // For User signout
+
+  const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
-  const signOutHandler = () => {
-    setIsLoading(true);
-    dispatch(authAction.signout());
+  const signOutHandler = async () => {
+    setIsInOperation(true);
+    await dispatch(authAction.signout());
+    setIsInOperation(false);
   };
 
   //User image
@@ -295,8 +299,9 @@ export default EditingUserprofileScreen = props => {
   };
   const uploadImage = async () => {
     // upload img
-    console.log(userImg);
-    libary.uploadingImg(userImg, `${userProfile.uid}.jpg`, "user");
+    setIsInOperation(true);
+    await libary.uploadingImg(userImg, `${userProfile.uid}.jpg`, "user");
+    setIsInOperation(false);
     setIsImgEdit(false);
   };
   return (
@@ -306,6 +311,7 @@ export default EditingUserprofileScreen = props => {
         width: wp("100%")
       }}
     >
+      <ModalLoading modalVisible={isInOperation} />
       <LinearGradient colors={Colors.linearGradientDark}>
         <View
           style={{

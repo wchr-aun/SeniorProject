@@ -64,6 +64,13 @@ export default BuyerHomepageScreen = props => {
   }, [refreshTxAndBuyerInfo, dispatch]);
 
   const transactions = useSelector(state => state.transactions.transactions);
+  const [txShow, setTxShow] = useState([]);
+  useEffect(() => {
+    if (transactions) {
+      let tmpTxShow = transactions[0].concat(transactions[2]);
+      setTxShow(tmpTxShow.concat(transactions[3]));
+    }
+  }, [transactions]);
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
@@ -130,7 +137,6 @@ export default BuyerHomepageScreen = props => {
           <>
             <UserInfoCard
               userRole={userRole}
-              numberOfIncompleteTx={transactions ? transactions[0].length : 0}
               avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
@@ -139,11 +145,11 @@ export default BuyerHomepageScreen = props => {
               }}
               imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
-              meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
               onSignout={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
+              transactions={transactions}
             />
             <LinearGradient
               colors={Colors.linearGradientDark}
@@ -195,11 +201,12 @@ export default BuyerHomepageScreen = props => {
                       color={Colors.primary_bright_variant}
                     />
                   </View>
-                ) : (
+                ) : txShow.length > 0 ? (
                   <FlatList
                     onRefresh={refreshTxAndBuyerInfo}
                     refreshing={isRefreshing}
-                    data={transactions ? transactions[0] : []}
+                    // data={transactions ? transactions[0] : []}
+                    data={txShow ? txShow : []}
                     keyExtractor={item => item.txId}
                     renderItem={({ item }) => {
                       return (
@@ -221,6 +228,10 @@ export default BuyerHomepageScreen = props => {
                       );
                     }}
                   />
+                ) : (
+                  <View style={{ width: "50%", height: "50%" }}>
+                    <ThaiMdText>ยังไม่มีรายการที่ท่านสนใจ</ThaiMdText>
+                  </View>
                 )}
               </View>
             </LinearGradient>

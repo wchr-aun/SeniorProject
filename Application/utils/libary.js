@@ -106,7 +106,9 @@ const downloadingImg = async (imgNames, mode) => {
           allImgs.push(uri);
         })
         .catch(err => {
-          console.log(err.message);
+          console.log(
+            err.message + " but it not hurt our application, just console.log"
+          );
         })
     );
   }

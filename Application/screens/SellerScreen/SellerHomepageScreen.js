@@ -45,6 +45,13 @@ export default SellerHomepageScreen = props => {
   const userProfile = useSelector(state => state.user.userProfile);
   const userRole = useSelector(state => state.user.userRole);
   const transactions = useSelector(state => state.transactions.transactions);
+  const [txShow, setTxShow] = useState([]);
+  useEffect(() => {
+    if (transactions) {
+      let tmpTxShow = transactions[3].concat(transactions[1]);
+      setTxShow(tmpTxShow);
+    }
+  }, [transactions]);
 
   // For looking into transaction detail
   const selectedHandler = transactionItem => {
@@ -127,7 +134,7 @@ export default SellerHomepageScreen = props => {
           <>
             <UserInfoCard
               userRole={userRole}
-              numberOfIncompleteTx={transactions ? transactions[1].length : 0}
+              // numberOfIncompleteTx={transactions ? transactions[1].length : 0}
               avariableWidth={wp("100%")}
               style={{
                 ...styles.userInfoCard,
@@ -136,11 +143,11 @@ export default SellerHomepageScreen = props => {
               }}
               imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
-              meetTime={"18 มกรา 15.00 น."}
               address={userProfile.addr.readable}
               onSignout={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
+              transactions={transactions}
             />
             <View
               style={{
@@ -196,7 +203,8 @@ export default SellerHomepageScreen = props => {
                   </ThaiMdText>
                 </CustomButton>
               </View>
-              {transactions[0].length > 0 ? (
+              {/* {transactions[0].length > 0 ? ( */}
+              {txShow.length > 0 ? (
                 <FlatList
                   refreshControl={
                     <RefreshControl
@@ -206,7 +214,8 @@ export default SellerHomepageScreen = props => {
                   }
                   refreshing={isRefreshing}
                   onRefresh={refreshTx}
-                  data={transactions[0]}
+                  // data={transactions[0]}
+                  data={txShow}
                   keyExtractor={item => item.txId}
                   renderItem={({ item }) => {
                     return (

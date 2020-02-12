@@ -36,6 +36,7 @@ import ModalLoading from "../../components/ModalLoading";
 
 export default WasteDetailScreen = props => {
   //add spinner loading
+  const [isLoading, setIsLoading] = useState(false);
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -177,7 +178,6 @@ export default WasteDetailScreen = props => {
               {waste.wasteDisposal}
             </ThaiMdText>
           </ThaiRegText>
-          <ThaiRegText>{transactionItem.tel}</ThaiRegText>
         </View>
       </View>
 
@@ -199,38 +199,7 @@ export default WasteDetailScreen = props => {
             justifyContent: "space-around",
             alignItems: "center"
           }}
-        >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 40,
-              borderRadius: 5
-            }}
-            btnColor={
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_bright.btnBackgroundDisabled
-                : Colors.button.submit_primary_bright.btnBackground
-            }
-            btnTitleColor={
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_bright.btnTextDisabled
-                : Colors.button.submit_primary_bright.btnText
-            }
-            onPress={
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? null
-                : acceptPreferedtimeHandler
-            }
-            btnTitleFontSize={12}
-          >
-            <MaterialCommunityIcons
-              name={"calendar-multiple-check"}
-              size={12}
-            />
-            <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
-          </CustomButton>
-        </View>
+        ></View>
       </View>
     </View>
   );
