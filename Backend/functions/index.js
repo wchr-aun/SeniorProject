@@ -26,7 +26,7 @@ exports.createAccount = functions.https.onCall((data, context) => {
   const surname = data.surname
   const addr = data.addr.readable
   const notificationToken = data.notificationToken || false
-  const zipcode = data.zipcode
+  const zipcode = Number(data.zipcode)
   const phoneNo = data.phoneNo
   return auth.createUser({
     uid: data.username,
@@ -84,7 +84,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
     const buyer = (data.txType == 0) ? data.buyer : ""
     const addr = data.addr.readable
     const addr_geopoint = geo.point(data.addr.latitude, data.addr.longitude)
-    const zipcode = data.addr.zipcode
+    const zipcode = Number(data.addr.zipcode)
     const txType = data.txType
     const img = data.img
     if (txType == 0 || txType == 1) {
@@ -290,7 +290,7 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     const description = data.desc || "default description"
     const addr = data.addr.readable || {}
     const enableSearch = data.enableSearch || false
-    const zipcode = data.addr.zipcode
+    const zipcode = Number(data.addr.zipcode)
     return buyerDB.doc(context.auth.uid).set({
       addr,
       zipcode,
@@ -314,7 +314,7 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     const name = data.name
     const surname = data.surname
     const addr = data.addr.readable
-    const zipcode = data.addr.zipcode
+    const zipcode = Number(data.addr.zipcode)
     const phoneNo = data.phoneNo
     return usersDB.doc(context.auth.uid).update({
       name,
@@ -462,15 +462,15 @@ const getTitleAndBody = (data) => {
     "ผู้ซื้อตอบตกลงคำร้องขอ",
     "ผู้ซื้อกำลังเดินทางมา",
     "คำขอร้องถูกยกเลิก",
-    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว",
-    ""],
+    "",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"],
     ["คำร้องขอในบริเวณของคุณ",
     "",
     "ผู้ซื้อตอบตกลงคำร้องขอขายด่วน",
     "ผู้ซื้อกำลังเดินทางมา",
     "คำขอร้องถูกยกเลิก",
-    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว",
-    ""]
+    "",
+    "ผู้ขายขยะได้ทำการเลือกเวลาใหม่แล้ว"]
   ]
   const body = [
     [uid + " ต้องการขายขยะให้คุณ",
@@ -478,15 +478,15 @@ const getTitleAndBody = (data) => {
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
     uid + " ได้ทำการยกเลิกคำขอซื้อ-ขายกับคุณแล้ว",
-    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft,
-    ""],
+    "",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft],
     [uid + " ต้องการขายขยะ",
     "",
     uid + " จะเดินทางมาใน" + daysLeft,
     uid + " จะเดินทางมาถึงเวลาประมาณ " + hour + ":" + min + " น.",
     uid + " ได้ทำการยกเลิกคำขอซื้อ-ขายกับคุณแล้ว",
-    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft,
-    ""]
+    "",
+    uid + " ได้ทำการเลือกเวลาใหม่แล้ว จะต้องเดินทางใน" + daysLeft]
   ]
   return {title: title[data.txType][data.txStatus], body: body[data.txType][data.txStatus]}
 }

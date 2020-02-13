@@ -14,18 +14,20 @@ export const queryWastesInAnArea = (zipcode) => {
       const saleList = doc.data().saleList
       for (let type in saleList) {
         for (let subtype in saleList[type]) {
-          if (wasteAmount[type] == undefined) {
-            wasteAmount[type] = {}
-            wasteAmount[type][subtype] = {}
-            wasteAmount[type][subtype].inTx = 0
-            wasteAmount[type][subtype].onHold = 0
+          if (doc.data().txStatus != 4) {
+            if (wasteAmount[type] == undefined) {
+              wasteAmount[type] = {}
+              wasteAmount[type][subtype] = {}
+              wasteAmount[type][subtype].inTx = 0
+              wasteAmount[type][subtype].onHold = 0
+            }
+            else if (wasteAmount[type][subtype] == undefined) {
+              wasteAmount[type][subtype] = {}
+              wasteAmount[type][subtype].inTx = 0
+              wasteAmount[type][subtype].onHold = 0
+            }
+            wasteAmount[type][subtype].inTx += saleList[type][subtype].amount
           }
-          else if (wasteAmount[type][subtype] == undefined) {
-            wasteAmount[type][subtype] = {}
-            wasteAmount[type][subtype].inTx = 0
-            wasteAmount[type][subtype].onHold = 0
-          }
-          wasteAmount[type][subtype].inTx += saleList[type][subtype].amount
         }
       }
     })
@@ -78,18 +80,20 @@ export const queryTotalWastes = () => {
       const saleList = doc.data().saleList
       for (let type in saleList) {
         for (let subtype in saleList[type]) {
-          if (totalWastesInSystem[type] == undefined) {
-            totalWastesInSystem[type] = {}
-            totalWastesInSystem[type][subtype] = 0
-            totalWastesInTx[type] = {}
-            totalWastesInTx[type][subtype] = 0
+          if (doc.data().txStatus != 4) {
+            if (totalWastesInSystem[type] == undefined) {
+              totalWastesInSystem[type] = {}
+              totalWastesInSystem[type][subtype] = 0
+              totalWastesInTx[type] = {}
+              totalWastesInTx[type][subtype] = 0
+            }
+            else if (totalWastesInSystem[type][subtype] == undefined) {
+              totalWastesInSystem[type][subtype] = 0
+              totalWastesInTx[type][subtype] = 0
+            }
+            totalWastesInSystem[type][subtype] += saleList[type][subtype].amount
+            totalWastesInTx[type][subtype] += saleList[type][subtype].amount
           }
-          else if (totalWastesInSystem[type][subtype] == undefined) {
-            totalWastesInSystem[type][subtype] = 0
-            totalWastesInTx[type][subtype] = 0
-          }
-          totalWastesInSystem[type][subtype] += saleList[type][subtype].amount
-          totalWastesInTx[type][subtype] += saleList[type][subtype].amount
         }
       }
     })
