@@ -255,7 +255,7 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
                     }
                     else {
                       items[i] = doc.data().saleList[i]
-                      for (let j in items[i]) delete items[i][j].price
+                      for (let j in items[i]) items[i][j] = items[i][j].amount
                     }
                   }
                   sellerDB.doc(doc.data().seller).update({
