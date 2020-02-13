@@ -14,7 +14,11 @@ import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome
+} from "@expo/vector-icons";
 
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
@@ -136,7 +140,7 @@ export default SellingReqBeforeSendingScreen = props => {
 
         <View
           style={{
-            width: "20%",
+            width: "50%",
             height: "100%",
             alignItems: "flex-start",
             justifyContent: "center"
@@ -154,6 +158,7 @@ export default SellingReqBeforeSendingScreen = props => {
         <CustomButton
           style={{
             width: "20%",
+            maxWidth: 30,
             height: "100%",
             maxHeight: 30,
             borderRadius: 5
@@ -163,12 +168,11 @@ export default SellingReqBeforeSendingScreen = props => {
           btnTitleColor={Colors.button.submit_primary_bright.btnText}
           btnTitleFontSize={10}
         >
-          <MaterialCommunityIcons
-            name={"account-card-details"}
+          <FontAwesome
+            name={"info-circle"}
             color={Colors.button.cancel.btnText}
             size={10}
           />
-          <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้ซื้อ</ThaiMdText>
         </CustomButton>
       </View>
       <View style={{ height: "10%", width: "100%" }}>

@@ -247,9 +247,12 @@ export default SellingTransactionDetailScreen = props => {
     }
   };
 
-  const onBuyerDetail = () => {
-    props.navigation.navigate("");
-  };
+  // const goBuyerDetail = () => {
+  //   props.navigation.navigate({
+  //     routeName: "BuyerDetailScreen",
+  //     params: { buyerInfomation: sellReq.buyerInfomation }
+  //   });
+  // };
 
   const backHandler = () => {
     props.navigation.goBack();
@@ -341,6 +344,7 @@ export default SellingTransactionDetailScreen = props => {
         positiveButton={{
           title: "ลบ",
           onPress: () => {
+            cancelHandler();
             setConfirmCancleVisible(false);
           }
         }}
@@ -405,7 +409,7 @@ export default SellingTransactionDetailScreen = props => {
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <CustomButton
+        {/* <CustomButton
           style={{
             width: "20%",
             height: "100%",
@@ -413,17 +417,12 @@ export default SellingTransactionDetailScreen = props => {
             borderRadius: 5
           }}
           btnColor={Colors.button.submit_primary_bright.btnBackground}
-          onPress={onBuyerDetail}
+          onPress={goBuyerDetail}
           btnTitleColor={Colors.button.submit_primary_bright.btnText}
           btnTitleFontSize={10}
         >
-          <MaterialCommunityIcons
-            name={"account-card-details"}
-            color={Colors.button.cancel.btnText}
-            size={10}
-          />
           <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
-        </CustomButton>
+        </CustomButton> */}
       </View>
       <View
         style={{
@@ -758,7 +757,7 @@ export default SellingTransactionDetailScreen = props => {
             onPress={
               getDisableStatusForSeller(4, transactionItem.detail.txStatus)
                 ? null
-                : cancelHandler
+                : () => setConfirmCancleVisible(true)
             }
             btnTitleColor={
               getDisableStatusForSeller(4, transactionItem.detail.txStatus)

@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Image,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  SectionList
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -39,9 +40,9 @@ export default BuyerDetailScreen = props => {
   // Get a parameter that sent from the previous page.
   const buyerInfomation = props.navigation.getParam("buyerInfomation");
   console.log("-- BuyerDetail Screen buyerInfomation");
-  console.log(buyerInfomation);
+  console.log(buyerInfomation.buyerPriceInfo);
 
-  const wasteTypeDropdownFormat = useSelector(state => {
+  const wasteListSectionFormat = useSelector(state => {
     return state.wasteType.wasteListSectionFormat;
   });
 
@@ -107,6 +108,121 @@ export default BuyerDetailScreen = props => {
             รายละเอียดผู้รับซื้อ
           </ThaiBoldText>
         </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "80%",
+          paddingHorizontal: 10,
+          paddingBottom: getStatusBarHeight()
+        }}
+      >
+        <SectionList
+          keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
+          renderItem={({ item, section: { type } }) => {
+            let subtypeIndex = Object.keys(item)[0];
+            let subtypeName = item[Object.keys(item)[0]].name;
+
+            // Set price for showing
+            let price = 0;
+            let isDefinedPrice = false;
+            if (buyerInfomation.buyerPriceInfo[type]) {
+              if (buyerInfomation.buyerPriceInfo[type][subtypeIndex]) {
+                if (
+                  buyerInfomation.buyerPriceInfo._count[type][subtypeIndex] != 0
+                ) {
+                  //have an update
+                  price =
+                    buyerInfomation.buyerPriceInfo._count[type][subtypeIndex];
+                  isUpdated = true;
+                } else {
+                  price =
+                    buyerInfomation.buyerPriceInfo[type][Object.keys(item)[0]];
+                  isUpdated = false;
+                }
+                isDefinedPrice = true;
+              } else {
+                isDefinedPrice = false;
+              }
+            } else {
+              isDefinedPrice = false;
+            }
+
+            return (
+              <View
+                style={{
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 5,
+                  padding: 10,
+                  backgroundColor: Colors.on_primary_dark.low_constrast,
+                  borderBottomColor: Colors.hard_secondary,
+                  borderBottomWidth: 0.75,
+                  marginBottom: 2,
+                  justifyContent: "center"
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    height: "50%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}
+                >
+                  <View style={{ width: "50%" }}>
+                    <ThaiRegText
+                      style={{
+                        fontSize: 15,
+                        color: Colors.soft_primary_bright
+                      }}
+                    >
+                      {subtypeName}
+                    </ThaiRegText>
+                  </View>
+                  <View
+                    style={{
+                      width: "50%",
+                      flexDirection: "row"
+                    }}
+                  >
+                    <View
+                      style={{
+                        borderWidth: 0.75,
+                        width: "50%",
+                        borderRadius: 3,
+                        borderColor: Colors.soft_secondary,
+                        backgroundColor: Colors.soft_secondary,
+                        alignItems: "center"
+                      }}
+                    >
+                      <ThaiRegText
+                        style={{ textAlign: "center", fontSize: 15 }}
+                      >
+                        {(isDefinedPrice ? price : 0).toString()}
+                      </ThaiRegText>
+                      )}
+                    </View>
+                    <ThaiRegText style={{ fontSize: 15 }}>
+                      {" "}
+                      บาท/ กก.
+                    </ThaiRegText>
+                  </View>
+                </View>
+              </View>
+            );
+          }}
+          renderSectionHeader={({ section: { type } }) => {
+            return (
+              <ThaiMdText
+                style={{ fontSize: 18, color: Colors.hard_primary_dark }}
+              >
+                {type}
+              </ThaiMdText>
+            );
+          }}
+        />
       </View>
       {/* <View
         style={{

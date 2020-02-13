@@ -63,12 +63,9 @@ export default SellingTransactionScreen = props => {
     transactionsDropdownFormat[0].transactions
   );
   useEffect(() => {
-    console.log(txStatus);
-    console.log(transactionsDropdownFormat);
     let txOld = transactionsDropdownFormat.filter(
       txs => txs.value === txStatus
     )[0];
-    console.log(txOld);
     setTxShow(txOld.transactions.length > 0 ? txOld.transactions : []);
   }, [transactionsDropdownFormat]);
 

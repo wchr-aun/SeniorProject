@@ -387,13 +387,15 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
+              console.log("item");
+              console.log(item);
               return (
                 <TrashCard
                   onPress={() =>
                     onSelectedHandler({
                       imgUrl: wasteTypes[item.type][item.subtype]["imgUrl"],
                       majorType: item.type,
-                      subType: item.subType,
+                      subType: item.subtype,
                       wasteName: wasteTypes[item.type][item.subtype]["name"],
                       wasteDisposal:
                         wasteTypes[item.type][item.subtype]["disposal"],

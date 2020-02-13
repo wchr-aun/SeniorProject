@@ -76,7 +76,6 @@ export default SellerHomepageScreen = props => {
   };
   // load Callback fn
   const refreshTx = useCallback(async () => {
-    console.log("refreshTx -- sellerHomepageScreen");
     setIsRefreshing(true);
     await dispatch(transactionAction.fetchTransaction(userRole));
     setIsRefreshing(false);

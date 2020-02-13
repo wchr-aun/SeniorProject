@@ -61,9 +61,7 @@ export default WasteDetailScreen = props => {
         height: "100%"
       }}
     >
-      {props.navigation.getParam("addCustomStatusbar") ? (
-        <CustomStatusBar />
-      ) : null}
+      <CustomStatusBar />
       <View
         style={{
           height: "10%",
@@ -146,7 +144,7 @@ export default WasteDetailScreen = props => {
             <ThaiMdText
               style={{
                 fontSize: 14,
-                color: Colors.primary_dark
+                color: Colors.primary_bright_variant
               }}
             >
               {waste.majorType}
@@ -176,6 +174,19 @@ export default WasteDetailScreen = props => {
               style={{ fontSize: 14, color: Colors.primary_bright_variant }}
             >
               {waste.wasteDisposal}
+            </ThaiMdText>
+          </ThaiRegText>
+          <ThaiRegText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_dark.low_constrast
+            }}
+          >
+            {`คำอธิบาย `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {waste.wasteDescription}
             </ThaiMdText>
           </ThaiRegText>
         </View>

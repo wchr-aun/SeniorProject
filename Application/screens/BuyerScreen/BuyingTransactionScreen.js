@@ -160,6 +160,9 @@ export default BuyingTransactionScreen = props => {
               selectedItemColor={Colors.primary_bright}
             />
           </View>
+          {/* <View style={{width: '30%'}}>
+              
+          </View> */}
         </View>
         <View
           style={{

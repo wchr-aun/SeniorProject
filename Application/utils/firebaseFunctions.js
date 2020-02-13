@@ -213,7 +213,6 @@ export const getTodayTxForPathOp = async () => {
 };
 
 export const getFavBuyers = async () => {
-  console.log("getFavBuyers");
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
@@ -289,7 +288,6 @@ export const toggleSearch = async toggleSearch => {
     .httpsCallable("toggleSearch")({ toggleSearch })
     .then(result => {
       if (result.data.errorMessage == null) {
-        console.log(result.data);
         return true;
       } else throw new Error(result.data.errorMessage);
     })
@@ -335,8 +333,6 @@ updatedTx = {
 } */
 
 export const updateTxStatus = async updatedTx => {
-  console.log("before sending to updateTxStatus fn this is 'updatedTx'");
-  console.log(updatedTx);
   return functions
     .httpsCallable("changeTxStatus")(updatedTx)
     .then(result => {
@@ -367,15 +363,17 @@ newInfo = {
 } */
 
 export const editUserInfo = async newInfo => {
-  console.log(newInfo);
   return functions
     .httpsCallable("editUserInfo")(newInfo)
     .then(result => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
-        console.log("error this -- firebaseFunction -- editUserInfo");
-        throw new Error(result.data.errorMessage);
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
       }
     })
     .catch(err => {
@@ -445,8 +443,11 @@ export const editBuyerInfo = async buyerInfo => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
-        console.log(result.data.errorMessage);
-        throw new Error(result.data.errorMessage);
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
       }
     })
     .catch(err => {
@@ -477,8 +478,11 @@ export const queryBuyers = async queryData => {
     .then(result => {
       if (result.data.errorMessage == null) return result.data;
       else {
-        console.log(result.data.errorMessage);
-        throw new Error(result.data.errorMessage);
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
       }
     })
     .catch(err => {
@@ -497,8 +501,11 @@ export const querySellers = async queryData => {
     .then(result => {
       if (result.data.errorMessage == null) return result.data;
       else {
-        console.log(result.data.errorMessage);
-        throw new Error(result.data.errorMessage);
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
       }
     })
     .catch(err => {

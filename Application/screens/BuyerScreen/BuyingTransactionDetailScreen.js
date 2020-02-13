@@ -36,6 +36,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import { Header } from "react-navigation-stack";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 
 const getDisableStatusForBuyer = (btnType, txStatus) => {
   /* 
@@ -425,6 +426,7 @@ export default BuyingTransactionDetailScreen = props => {
       </View>
     );
   }
+  const [confirmCancleVisible, setConfirmCancleVisible] = useState(false);
 
   if (assignedTimeModalVisible) {
     return (
@@ -451,6 +453,25 @@ export default BuyingTransactionDetailScreen = props => {
       )}
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <ModalLoading modalVisible={isInOperation} userRole="buyer" />
+      <ConfirmDialog
+        title="ยกเลิกการซื้อขายนี้"
+        message="คุณต้องการยกเลิกคำสั่งซื้อขายนี้หรือไม่"
+        visible={confirmCancleVisible}
+        onTouchOutside={() => setConfirmCancleVisible(false)}
+        positiveButton={{
+          title: "ลบ",
+          onPress: () => {
+            cancelHandler();
+            setConfirmCancleVisible(false);
+          }
+        }}
+        negativeButton={{
+          title: "ยกเลิก",
+          onPress: () => {
+            setConfirmCancleVisible(false);
+          }
+        }}
+      />
       <ModalShowImg
         modalVisible={isImgModalVisible}
         onRequestClose={() => console.log("modal close")}
@@ -968,7 +989,7 @@ export default BuyingTransactionDetailScreen = props => {
             onPress={
               getDisableStatusForBuyer(4, transactionItem.detail.txStatus)
                 ? null
-                : cancelHandler
+                : () => setConfirmCancleVisible(true)
             }
             btnTitleColor={
               getDisableStatusForBuyer(4, transactionItem.detail.txStatus)

@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import ModalLoading from "../../components/ModalLoading";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
@@ -93,22 +94,22 @@ export default OptionTrashCheck = props => {
   );
 
   const [pickedImage, setPickedImage] = useState();
+  const [isInOperation, setIsInOperation] = useState(false);
 
   // take picture for get prediction
   const takeImageHandler = async () => {
     // get img
     const resultedImg = await libary.takeImgForGetprediction();
+    if (!resultedImg) {
+      return;
+    }
 
     // set react
     setPickedImage(resultedImg);
-    dispatch(imgActions.getPrediction(resultedImg, wasteTypesDB));
+    setIsInOperation(true);
+    await dispatch(imgActions.getPrediction(resultedImg, wasteTypesDB));
+    setIsInOperation(false);
   };
-
-  // const takeImageHandler = async () => {
-  //   const resultedImg = await libary.uploadingImg();
-  //   console.log("resultedImg");
-  //   console.log(resultedImg);
-  // };
 
   const confirmHandler = () => {
     dispatch(imgActions.confirmSellerItemsCamera(sellerItemsCameraObj));
@@ -132,6 +133,7 @@ export default OptionTrashCheck = props => {
           height: hp("100%") - AppVariableSetting.bottomBarHeight
         }}
       >
+        <ModalLoading modalVisible={isInOperation} />
         <View
           style={{
             width: "100%",
@@ -158,7 +160,16 @@ export default OptionTrashCheck = props => {
           pickedImage={pickedImage}
         />
         <View style={{ width: "100%", height: "5%", padding: 10 }}>
-          <ThaiBoldText>ยืนยันจำนวนขยะที่ถ่าย</ThaiBoldText>
+          <ThaiBoldText
+            style={{
+              color:
+                sellerItemsCamera.length > 0
+                  ? Colors.primary_bright
+                  : Colors.secondary
+            }}
+          >
+            ยืนยันจำนวนขยะที่ถ่าย
+          </ThaiBoldText>
         </View>
         <View
           style={{
@@ -194,6 +205,7 @@ export default OptionTrashCheck = props => {
                   trashAdjustPrice={
                     wasteTypesDB[item.type][item.subtype]["price"]
                   }
+                  wasteTag={wasteTypesDB[item.type][item.subtype]["trashTag"]}
                   cameraMode={true}
                   onIncrease={() =>
                     dispatchSellerItemsState({
@@ -245,9 +257,17 @@ export default OptionTrashCheck = props => {
               borderRadius: 8,
               maxHeight: 40
             }}
-            btnColor={Colors.button.submit_primary_bright.btnBackground}
-            onPress={confirmHandler}
-            btnTitleColor={Colors.button.submit_primary_bright.btnText}
+            btnColor={
+              sellerItemsCamera.length > 0
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.submit_primary_bright.btnBackgroundDisabled
+            }
+            onPress={sellerItemsCamera.length > 0 ? confirmHandler : null}
+            btnTitleColor={
+              sellerItemsCamera.length > 0
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.submit_primary_bright.btnTextDisabled
+            }
             btnTitleFontSize={12}
           >
             ยืนยันจำนวน
