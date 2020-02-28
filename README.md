@@ -20,6 +20,7 @@ Currently, there are many problems with waste pollution, for example, air pollut
   - Firestore
   - Cloud Functions
   - Storage
+- Google Maps Service
 ## Website part
 - VueJS
 - ChartJS
@@ -27,5 +28,6 @@ Currently, there are many problems with waste pollution, for example, air pollut
 ## Model part
 - TensorFlow
 - YOLOv3
+- Google Cloud
 
 <a href="/NSCFinalReport.pdf">Full Report (in Thai)</a>
