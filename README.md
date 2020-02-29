@@ -26,8 +26,10 @@ Currently, there are many problems with waste pollution, for example, air pollut
 - ChartJS
 - BulmaCSS
 ## Model part
+<a href="https://github.com/ttn37/frcnn_server">Link to the code</a>
 - TensorFlow
-- YOLOv3
+- <a href="https://github.com/AntonMu/TrainYourOwnYOLO">YOLOv3</a>
 - Google Cloud
+
 
 <a href="/NSCFinalReport.pdf">Full Report (in Thai)</a>
