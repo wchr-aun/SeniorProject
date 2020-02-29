@@ -16,16 +16,17 @@ export default UserStartupScreen = props => {
     return firebaseUtil.auth().onAuthStateChanged(user => {
       if (user != null) {
         return dispatch(authAction.signin())
-        .then(() => {
-          return AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
-            dispatch(authAction.setUserRole(config_role));
-            if (config_role == "seller")
-              props.navigation.navigate("SellerNavigator");
-            else if (config_role == "buyer") {
-              props.navigation.navigate("BuyerNavigator");
-            } else props.navigation.navigate("ConfigAccountScreen");
+          .then(dispatch(wasteTypeAction.fetchWasteType()))
+          .then(() => {
+            return AsyncStorage.getItem("CONFIG_ROLE").then(config_role => {
+              dispatch(authAction.setUserRole(config_role));
+              if (config_role == "seller")
+                props.navigation.navigate("SellerNavigator");
+              else if (config_role == "buyer") {
+                props.navigation.navigate("BuyerNavigator");
+              } else props.navigation.navigate("ConfigAccountScreen");
+            });
           });
-        });
       } else {
         return props.navigation.navigate("UserAuthenNavigator");
       }
