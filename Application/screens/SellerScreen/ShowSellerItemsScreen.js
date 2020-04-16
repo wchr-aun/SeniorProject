@@ -387,8 +387,6 @@ const ShowAllUserTrashScreen = props => {
             }}
             keyExtractor={item => item.subtype}
             renderItem={({ item }) => {
-              console.log("item");
-              console.log(item);
               return (
                 <TrashCard
                   onPress={() =>
