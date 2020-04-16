@@ -275,7 +275,7 @@ export default EditingUserprofileScreen = props => {
     setIsInOperation(true);
     await dispatch(authAction.signout());
     setIsInOperation(false);
-    props.navigation.navigate("StartupScreen");
+    props.navigation.navigate("UserSigninScreen");
   };
 
   //User image

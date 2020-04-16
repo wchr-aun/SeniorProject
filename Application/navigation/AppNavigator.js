@@ -9,7 +9,6 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import {
   Ionicons,
-  MaterialIcons,
   MaterialCommunityIcons
 } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
