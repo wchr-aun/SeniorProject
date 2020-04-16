@@ -46,9 +46,11 @@ export default SellerHomepageScreen = props => {
   const userRole = useSelector(state => state.user.userRole);
   const transactions = useSelector(state => state.transactions.transactions);
   const [txShow, setTxShow] = useState([]);
+
+  // Show comming transaction
   useEffect(() => {
     if (transactions) {
-      let tmpTxShow = transactions[3].concat(transactions[1]);
+      let tmpTxShow = transactions[3].concat(transactions[1]).concat(transactions[0]);
       setTxShow(tmpTxShow);
     }
   }, [transactions]);
@@ -150,7 +152,7 @@ export default SellerHomepageScreen = props => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
-              goAllTxQuickly={goAllTxQuickly}
+              onStatusClick={goAllTxQuickly}
             />
             <View
               style={{
