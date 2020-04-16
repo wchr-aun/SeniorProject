@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 
-export default ThaiBoldText = props => {
+export default ThaiSemiBoldText = props => {
   return (
     <Text style={{ ...styles.customStyle, ...props.style }}>
       {props.children}
@@ -12,6 +12,6 @@ export default ThaiBoldText = props => {
 const styles = StyleSheet.create({
   customStyle: {
     fontSize: 10,
-    fontFamily: "BOLD_NOTO"
+    fontFamily: "SEMI_BOLD_NOTO"
   }
 });

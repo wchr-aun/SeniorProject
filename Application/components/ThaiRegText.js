@@ -12,6 +12,6 @@ export default ThaiRegText = props => {
 const styles = StyleSheet.create({
   customStyle: {
     fontSize: 10,
-    fontFamily: "REG_K2D"
+    fontFamily: "REG_NOTO"
   }
 });
