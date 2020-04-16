@@ -67,7 +67,7 @@ export default ModalLoading = props => {
                   props.userRole === "seller" ? Colors.primary_bright : "white"
               }}
             >
-              กำลังดำเนินการ
+              {props.text ? props.text : "กำลังดำเนินการ"}
             </ThaiBoldText>
           </View>
         </View>

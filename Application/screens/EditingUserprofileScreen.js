@@ -214,6 +214,7 @@ export default EditingUserprofileScreen = props => {
   const editConfirmHandler = async () => {
     setIsLoading(true);
     setIsInOperation(true);
+    setTextInOperation("กำลังแก้ไขข้อมูล")
 
     if (!formState.allFormIsValid) {
       setError("โปรดกรอกข้อมูลให้ครบถ้วน");
@@ -264,7 +265,7 @@ export default EditingUserprofileScreen = props => {
   }
 
   // For User signout
-
+  const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ")
   const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
   const signOutHandler = async () => {
@@ -307,7 +308,7 @@ export default EditingUserprofileScreen = props => {
         width: wp("100%")
       }}
     >
-      <ModalLoading modalVisible={isInOperation} />
+      <ModalLoading modalVisible={isInOperation} text={textInOperation} />
       <LinearGradient colors={Colors.linearGradientDark}>
         <View
           style={{
