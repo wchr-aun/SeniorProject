@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Modal,
-  Alert
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -26,17 +26,17 @@ import { ConfirmDialog } from "react-native-simple-dialogs";
 import {
   Ionicons,
   MaterialIcons,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ModalLoading from "../../components/ModalLoading";
 
-const ModalShowImg = props => {
+const ModalShowImg = (props) => {
   return (
     <Modal
       animationType="slide"
@@ -49,7 +49,7 @@ const ModalShowImg = props => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.5"
+          backgroundColor: "rgba(255,255,255,0.5)",
         }}
       >
         <View
@@ -58,7 +58,7 @@ const ModalShowImg = props => {
             height: "80%",
             backgroundColor: "white",
             borderRadius: 5,
-            padding: 5
+            padding: 5,
           }}
         >
           <View
@@ -68,7 +68,7 @@ const ModalShowImg = props => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              padding: 10
+              padding: 10,
             }}
           >
             <View
@@ -76,7 +76,7 @@ const ModalShowImg = props => {
                 width: "100%",
                 height: "100%",
                 borderRadius: 5,
-                overflow: "hidden"
+                overflow: "hidden",
               }}
             >
               <Image
@@ -92,7 +92,7 @@ const ModalShowImg = props => {
               height: "15%",
               justifyContent: "space-around",
               alignItems: "center",
-              flexDirection: "row"
+              flexDirection: "row",
             }}
           >
             <CustomButton
@@ -101,7 +101,7 @@ const ModalShowImg = props => {
                 maxWidth: 40,
                 height: "100%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.submit_primary_dark.btnBackground}
               onPress={() => {
@@ -124,7 +124,7 @@ const ModalShowImg = props => {
                 maxWidth: 80,
                 height: "100%",
                 maxHeight: 50,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.cancel.btnBackground}
               onPress={() => {
@@ -147,7 +147,7 @@ const ModalShowImg = props => {
                 maxWidth: 40,
                 height: "100%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.submit_primary_dark.btnBackground}
               onPress={() => props.slideImg(1)}
@@ -193,7 +193,7 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
   }
 };
 
-export default SellingTransactionDetailScreen = props => {
+export default SellingTransactionDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
   const [isInOperation, setIsInOperation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -206,14 +206,14 @@ export default SellingTransactionDetailScreen = props => {
     );
   }
   const transactionItem = props.navigation.getParam("transactionItem");
-  const userRole = useSelector(state => state.user.userRole);
+  const userRole = useSelector((state) => state.user.userRole);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
 
   const [timeSelected, setTimeSelected] = useState("");
-  const onTimeSelectedHandler = timeItem => {
+  const onTimeSelectedHandler = (timeItem) => {
     if (timeSelected === timeItem) setTimeSelected("");
     else setTimeSelected(timeItem);
   };
@@ -227,7 +227,7 @@ export default SellingTransactionDetailScreen = props => {
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
           newStatus: 4,
-          userRole
+          userRole,
         })
       );
       await dispatch(transactionAction.fetchTransaction(userRole));
@@ -250,7 +250,7 @@ export default SellingTransactionDetailScreen = props => {
   const goBuyerDetail = () => {
     props.navigation.navigate({
       routeName: "BuyerDetailScreen",
-      params: { buyerInfomation: sellReq.buyerInfomation }
+      params: { buyerInfomation: sellReq.buyerInfomation },
     });
   };
 
@@ -269,7 +269,7 @@ export default SellingTransactionDetailScreen = props => {
           newStatus: 2,
           txType: transactionItem.detail.txType,
           assignedTime: transactionItem.detail.assignedTime,
-          userRole
+          userRole,
         })
       );
       setIsInOperation(false);
@@ -281,7 +281,7 @@ export default SellingTransactionDetailScreen = props => {
       );
     } catch (err) {
       Alert.alert("ยอมรับข้อเสนอไม่สำเร็จ", "โปรดตรวจสอบข้อมูลอีกครั้ง", [
-        { text: "OK" }
+        { text: "OK" },
       ]);
     }
   };
@@ -294,7 +294,7 @@ export default SellingTransactionDetailScreen = props => {
     let imgs = await libary.downloadingImg(transactionItem.detail.img, "tx");
     setImgs(imgs);
   };
-  const slideImg = indexSlide => {
+  const slideImg = (indexSlide) => {
     let oldIndex = imgs.indexOf(imgShowInModal);
     let newIndex = oldIndex + indexSlide;
     if (newIndex != -1 && newIndex < imgs.length) {
@@ -329,7 +329,7 @@ export default SellingTransactionDetailScreen = props => {
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%"
+        height: "100%",
       }}
     >
       {props.navigation.getParam("addCustomStatusbar") ? (
@@ -346,13 +346,13 @@ export default SellingTransactionDetailScreen = props => {
           onPress: () => {
             cancelHandler();
             setConfirmCancleVisible(false);
-          }
+          },
         }}
         negativeButton={{
           title: "ยกเลิก",
           onPress: () => {
             setConfirmCancleVisible(false);
-          }
+          },
         }}
       />
       <ModalShowImg
@@ -370,7 +370,7 @@ export default SellingTransactionDetailScreen = props => {
           backgroundColor: Colors.hard_secondary,
           paddingVertical: 10,
           justifyContent: "space-around",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <CustomButton
@@ -378,7 +378,7 @@ export default SellingTransactionDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={Colors.button.cancel.btnBackground}
           onPress={backHandler}
@@ -397,13 +397,13 @@ export default SellingTransactionDetailScreen = props => {
             width: "50%",
             height: "100%",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ThaiBoldText
             style={{
               color: Colors.on_secondary.high_constrast,
-              fontSize: 18
+              fontSize: 18,
             }}
           >
             รายละเอียดคำขอ
@@ -414,11 +414,11 @@ export default SellingTransactionDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
-          btnColor={Colors.button.submit_primary_bright.btnBackground}
+          btnColor={Colors.button.submit_primary_dark.btnBackground}
           onPress={goBuyerDetail}
-          btnTitleColor={Colors.button.submit_primary_bright.btnText}
+          btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={10}
         >
           <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
@@ -430,7 +430,7 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-around"
+          justifyContent: "space-around",
         }}
       >
         <View
@@ -439,7 +439,7 @@ export default SellingTransactionDetailScreen = props => {
             height: "80%",
             padding: 5,
             alignItems: "center",
-            paddingHorizontal: 10
+            paddingHorizontal: 10,
           }}
         >
           <ImageCircle imgUrl={userImg} avariableWidth={wp("20%")} />
@@ -448,14 +448,14 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_secondary.high_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`สถานะ `}
             <ThaiMdText
               style={{
                 fontSize: 14,
-                color: libary.getColorTxStatus(transactionItem.detail.txStatus)
+                color: libary.getColorTxStatus(transactionItem.detail.txStatus),
               }}
             >
               {libary.getReadableTxStatus(
@@ -467,7 +467,7 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_secondary.high_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`ผู้รับซื้อ `}
@@ -480,7 +480,7 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_secondary.high_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`สถานที่รับขยะ `}
@@ -498,7 +498,7 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "5%",
           paddingHorizontal: 10,
-          paddingVertical: 5
+          paddingVertical: 5,
         }}
       >
         <ThaiMdText
@@ -515,7 +515,7 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <View
@@ -525,11 +525,12 @@ export default SellingTransactionDetailScreen = props => {
             backgroundColor: Colors.hard_secondary,
             borderRadius: 5,
             paddingVertical: 5,
+            ...styles.shadow,
           }}
         >
           <FlatList
             data={transactionItem.detail.assignedTime}
-            keyExtractor={item =>
+            keyExtractor={(item) =>
               libary.formatDate(item.toDate()) +
               libary.formatTime(item.toDate())
             }
@@ -547,7 +548,7 @@ export default SellingTransactionDetailScreen = props => {
                               item.seconds
                               ? Colors.soft_primary_bright
                               : Colors.soft_secondary
-                            : Colors.soft_secondary
+                            : Colors.soft_secondary,
                       }}
                     >
                       <ThaiMdText
@@ -559,10 +560,12 @@ export default SellingTransactionDetailScreen = props => {
                                 item.seconds
                                 ? Colors.soft_primary_bright
                                 : Colors.soft_primary_dark
-                              : Colors.soft_primary_dark
+                              : Colors.soft_primary_dark,
                         }}
                       >
-                        {`${libary.formatDate(item.toDate())} ${libary.formatTime(item.toDate())} `}
+                        {`${libary.formatDate(
+                          item.toDate()
+                        )} ${libary.formatTime(item.toDate())} `}
                       </ThaiMdText>
                       <ThaiMdText
                         style={{
@@ -573,7 +576,7 @@ export default SellingTransactionDetailScreen = props => {
                                 item.seconds
                                 ? Colors.soft_primary_bright
                                 : Colors.soft_primary_dark
-                              : Colors.soft_primary_dark
+                              : Colors.soft_primary_dark,
                         }}
                       >
                         {transactionItem.detail.txStatus === 1 ? (
@@ -596,7 +599,14 @@ export default SellingTransactionDetailScreen = props => {
           />
         </View>
       </View>
-      <View style={{ width: "100%", height: "5%", paddingHorizontal: 10, paddingVertical: 5 }}>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+        }}
+      >
         <ThaiMdText
           style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
         >
@@ -607,7 +617,7 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <View
@@ -616,12 +626,13 @@ export default SellingTransactionDetailScreen = props => {
             height: "100%",
             backgroundColor: Colors.hard_secondary,
             borderRadius: 5,
-            paddingVertical: 5
+            paddingVertical: 5,
+            ...styles.shadow,
           }}
         >
           <FlatList
             data={saleList}
-            keyExtractor={item => item.subtype}
+            keyExtractor={(item) => item.subtype}
             style={{ flex: 1 }}
             renderItem={({ item }) => {
               return (
@@ -630,14 +641,14 @@ export default SellingTransactionDetailScreen = props => {
                     height: 30,
                     padding: 3,
                     alignSelf: "center",
-                    flexDirection: "row"
+                    flexDirection: "row",
                   }}
                 >
                   <View
                     style={{
                       width: "100%",
                       height: "100%",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <ThaiRegText
@@ -658,7 +669,7 @@ export default SellingTransactionDetailScreen = props => {
           height: "5%",
           padding: 2,
           paddingHorizontal: 10,
-          paddingVertical: 5
+          paddingVertical: 5,
         }}
       >
         <ThaiMdText
@@ -672,12 +683,12 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "10%",
           padding: 2,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <FlatList
           data={imgs}
-          keyExtractor={item => item}
+          keyExtractor={(item) => item}
           style={{ flex: 1 }}
           horizontal={true}
           renderItem={({ item: uri }) => {
@@ -694,7 +705,7 @@ export default SellingTransactionDetailScreen = props => {
                     height: 50,
                     borderRadius: 5,
                     paddingHorizontal: 2,
-                    overflow: "hidden"
+                    overflow: "hidden",
                   }}
                 >
                   <Image
@@ -714,7 +725,7 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "15%",
           padding: 5,
-          paddingBottom: getStatusBarHeight()
+          paddingBottom: getStatusBarHeight(),
         }}
       >
         <View
@@ -723,7 +734,7 @@ export default SellingTransactionDetailScreen = props => {
             height: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -731,7 +742,7 @@ export default SellingTransactionDetailScreen = props => {
               width: "40%",
               height: "100%",
               maxHeight: 40,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             btnColor={
               getDisableStatusForSeller(4, transactionItem.detail.txStatus)
@@ -759,7 +770,7 @@ export default SellingTransactionDetailScreen = props => {
               width: "40%",
               height: "100%",
               maxHeight: 40,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             btnColor={
               !timeSelected ||
@@ -796,13 +807,24 @@ export default SellingTransactionDetailScreen = props => {
 const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.secondary,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
 });
