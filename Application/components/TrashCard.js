@@ -49,7 +49,7 @@ const getColorTag = tag => {
 
 export default TrashCard = props => {
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableWithoutFeedback onPress={props.onPress}>
       <View
         style={{
           ...styles.trashCard,
@@ -281,7 +281,7 @@ export default TrashCard = props => {
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 

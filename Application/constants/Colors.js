@@ -27,7 +27,7 @@ export default {
       btnText: "#e6e6e6"
     },
     cancel: {
-      btnBackground: "#e3e3e3",
+      btnBackground: "#f2f2f2",
       btnText: "#272727"
     },
     start_operation_info: {

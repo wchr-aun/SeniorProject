@@ -247,12 +247,12 @@ export default SellingTransactionDetailScreen = props => {
     }
   };
 
-  // const goBuyerDetail = () => {
-  //   props.navigation.navigate({
-  //     routeName: "BuyerDetailScreen",
-  //     params: { buyerInfomation: sellReq.buyerInfomation }
-  //   });
-  // };
+  const goBuyerDetail = () => {
+    props.navigation.navigate({
+      routeName: "BuyerDetailScreen",
+      params: { buyerInfomation: sellReq.buyerInfomation }
+    });
+  };
 
   const backHandler = () => {
     props.navigation.goBack();
@@ -367,7 +367,7 @@ export default SellingTransactionDetailScreen = props => {
           height: "10%",
           width: "100%",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark,
+          backgroundColor: Colors.hard_secondary,
           paddingVertical: 10,
           justifyContent: "space-around",
           alignItems: "center"
@@ -402,14 +402,14 @@ export default SellingTransactionDetailScreen = props => {
         >
           <ThaiBoldText
             style={{
-              color: Colors.on_primary_dark.low_constrast,
+              color: Colors.on_secondary.high_constrast,
               fontSize: 18
             }}
           >
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        {/* <CustomButton
+        <CustomButton
           style={{
             width: "20%",
             height: "100%",
@@ -422,7 +422,7 @@ export default SellingTransactionDetailScreen = props => {
           btnTitleFontSize={10}
         >
           <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
-        </CustomButton> */}
+        </CustomButton>
       </View>
       <View
         style={{
@@ -448,7 +448,7 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast
             }}
           >
             {`สถานะ `}
@@ -467,7 +467,7 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast
             }}
           >
             {`ผู้รับซื้อ `}
@@ -480,7 +480,7 @@ export default SellingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast
             }}
           >
             {`สถานที่รับขยะ `}
@@ -497,11 +497,12 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "5%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
+          paddingVertical: 5
         }}
       >
         <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+          style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
         >
           {transactionItem.detail.txStatus === 0
             ? "เวลาที่คุณเสนอ"
@@ -514,7 +515,6 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          borderRadius: 5,
           paddingHorizontal: 10
         }}
       >
@@ -522,8 +522,9 @@ export default SellingTransactionDetailScreen = props => {
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 5
+            backgroundColor: Colors.hard_secondary,
+            borderRadius: 5,
+            paddingVertical: 5,
           }}
         >
           <FlatList
@@ -557,13 +558,12 @@ export default SellingTransactionDetailScreen = props => {
                               ? transactionItem.detail.chosenTime.seconds ===
                                 item.seconds
                                 ? Colors.soft_primary_bright
-                                : Colors.soft_secondary
-                              : Colors.soft_secondary
+                                : Colors.soft_primary_dark
+                              : Colors.soft_primary_dark
                         }}
                       >
-                        {libary.formatDate(item.toDate())}
+                        {`${libary.formatDate(item.toDate())} ${libary.formatTime(item.toDate())} `}
                       </ThaiMdText>
-                      {` `}
                       <ThaiMdText
                         style={{
                           fontSize: 18,
@@ -572,11 +572,10 @@ export default SellingTransactionDetailScreen = props => {
                               ? transactionItem.detail.chosenTime.seconds ===
                                 item.seconds
                                 ? Colors.soft_primary_bright
-                                : Colors.soft_secondary
-                              : Colors.soft_secondary
+                                : Colors.soft_primary_dark
+                              : Colors.soft_primary_dark
                         }}
                       >
-                        {libary.formatTime(item.toDate())}
                         {transactionItem.detail.txStatus === 1 ? (
                           <MaterialIcons
                             name={
@@ -597,9 +596,9 @@ export default SellingTransactionDetailScreen = props => {
           />
         </View>
       </View>
-      <View style={{ width: "100%", height: "5%", paddingHorizontal: 10 }}>
+      <View style={{ width: "100%", height: "5%", paddingHorizontal: 10, paddingVertical: 5 }}>
         <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+          style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
         >
           ประเภทขยะที่ขาย
         </ThaiMdText>
@@ -608,7 +607,6 @@ export default SellingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          borderRadius: 5,
           paddingHorizontal: 10
         }}
       >
@@ -616,8 +614,9 @@ export default SellingTransactionDetailScreen = props => {
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 5
+            backgroundColor: Colors.hard_secondary,
+            borderRadius: 5,
+            paddingVertical: 5
           }}
         >
           <FlatList
@@ -642,25 +641,9 @@ export default SellingTransactionDetailScreen = props => {
                     }}
                   >
                     <ThaiRegText
-                      style={{ fontSize: 18, color: Colors.soft_secondary }}
+                      style={{ fontSize: 18, color: Colors.soft_primary_dark }}
                     >
-                      <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.primary_bright }}
-                      >
-                        {item.type}
-                      </ThaiMdText>
-                      {` ประเภท `}
-                      <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.primary_bright }}
-                      >
-                        {item.subtype}
-                      </ThaiMdText>
-                      {` จำนวน `}
-                      <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.primary_bright }}
-                      >
-                        {item.amount.amount}
-                      </ThaiMdText>
+                      {`${item.subtype} จำนวน ${item.amount.amount}`}
                     </ThaiRegText>
                   </View>
                 </View>
@@ -674,11 +657,12 @@ export default SellingTransactionDetailScreen = props => {
           width: "100%",
           height: "5%",
           padding: 2,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
+          paddingVertical: 5
         }}
       >
         <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+          style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
         >
           รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
         </ThaiMdText>
@@ -811,7 +795,7 @@ export default SellingTransactionDetailScreen = props => {
 
 const styles = StyleSheet.create({
   infoContainerCard: {
-    backgroundColor: Colors.primary_dark,
+    backgroundColor: Colors.secondary,
     alignSelf: "center"
   },
   userInfo: {

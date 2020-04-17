@@ -389,7 +389,7 @@ const ShowAllUserTrashScreen = props => {
             renderItem={({ item }) => {
               return (
                 <TrashCard
-                  onPress={() =>
+                  onPress={editingMode ? null : () =>
                     onSelectedHandler({
                       imgUrl: wasteTypes[item.type][item.subtype]["imgUrl"],
                       majorType: item.type,
