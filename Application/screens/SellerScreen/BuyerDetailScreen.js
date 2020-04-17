@@ -8,7 +8,7 @@ import {
   Image,
   Modal,
   TouchableHighlight,
-  SectionList
+  SectionList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -24,27 +24,27 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   Ionicons,
-  FontAwesome
+  FontAwesome,
 } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import { Header } from "react-navigation-stack";
 
-export default BuyerDetailScreen = props => {
+export default BuyerDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
-  const buyerInfomation = props.navigation.getParam("buyerInfomation");
-  console.log("-- BuyerDetail Screen buyerInfomation");
-  console.log(buyerInfomation.buyerPriceInfo);
+  const buyerId = props.navigation.getParam("buyerId");
+  console.log("infile BuyerDetailScreen - buyerId");
+  console.log(buyerId);
 
-  const wasteListSectionFormat = useSelector(state => {
-    return state.wasteType.wasteListSectionFormat;
-  });
+  // const wasteListSectionFormat = useSelector(state => {
+  //   return state.wasteType.wasteListSectionFormat;
+  // });
 
   const backHandler = () => {
     props.navigation.goBack();
@@ -55,12 +55,12 @@ export default BuyerDetailScreen = props => {
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%"
+        height: "100%",
       }}
     >
-      {/* {props.navigation.getParam("haveHeaderHight") ? null : (
+      {props.navigation.getParam("haveHeaderHight") ? null : (
         <CustomStatusBar />
-      )} */}
+      )}
       <View
         style={{
           height: "10%",
@@ -69,7 +69,7 @@ export default BuyerDetailScreen = props => {
           backgroundColor: Colors.soft_primary_dark,
           paddingVertical: 10,
           justifyContent: "space-around",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <CustomButton
@@ -77,7 +77,7 @@ export default BuyerDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={Colors.button.cancel.btnBackground}
           onPress={backHandler}
@@ -96,13 +96,13 @@ export default BuyerDetailScreen = props => {
             width: "70%",
             height: "100%",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ThaiBoldText
             style={{
               color: Colors.on_primary_dark.low_constrast,
-              fontSize: 18
+              fontSize: 18,
             }}
           >
             รายละเอียดผู้รับซื้อ
@@ -114,10 +114,10 @@ export default BuyerDetailScreen = props => {
           width: "100%",
           height: "80%",
           paddingHorizontal: 10,
-          paddingBottom: getStatusBarHeight()
+          paddingBottom: getStatusBarHeight(),
         }}
       >
-        <SectionList
+        {/* <SectionList
           keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
           renderItem={({ item, section: { type } }) => {
             let subtypeIndex = Object.keys(item)[0];
@@ -159,7 +159,7 @@ export default BuyerDetailScreen = props => {
                   borderBottomColor: Colors.hard_secondary,
                   borderBottomWidth: 0.75,
                   marginBottom: 2,
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               >
                 <View
@@ -168,14 +168,14 @@ export default BuyerDetailScreen = props => {
                     height: "50%",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    alignItems: "center"
+                    alignItems: "center",
                   }}
                 >
                   <View style={{ width: "50%" }}>
                     <ThaiRegText
                       style={{
                         fontSize: 15,
-                        color: Colors.soft_primary_bright
+                        color: Colors.soft_primary_bright,
                       }}
                     >
                       {subtypeName}
@@ -184,7 +184,7 @@ export default BuyerDetailScreen = props => {
                   <View
                     style={{
                       width: "50%",
-                      flexDirection: "row"
+                      flexDirection: "row",
                     }}
                   >
                     <View
@@ -194,7 +194,7 @@ export default BuyerDetailScreen = props => {
                         borderRadius: 3,
                         borderColor: Colors.soft_secondary,
                         backgroundColor: Colors.soft_secondary,
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
                       <ThaiRegText
@@ -222,7 +222,7 @@ export default BuyerDetailScreen = props => {
               </ThaiMdText>
             );
           }}
-        />
+        /> */}
       </View>
       {/* <View
         style={{
@@ -612,15 +612,15 @@ export default BuyerDetailScreen = props => {
 const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
 });
 
 /*

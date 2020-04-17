@@ -250,7 +250,7 @@ export default SellingTransactionDetailScreen = (props) => {
   const goBuyerDetail = () => {
     props.navigation.navigate({
       routeName: "BuyerDetailScreen",
-      params: { buyerInfomation: sellReq.buyerInfomation },
+      params: { buyerId: transactionItem.detail.buyer },
     });
   };
 
