@@ -301,7 +301,8 @@ export default SellingTransactionDetailScreen = (props) => {
       setImgShowInModal(imgs[newIndex]);
     }
   };
-  // load seller img
+
+  // load buyer img
   const [userImg, setUserImg] = useState("");
   const loadBuyerImg = async () => {
     let imgUri = "";
@@ -493,6 +494,7 @@ export default SellingTransactionDetailScreen = (props) => {
           <ThaiRegText>{transactionItem.tel}</ThaiRegText>
         </View>
       </View>
+
       <View
         style={{
           width: "100%",
@@ -511,6 +513,7 @@ export default SellingTransactionDetailScreen = (props) => {
             : "วันเวลาที่เสนอขาย(สีขาว) วันเวลาที่ตกลง(สีเขียว)"}
         </ThaiMdText>
       </View>
+
       <View
         style={{
           width: "100%",
