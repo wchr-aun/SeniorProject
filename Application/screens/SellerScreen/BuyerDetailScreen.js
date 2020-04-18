@@ -42,12 +42,14 @@ const comments_temp = [
     commentId: "1",
     seller: "สมศักดิ์ เจียม",
     message: "บริการดีมากครับ",
+    rate: 5,
     time: new Date().getTime(),
   },
   {
     commentId: "2",
     seller: "ชยุตม์ เอี่ยมกลาน",
     message: "มารับช้าไปหน่อย บางที",
+    rate: 3,
     time: new Date().getTime(),
   },
   {
@@ -55,36 +57,14 @@ const comments_temp = [
     seller: "นาวิช พงทาน",
     message:
       "แกสโซฮอล์แฟรนไชส์งั้น ดิสเครดิตแฮปปี้ซูเอี๋ยออกแบบ โดมิโนคอร์รัปชันคาร์โก้ ผลไม้ เฟิร์ม อัตลักษณ์ซากุระโนติสแชมเปญ คอนแทครุสโซสมิติเวชสะกอมสแควร์ โบรกเกอร์คอมพ์ไทเฮารีดไถเทอร์โบ ติงต๊องคันยิ เบอร์รีแฮมเบอร์เกอร์ อัตลักษณ์เพียบแปร้คูลเลอร์ฮอตดอกธุรกรรม เห่ย งี้เยอร์บีร่า ฮ่องเต้จิ๊กซอว์ชิฟฟอนซื่อบื้อ ยังไงเซ็กซ์ซีนตุ๊กตุ๊กเจ๊ เอ็นทรานซ์ฮองเฮา",
+    rate: 1,
     time: new Date().getTime(),
   },
   {
     commentId: "4",
     seller: "พรเทพ วิชัยกร",
     message: "ช้าไปหน่อย แต่ก็บริการดีนะครับ",
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "5",
-    seller: "สุภวิทย์ จิตใจดี",
-    message: "",
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "6",
-    seller: "สุภวิทย์ จิตใจดี",
-    message: "",
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "7",
-    seller: "สุภวิทย์ จิตใจดี",
-    message: "",
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "8",
-    seller: "สุภวิทย์ จิตใจดี",
-    message: "",
+    rate: 3,
     time: new Date().getTime(),
   },
 ];
@@ -93,13 +73,31 @@ const Comment = (props) => {
   return (
     <View
       style={{
-        marginVertical: 5,
+        marginBottom: 5,
         borderRadius: 5,
         padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.18,
+        shadowRadius: 1.0,
+        elevation: 1,
         ...props.style,
-        ...styles.shadow,
       }}
     >
+      <View style={{ flexDirection: "row" }}>
+        {Array.from(Array(props.rate)).map((x, index) => (
+          <Ionicons
+            key={index}
+            name="md-star"
+            color={Colors.primary_bright}
+            size={16}
+          />
+        ))}
+      </View>
+
       <View
         style={{
           justifyContent: "space-around",
@@ -265,12 +263,7 @@ export default BuyerDetailScreen = (props) => {
           btnTitleColor={Colors.button.cancel.btnText}
           btnTitleFontSize={10}
         >
-          <Ionicons
-            name={"ios-arrow-back"}
-            color={Colors.button.cancel.btnText}
-            size={10}
-          />
-          <ThaiMdText style={{ fontSize: 10 }}> ดูราคารับซื้อ</ThaiMdText>
+          <ThaiMdText style={{ fontSize: 10 }}>ดูราคารับซื้อ </ThaiMdText>
         </CustomButton>
       </View>
 
@@ -285,16 +278,14 @@ export default BuyerDetailScreen = (props) => {
         {/* buyer info */}
         <View
           style={{
-            height: "30%",
+            height: "25%",
             width: "100%",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-around",
             backgroundColor: Colors.secondary,
             borderRadius: 5,
-
-            paddingHorizontal: 10,
-            ...styles.shadow,
+            marginHorizontal: 10,
           }}
         >
           <View
@@ -367,17 +358,18 @@ export default BuyerDetailScreen = (props) => {
         {/* seller comment */}
         <View
           style={{
-            backgroundColor: Colors.hard_secondary,
-            height: "70%",
+            backgroundColor: Colors.secondary,
+            height: "75%",
             width: "100%",
-            padding: 10,
           }}
         >
           <View
             style={{
-              height: "30%",
-              maxHeight: 60,
+              height: 40,
               width: "100%",
+              backgroundColor: "white",
+              padding: 10,
+              ...styles.shadow,
             }}
           >
             <ThaiBoldText
@@ -388,8 +380,8 @@ export default BuyerDetailScreen = (props) => {
           </View>
           <View
             style={{
-              height: "70%",
-              width: "100%",
+              flex: 1,
+              padding: 10,
             }}
           >
             <FlatList
@@ -404,6 +396,7 @@ export default BuyerDetailScreen = (props) => {
                     style={{ flex: 0, background: Colors.secondary }}
                     seller={item.seller}
                     message={item.message}
+                    rate={item.rate}
                   />
                 );
               }}
@@ -431,11 +424,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
 });
