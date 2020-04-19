@@ -5,6 +5,7 @@ import {
   FlatList,
   BackHandler,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -12,7 +13,11 @@ import {
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { NavigationEvents } from "react-navigation";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  AntDesign,
+} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -257,7 +262,7 @@ export default SellingTrashScreen = (props) => {
                             ]
                           : false
                       }
-                      changeAmount={
+                      changedAmount={
                         trashsState.sellerItemsForSell._count[item.type]
                           ? trashsState.sellerItemsForSell._count[item.type][
                               item.subtype
@@ -307,6 +312,7 @@ export default SellingTrashScreen = (props) => {
               />
             </View>
           </View>
+
           <View
             style={{
               width: "100%",
@@ -319,42 +325,78 @@ export default SellingTrashScreen = (props) => {
             <View
               style={{
                 width: "100%",
-                height: "30%",
+                height: 50,
                 flexDirection: "row",
-                justifyContent: "center",
+                justifyContent: "space-around",
                 alignItems: "center",
+                borderRadius: 3,
+                backgroundColor: Colors.secondary,
               }}
             >
-              <ThaiRegText
+              <View style={{ width: "50%", padding: 5 }}>
+                <ThaiRegText
+                  style={{
+                    fontSize: 12,
+                    color: Colors.on_primary_bright.low_constrast,
+                    textAlign: "center",
+                  }}
+                >
+                  ค้นหาผู้รับซื้อในระยะ (km.)
+                </ThaiRegText>
+              </View>
+
+              <View
                 style={{
-                  fontSize: 12,
-                  color: Colors.on_primary_bright.low_constrast,
+                  width: "50%",
+                  flexDirection: "row",
+                  padding: 5,
+                  justifyContent: "center",
                 }}
               >
-                ค้นหาผู้รับซื้อในระยะ{" "}
-              </ThaiRegText>
-              <TextInput
-                style={{
-                  fontSize: 14,
-                  textAlign: "center",
-                  color: Colors.on_primary_bright.low_constrast,
-                }}
-                value={distance}
-                selectTextOnFocus={true}
-                onChangeText={(value) => {
-                  setDistance(value.toString());
-                }}
-                keyboardType="number-pad"
-              />
-              <ThaiRegText
-                style={{
-                  fontSize: 12,
-                  color: Colors.on_primary_bright.low_constrast,
-                }}
-              >
-                {" "}
-                กิโลเมตร
-              </ThaiRegText>
+                <View style={{ marginHorizontal: 3 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setDistance((value) => (Number(value) + 1).toString())
+                    }
+                  >
+                    <AntDesign
+                      name="plus"
+                      size={24}
+                      color={Colors.soft_primary_dark}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginHorizontal: 3 }}>
+                  <TextInput
+                    style={{
+                      fontSize: 14,
+                      textAlign: "center",
+                      color: Colors.on_primary_bright.low_constrast,
+                    }}
+                    value={distance}
+                    selectTextOnFocus={true}
+                    onChangeText={(value) => {
+                      setDistance(value.toString());
+                    }}
+                    keyboardType="number-pad"
+                  />
+                </View>
+                <View style={{ marginHorizontal: 3 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setDistance((value) =>
+                        Number(value) > 1 ? (value - 1).toString() : "1"
+                      )
+                    }
+                  >
+                    <AntDesign
+                      name="minus"
+                      size={24}
+                      color={Colors.soft_primary_dark}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
 
             <View

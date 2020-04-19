@@ -32,18 +32,18 @@ const AmountOfTrash = (props) => {
             textAlign: "center",
             fontSize: 8,
             color:
-              isNaN(props.changeAmount) ||
-              props.changeAmount === 0 ||
+              isNaN(props.changedAmount) ||
+              props.changedAmount === 0 ||
               !props.selected
                 ? "black"
-                : props.changeAmount > 0
+                : props.changedAmount > 0
                 ? "green"
                 : Colors.error,
           }}
         >
           {`คงเหลือ ${
             props.selected
-              ? props.oldAmount - (props.oldAmount + props.changeAmount)
+              ? props.oldAmount - (props.oldAmount + props.changedAmount)
               : props.oldAmount
           }`}
         </ThaiRegText>
@@ -105,6 +105,7 @@ export default TrashCardForSell = (props) => {
                 ? Colors.button.submit_primary_bright.btnText
                 : Colors.primary_dark
             }
+            onPress={props.onSelected}
             btnTitleFontSize={12}
             disable={false}
           >
@@ -221,18 +222,16 @@ export default TrashCardForSell = (props) => {
                 style={{
                   fontSize: 12,
                   color:
-                    isNaN(props.changeAmount) ||
-                    props.changeAmount === 0 ||
-                    !props.selected
+                    isNaN(props.changedAmount) || !props.selected
                       ? Colors.soft_primary_dark
-                      : props.changeAmount > 0
-                      ? Colors.primary_bright
+                      : props.changedAmount === props.oldAmount
+                      ? Colors.soft_primary_bright
                       : Colors.error,
                   textAlign: "left",
                 }}
               >
                 {props.selected
-                  ? props.oldAmount - (props.oldAmount + props.changeAmount)
+                  ? props.oldAmount - (props.oldAmount + props.changedAmount)
                   : props.oldAmount}
               </ThaiBoldText>
             </View>
@@ -294,9 +293,9 @@ export default TrashCardForSell = (props) => {
                     style={{ textAlign: "center" }}
                     selectTextOnFocus={true}
                     keyboardType="numeric"
-                    value={(props.oldAmount + props.changeAmount <= 0
+                    value={(props.oldAmount + props.changedAmount <= 0
                       ? 0
-                      : props.oldAmount + props.changeAmount
+                      : props.oldAmount + props.changedAmount
                     ).toString()}
                     onChangeText={props.onEdit}
                     textAlign={"center"}
