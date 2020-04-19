@@ -207,6 +207,7 @@ export default SellingTransactionDetailScreen = (props) => {
   }
   const transactionItem = props.navigation.getParam("transactionItem");
   const userRole = useSelector((state) => state.user.userRole);
+  const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -303,7 +304,7 @@ export default SellingTransactionDetailScreen = (props) => {
   };
 
   // load buyer img
-  const [userImg, setUserImg] = useState("");
+  const [buyerImg, setUserImg] = useState("");
   const loadBuyerImg = async () => {
     let imgUri = "";
     if (transactionItem.detail.buyer) {
@@ -410,7 +411,8 @@ export default SellingTransactionDetailScreen = (props) => {
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <CustomButton
+        <View style={{ width: "20%" }} />
+        {/* <CustomButton
           style={{
             width: "20%",
             height: "100%",
@@ -423,78 +425,98 @@ export default SellingTransactionDetailScreen = (props) => {
           btnTitleFontSize={10}
         >
           <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
-        </CustomButton>
+        </CustomButton> */}
       </View>
-      <View
-        style={{
-          height: "20%",
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
+      {/* tx infomation */}
+      <TouchableOpacity onPress={goBuyerDetail}>
         <View
           style={{
-            width: "30%",
-            height: "80%",
-            padding: 5,
+            width: "95%",
+            flexDirection: "row",
             alignItems: "center",
-            paddingHorizontal: 10,
+            alignSelf: "center",
+            justifyContent: "space-around",
+            borderRadius: 5,
+            backgroundColor: Colors.secondary,
+            padding: 5,
+            ...styles.shadow,
           }}
         >
-          <ImageCircle imgUrl={userImg} avariableWidth={wp("20%")} />
-        </View>
-        <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
-          <ThaiRegText
+          <View
             style={{
-              fontSize: 14,
-              color: Colors.on_secondary.high_constrast,
+              width: "30%",
+              padding: 5,
+              alignItems: "center",
+              paddingHorizontal: 10,
             }}
           >
-            {`สถานะ `}
-            <ThaiMdText
+            <ImageCircle imgUrl={buyerImg} avariableWidth={wp("20%")} />
+          </View>
+          <View style={{ width: "70%", paddingHorizontal: 10 }}>
+            <ThaiRegText
               style={{
                 fontSize: 14,
-                color: libary.getColorTxStatus(transactionItem.detail.txStatus),
+                color: Colors.on_secondary.high_constrast,
               }}
             >
-              {libary.getReadableTxStatus(
-                transactionItem.detail.txStatus,
-                "seller"
-              )}
-            </ThaiMdText>
-          </ThaiRegText>
-          <ThaiRegText
-            style={{
-              fontSize: 14,
-              color: Colors.on_secondary.high_constrast,
-            }}
-          >
-            {`ผู้รับซื้อ `}
-            <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              {`สถานะ `}
+              <ThaiMdText
+                style={{
+                  fontSize: 14,
+                  color: libary.getColorTxStatus(
+                    transactionItem.detail.txStatus
+                  ),
+                }}
+              >
+                {libary.getReadableTxStatus(
+                  transactionItem.detail.txStatus,
+                  "seller"
+                )}
+              </ThaiMdText>
+            </ThaiRegText>
+            <ThaiRegText
+              style={{
+                fontSize: 14,
+                color: Colors.on_secondary.high_constrast,
+              }}
             >
-              {transactionItem.detail.buyer}
-            </ThaiMdText>
-          </ThaiRegText>
-          <ThaiRegText
-            style={{
-              fontSize: 14,
-              color: Colors.on_secondary.high_constrast,
-            }}
-          >
-            {`สถานที่รับขยะ `}
-            <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              {`ผู้รับซื้อ `}
+              <ThaiMdText
+                style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              >
+                {transactionItem.detail.buyer}
+              </ThaiMdText>
+            </ThaiRegText>
+            <ThaiRegText
+              style={{
+                fontSize: 14,
+                color: Colors.on_secondary.high_constrast,
+              }}
             >
-              {transactionItem.detail.addr}
-            </ThaiMdText>
-          </ThaiRegText>
-          <ThaiRegText>{transactionItem.tel}</ThaiRegText>
+              {`สถานที่รับขยะ `}
+              <ThaiMdText
+                style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+              >
+                {transactionItem.detail.addr}
+              </ThaiMdText>
+            </ThaiRegText>
+            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
+            <View
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
+                marginVertical: 5,
+              }}
+            >
+              <ThaiRegText
+                style={{ fontSize: 12, color: Colors.soft_primary_dark }}
+              >
+                กดเพื่อดูรายละเอียดผู้รับซื้อ
+              </ThaiRegText>
+            </View>
+          </View>
         </View>
-      </View>
-
+      </TouchableOpacity>
       <View
         style={{
           width: "100%",
@@ -516,33 +538,36 @@ export default SellingTransactionDetailScreen = (props) => {
 
       <View
         style={{
-          width: "100%",
-          height: "15%",
-          paddingHorizontal: 10,
+          width: "90%",
+          backgroundColor: Colors.hard_secondary,
+          borderRadius: 5,
+          paddingVertical: 5,
+          alignSelf: "center",
+          ...styles.shadow,
         }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: Colors.hard_secondary,
-            borderRadius: 5,
-            paddingVertical: 5,
-            ...styles.shadow,
-          }}
-        >
-          <FlatList
-            data={transactionItem.detail.assignedTime}
-            keyExtractor={(item) =>
-              libary.formatDate(item.toDate()) +
-              libary.formatTime(item.toDate())
-            }
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
-                  <View style={{ height: 25, alignSelf: "center" }}>
-                    <ThaiRegText
+        <FlatList
+          data={transactionItem.detail.assignedTime}
+          keyExtractor={(item) =>
+            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
+          }
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
+                <View style={{ height: 25, alignSelf: "center" }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 18,
+                      color:
+                        transactionItem.detail.chosenTime != undefined
+                          ? transactionItem.detail.chosenTime.seconds ===
+                            item.seconds
+                            ? Colors.soft_primary_bright
+                            : Colors.soft_secondary
+                          : Colors.soft_secondary,
+                    }}
+                  >
+                    <ThaiMdText
                       style={{
                         fontSize: 18,
                         color:
@@ -550,57 +575,44 @@ export default SellingTransactionDetailScreen = (props) => {
                             ? transactionItem.detail.chosenTime.seconds ===
                               item.seconds
                               ? Colors.soft_primary_bright
-                              : Colors.soft_secondary
-                            : Colors.soft_secondary,
+                              : Colors.soft_primary_dark
+                            : Colors.soft_primary_dark,
                       }}
                     >
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color:
-                            transactionItem.detail.chosenTime != undefined
-                              ? transactionItem.detail.chosenTime.seconds ===
-                                item.seconds
-                                ? Colors.soft_primary_bright
-                                : Colors.soft_primary_dark
-                              : Colors.soft_primary_dark,
-                        }}
-                      >
-                        {`${libary.formatDate(
-                          item.toDate()
-                        )} ${libary.formatTime(item.toDate())} `}
-                      </ThaiMdText>
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color:
-                            transactionItem.detail.chosenTime != undefined
-                              ? transactionItem.detail.chosenTime.seconds ===
-                                item.seconds
-                                ? Colors.soft_primary_bright
-                                : Colors.soft_primary_dark
-                              : Colors.soft_primary_dark,
-                        }}
-                      >
-                        {transactionItem.detail.txStatus === 1 ? (
-                          <MaterialIcons
-                            name={
-                              item.seconds === timeSelected.seconds
-                                ? "check-box"
-                                : "check-box-outline-blank"
-                            }
-                            size={20}
-                            color={Colors.primary_bright}
-                          />
-                        ) : null}
-                      </ThaiMdText>
-                    </ThaiRegText>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+                      {`${libary.formatDate(item.toDate())} ${libary.formatTime(
+                        item.toDate()
+                      )} `}
+                    </ThaiMdText>
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color:
+                          transactionItem.detail.chosenTime != undefined
+                            ? transactionItem.detail.chosenTime.seconds ===
+                              item.seconds
+                              ? Colors.soft_primary_bright
+                              : Colors.soft_primary_dark
+                            : Colors.soft_primary_dark,
+                      }}
+                    >
+                      {transactionItem.detail.txStatus === 1 ? (
+                        <MaterialIcons
+                          name={
+                            item.seconds === timeSelected.seconds
+                              ? "check-box"
+                              : "check-box-outline-blank"
+                          }
+                          size={20}
+                          color={Colors.primary_bright}
+                        />
+                      ) : null}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
       </View>
       <View
         style={{
@@ -618,53 +630,59 @@ export default SellingTransactionDetailScreen = (props) => {
       </View>
       <View
         style={{
-          width: "100%",
-          height: "15%",
-          paddingHorizontal: 10,
+          width: "90%",
+          backgroundColor: Colors.hard_secondary,
+          borderRadius: 5,
+          paddingVertical: 5,
+          alignSelf: "center",
+          ...styles.shadow,
         }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: Colors.hard_secondary,
-            borderRadius: 5,
-            paddingVertical: 5,
-            ...styles.shadow,
-          }}
-        >
-          <FlatList
-            data={saleList}
-            keyExtractor={(item) => item.subtype}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
+        <FlatList
+          data={saleList}
+          keyExtractor={(item) => item.subtype}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 30,
+                  padding: 3,
+                  alignSelf: "center",
+                  flexDirection: "row",
+                }}
+              >
                 <View
                   style={{
-                    height: 30,
-                    padding: 3,
-                    alignSelf: "center",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
                     flexDirection: "row",
+                    justifyContent: "space-around",
                   }}
                 >
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      alignItems: "center",
-                    }}
-                  >
+                  <View style={{ width: "40%" }}>
                     <ThaiRegText
                       style={{ fontSize: 18, color: Colors.soft_primary_dark }}
                     >
-                      {`${item.subtype} จำนวน ${item.amount.amount}`}
+                      {`${wasteTypes[item.type][item.subtype]["name"]}`}
+                    </ThaiRegText>
+                  </View>
+                  <View style={{ width: "40%" }}>
+                    <ThaiRegText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.soft_primary_dark,
+                        textAlign: "right",
+                      }}
+                    >
+                      {`จำนวน ${item.amount.amount}`}
                     </ThaiRegText>
                   </View>
                 </View>
-              );
-            }}
-          />
-        </View>
+              </View>
+            );
+          }}
+        />
       </View>
       <View
         style={{

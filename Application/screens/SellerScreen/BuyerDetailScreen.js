@@ -1,31 +1,12 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-  Modal,
-  TouchableHighlight,
-  SectionList,
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
-import DateTimePicker from "react-native-modal-datetime-picker";
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
-import { Wastes } from "../../models/AllUserTrash";
-import * as transactionAction from "../../store/actions/transactionAction";
-import {
-  MaterialIcons,
-  MaterialCommunityIcons,
-  Ionicons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
   widthPercentageToDP as wp,
@@ -33,8 +14,6 @@ import {
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
-import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
-import { Header } from "react-navigation-stack";
 import { searchBuyer } from "../../utils/firebaseFunctions";
 
 const comments_temp = [
@@ -171,16 +150,15 @@ export default BuyerDetailScreen = (props) => {
     setIsRefreshing(false);
   };
 
-  // const wasteListSectionFormat = useSelector(state => {
-  //   return state.wasteType.wasteListSectionFormat;
-  // });
-
   const backHandler = () => {
     props.navigation.goBack();
   };
 
   const seeBuyerPriceHandler = () => {
-    // props.navigation.navigate();
+    props.navigation.navigate({
+      routeName: "BuyerDetailShowPriceScreen",
+      params: { purchaseList: buyerInfo.detail.purchaseList },
+    });
   };
 
   //add spinner loading
@@ -375,7 +353,7 @@ export default BuyerDetailScreen = (props) => {
             <ThaiBoldText
               style={{ fontSize: 16, color: Colors.soft_primary_dark }}
             >
-              ความคิดเห็น
+              คะแนนความพึงพอใจ
             </ThaiBoldText>
           </View>
           <View
