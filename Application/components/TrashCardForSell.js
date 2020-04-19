@@ -134,6 +134,7 @@ export default TrashCardForSell = (props) => {
           style={{
             width: "50%",
             padding: 7,
+            justifyContent: "space-around",
           }}
         >
           {/* Row 1 */}
