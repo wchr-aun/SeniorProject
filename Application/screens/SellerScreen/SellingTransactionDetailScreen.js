@@ -412,109 +412,111 @@ export default SellingTransactionDetailScreen = (props) => {
           </ThaiBoldText>
         </View>
         <View style={{ width: "20%" }} />
-        {/* <CustomButton
-          style={{
-            width: "20%",
-            height: "100%",
-            maxHeight: 30,
-            borderRadius: 5,
-          }}
-          btnColor={Colors.button.submit_primary_dark.btnBackground}
-          onPress={goBuyerDetail}
-          btnTitleColor={Colors.button.submit_primary_dark.btnText}
-          btnTitleFontSize={10}
-        >
-          <ThaiMdText style={{ fontSize: 10 }}> ดูข้อมูลผู้รับซื้อ</ThaiMdText>
-        </CustomButton> */}
       </View>
       {/* tx infomation */}
       <TouchableOpacity onPress={goBuyerDetail}>
         <View
           style={{
             width: "95%",
-            flexDirection: "row",
+            borderRadius: 5,
+            overflow: "hidden",
+            backgroundColor: Colors.secondary,
             alignItems: "center",
             alignSelf: "center",
-            justifyContent: "space-around",
-            borderRadius: 5,
-            backgroundColor: Colors.secondary,
-            padding: 5,
             ...styles.shadow,
           }}
         >
           <View
             style={{
-              width: "30%",
+              flexDirection: "row",
+
+              justifyContent: "space-around",
               padding: 5,
-              alignItems: "center",
-              paddingHorizontal: 10,
             }}
           >
-            <ImageCircle imgUrl={buyerImg} avariableWidth={wp("20%")} />
-          </View>
-          <View style={{ width: "70%", paddingHorizontal: 10 }}>
-            <ThaiRegText
-              style={{
-                fontSize: 14,
-                color: Colors.on_secondary.high_constrast,
-              }}
-            >
-              {`สถานะ `}
-              <ThaiMdText
-                style={{
-                  fontSize: 14,
-                  color: libary.getColorTxStatus(
-                    transactionItem.detail.txStatus
-                  ),
-                }}
-              >
-                {libary.getReadableTxStatus(
-                  transactionItem.detail.txStatus,
-                  "seller"
-                )}
-              </ThaiMdText>
-            </ThaiRegText>
-            <ThaiRegText
-              style={{
-                fontSize: 14,
-                color: Colors.on_secondary.high_constrast,
-              }}
-            >
-              {`ผู้รับซื้อ `}
-              <ThaiMdText
-                style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-              >
-                {transactionItem.detail.buyer}
-              </ThaiMdText>
-            </ThaiRegText>
-            <ThaiRegText
-              style={{
-                fontSize: 14,
-                color: Colors.on_secondary.high_constrast,
-              }}
-            >
-              {`สถานที่รับขยะ `}
-              <ThaiMdText
-                style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-              >
-                {transactionItem.detail.addr}
-              </ThaiMdText>
-            </ThaiRegText>
-            <ThaiRegText>{transactionItem.tel}</ThaiRegText>
             <View
               style={{
-                width: "100%",
-                alignItems: "flex-end",
-                marginVertical: 5,
+                width: "30%",
+                padding: 5,
+                alignItems: "center",
+                paddingHorizontal: 10,
               }}
             >
+              <ImageCircle imgUrl={buyerImg} avariableWidth={wp("20%")} />
+            </View>
+            <View style={{ width: "70%", paddingHorizontal: 10 }}>
               <ThaiRegText
-                style={{ fontSize: 12, color: Colors.soft_primary_dark }}
+                style={{
+                  fontSize: 14,
+                  color: Colors.on_secondary.high_constrast,
+                }}
               >
-                กดเพื่อดูรายละเอียดผู้รับซื้อ
+                {`สถานะ `}
+                <ThaiMdText
+                  style={{
+                    fontSize: 14,
+                    color: libary.getColorTxStatus(
+                      transactionItem.detail.txStatus
+                    ),
+                  }}
+                >
+                  {libary.getReadableTxStatus(
+                    transactionItem.detail.txStatus,
+                    "seller"
+                  )}
+                </ThaiMdText>
               </ThaiRegText>
+              <ThaiRegText
+                style={{
+                  fontSize: 14,
+                  color: Colors.on_secondary.high_constrast,
+                }}
+              >
+                {`ผู้รับซื้อ `}
+                <ThaiMdText
+                  style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+                >
+                  {transactionItem.detail.buyer}
+                </ThaiMdText>
+              </ThaiRegText>
+              <ThaiRegText
+                style={{
+                  fontSize: 14,
+                  color: Colors.on_secondary.high_constrast,
+                }}
+              >
+                {`สถานที่รับขยะ `}
+                <ThaiMdText
+                  style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+                >
+                  {transactionItem.detail.addr}
+                </ThaiMdText>
+              </ThaiRegText>
+              <ThaiRegText>{transactionItem.tel}</ThaiRegText>
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "flex-end",
+                  marginVertical: 5,
+                }}
+              >
+                <ThaiRegText
+                  style={{ fontSize: 12, color: Colors.soft_primary_dark }}
+                >
+                  กดเพื่อดูรายละเอียดผู้รับซื้อ
+                </ThaiRegText>
+              </View>
             </View>
           </View>
+          <View
+            style={{
+              backgroundColor: libary.getColorTxStatus(
+                transactionItem.detail.txStatus
+              ),
+              height: 10,
+              width: "100%",
+            }}
+          />
         </View>
       </TouchableOpacity>
       <View

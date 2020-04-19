@@ -7,12 +7,12 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Alert,
-  Button
+  Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { AntDesign } from "@expo/vector-icons";
@@ -48,7 +48,7 @@ const trashsModifyingReducer = (state, action) => {
       return {
         ...state,
         sellerItems: action.sellerItems,
-        sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
+        sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat],
       };
     case ADD_SELLERITEMS_AMOUNT:
       sellerItems.incrementalValue(
@@ -57,25 +57,25 @@ const trashsModifyingReducer = (state, action) => {
         action.addAmount
       );
       return {
-        ...state
+        ...state,
       };
     case ADD_NEW_SELLERITEMS_AMOUNT:
       let addedSellerItem = {
         [action.majortype]: {
-          [action.subtype]: action.addAmount
-        }
+          [action.subtype]: action.addAmount,
+        },
       };
 
       sellerItems.addWasteObj(addedSellerItem);
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true),
       };
     case ADD_NEW_SELLERITEMSCAMERA_AMOUNT:
       sellerItems.addWasteObj(action.sellerItemsCameraObj);
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true),
       };
     case MINUS_SELLERITEMS_AMOUNT:
       sellerItems.incrementalValue(
@@ -84,7 +84,7 @@ const trashsModifyingReducer = (state, action) => {
         -action.minusAmount
       );
       return {
-        ...state
+        ...state,
       };
     case EDIT_SELLERITEMS_AMOUNT:
       sellerItems.editValue(
@@ -93,25 +93,25 @@ const trashsModifyingReducer = (state, action) => {
         action.value - sellerItems[action.majortype][action.subtype]
       );
       return {
-        ...state
+        ...state,
       };
     case UPDATE_LOCAL_SELLERITEMS:
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true),
       };
     case CANCEL:
       sellerItems.clearValue();
       return {
         ...state,
-        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true)
+        sellerItemsFlatListFormat: sellerItems.getFlatListFormat(true),
       };
     default:
       return { ...state };
   }
 };
 
-const ShowAllUserTrashScreen = props => {
+const ShowAllUserTrashScreen = (props) => {
   const [isInOperation, setIsInOperation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -148,26 +148,26 @@ const ShowAllUserTrashScreen = props => {
     setIsLoading(true);
     refreshSellerItems()
       .then(() => setIsLoading(false))
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setError(err.message);
       });
   }, [refreshSellerItems, dispatch]);
 
   // Get sellerItems and wasteTyp from redux
-  const sellerItems = useSelector(state => {
+  const sellerItems = useSelector((state) => {
     return state.sellerItems.sellerItems;
   });
-  const sellerItemsCameraObj = useSelector(state => {
+  const sellerItemsCameraObj = useSelector((state) => {
     return state.sellerItems.sellerItemsCameraObj;
   });
-  const sellerItemsFlatListFormat = useSelector(state => {
+  const sellerItemsFlatListFormat = useSelector((state) => {
     return state.sellerItems.sellerItemsFlatListFormat;
   });
-  const wasteTypeDropdownFormat = useSelector(state => {
+  const wasteTypeDropdownFormat = useSelector((state) => {
     return state.wasteType.wasteTypeDropdownFormat;
   });
-  const wasteTypes = useSelector(state => {
+  const wasteTypes = useSelector((state) => {
     return state.wasteType.wasteTypes;
   });
 
@@ -175,7 +175,7 @@ const ShowAllUserTrashScreen = props => {
     trashsModifyingReducer,
     {
       sellerItems: {},
-      sellerItemsFlatListFormat: []
+      sellerItemsFlatListFormat: [],
     }
   );
 
@@ -185,7 +185,7 @@ const ShowAllUserTrashScreen = props => {
       dispatchAmountTrashsState({
         type: SET_LOCAL_SELLERITEMS,
         sellerItems,
-        sellerItemsFlatListFormat
+        sellerItemsFlatListFormat,
       });
     }
   }, [sellerItems]);
@@ -199,13 +199,13 @@ const ShowAllUserTrashScreen = props => {
       setEditingMode(true);
       dispatchAmountTrashsState({
         type: ADD_NEW_SELLERITEMSCAMERA_AMOUNT,
-        sellerItemsCameraObj
+        sellerItemsCameraObj,
       });
     }
   }, [
     sellerItemsCameraObj,
     trashsState.sellerItems,
-    dispatchAmountTrashsState
+    dispatchAmountTrashsState,
   ]);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -231,7 +231,7 @@ const ShowAllUserTrashScreen = props => {
     trashsState.sellerItems.confirmValue();
     // update new wasteData on local redux
     dispatchAmountTrashsState({
-      type: UPDATE_LOCAL_SELLERITEMS
+      type: UPDATE_LOCAL_SELLERITEMS,
     });
     // update new wasteData on redux
     await dispatch(
@@ -252,16 +252,16 @@ const ShowAllUserTrashScreen = props => {
     dispatch(navigationBehaviorAction.startOperation());
     props.navigation.navigate({
       routeName: "SellingTrashScreen",
-      params: { sellerItemsNew: trashsState.sellerItems }
+      params: { sellerItemsNew: trashsState.sellerItems },
     });
   };
 
-  const onSelectedHandler = waste => {
+  const onSelectedHandler = (waste) => {
     props.navigation.navigate({
       routeName: "WasteDetailScreen",
       params: {
-        waste
-      }
+        waste,
+      },
     });
   };
 
@@ -292,7 +292,7 @@ const ShowAllUserTrashScreen = props => {
             type: ADD_NEW_SELLERITEMS_AMOUNT,
             majortype,
             subtype,
-            addAmount
+            addAmount,
           });
         }}
       />
@@ -308,7 +308,7 @@ const ShowAllUserTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <ModalLoading modalVisible={isInOperation} userRole="seller" />
@@ -317,16 +317,16 @@ const ShowAllUserTrashScreen = props => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 18
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
               จำนวนขยะที่คุณมี
@@ -338,7 +338,7 @@ const ShowAllUserTrashScreen = props => {
               height: "100%",
               flexDirection: "row",
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             {editingMode ? (
@@ -350,7 +350,7 @@ const ShowAllUserTrashScreen = props => {
                   height: "100%",
                   flexDirection: "row",
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <CustomButton
@@ -375,7 +375,7 @@ const ShowAllUserTrashScreen = props => {
           style={{
             width: "100%",
             height: "75%",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <FlatList
@@ -383,24 +383,31 @@ const ShowAllUserTrashScreen = props => {
             refreshing={isRefreshing}
             onRefresh={refreshSellerItems}
             style={{
-              flex: 1
+              flex: 1,
             }}
-            keyExtractor={item => item.subtype}
+            keyExtractor={(item) => item.subtype}
             renderItem={({ item }) => {
               return (
                 <TrashCard
-                  onPress={editingMode ? null : () =>
-                    onSelectedHandler({
-                      imgUrl: wasteTypes[item.type][item.subtype]["imgUrl"],
-                      majorType: item.type,
-                      subType: item.subtype,
-                      wasteName: wasteTypes[item.type][item.subtype]["name"],
-                      wasteDisposal:
-                        wasteTypes[item.type][item.subtype]["disposal"],
-                      wasteDescription:
-                        wasteTypes[item.type][item.subtype]["description"],
-                      price: wasteTypes[item.type][item.subtype]["price"]
-                    })
+                  onPress={
+                    editingMode
+                      ? null
+                      : () =>
+                          onSelectedHandler({
+                            imgUrl:
+                              wasteTypes[item.type][item.subtype]["imgUrl"],
+                            majorType: item.type,
+                            subType: item.subtype,
+                            wasteName:
+                              wasteTypes[item.type][item.subtype]["name"],
+                            wasteDisposal:
+                              wasteTypes[item.type][item.subtype]["disposal"],
+                            wasteDescription:
+                              wasteTypes[item.type][item.subtype][
+                                "description"
+                              ],
+                            price: wasteTypes[item.type][item.subtype]["price"],
+                          })
                   }
                   style={{ ...styles.eachSellerItemCard }}
                   imgUrl={wasteTypes[item.type][item.subtype]["imgUrl"]}
@@ -440,7 +447,7 @@ const ShowAllUserTrashScreen = props => {
                       type: ADD_SELLERITEMS_AMOUNT,
                       subtype: item.subtype,
                       majortype: item.type,
-                      addAmount: 1
+                      addAmount: 1,
                     })
                   }
                   onDecrease={() => {
@@ -448,15 +455,15 @@ const ShowAllUserTrashScreen = props => {
                       type: MINUS_SELLERITEMS_AMOUNT,
                       subtype: item.subtype,
                       majortype: item.type,
-                      minusAmount: 1
+                      minusAmount: 1,
                     });
                   }}
-                  onEdit={text => {
+                  onEdit={(text) => {
                     dispatchAmountTrashsState({
                       type: EDIT_SELLERITEMS_AMOUNT,
                       subtype: item.subtype,
                       majortype: item.type,
-                      value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
+                      value: text > 0 ? parseInt(text, 10) : 0, //not positive, Nan
                     });
                   }}
                 />
@@ -470,7 +477,7 @@ const ShowAllUserTrashScreen = props => {
             alignItems: "center",
             width: "100%",
             height: "15%",
-            paddingBottom: getStatusBarHeight() //unable it in future
+            paddingBottom: getStatusBarHeight(), //unable it in future
           }}
         >
           <View
@@ -479,7 +486,7 @@ const ShowAllUserTrashScreen = props => {
               height: "100%",
               flexDirection: "row",
               justifyContent: "space-around",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <CustomButton
@@ -487,7 +494,7 @@ const ShowAllUserTrashScreen = props => {
                 width: "40%",
                 height: "80%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={
                 editingMode
@@ -510,7 +517,7 @@ const ShowAllUserTrashScreen = props => {
                 width: "40%",
                 height: "80%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={
                 editingMode
@@ -542,15 +549,15 @@ const ShowAllUserTrashScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Colors.screen
+    backgroundColor: Colors.screen,
   },
   eachSellerItemCard: {
     shadowColor: "black",
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
-    elevation: 1
-  }
+    elevation: 1,
+  },
 });
 
 export default ShowAllUserTrashScreen;

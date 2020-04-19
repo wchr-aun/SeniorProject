@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  SectionList,
+} from "react-native";
+import { useSelector } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
@@ -15,6 +22,7 @@ import {
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import { searchBuyer } from "../../utils/firebaseFunctions";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const comments_temp = [
   {
@@ -106,6 +114,100 @@ const Comment = (props) => {
   );
 };
 
+const BuyerPrice = (props) => {
+  return (
+    <View
+      style={{
+        paddingHorizontal: 10,
+        paddingBottom: getStatusBarHeight(),
+        ...props.style,
+      }}
+    >
+      <SectionList
+        sections={
+          props.wasteListSectionFormat ? props.wasteListSectionFormat : []
+        }
+        keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
+        renderItem={({ item, section: { type } }) => {
+          let subtypeIndex = Object.keys(item)[0];
+          let subtypeName = item[Object.keys(item)[0]].name;
+
+          // Set price for showing
+          let price = props.purchaseList[type][subtypeIndex];
+
+          return (
+            <View
+              style={{
+                width: "100%",
+                height: 50,
+                borderRadius: 5,
+                padding: 10,
+                backgroundColor: Colors.on_primary_dark.low_constrast,
+                borderBottomColor: Colors.hard_secondary,
+                borderBottomWidth: 0.75,
+                marginBottom: 2,
+                justifyContent: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "50%",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ width: "50%" }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 15,
+                      color: Colors.soft_primary_bright,
+                    }}
+                  >
+                    {subtypeName}
+                  </ThaiRegText>
+                </View>
+                <View
+                  style={{
+                    width: "50%",
+                    flexDirection: "row",
+                  }}
+                >
+                  <View
+                    style={{
+                      borderWidth: 0.75,
+                      width: "50%",
+                      borderRadius: 3,
+                      borderColor: Colors.soft_secondary,
+                      backgroundColor: Colors.soft_secondary,
+                      alignItems: "center",
+                    }}
+                  >
+                    <ThaiRegText style={{ textAlign: "center", fontSize: 15 }}>
+                      {price}
+                    </ThaiRegText>
+                  </View>
+                  <ThaiRegText style={{ fontSize: 15 }}> บาท/ กก.</ThaiRegText>
+                </View>
+              </View>
+            </View>
+          );
+        }}
+        renderSectionHeader={({ section: { type } }) => {
+          return (
+            <ThaiMdText
+              style={{ fontSize: 18, color: Colors.hard_primary_dark }}
+            >
+              {type}
+            </ThaiMdText>
+          );
+        }}
+      />
+    </View>
+  );
+};
+
 export default BuyerDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
   const buyerId = props.navigation.getParam("buyerId");
@@ -150,15 +252,13 @@ export default BuyerDetailScreen = (props) => {
     setIsRefreshing(false);
   };
 
+  const wasteListSectionFormat = useSelector(
+    (state) => state.wasteType.wasteListSectionFormat
+  );
+  const [isCommentMode, setIsCommentMode] = useState(true);
+
   const backHandler = () => {
     props.navigation.goBack();
-  };
-
-  const seeBuyerPriceHandler = () => {
-    props.navigation.navigate({
-      routeName: "BuyerDetailShowPriceScreen",
-      params: { purchaseList: buyerInfo.detail.purchaseList },
-    });
   };
 
   //add spinner loading
@@ -229,20 +329,7 @@ export default BuyerDetailScreen = (props) => {
             รายละเอียดผู้รับซื้อ
           </ThaiBoldText>
         </View>
-        <CustomButton
-          style={{
-            width: "20%",
-            height: "100%",
-            maxHeight: 30,
-            borderRadius: 5,
-          }}
-          btnColor={Colors.button.cancel.btnBackground}
-          onPress={seeBuyerPriceHandler}
-          btnTitleColor={Colors.button.cancel.btnText}
-          btnTitleFontSize={10}
-        >
-          <ThaiMdText style={{ fontSize: 10 }}>ดูราคารับซื้อ </ThaiMdText>
-        </CustomButton>
+        <View style={{ width: "20%" }} />
       </View>
 
       {/* buyerInfo + sellerComment */}
@@ -256,20 +343,18 @@ export default BuyerDetailScreen = (props) => {
         {/* buyer info */}
         <View
           style={{
-            height: "25%",
             width: "100%",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-around",
             backgroundColor: Colors.secondary,
             borderRadius: 5,
-            marginHorizontal: 10,
+            margin: 10,
           }}
         >
           <View
             style={{
               width: "30%",
-              height: "80%",
               padding: 5,
               alignItems: "center",
               paddingHorizontal: 10,
@@ -277,7 +362,7 @@ export default BuyerDetailScreen = (props) => {
           >
             <ImageCircle imgUrl={buyerImg} avariableWidth={wp("20%")} />
           </View>
-          <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
+          <View style={{ width: "70%", paddingHorizontal: 10 }}>
             <ThaiRegText
               style={{
                 fontSize: 14,
@@ -337,8 +422,7 @@ export default BuyerDetailScreen = (props) => {
         <View
           style={{
             backgroundColor: Colors.secondary,
-            height: "75%",
-            width: "100%",
+            flex: 1,
           }}
         >
           <View
@@ -347,39 +431,84 @@ export default BuyerDetailScreen = (props) => {
               width: "100%",
               backgroundColor: "white",
               padding: 10,
+              flexDirection: "row",
+              justifyContent: "space-around",
               ...styles.shadow,
             }}
           >
-            <ThaiBoldText
-              style={{ fontSize: 16, color: Colors.soft_primary_dark }}
-            >
-              คะแนนความพึงพอใจ
-            </ThaiBoldText>
+            <View style={{ width: "40%", ...styles.shadow }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsCommentMode(true);
+                }}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 16,
+                    color: isCommentMode
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                    textAlign: "center",
+                  }}
+                >
+                  ดูคะแนนความพึงพอใจ
+                </ThaiBoldText>
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: "40%", ...styles.shadow }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsCommentMode(false);
+                }}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 16,
+                    color: !isCommentMode
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                    textAlign: "center",
+                  }}
+                >
+                  ดูราคารับซื้อ
+                </ThaiBoldText>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View
-            style={{
-              flex: 1,
-              padding: 10,
-            }}
-          >
-            <FlatList
-              refreshing={isRefreshing}
-              onRefresh={loadComments}
-              data={comments}
-              keyExtractor={(item) => item.commentId}
-              renderItem={({ item }) => {
-                return (
-                  <Comment
-                    // style={{ width: "100%", height: 100, flex: 0 }}
-                    style={{ flex: 0, background: Colors.secondary }}
-                    seller={item.seller}
-                    message={item.message}
-                    rate={item.rate}
-                  />
-                );
+
+          {/* Content "comment" or "price" */}
+          {isCommentMode ? (
+            <View
+              style={{
+                flex: 1,
+                padding: 10,
               }}
+            >
+              <FlatList
+                refreshing={isRefreshing}
+                onRefresh={loadComments}
+                data={comments}
+                keyExtractor={(item) => item.commentId}
+                renderItem={({ item }) => {
+                  return (
+                    <Comment
+                      // style={{ width: "100%", height: 100, flex: 0 }}
+                      style={{ flex: 0, background: Colors.secondary }}
+                      seller={item.seller}
+                      message={item.message}
+                      rate={item.rate}
+                    />
+                  );
+                }}
+              />
+            </View>
+          ) : (
+            <BuyerPrice
+              wasteListSectionFormat={wasteListSectionFormat}
+              purchaseList={buyerInfo.detail.purchaseList}
+              style={{ flex: 1, padding: 10 }}
             />
-          </View>
+          )}
         </View>
       </View>
     </LinearGradient>

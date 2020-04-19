@@ -41,64 +41,10 @@ export default BuyerDetailShowPriceScreen = (props) => {
   const wasteListSectionFormat = useSelector(
     (state) => state.wasteType.wasteListSectionFormat
   );
-  console.log(purchaseList);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(true);
-
-  //   // load buyer info function
-  //   const [buyerInfo, setBuyerInfo] = useState({});
-  //   const loadBuyerInfo = async (buyerId) => {
-  //     const buyerInfo = await searchBuyer(buyerId);
-  //     setBuyerInfo(buyerInfo);
-  //   };
-
-  //   // load buyer img function
-  //   const [buyerImg, setBuyerImg] = useState("");
-  //   const loadBuyerImg = async (buyerId) => {
-  //     let imgUri = "";
-  //     if (buyerId) {
-  //       imgUri = await libary.downloadingImg([`${buyerId}.jpg`], "user");
-  //     }
-  //     setBuyerImg(imgUri != "" ? imgUri[0] : "");
-  //   };
-  //   const loadBuyerData = async () => {
-  //     setIsLoading(true);
-  //     await loadBuyerInfo(buyerId);
-  //     await loadBuyerImg(buyerId);
-  //     await loadComments();
-  //     setIsLoading(false);
-  //   };
-  //   // load buyer img and information
-  //   useEffect(() => {
-  //     loadBuyerData();
-  //   }, []);
-
-  //   // load comments about buyer
-  //   const [comments, setComments] = useState([]);
-  //   const loadComments = async () => {
-  //     // do some api
-  //     setIsRefreshing(true);
-  //     setComments(comments_temp);
-  //     setIsRefreshing(false);
-  //   };
 
   const backHandler = () => {
     props.navigation.goBack();
   };
-
-  //   const seeBuyerPriceHandler = () => {
-  //     props.navigation.navigate("BuyerDetailShowPriceScreen");
-  //   };
-
-  //   //add spinner loading
-  //   if (isLoading) {
-  //     return (
-  //       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //         <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
-  //       </View>
-  //     );
-  //   }
 
   return (
     <LinearGradient
@@ -159,6 +105,7 @@ export default BuyerDetailShowPriceScreen = (props) => {
             ราคารับซื้อ
           </ThaiBoldText>
         </View>
+        <View style={{ width: "20%" }} />
       </View>
 
       {/* buyerInfo + sellerComment */}
@@ -172,7 +119,6 @@ export default BuyerDetailShowPriceScreen = (props) => {
       >
         <SectionList
           sections={wasteListSectionFormat ? wasteListSectionFormat : []}
-          refreshing={isLoading}
           keyExtractor={(item, index) => item + index} //item refer to each obj in each seaction
           renderItem={({ item, section: { type } }) => {
             let subtypeIndex = Object.keys(item)[0];
