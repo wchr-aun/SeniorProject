@@ -1,39 +1,15 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  Modal,
-  TouchableHighlight,
-  SectionList,
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { View, StyleSheet, SectionList } from "react-native";
+import { useSelector } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomButton from "../../components/UI/CustomButton";
-import libary from "../../utils/libary";
-import { Wastes } from "../../models/AllUserTrash";
-import * as transactionAction from "../../store/actions/transactionAction";
-import {
-  MaterialIcons,
-  MaterialCommunityIcons,
-  Ionicons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
-import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
-import { Header } from "react-navigation-stack";
-import { searchBuyer } from "../../utils/firebaseFunctions";
 
 export default BuyerDetailShowPriceScreen = (props) => {
   // Get a parameter that sent from the previous page.
@@ -108,7 +84,7 @@ export default BuyerDetailShowPriceScreen = (props) => {
         <View style={{ width: "20%" }} />
       </View>
 
-      {/* buyerInfo + sellerComment */}
+      {/* list */}
       <View
         style={{
           width: "100%",

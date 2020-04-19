@@ -1,76 +1,49 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Image,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-  Modal
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { View, StyleSheet, Image } from "react-native";
 
 import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
 
 import CustomButton from "../../components/UI/CustomButton";
-import libary from "../../utils/libary";
-import { Wastes } from "../../models/AllUserTrash";
-import * as transactionAction from "../../store/actions/transactionAction";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import ImageCircle from "../../components/UI/ImageCircle";
 
-import {
-  Ionicons,
-  MaterialIcons,
-  MaterialCommunityIcons
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
-import ModalLoading from "../../components/ModalLoading";
+import ThaiBoldText from "../../components/ThaiBoldText";
 
-export default WasteDetailScreen = props => {
-  //add spinner loading
-  const [isLoading, setIsLoading] = useState(false);
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary_bright_variant} />
-      </View>
-    );
-  }
-
+export default WasteDetailScreen = (props) => {
   const backHandler = () => {
     props.navigation.goBack();
   };
 
   const waste = props.navigation.getParam("waste");
-  console.log("waste");
-  console.log(waste);
 
   return (
     <View
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%"
+        height: "100%",
       }}
     >
       <CustomStatusBar />
+      {/* header bar */}
       <View
         style={{
           height: "10%",
           width: "100%",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark,
+          backgroundColor: Colors.hard_secondary,
           paddingVertical: 10,
           justifyContent: "space-around",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <CustomButton
@@ -78,7 +51,7 @@ export default WasteDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={Colors.button.cancel.btnBackground}
           onPress={backHandler}
@@ -97,13 +70,13 @@ export default WasteDetailScreen = props => {
             width: "50%",
             height: "100%",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ThaiBoldText
             style={{
-              color: Colors.on_primary_dark.low_constrast,
-              fontSize: 18
+              color: Colors.on_secondary.high_constrast,
+              fontSize: 18,
             }}
           >
             รายละเอียดขยะ
@@ -113,38 +86,65 @@ export default WasteDetailScreen = props => {
           {/* used for fulfll space */}
         </View>
       </View>
+
+      {/* content */}
       <View
         style={{
-          height: "20%",
           width: "100%",
-          flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-around"
         }}
       >
+        {/* Image */}
         <View
           style={{
-            width: "30%",
-            height: "80%",
-            padding: 5,
+            width: "100%",
+            height: "50%",
             alignItems: "center",
-            paddingHorizontal: 10
           }}
         >
-          <ImageCircle imgUrl={waste.imgUrl} avariableWidth={wp("20%")} />
+          <Image
+            style={{ width: "100%", height: "100%" }}
+            source={{
+              uri: waste.imgUrl,
+            }}
+          />
         </View>
-        <View style={{ width: "70%", height: "80%", paddingHorizontal: 10 }}>
+
+        {/* Content */}
+        <View
+          style={{
+            width: "90%",
+            paddingHorizontal: 12,
+            alignSelf: "flex-start",
+            paddingVertical: 3,
+            marginVertical: 5,
+          }}
+        >
+          <ThaiBoldText style={{ fontSize: 16, textAlign: "left" }}>
+            ข้อมูล
+          </ThaiBoldText>
+        </View>
+
+        <View
+          style={{
+            width: "90%",
+            padding: 12,
+            borderRadius: 7,
+            backgroundColor: Colors.soft_secondary,
+            ...styles.shadow,
+          }}
+        >
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`ประเภทวัสดุ `}
             <ThaiMdText
               style={{
                 fontSize: 14,
-                color: Colors.primary_bright_variant
+                color: Colors.primary_bright_variant,
               }}
             >
               {waste.majorType}
@@ -153,7 +153,7 @@ export default WasteDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`ชนิดของขยะ `}
@@ -166,7 +166,7 @@ export default WasteDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`การกำจัด `}
@@ -179,7 +179,7 @@ export default WasteDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_secondary.high_constrast,
             }}
           >
             {`คำอธิบาย `}
@@ -199,7 +199,7 @@ export default WasteDetailScreen = props => {
           width: "100%",
           height: "15%",
           padding: 5,
-          paddingBottom: getStatusBarHeight()
+          paddingBottom: getStatusBarHeight(),
         }}
       >
         <View
@@ -208,7 +208,7 @@ export default WasteDetailScreen = props => {
             height: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         ></View>
       </View>
@@ -218,14 +218,25 @@ export default WasteDetailScreen = props => {
 
 const styles = StyleSheet.create({
   infoContainerCard: {
-    backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    backgroundColor: Colors.secondary,
+    alignSelf: "center",
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+  },
 });

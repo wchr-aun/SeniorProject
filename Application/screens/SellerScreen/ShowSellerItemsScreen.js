@@ -7,7 +7,6 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Alert,
-  Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -208,6 +207,7 @@ const ShowAllUserTrashScreen = (props) => {
     dispatchAmountTrashsState,
   ]);
 
+  const [modalLoadingText, setModalLoadingText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   // error alert handling
@@ -220,6 +220,7 @@ const ShowAllUserTrashScreen = (props) => {
   }, [error]);
 
   const confirmHandlerTricker = useCallback(() => {
+    setModalLoadingText("กำลังอัปเดทข้อมูล");
     confirmHandler();
   }, [trashsState, dispatchAmountTrashsState]);
 
@@ -311,7 +312,11 @@ const ShowAllUserTrashScreen = (props) => {
           alignItems: "center",
         }}
       >
-        <ModalLoading modalVisible={isInOperation} userRole="seller" />
+        <ModalLoading
+          modalVisible={isInOperation}
+          text={modalLoadingText}
+          userRole="seller"
+        />
         <View
           style={{
             width: "100%",
@@ -320,9 +325,11 @@ const ShowAllUserTrashScreen = (props) => {
             backgroundColor: Colors.secondary,
             paddingVertical: 10,
             alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "70%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }} />
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_secondary.high_constrast,
@@ -334,40 +341,26 @@ const ShowAllUserTrashScreen = (props) => {
           </View>
           <View
             style={{
-              width: "30%",
-              height: "100%",
-              flexDirection: "row",
+              width: "20%",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
             {editingMode ? (
-              <View
-                style={{
-                  backgroundColor: Colors.soft_primary_dark,
-                  borderRadius: 5,
-                  width: "100%",
-                  height: "100%",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+              <CustomButton
+                style={{ borderRadius: 5 }}
+                btnColor={Colors.button.submit_primary_dark.btnBackground}
+                btnTitleColor={Colors.button.submit_primary_dark.btnText}
+                onPress={() => setModalVisible(true)}
+                btnTitleFontSize={14}
               >
-                <CustomButton
-                  style={{ borderRadius: 5 }}
-                  btnColor={Colors.button.submit_primary_dark.btnBackground}
-                  btnTitleColor={Colors.button.submit_primary_dark.btnText}
-                  onPress={() => setModalVisible(true)}
-                  btnTitleFontSize={14}
-                >
-                  <ThaiRegText style={{ fontSize: 10 }}>เพิ่มขยะ </ThaiRegText>
-                  <AntDesign
-                    name="plus"
-                    size={10}
-                    color={Colors.button.submit_primary_dark.btnText}
-                  />
-                </CustomButton>
-              </View>
+                <ThaiRegText style={{ fontSize: 10 }}>เพิ่มขยะ </ThaiRegText>
+                <AntDesign
+                  name="plus"
+                  size={10}
+                  color={Colors.button.submit_primary_dark.btnText}
+                />
+              </CustomButton>
             ) : null}
           </View>
         </View>
