@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import ThaiMdText from "./ThaiMdText";
@@ -13,18 +13,18 @@ import ImageCircle from "./UI/ImageCircle";
 import ThaiBoldText from "./ThaiBoldText";
 import CustomButton from "./UI/CustomButton";
 
-const AmountOfTrash = props => {
+const AmountOfTrash = (props) => {
   return (
     <View
       style={{
         ...props.style,
         alignItems: "center",
-        flexDirection: "row"
+        flexDirection: "row",
       }}
     >
       <View
         style={{
-          width: "100%"
+          width: "100%",
         }}
       >
         <ThaiRegText
@@ -38,7 +38,7 @@ const AmountOfTrash = props => {
                 ? "black"
                 : props.changeAmount > 0
                 ? "green"
-                : Colors.error
+                : Colors.error,
           }}
         >
           {`คงเหลือ ${
@@ -52,7 +52,7 @@ const AmountOfTrash = props => {
   );
 };
 
-export default TrashCardForSell = props => {
+export default TrashCardForSell = (props) => {
   return (
     <TouchableOpacity onPress={props.onSelected}>
       <View
@@ -69,11 +69,11 @@ export default TrashCardForSell = props => {
           shadowColor: "#000",
           shadowOffset: {
             width: 0,
-            height: props.selected ? 5 : 1
+            height: props.selected ? 5 : 1,
           },
           shadowOpacity: props.selected ? 0.34 : 0.18,
           shadowRadius: props.selected ? 6.27 : 1.0,
-          elevation: props.selected ? 10 : 1
+          elevation: props.selected ? 10 : 1,
         }}
       >
         <View
@@ -84,7 +84,7 @@ export default TrashCardForSell = props => {
             backgroundColor: Colors.secondary,
             padding: wp("2.5%"),
             alignItems: "center",
-            justifyContent: "space-around"
+            justifyContent: "space-around",
           }}
         >
           <CustomButton
@@ -93,7 +93,7 @@ export default TrashCardForSell = props => {
               height: "20%",
               maxHeight: 40,
               borderRadius: 8,
-              padding: 10
+              padding: 10,
             }}
             btnColor={
               props.selected
@@ -124,84 +124,117 @@ export default TrashCardForSell = props => {
               borderWidth: 1,
               borderColor: Colors.soft_secondary,
               height: "80%",
-              width: "100%"
+              width: "100%",
             }}
           />
         </View>
 
+        {/* Detail container */}
         <View
           style={{
-            ...styles.detailContainer,
             width: "50%",
-            height: "100%",
-            justifyContent: "space-around"
+            padding: 7,
           }}
         >
+          {/* Row 1 */}
           <View
             style={{
-              ...styles.sellerItemNameAndCheckbox,
               width: "100%",
-              height: "30%",
-              flexDirection: "row"
+              flexDirection: "row",
+              margin: 4,
             }}
           >
             <View
               style={{
-                ...styles.sellerItemName,
-                width: "60%",
-                height: "100%",
-                justifyContent: "space-between"
+                width: "50%",
               }}
             >
-              <ThaiRegText style={{ fontSize: 10 }}>ประเภท: </ThaiRegText>
-              <ThaiMdText
+              <ThaiRegText style={{ fontSize: 16 }}>ประเภท: </ThaiRegText>
+            </View>
+            <View
+              style={{
+                width: "50%",
+              }}
+            >
+              <ThaiBoldText
                 style={{
-                  ...styles.trashName,
+                  fontSize: 16,
                   color: props.selected
-                    ? Colors.primary_bright_variant
-                    : Colors.hard_secondary,
-                  fontSize: 12
+                    ? Colors.primary_bright
+                    : Colors.soft_primary_dark,
+                  textAlign: "left",
                 }}
               >
                 {props.wasteName}
-              </ThaiMdText>
-            </View>
-          </View>
-          <View style={{ width: "100%", height: "30%" }}>
-            <ThaiRegText>ราคารับซื้อ: </ThaiRegText>
-            <View style={{ flexDirection: "row" }}>
-              <ThaiBoldText
-                style={{
-                  color: props.selected
-                    ? Colors.primary_bright
-                    : Colors.hard_secondary,
-                  fontSize: 12
-                }}
-              >
-                {props.sellerItemAdjustPrice}
               </ThaiBoldText>
-              <ThaiBoldText style={{ fontSize: 12 }}> บาท/กก.</ThaiBoldText>
             </View>
           </View>
-          <View style={{ width: "100%", height: "30%" }}>
-            <ThaiRegText>คงเหลือ: </ThaiRegText>
-            <ThaiMdText
+
+          {/* Row 2 */}
+          <View style={{ width: "100%", flexDirection: "row", margin: 4 }}>
+            <View
               style={{
-                fontSize: 12,
-                color:
-                  isNaN(props.changeAmount) ||
-                  props.changeAmount === 0 ||
-                  !props.selected
-                    ? Colors.hard_secondary
-                    : props.changeAmount > 0
-                    ? Colors.primary_bright
-                    : Colors.error
+                width: "50%",
               }}
             >
-              {props.selected
-                ? props.oldAmount - (props.oldAmount + props.changeAmount)
-                : props.oldAmount}
-            </ThaiMdText>
+              <ThaiRegText style={{ fontSize: 16 }}>ราคารับซื้อ: </ThaiRegText>
+            </View>
+
+            <View style={{ width: "50%" }}>
+              <ThaiBoldText style={{ fontSize: 12, textAlign: "left" }}>
+                <ThaiBoldText
+                  style={{
+                    color: props.selected
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                    fontSize: 16,
+                  }}
+                >
+                  {props.sellerItemAdjustPrice}
+                </ThaiBoldText>{" "}
+                บาท/กก.
+              </ThaiBoldText>
+            </View>
+          </View>
+
+          {/* Row 3 */}
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              flexDirection: "row",
+              margin: 4,
+              padding: 4,
+              borderBottomColor: "#d1d1d1",
+              borderBottomWidth: 1,
+              backgroundColor: "white",
+              borderRadius: 2,
+              ...styles.shadow,
+            }}
+          >
+            <View style={{ width: "50%" }}>
+              <ThaiRegText style={{ fontSize: 16 }}>คงเหลือ: </ThaiRegText>
+            </View>
+            <View style={{ width: "50%" }}>
+              <ThaiBoldText
+                style={{
+                  fontSize: 12,
+                  color:
+                    isNaN(props.changeAmount) ||
+                    props.changeAmount === 0 ||
+                    !props.selected
+                      ? Colors.soft_primary_dark
+                      : props.changeAmount > 0
+                      ? Colors.primary_bright
+                      : Colors.error,
+                  textAlign: "left",
+                }}
+              >
+                {props.selected
+                  ? props.oldAmount - (props.oldAmount + props.changeAmount)
+                  : props.oldAmount}
+              </ThaiBoldText>
+            </View>
           </View>
         </View>
 
@@ -214,7 +247,7 @@ export default TrashCardForSell = props => {
               backgroundColor: Colors.secondary,
               alignItems: "center",
               justifyContent: "center",
-              padding: 10
+              padding: 10,
             }}
           >
             <View
@@ -225,7 +258,7 @@ export default TrashCardForSell = props => {
                 justifyContent: "space-around",
                 borderRadius: 8,
                 backgroundColor: Colors.soft_secondary,
-                ...styles.shadow
+                ...styles.shadow,
               }}
             >
               {/* + */}
@@ -234,7 +267,7 @@ export default TrashCardForSell = props => {
                   width: "100%",
                   height: "30%",
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               >
                 {!props.selected ? null : (
@@ -242,7 +275,7 @@ export default TrashCardForSell = props => {
                     <AntDesign
                       name="plus"
                       size={24}
-                      color={Colors.hard_secondary}
+                      color={Colors.soft_primary_dark}
                     />
                   </TouchableOpacity>
                 )}
@@ -252,7 +285,7 @@ export default TrashCardForSell = props => {
                 style={{
                   width: "100%",
                   height: "30%",
-                  alignSelf: "center"
+                  alignSelf: "center",
                 }}
               >
                 {props.selected ? (
@@ -276,7 +309,7 @@ export default TrashCardForSell = props => {
                   height: "30%",
                   alignItems: "center",
                   justifyContent: "center",
-                  ...styles.shadow
+                  ...styles.shadow,
                 }}
               >
                 {!props.selected ? null : (
@@ -284,7 +317,7 @@ export default TrashCardForSell = props => {
                     <AntDesign
                       name="minus"
                       size={24}
-                      color={Colors.hard_secondary}
+                      color={Colors.soft_primary_dark}
                     />
                   </TouchableOpacity>
                 )}
@@ -300,45 +333,42 @@ export default TrashCardForSell = props => {
 const styles = StyleSheet.create({
   trashCard: {
     flexDirection: "row",
-    borderRadius: 10
+    borderRadius: 10,
   },
   selectedTrashCard: {
     shadowColor: Colors.primary_bright,
     shadowOffset: {
       width: 0,
-      height: 7
+      height: 7,
     },
     shadowOpacity: 0.41,
     shadowRadius: 9.11,
 
-    elevation: 14
+    elevation: 14,
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
 
-    elevation: 2
+    elevation: 2,
   },
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
-    alignItems: "center"
-  },
-  trashName: {
-    fontSize: 16
+    alignItems: "center",
   },
   trashAdjustPrice: {
-    fontSize: 12
+    fontSize: 12,
   },
   trashDisposal: {
-    fontSize: 12
+    fontSize: 12,
   },
   plusAndMinusCircle: {
-    marginHorizontal: 5
-  }
+    marginHorizontal: 5,
+  },
 });

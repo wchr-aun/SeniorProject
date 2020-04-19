@@ -4,19 +4,15 @@ import {
   View,
   FlatList,
   BackHandler,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { NavigationEvents } from "react-navigation";
-import {
-  AntDesign,
-  MaterialCommunityIcons,
-  Ionicons
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -47,7 +43,7 @@ const trashSellingReducer = (state, action) => {
       return {
         ...state,
         sellerItemsForSell: sellerItemsCloned,
-        sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat]
+        sellerItemsFlatListFormat: [...action.sellerItemsFlatListFormat],
       };
     case ADD_AMOUNT_FORSELL:
       console.log("ADD_WASTE local Reducer Run");
@@ -58,7 +54,7 @@ const trashSellingReducer = (state, action) => {
           action.addAmount
         );
       return {
-        ...state
+        ...state,
       };
     case MINUS_AMOUNT_FORSELL:
       console.log("MINUS_WASTE local Reducer Run");
@@ -74,13 +70,13 @@ const trashSellingReducer = (state, action) => {
         );
       }
       return {
-        ...state
+        ...state,
       };
     case SELECT_ITEM:
       console.log("SELECT_ITEM local Reducer Run");
       sellerItemsForSell.selectedToggle(action.majortype, action.subtype);
       return {
-        ...state
+        ...state,
       };
     case EDIT_AMOUNT_FORSELL:
       console.log("EDIT_AMOUNT_FORSELL local Reducer Run");
@@ -90,19 +86,19 @@ const trashSellingReducer = (state, action) => {
         action.value - sellerItemsForSell[action.majortype][action.subtype]
       );
       return {
-        ...state
+        ...state,
       };
     default:
       return { ...state };
   }
 };
 
-export default SellingTrashScreen = props => {
+export default SellingTrashScreen = (props) => {
   const [isInOperation, setIsInOperation] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isOperationCompleted = useSelector(
-    state => state.navigation.isOperationCompleted
+    (state) => state.navigation.isOperationCompleted
   );
 
   //add spinner loading
@@ -139,20 +135,20 @@ export default SellingTrashScreen = props => {
 
   // Get data from redux
   const [distance, setDistance] = useState("10");
-  const sellerItemsForSell = useSelector(state => {
+  const sellerItemsForSell = useSelector((state) => {
     return state.sellerItems.sellerItemsForSell;
   });
-  const sellerItemsFlatListFormat = useSelector(state => {
+  const sellerItemsFlatListFormat = useSelector((state) => {
     return state.sellerItems.sellerItemsFlatListFormat;
   });
-  const wasteTypes = useSelector(state => {
+  const wasteTypes = useSelector((state) => {
     return state.wasteType.wasteTypes;
   });
   const [trashsState, dispatchAmountTrashsState] = useReducer(
     trashSellingReducer,
     {
       sellerItemsForSell,
-      sellerItemsFlatListFormat //becuase these are already loaded in showAllSellerTrash
+      sellerItemsFlatListFormat, //becuase these are already loaded in showAllSellerTrash
     }
   );
 
@@ -172,7 +168,7 @@ export default SellingTrashScreen = props => {
     setIsInOperation(false);
     props.navigation.navigate({
       routeName: "chooseBuyerForSellScreen",
-      params: { distance }
+      params: { distance },
     });
   }, [trashsState.sellerItemsForSell, distance, dispatch]);
 
@@ -182,7 +178,7 @@ export default SellingTrashScreen = props => {
       dispatchAmountTrashsState({
         type: SET_LOCAL_SELLERITEMS,
         sellerItemsForSell,
-        sellerItemsFlatListFormat
+        sellerItemsFlatListFormat,
       });
     }
   }, [sellerItemsForSell, sellerItemsFlatListFormat]);
@@ -197,7 +193,7 @@ export default SellingTrashScreen = props => {
           ...styles.screen,
           width: wp("100%"),
           height: hp("100%"),
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <ModalLoading modalVisible={isInOperation} userRole="seller" />
@@ -210,30 +206,27 @@ export default SellingTrashScreen = props => {
               width: "100%",
               height: "10%",
               flexDirection: "row",
-              backgroundColor: Colors.soft_primary_dark,
+              backgroundColor: Colors.hard_secondary,
               paddingVertical: 10,
-              alignItems: "center"
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <View
-              style={{ width: "100%", height: "100%", alignItems: "center" }}
+            <ThaiBoldText
+              style={{
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 20,
+              }}
             >
-              <ThaiBoldText
-                style={{
-                  color: Colors.on_primary_dark.low_constrast,
-                  fontSize: 20
-                }}
-              >
-                เลือกขยะที่ต้องการขายพร้อมจำนวน
-              </ThaiBoldText>
-            </View>
+              เลือกขยะที่ต้องการขายพร้อมจำนวน
+            </ThaiBoldText>
           </View>
           <View
             style={{
               ...styles.allTrashContainer,
               width: "100%",
               height: "70%",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <View style={{ width: "100%", height: "100%" }}>
@@ -242,9 +235,9 @@ export default SellingTrashScreen = props => {
                 refreshing={isRefreshing}
                 onRefresh={refreshSellerItems}
                 style={{
-                  flex: 1
+                  flex: 1,
                 }}
-                keyExtractor={item => item.subtype}
+                keyExtractor={(item) => item.subtype}
                 renderItem={({ item }) => {
                   return (
                     <TrashCardForSell
@@ -281,7 +274,7 @@ export default SellingTrashScreen = props => {
                           type: ADD_AMOUNT_FORSELL,
                           subtype: item.subtype,
                           majortype: item.type,
-                          addAmount: 1
+                          addAmount: 1,
                         })
                       }
                       onDecrease={() => {
@@ -289,15 +282,15 @@ export default SellingTrashScreen = props => {
                           type: MINUS_AMOUNT_FORSELL,
                           subtype: item.subtype,
                           majortype: item.type,
-                          minusAmount: 1
+                          minusAmount: 1,
                         });
                       }}
-                      onEdit={text => {
+                      onEdit={(text) => {
                         dispatchAmountTrashsState({
                           type: EDIT_AMOUNT_FORSELL,
                           subtype: item.subtype,
                           majortype: item.type,
-                          value: text > 0 ? parseInt(text, 10) : 0 //not positive, Nan
+                          value: text > 0 ? parseInt(text, 10) : 0, //not positive, Nan
                         });
                       }}
                       onSelected={() => {
@@ -305,7 +298,7 @@ export default SellingTrashScreen = props => {
                         dispatchAmountTrashsState({
                           type: SELECT_ITEM,
                           majortype: item.type,
-                          subtype: item.subtype
+                          subtype: item.subtype,
                         });
                       }}
                     />
@@ -320,7 +313,7 @@ export default SellingTrashScreen = props => {
               height: "20%",
               justifyContent: "space-around",
               alignItems: "center",
-              paddingBottom: getStatusBarHeight()
+              paddingBottom: getStatusBarHeight(),
             }}
           >
             <View
@@ -329,13 +322,13 @@ export default SellingTrashScreen = props => {
                 height: "30%",
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <ThaiRegText
                 style={{
                   fontSize: 12,
-                  color: Colors.on_primary_bright.low_constrast
+                  color: Colors.on_primary_bright.low_constrast,
                 }}
               >
                 ค้นหาผู้รับซื้อในระยะ{" "}
@@ -344,11 +337,11 @@ export default SellingTrashScreen = props => {
                 style={{
                   fontSize: 14,
                   textAlign: "center",
-                  color: Colors.on_primary_bright.low_constrast
+                  color: Colors.on_primary_bright.low_constrast,
                 }}
                 value={distance}
                 selectTextOnFocus={true}
-                onChangeText={value => {
+                onChangeText={(value) => {
                   setDistance(value.toString());
                 }}
                 keyboardType="number-pad"
@@ -356,7 +349,7 @@ export default SellingTrashScreen = props => {
               <ThaiRegText
                 style={{
                   fontSize: 12,
-                  color: Colors.on_primary_bright.low_constrast
+                  color: Colors.on_primary_bright.low_constrast,
                 }}
               >
                 {" "}
@@ -371,7 +364,7 @@ export default SellingTrashScreen = props => {
                 flexDirection: "row",
                 justifyContent: "space-around",
                 alignItems: "center",
-                padding: 5
+                padding: 5,
               }}
             >
               <CustomButton
@@ -379,7 +372,7 @@ export default SellingTrashScreen = props => {
                   width: "40%",
                   height: "80%",
                   maxHeight: 40,
-                  borderRadius: 8
+                  borderRadius: 8,
                 }}
                 btnColor={Colors.button.cancel.btnBackground}
                 onPress={() => props.navigation.goBack()}
@@ -393,7 +386,7 @@ export default SellingTrashScreen = props => {
                 />
                 <ThaiRegText
                   style={{
-                    fontSize: 12
+                    fontSize: 12,
                   }}
                 >
                   {` ย้อนกลับ`}
@@ -405,7 +398,7 @@ export default SellingTrashScreen = props => {
                   width: "40%",
                   height: "80%",
                   maxHeight: 40,
-                  borderRadius: 8
+                  borderRadius: 8,
                 }}
                 btnColor={Colors.button.start_operation_info.btnBackground}
                 onPress={setSellerItemsForSell}
@@ -419,7 +412,7 @@ export default SellingTrashScreen = props => {
                 />
                 <ThaiRegText
                   style={{
-                    fontSize: 12
+                    fontSize: 12,
                   }}
                 >
                   {` ค้นหาผู้รับซื้อขยะ`}
@@ -437,7 +430,7 @@ const styles = StyleSheet.create({
   eachTrashCard: {
     marginBottom: 5,
     width: "100%",
-    height: 100
+    height: 100,
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
