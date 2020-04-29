@@ -455,18 +455,23 @@ exports.sendComment = functions.https.onCall((data,context) => {
       return {errorMessage: "Error has occurred due to incompleted data: The comment needs to have more than 5 characters, and the rating needs to be given"}
     return firestore.runTransaction(transaction => {
       return transaction.get(buyerDB.doc(data.seller)).then(doc => {
-        if (doc.data().rating == undefined) psudoRating = 0
-        else psudoRating = doc.data().rating
-        amountOfRating = Math.floor(psudoRating / 10)
-        totalRating = psudoRating % 10
-        newRating = ((amountOfRating * totalRating) + data.rating) / (amountOfRating + 1) + (amountOfRating + 1) * 10
+        if (doc.data().rating == undefined || doc.data().review == undefined) {
+          oldRating = 0
+          numberOfReviews = 0
+        }
+        else {
+          oldRating = doc.data().rating
+          numberOfReviews = doc.data().review.length
+        }
+        newRating = ((oldRating * numberOfReviews) + data.rating) / (numberOfReviews + 1)
 
         transaction.update(buyerDB.doc(data.seller), {
           rating: newRating,
           review: admin.firestore.FieldValue.arrayUnion({
             comment: data.comment,
             rating: data.rating,
-            user: "wchr.aun"
+            user: "wchr.aun",
+            timestamp: new Date()
           })
         })
         return true
