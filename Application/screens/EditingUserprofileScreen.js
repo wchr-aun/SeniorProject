@@ -94,7 +94,7 @@ const formReducer = (state, action) => {
 
 export default EditingUserprofileScreen = props => {
   useEffect(() => {
-    console.log("Edit");
+    console.log("Edit page");
   }, []);
 
   // get all user data
@@ -125,7 +125,7 @@ export default EditingUserprofileScreen = props => {
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
       phoneNo: userProfile.phoneNo
-        ? userProfile.phoneNo.replace("+660", "0")
+        ? userProfile.phoneNo.replace("+66", "0")
         : ""
     },
     inputValidities: {
@@ -170,8 +170,6 @@ export default EditingUserprofileScreen = props => {
   // Search map from user input form
   const searchMapHandler = async () => {
     // do async task
-    console.log("searhMapHandler -- editUserScreen");
-    console.log(formState.addrFormIsValid);
     if (!formState.addrFormIsValid) {
       setError("Please fill all the addresses");
       return;
@@ -200,11 +198,8 @@ export default EditingUserprofileScreen = props => {
         formState.inputValues.province +
         " " +
         formState.inputValues.postalCode;
-    console.log(userAddrString);
     setAddrReadable(userAddrString);
     let result = await getManualStringLocation(userAddrString);
-    console.log("result");
-    console.log(result);
     setAddrCord(result);
     setIsAddrModalVisible(true);
   };
@@ -219,6 +214,7 @@ export default EditingUserprofileScreen = props => {
   const editConfirmHandler = async () => {
     setIsLoading(true);
     setIsInOperation(true);
+    setTextInOperation("กำลังแก้ไขข้อมูล")
 
     if (!formState.allFormIsValid) {
       setError("โปรดกรอกข้อมูลให้ครบถ้วน");
@@ -234,6 +230,7 @@ export default EditingUserprofileScreen = props => {
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
     };
 
+    console.log(user)
     editUserInfo(user)
       // .then(() => {
       //   AsyncStorage.clear()
@@ -268,14 +265,14 @@ export default EditingUserprofileScreen = props => {
   }
 
   // For User signout
-
+  const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ")
   const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
   const signOutHandler = async () => {
     setIsInOperation(true);
     await dispatch(authAction.signout());
     setIsInOperation(false);
-    props.navigation.navigate("StartupScreen");
+    props.navigation.navigate("UserSigninScreen");
   };
 
   //User image
@@ -311,7 +308,7 @@ export default EditingUserprofileScreen = props => {
         width: wp("100%")
       }}
     >
-      <ModalLoading modalVisible={isInOperation} />
+      <ModalLoading modalVisible={isInOperation} text={textInOperation} />
       <LinearGradient colors={Colors.linearGradientDark}>
         <View
           style={{
@@ -581,7 +578,6 @@ export default EditingUserprofileScreen = props => {
 
               <TouchableOpacity
                 onPress={() => {
-                  console.log(isCurrentAddr);
                   setIsCurrentAddr(preState => !preState);
                 }}
               >

@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Text
+  Text,
 } from "react-native";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Entypo, Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
@@ -22,7 +22,7 @@ import Colors from "../constants/Colors";
 import ImageCircle from "./UI/ImageCircle";
 import ThaiBoldText from "./ThaiBoldText";
 
-const getReadableTag = tag => {
+const getReadableTag = (tag) => {
   switch (tag) {
     case 0:
       return "ขยะอันตราย";
@@ -34,7 +34,7 @@ const getReadableTag = tag => {
       break;
   }
 };
-const getColorTag = tag => {
+const getColorTag = (tag) => {
   switch (tag) {
     case 0:
       return "#b51a18";
@@ -47,9 +47,9 @@ const getColorTag = tag => {
   }
 };
 
-export default TrashCard = props => {
+export default TrashCard = (props) => {
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableWithoutFeedback onPress={props.onPress}>
       <View
         style={{
           ...styles.trashCard,
@@ -60,7 +60,7 @@ export default TrashCard = props => {
           marginVertical: 5,
           overflow: "hidden",
           backgroundColor: Colors.secondary,
-          borderRadius: 10
+          borderRadius: 10,
         }}
       >
         <View
@@ -71,7 +71,7 @@ export default TrashCard = props => {
             backgroundColor: Colors.secondary,
             padding: wp("2.5%"),
             alignItems: "center",
-            justifyContent: "space-around"
+            justifyContent: "space-around",
           }}
         >
           <ImageCircle
@@ -86,7 +86,7 @@ export default TrashCard = props => {
             ...styles.descriptionContainer,
             width: "50%",
             height: "100%",
-            backgroundColor: Colors.secondary
+            backgroundColor: Colors.secondary,
           }}
         >
           <View
@@ -94,7 +94,7 @@ export default TrashCard = props => {
               ...styles.sellerItemName,
               ...styles.descriptionRow,
               width: "100%",
-              height: "30%"
+              height: "30%",
             }}
           >
             <ThaiRegText style={{ fontSize: 12 }}>ประเภท: </ThaiRegText>
@@ -102,7 +102,7 @@ export default TrashCard = props => {
               style={{
                 ...styles.trashName,
                 color: Colors.primary_bright_variant,
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               {props.wasteName}
@@ -115,7 +115,7 @@ export default TrashCard = props => {
                   ...styles._sellerItemPrice,
                   ...styles.descriptionRow,
                   width: "100%",
-                  height: "60%"
+                  height: "60%",
                 }}
               >
                 <ThaiRegText style={{ fontSize: 12 }}>
@@ -128,7 +128,7 @@ export default TrashCard = props => {
                           ? Colors.primary_dark
                           : props.changeAmount > 0
                           ? Colors.primary_bright
-                          : Colors.error
+                          : Colors.error,
                     }}
                   >
                     {props.changeAmount ? props.changeAmount.toString() : 0}
@@ -144,7 +144,7 @@ export default TrashCard = props => {
                   ...styles.descriptionRow,
                   width: "100%",
                   height: "30%",
-                  justifyContent: "space-around"
+                  justifyContent: "space-around",
                 }}
               >
                 <View style={{ width: "20%" }}>
@@ -158,7 +158,7 @@ export default TrashCard = props => {
                   <ThaiRegText
                     style={{
                       ...styles.trashDisposal,
-                      color: getColorTag(props.wasteTag)
+                      color: getColorTag(props.wasteTag),
                     }}
                   >
                     {` ${getReadableTag(props.wasteTag)}`}
@@ -170,7 +170,7 @@ export default TrashCard = props => {
                   ...styles._sellerItemPrice,
                   ...styles.descriptionRow,
                   width: "100%",
-                  height: "30%"
+                  height: "30%",
                 }}
               >
                 <ThaiRegText style={styles.trashAdjustPrice}>
@@ -197,7 +197,7 @@ export default TrashCard = props => {
             backgroundColor: Colors.secondary,
             alignItems: "center",
             justifyContent: "center",
-            padding: 10
+            padding: 10,
           }}
         >
           <View
@@ -208,7 +208,7 @@ export default TrashCard = props => {
               alignItems: "center",
               justifyContent: "space-around",
               borderRadius: 8,
-              backgroundColor: Colors.soft_secondary
+              backgroundColor: Colors.soft_secondary,
             }}
           >
             {/* + */}
@@ -217,7 +217,7 @@ export default TrashCard = props => {
                 width: "100%",
                 height: "30%",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               {!props.selected &&
@@ -227,7 +227,7 @@ export default TrashCard = props => {
                   <AntDesign
                     name="plus"
                     size={24}
-                    color={Colors.hard_secondary}
+                    color={Colors.soft_primary_dark}
                   />
                 </TouchableOpacity>
               )}
@@ -239,7 +239,7 @@ export default TrashCard = props => {
                 height: "30%",
                 justifyContent: "center",
                 alignItems: "center",
-                ...styles.shadow
+                ...styles.shadow,
               }}
             >
               {props.editingMode ? (
@@ -263,7 +263,7 @@ export default TrashCard = props => {
                 width: "100%",
                 height: "30%",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               {!props.selected &&
@@ -273,7 +273,7 @@ export default TrashCard = props => {
                   <AntDesign
                     name="minus"
                     size={24}
-                    color={Colors.hard_secondary}
+                    color={Colors.soft_primary_dark}
                   />
                 </TouchableOpacity>
               )}
@@ -281,35 +281,35 @@ export default TrashCard = props => {
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   trashCard: {
     flexDirection: "row",
-    borderRadius: 10
+    borderRadius: 10,
   },
   descriptionRow: {
     flexDirection: "row",
     padding: 5,
-    alignItems: "center"
+    alignItems: "center",
   },
   trashName: {
-    fontSize: 16
+    fontSize: 16,
   },
   trashDisposal: {
-    fontSize: 12
+    fontSize: 12,
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
 
-    elevation: 2
-  }
+    elevation: 2,
+  },
 });

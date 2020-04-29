@@ -1,22 +1,12 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-  Modal,
-  TouchableHighlight,
-  Alert
-} from "react-native";
+import React from "react";
+import { View, StyleSheet, ActivityIndicator, Modal } from "react-native";
 import Colors from "../constants/Colors";
 import ThaiBoldText from "./ThaiBoldText";
 
-export default ModalLoading = props => {
+export default ModalLoading = (props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.modalVisible}
       onRequestClose={props.onRequestClose}
@@ -26,7 +16,7 @@ export default ModalLoading = props => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgba(0,0,0,0.5)"
+          backgroundColor: "rgba(0,0,0,0.5)",
         }}
       >
         <View
@@ -37,7 +27,7 @@ export default ModalLoading = props => {
               props.userRole === "seller" ? "white" : Colors.primary_dark,
             borderRadius: 10,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <View
@@ -47,7 +37,7 @@ export default ModalLoading = props => {
               justifyContent: "flex-end",
               alignItems: "center",
               ...styles.shadow,
-              paddingBottom: 3
+              paddingBottom: 3,
             }}
           >
             <ActivityIndicator size="large" color={Colors.primary_bright} />
@@ -58,16 +48,16 @@ export default ModalLoading = props => {
               height: "50%",
               justifyContent: "flex-start",
               alignItems: "center",
-              paddingTop: 3
+              paddingTop: 3,
             }}
           >
             <ThaiBoldText
               style={{
                 color:
-                  props.userRole === "seller" ? Colors.primary_bright : "white"
+                  props.userRole === "seller" ? Colors.primary_bright : "white",
               }}
             >
-              กำลังดำเนินการ
+              {props.text ? props.text : "กำลังดำเนินการ"}
             </ThaiBoldText>
           </View>
         </View>
@@ -79,24 +69,24 @@ export default ModalLoading = props => {
 const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
-    elevation: 3
-  }
+    elevation: 3,
+  },
 });

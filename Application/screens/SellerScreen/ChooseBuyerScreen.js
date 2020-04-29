@@ -6,31 +6,28 @@ import {
   Alert,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSelector, useDispatch } from "react-redux";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 import { NavigationEvents } from "react-navigation";
 import Colors from "../../constants/Colors";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
-import * as transactionAction from "../../store/actions/transactionAction";
-import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
 
-const BuyerChoice = props => {
+const BuyerChoice = (props) => {
   return (
     <TouchableOpacity
       style={{
@@ -42,7 +39,7 @@ const BuyerChoice = props => {
         margin: wp("3.75%"),
         justifyContent: "center",
         padding: 10,
-        ...styles.shadow
+        ...styles.shadow,
       }}
       onPress={props.onSelected}
     >
@@ -51,7 +48,7 @@ const BuyerChoice = props => {
           width: "100%",
           height: "100%",
           flexDirection: "row",
-          justifyContent: "space-around"
+          justifyContent: "space-around",
         }}
       >
         <View style={{ width: "70%", height: "100%", padding: 5 }}>
@@ -59,7 +56,7 @@ const BuyerChoice = props => {
             style={{
               alignSelf: "center",
               height: "30%",
-              width: "100%"
+              width: "100%",
             }}
           >
             <ThaiRegText>
@@ -75,7 +72,7 @@ const BuyerChoice = props => {
             <FlatList
               style={{ flex: 1 }}
               data={props.sellerItemsForSell.getFlatListFormat(false)}
-              keyExtractor={item => item.type + item.subtype}
+              keyExtractor={(item) => item.type + item.subtype}
               renderItem={({ item }) => {
                 return (
                   <View
@@ -83,7 +80,7 @@ const BuyerChoice = props => {
                       height: 20,
                       width: "100%",
                       backgroundColor: Colors.secondary,
-                      borderRadius: 5
+                      borderRadius: 5,
                     }}
                   >
                     <ThaiRegText>
@@ -91,7 +88,7 @@ const BuyerChoice = props => {
                       <ThaiMdText
                         style={{
                           fontSize: 10,
-                          color: Colors.primary_bright_variant
+                          color: Colors.primary_bright_variant,
                         }}
                       >
                         {item.subtype}
@@ -116,7 +113,7 @@ const BuyerChoice = props => {
                         <ThaiMdText
                           style={{
                             fontSize: 10,
-                            color: Colors.primary_bright_variant
+                            color: Colors.primary_bright_variant,
                           }}
                         >
                           {item.amount *
@@ -135,7 +132,7 @@ const BuyerChoice = props => {
             width: "30%",
             height: "100%",
             justifyContent: "center",
-            padding: 3
+            padding: 3,
           }}
         >
           <View
@@ -146,7 +143,7 @@ const BuyerChoice = props => {
               borderRadius: 8,
               backgroundColor: Colors.soft_secondary,
               justifyContent: "space-around",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <ThaiRegText
@@ -155,7 +152,7 @@ const BuyerChoice = props => {
             <ThaiBoldText
               style={{
                 fontSize: 24,
-                color: Colors.on_primary_dark.high_constrast
+                color: Colors.on_primary_dark.high_constrast,
               }}
             >
               {props.totalPrice}
@@ -167,13 +164,13 @@ const BuyerChoice = props => {
   );
 };
 
-export default ChooseBuyerScreen = props => {
+export default ChooseBuyerScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
   const isOperationCompleted = useSelector(
-    state => state.navigation.isOperationCompleted
+    (state) => state.navigation.isOperationCompleted
   );
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
@@ -189,11 +186,11 @@ export default ChooseBuyerScreen = props => {
   }, []);
 
   // required data for sending an transaction
-  const sellerAddr = useSelector(state => state.user.userProfile.addr);
+  const sellerAddr = useSelector((state) => state.user.userProfile.addr);
   const sellerItemsForSell = useSelector(
-    state => state.sellerItems.sellerItemsForSell
+    (state) => state.sellerItems.sellerItemsForSell
   );
-  const buyerListRedux = useSelector(state => state.sellerItems.buyerList);
+  const buyerListRedux = useSelector((state) => state.sellerItems.buyerList);
 
   // Callback fn
   const loadBuyer = useCallback(async () => {
@@ -202,7 +199,7 @@ export default ChooseBuyerScreen = props => {
       sellerItemsAction.getBuyerList({
         distance: parseInt(props.navigation.getParam("distance"), 10),
         wasteType: sellerItemsForSell.getSelected(),
-        addr: sellerAddr
+        addr: sellerAddr,
       })
     );
     setIsRefreshing(false);
@@ -236,7 +233,7 @@ export default ChooseBuyerScreen = props => {
     setBuyerInfomation({
       buyerName,
       buyerPriceInfo,
-      unavailableTypes
+      unavailableTypes,
     });
     // ---
     setDatapickerShow(true);
@@ -250,7 +247,7 @@ export default ChooseBuyerScreen = props => {
   const [date, setDate] = useState(new Date().getTime()); //date that  will be passed to submit fn.
   const [selectedTimes, setSelectedTimes] = useState([]);
 
-  const handleDatePicked = date => {
+  const handleDatePicked = (date) => {
     setDate(date);
     hideDateTimePicker();
     setModalVisible(true);
@@ -274,7 +271,7 @@ export default ChooseBuyerScreen = props => {
                 }
                 saleList["length"] += 1;
                 saleList[type][subtype] = {
-                  amount: sellerItemsForSell[type][subtype]
+                  amount: sellerItemsForSell[type][subtype],
                 };
               }
             }
@@ -294,7 +291,7 @@ export default ChooseBuyerScreen = props => {
                 saleList["length"] += 1;
                 saleList[type][subtype] = {
                   amount: sellerItemsForSell[type][subtype],
-                  price: buyerInfomation.buyerPriceInfo[type][subtype]
+                  price: buyerInfomation.buyerPriceInfo[type][subtype],
                 };
               }
             }
@@ -311,9 +308,9 @@ export default ChooseBuyerScreen = props => {
             assignedTime: selectedTimes,
             sellerAddr,
             saleList,
-            sellerAddr
-          }
-        }
+            sellerAddr,
+          },
+        },
       });
     } catch (err) {
       Alert.alert("มีข้อผิดพลาดเกิดขึ้น", err.message, [{ text: "OK" }]);
@@ -323,7 +320,7 @@ export default ChooseBuyerScreen = props => {
     sellerAddr,
     sellerItemsForSell,
     buyerInfomation,
-    selectedTimes
+    selectedTimes,
   ]);
 
   // When 'assignedTime.selectedTimes' show it
@@ -368,7 +365,7 @@ export default ChooseBuyerScreen = props => {
       behavior="padding"
       style={{
         ...styles.screen,
-        flex: 1
+        flex: 1,
       }}
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
@@ -380,7 +377,7 @@ export default ChooseBuyerScreen = props => {
           width: wp("100%"),
           height: hp("100%"),
           backgroundColor: Colors.secondary,
-          borderRadius: 10
+          borderRadius: 10,
         }}
       >
         <View
@@ -390,14 +387,14 @@ export default ChooseBuyerScreen = props => {
             flexDirection: "row",
             backgroundColor: Colors.soft_primary_dark,
             paddingVertical: 10,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
-                fontSize: 20
+                fontSize: 20,
               }}
             >
               เลือกผู้รับซื้อ
@@ -408,7 +405,7 @@ export default ChooseBuyerScreen = props => {
           {buyerListRedux.length > 0 ? (
             <FlatList
               data={buyerListRedux}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               onRefresh={loadBuyer}
               refreshing={isRefreshing}
               renderItem={({ item }) => {
@@ -450,7 +447,7 @@ export default ChooseBuyerScreen = props => {
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -458,7 +455,7 @@ export default ChooseBuyerScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 40
+              maxHeight: 40,
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => props.navigation.goBack()}
@@ -472,7 +469,7 @@ export default ChooseBuyerScreen = props => {
             />
             <ThaiRegText
               style={{
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               {` ย้อนกลับ`}
@@ -484,7 +481,7 @@ export default ChooseBuyerScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 40
+              maxHeight: 40,
             }}
             btnColor={Colors.button.submit_primary_dark.btnBackground}
             onPress={quickSellHandler}
@@ -493,7 +490,7 @@ export default ChooseBuyerScreen = props => {
           >
             <ThaiRegText
               style={{
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               {` ขายด่วน`}
@@ -507,17 +504,17 @@ export default ChooseBuyerScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
-    elevation: 3
-  }
+    elevation: 3,
+  },
 });

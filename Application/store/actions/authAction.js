@@ -4,7 +4,6 @@ import {
 } from "../../utils/firebaseFunctions";
 import firebaseUtil from "../../firebase";
 import { AsyncStorage } from "react-native";
-import { verifyNotificationsPermissions } from "../../utils/permissions";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGIN = "LOGIN";

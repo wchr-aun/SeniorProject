@@ -7,11 +7,7 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-import {
-  Ionicons,
-  MaterialIcons,
-  MaterialCommunityIcons
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
 import StartupScreen from "../screens/UserStartupScreen";
@@ -25,6 +21,7 @@ import SellingTransactionScreen from "../screens/SellerScreen/SellingTransaction
 import SellerHomepageScreen from "../screens/SellerScreen/SellerHomepageScreen";
 import SellingTransactionDetailScreen from "../screens/SellerScreen/SellingTransactionDetailScreen";
 import SellingTrashScreen from "../screens/SellerScreen/SellingTrashScreen";
+import BuyerDetailShowPriceScreen from "../screens/SellerScreen/BuyerDetailShowPriceScreen";
 import ChooseBuyerScreen from "../screens/SellerScreen/ChooseBuyerScreen";
 
 import BuyerHomepageScreen from "../screens/BuyerScreen/BuyerHomepageScreen";
@@ -52,7 +49,8 @@ const SellerhomepageNavigator = createStackNavigator(
   {
     SellerHomepageScreen: SellerHomepageScreen,
     SellingTransactionDetailScreen: SellingTransactionDetailScreen,
-    BuyerDetailScreen
+    BuyerDetailScreen,
+    BuyerDetailShowPriceScreen,
   },
   { headerMode: "none" }
 );
@@ -64,31 +62,31 @@ SellerhomepageNavigator.navigationOptions = ({ navigation }) => {
     tabBarVisible = false;
   }
   return {
-    tabBarVisible
+    tabBarVisible,
   };
 };
 
 const ShowSellerItemsNavigator = createStackNavigator(
   {
     ShowSellerItemsScreen: {
-      screen: ShowSellerItemsScreen
+      screen: ShowSellerItemsScreen,
     },
     WasteDetailScreen: {
-      screen: WasteDetailScreen
+      screen: WasteDetailScreen,
     },
     SellingTrashScreen: {
       screen: SellingTrashScreen,
-      navigationOptions: { headerTitle: "ขายขยะ" }
+      navigationOptions: { headerTitle: "ขายขยะ" },
     },
     chooseBuyerForSellScreen: ChooseBuyerScreen,
     sellReqBeforeSending: SellingReqBeforeSendingScreen,
-    BuyerDetailScreen
+    BuyerDetailScreen,
   },
   {
     headerMode: "none",
     cardStyle: {
-      paddingTop: 0
-    }
+      paddingTop: 0,
+    },
   }
 );
 
@@ -99,7 +97,7 @@ ShowSellerItemsNavigator.navigationOptions = ({ navigation }) => {
     tabBarVisible = false;
   }
   return {
-    tabBarVisible
+    tabBarVisible,
   };
 };
 
@@ -107,13 +105,13 @@ const SellingTransactionNavigator = createStackNavigator(
   {
     SellingTransactionScreen: {
       screen: SellingTransactionScreen,
-      navigationOptions: { headerTitle: "การขายขยะ" }
+      navigationOptions: { headerTitle: "การขายขยะ" },
     },
     SellingTransactionDetailScreen: {
       screen: SellingTransactionDetailScreen,
-      navigationOptions: { headerTitle: "รายละเอียด" }
+      navigationOptions: { headerTitle: "รายละเอียด" },
     },
-    BuyerDetailScreen
+    BuyerDetailScreen,
   },
   { headerMode: "none" }
 );
@@ -123,7 +121,7 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
     SellingTx: {
       screen: SellingTransactionNavigator,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
+        tabBarIcon: (tabInfo) => {
           return (
             <MaterialCommunityIcons
               name="history"
@@ -131,13 +129,13 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
               color={Colors.on_primary_dark.low_constrast}
             />
           );
-        }
-      }
+        },
+      },
     },
     SearchBuyer: {
       screen: SearchBuyerScreen,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
+        tabBarIcon: (tabInfo) => {
           return (
             <MaterialCommunityIcons
               name="account-search"
@@ -145,9 +143,9 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
               color={Colors.on_primary_dark.low_constrast}
             />
           );
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     tabBarOptions: {
@@ -156,9 +154,9 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
       showLabel: false,
       style: {
         backgroundColor: Colors.soft_primary_dark,
-        paddingTop: getStatusBarHeight()
-      }
-    }
+        paddingTop: getStatusBarHeight(),
+      },
+    },
   }
 );
 
@@ -168,46 +166,46 @@ const SellerBottomTabConfig = {
     screen: SellerhomepageNavigator,
     navigationOptions: {
       tabBarLabel: "หน้าหลัก",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return <Ionicons name="md-home" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   AllTrash: {
     screen: ShowSellerItemsNavigator,
     navigationOptions: {
       tabBarLabel: "ขยะที่สะสมอยู่",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return <Ionicons name="md-trash" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   CheckTrash: {
     screen: OptionTrashCheckScreen,
     navigationOptions: {
       tabBarLabel: "เช็คขยะ",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return (
           <Ionicons name="md-camera" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   SellingTxAndSearchBuyer: {
     screen: SellingTxAndSearchBuyerTopNavigator,
     navigationOptions: {
       tabBarLabel: "การขายขยะ",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return (
           <Ionicons name="md-list-box" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary_dark
-    }
-  }
+      tabBarColor: Colors.primary_dark,
+    },
+  },
 };
 
 // Like a root navigator
@@ -220,8 +218,8 @@ const SellerNavigator =
         inactiveColor: Colors.soft_primary_dark,
         barStyle: {
           height: AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary_dark
-        }
+          backgroundColor: Colors.primary_dark,
+        },
       })
     : createBottomTabNavigator(SellerBottomTabConfig, {
         tabBarOptions: {
@@ -229,23 +227,23 @@ const SellerNavigator =
           activeTintColor: Colors.primary_bright,
           style: {
             backgroundColor: Colors.primary_dark,
-            height: AppVariableSetting.bottomBarHeight
-          }
-        }
+            height: AppVariableSetting.bottomBarHeight,
+          },
+        },
       });
 
 // **************************** For Buyer ****************************
 const BuyerhomepageNavigator = createStackNavigator(
   {
     BuyerHomepageScreen,
-    BuyingTransactionDetailScreen
+    BuyingTransactionDetailScreen,
   },
   { headerMode: "none" }
 );
 const SearchQuicksellingNavigator = createStackNavigator(
   {
     SearchQuicksellingScreen,
-    BuyingTransactionDetailScreen
+    BuyingTransactionDetailScreen,
   },
   { headerMode: "none" }
 );
@@ -253,7 +251,7 @@ const SearchQuicksellingNavigator = createStackNavigator(
 const BuyingTransactionNavigator = createStackNavigator(
   {
     BuyingTransactionScreen,
-    BuyingTransactionDetailScreen
+    BuyingTransactionDetailScreen,
   },
   { headerMode: "none" }
 );
@@ -264,7 +262,7 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
       screen: PathOptimization,
       navigationOptions: {
         tabBarLabel: "การรับซื้อขยะในวันนั้น",
-        tabBarIcon: tabInfo => {
+        tabBarIcon: (tabInfo) => {
           return (
             <Ionicons
               name="md-map"
@@ -272,15 +270,15 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
               color={Colors.on_primary_dark.low_constrast}
             />
           );
-        }
-      }
+        },
+      },
     },
     AllTypeTransaction: {
       screen: BuyingTransactionNavigator,
       navigationOptions: {
         headerTitle: "การรับซื้อขยะ",
         tabBarLabel: "การรับซื้อขยะในวันนั้น",
-        tabBarIcon: tabInfo => {
+        tabBarIcon: (tabInfo) => {
           return (
             <Ionicons
               name="md-list-box"
@@ -288,9 +286,9 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
               color={Colors.on_primary_dark.low_constrast}
             />
           );
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     tabBarOptions: {
@@ -299,9 +297,9 @@ const BuyerTransactionNavigator = createMaterialTopTabNavigator(
       showLabel: false,
       style: {
         backgroundColor: Colors.soft_primary_dark,
-        paddingTop: getStatusBarHeight()
-      }
-    }
+        paddingTop: getStatusBarHeight(),
+      },
+    },
   }
 );
 
@@ -311,48 +309,48 @@ const BuyerBottomTabConfig = {
     screen: BuyerhomepageNavigator,
     navigationOptions: {
       tabBarLabel: "หน้าหลัก",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return <Ionicons name="md-home" size={25} color={tabInfo.tintColor} />;
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   searchSellTransaction: {
     screen: SearchQuicksellingNavigator,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return (
           <Ionicons name="md-search" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   BuyerTransaction: {
     screen: BuyerTransactionNavigator,
     navigationOptions: {
       tabBarLabel: "การรับซื้อขยะ",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return (
           <Ionicons name="ios-list-box" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary_dark
-    }
+      tabBarColor: Colors.primary_dark,
+    },
   },
   EditBuyerInfo: {
     screen: EditBuyerInfomationScreen,
     navigationOptions: {
       tabBarLabel: "จัดการรายการ",
-      tabBarIcon: tabInfo => {
+      tabBarIcon: (tabInfo) => {
         return (
           <Ionicons name="ios-build" size={25} color={tabInfo.tintColor} />
         );
       },
-      tabBarColor: Colors.primary_dark
-    }
-  }
+      tabBarColor: Colors.primary_dark,
+    },
+  },
 };
 
 // Like a root navigator
@@ -365,8 +363,8 @@ const BuyerNavigator =
         inactiveColor: Colors.on_primary_dark.low_constrast,
         barStyle: {
           height: AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary_dark
-        }
+          backgroundColor: Colors.primary_dark,
+        },
       })
     : createBottomTabNavigator(BuyerBottomTabConfig, {
         tabBarOptions: {
@@ -374,16 +372,16 @@ const BuyerNavigator =
           activeTintColor: Colors.on_primary_dark.high_constrast,
           style: {
             backgroundColor: Colors.primary_dark,
-            height: AppVariableSetting.bottomBarHeight
-          }
-        }
+            height: AppVariableSetting.bottomBarHeight,
+          },
+        },
       });
 
 // for UserHomepageScreen
 const UserAuthenNavigator = createStackNavigator(
   {
     UserSigninScreen: UserSigninScreen,
-    UserSignupScreen: UserSignupScreen
+    UserSignupScreen: UserSignupScreen,
   },
   { headerMode: "none" }
 );
@@ -394,7 +392,7 @@ const MainNavigator = createSwitchNavigator({
   SellerNavigator: SellerNavigator, //Seller Homepage
   BuyerNavigator: BuyerNavigator, //Seller Homepage
   EditingUserprofileScreen: EditingUserprofileScreen,
-  ConfigAccountScreen: ConfigAccountScreen
+  ConfigAccountScreen: ConfigAccountScreen,
 });
 
 EditingUserprofileScreen;

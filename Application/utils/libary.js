@@ -153,7 +153,7 @@ const formatTime = date => {
   //   getHours() - Returns the hour of the day (0-23).
   // getMinutes() - Returns the minute (0-59).
   //   return date.toLocaleTimeString() + " น.";
-  return `${date.getHours()}:${
+  return `${date.getHours().toString().match(/^[12]*/i)[0] !== "" ? date.getHours() : `0${date.getHours()}`}:${
     date.getMinutes().toString() === "0" ? "00" : date.getMinutes()
   } น.`;
 };
