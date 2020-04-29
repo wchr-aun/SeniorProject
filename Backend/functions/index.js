@@ -450,31 +450,29 @@ exports.setFavBuyer = functions.https.onCall((data,context) => {
 })
 
 exports.sendComment = functions.https.onCall((data,context) => {
-  if (context.auth != null) {
+  if (context.auth == null) {
     if (data.comment.length < 5 && data.rating == 0)
       return {errorMessage: "Error has occurred due to incompleted data: The comment needs to have more than 5 characters, and the rating needs to be given"}
-    firestore.runTransaction(transaction => {
-      sellerDB.doc(data.seller).get().then(doc => {
-        psudoRating = doc.data().rating
-        amountOfRating = psudoRating / 10
+    return firestore.runTransaction(transaction => {
+      return transaction.get(buyerDB.doc(data.seller)).then(doc => {
+        if (doc.data().rating == undefined) psudoRating = 0
+        else psudoRating = doc.data().rating
+        amountOfRating = Math.floor(psudoRating / 10)
         totalRating = psudoRating % 10
-        newRating = ((amountOfRating * totalRating) + data.rating) / (amountOfRating + 1)
+        newRating = ((amountOfRating * totalRating) + data.rating) / (amountOfRating + 1) + (amountOfRating + 1) * 10
 
-        sellerDB.doc(data.seller).update({
+        transaction.update(buyerDB.doc(data.seller), {
           rating: newRating,
           review: admin.firestore.FieldValue.arrayUnion({
             comment: data.comment,
             rating: data.rating,
-            user: context.auth.uid
+            user: "wchr.aun"
           })
-        }).catch(err => {
-          console.log("Error has occurred in sendComment() while updating updating " + context.auth.uid)
-          console.log(err)
-          return {errorMessage: err.message}
         })
+        return true
       })
     }).catch(err => {
-      console.log("Error has occurred in sendComment() while updating transaction " + context.auth.uid)
+      console.log("Error has occurred in sendComment() while updating transaction " + "wchr.aun")
       console.log(err)
       return {errorMessage: err.message}
     })
