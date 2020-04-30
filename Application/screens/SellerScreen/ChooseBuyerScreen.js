@@ -23,9 +23,10 @@ import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
+import ThaiBoldText from "../../components/ThaiBoldText";
 
 const BuyerChoice = (props) => {
   return (
@@ -371,6 +372,14 @@ export default ChooseBuyerScreen = (props) => {
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
       <ModalLoading modalVisible={isInOperation} userRole={"seller"} />
+      {datepickerShow ? (
+        <DateTimePicker
+          mode="date"
+          isVisible={datepickerShow}
+          onConfirm={handleDatePicked}
+          onCancel={hideDateTimePicker}
+        />
+      ) : null}
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{
@@ -385,23 +394,66 @@ export default ChooseBuyerScreen = (props) => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
             alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }} />
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 20,
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
-              เลือกผู้รับซื้อ
+              เลือกผู้รับซื้อที่คุณสนใจ
             </ThaiBoldText>
           </View>
+          <View
+            style={{
+              width: "20%",
+            }}
+          />
         </View>
+
         <View style={{ width: "100%", height: "70%" }}>
+          <TouchableOpacity onPress={quickSellHandler}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: wp("90%"),
+                maxHeight: 50,
+                backgroundColor: Colors.primary_dark,
+                alignSelf: "center",
+                borderRadius: 10,
+                padding: 10,
+                ...styles.shadow,
+              }}
+            >
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <MaterialCommunityIcons
+                  name="truck-fast"
+                  color={Colors.on_primary_dark.low_constrast}
+                  size={30}
+                />
+              </View>
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <ThaiBoldText
+                  style={{
+                    fontSize: 30,
+                    color: Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  ขายด่วน
+                </ThaiBoldText>
+              </View>
+            </View>
+          </TouchableOpacity>
+
           {buyerListRedux.length > 0 ? (
             <FlatList
               data={buyerListRedux}
@@ -432,14 +484,6 @@ export default ChooseBuyerScreen = (props) => {
             </View>
           )}
         </View>
-        {datepickerShow ? (
-          <DateTimePicker
-            mode="date"
-            isVisible={datepickerShow}
-            onConfirm={handleDatePicked}
-            onCancel={hideDateTimePicker}
-          />
-        ) : null}
 
         <View
           style={{
