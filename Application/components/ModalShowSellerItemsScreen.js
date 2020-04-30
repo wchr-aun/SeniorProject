@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -30,27 +30,39 @@ export default ModalShowSellersItemsScreen = (props) => {
     props.wasteTypeDropdownFormat[0].subTypes
   );
   const [imageUrl, setImageUrl] = useState(
-    props.wasteTypes[majorType][subType]["imgUrl"]
+    props.wasteTypes[props.wasteTypeDropdownFormat[0].value][
+      props.wasteTypeDropdownFormat[0].subTypes[0].subType
+    ]["imgUrl"]
   );
   const getSubTypeFromMajorType = (majorType) => {
     let focusItem = props.wasteTypeDropdownFormat.filter(
       (item) => item.value === majorType
     )[0]; //get subtype
-    setSubTypes(focusItem.subTypes);
+    return focusItem;
   };
 
   const onDropdownSelectMajorType = (majorType) => {
-    getSubTypeFromMajorType(majorType);
+    const subtypeObj = getSubTypeFromMajorType(majorType);
     setMajorType(majorType);
-    setSubType("");
+    setSubType(subtypeObj.subTypes[0].subType);
+    setSubTypes(subtypeObj.subTypes);
+    setSubTypeView(subtypeObj.subTypes[0].value);
+    setImageUrl(
+      props.wasteTypes[majorType][subtypeObj.subTypes[0].subType]["imgUrl"]
+    );
   };
+
+  useEffect(() => {
+    console.log(majorType);
+    console.log(subType);
+  }, [majorType, subType]);
 
   const onDropdownSelectSubType = (value) => {
     const subTypeObj = subTypes.filter((item) => item.value === value)[0];
 
     setSubType(subTypeObj.subType);
     setSubTypeView(subTypeObj.value);
-    setImageUrl(props.wasteTypes[majorType][subType]["imgUrl"]);
+    setImageUrl(props.wasteTypes[majorType][subTypeObj.subType]["imgUrl"]);
   };
 
   const addWasteHandler = () => {
