@@ -5,45 +5,52 @@ import {
   Modal,
   TextInput,
   Alert,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 import Colors from "../constants/Colors";
 import { Dropdown } from "react-native-material-dropdown";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 import CustomButton from "./UI/CustomButton";
 import { AntDesign } from "@expo/vector-icons";
 
-export default ModalShowSellersItemsScreen = props => {
-  console.log(props.wasteTypeDropdownFormat);
-  const [subType, setSubType] = useState(
-    props.wasteTypeDropdownFormat[0].subTypes[0].value
-  );
+export default ModalShowSellersItemsScreen = (props) => {
+  console.log("From file modalShowSellerItems props.wasteTypes");
+
   const [amount, setAmount] = useState("0");
   const [majorType, setMajorType] = useState(
     props.wasteTypeDropdownFormat[0].value
   );
+  const [subType, setSubType] = useState(
+    props.wasteTypeDropdownFormat[0].subTypes[0].subType
+  );
+  const [subTypeView, setSubTypeView] = useState(
+    props.wasteTypeDropdownFormat[0].subTypes[0].value
+  );
   const [subTypes, setSubTypes] = useState(
     props.wasteTypeDropdownFormat[0].subTypes
   );
-  const getSubTypeFromMajorType = majorType => {
+  const [imageUrl, setImageUrl] = useState(
+    props.wasteTypes[majorType][subType]["imgUrl"]
+  );
+  const getSubTypeFromMajorType = (majorType) => {
     let focusItem = props.wasteTypeDropdownFormat.filter(
-      item => item.value === majorType
+      (item) => item.value === majorType
     )[0]; //get subtype
     setSubTypes(focusItem.subTypes);
   };
 
-  const onDropdownSelectMajorType = majorType => {
+  const onDropdownSelectMajorType = (majorType) => {
     getSubTypeFromMajorType(majorType);
     setMajorType(majorType);
     setSubType("");
   };
 
-  const onDropdownSelectSubType = subType => {
-    setSubType(subType);
+  const onDropdownSelectSubType = (value) => {
+    const subTypeObj = subTypes.filter((item) => item.value === value)[0];
+
+    setSubType(subTypeObj.subType);
+    setSubTypeView(subTypeObj.value);
+    setImageUrl(props.wasteTypes[majorType][subType]["imgUrl"]);
   };
 
   const addWasteHandler = () => {
@@ -65,35 +72,33 @@ export default ModalShowSellersItemsScreen = props => {
     >
       <View
         style={{
-          width: wp("80%"),
-          height: hp("60%"),
+          ...props.style,
           alignSelf: "center",
           alignItems: "center",
           justifyContent: "center",
-          marginTop: getStatusBarHeight()
+          padding: 10,
         }}
       >
         <View
           style={{
             ...styles.realContent,
+            alignItems: "center",
             width: "100%",
             height: "100%",
-            alignItems: "center",
             backgroundColor: Colors.secondary,
             borderRadius: 10,
             borderWidth: 2,
             borderColor: Colors.hard_secondary,
-            padding: 10
+            padding: 10,
           }}
         >
           <View
             style={{
               ...styles.realContent_ModalHeader,
-              width: "100%",
-              height: "20%",
-              backgroundColor: Colors.soft_primary_dark,
+              height: "10%",
+              backgroundColor: Colors.soft_secondary,
               padding: 10,
-              borderRadius: 10
+              borderRadius: 10,
             }}
           >
             <View
@@ -101,27 +106,41 @@ export default ModalShowSellersItemsScreen = props => {
             >
               <ThaiBoldText
                 style={{
-                  color: Colors.on_primary_dark.low_constrast,
+                  color: Colors.on_primary_bright.low_constrast,
                   fontSize: 26,
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
               >
                 เพิ่มประเภทขยะ
               </ThaiBoldText>
             </View>
           </View>
-
+          {/* Image */}
+          <View
+            style={{
+              width: "100%",
+              height: "40%",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={{ width: "100%", height: "100%" }}
+              source={{
+                uri: imageUrl,
+              }}
+            />
+          </View>
           <View
             style={{
               ...styles.inputs,
               justifyContent: "space-around",
               alignItems: "center",
               width: "100%",
-              height: "50%",
+              height: "40%",
               maxHeight: 200,
               flexDirection: "row",
               padding: 10,
-              marginVertical: 10
+              marginVertical: 10,
             }}
           >
             <View
@@ -130,22 +149,22 @@ export default ModalShowSellersItemsScreen = props => {
                 width: "70%",
                 height: "100%",
                 padding: 10,
-                justifyContent: "space-around"
+                justifyContent: "space-around",
               }}
             >
               <View
                 style={{
                   ...styles.firstDropdown,
                   width: "100%",
-                  height: 80
+                  height: 80,
                 }}
               >
                 <Dropdown
                   label="ประเภทวัสดุ"
                   value={majorType}
                   data={props.wasteTypeDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
-                  onChangeText={thisValue => {
-                    onDropdownSelectMajorType(thisValue);
+                  onChangeText={(value) => {
+                    onDropdownSelectMajorType(value);
                   }}
                   animationDuration={100}
                 />
@@ -154,14 +173,14 @@ export default ModalShowSellersItemsScreen = props => {
                 style={{
                   ...styles.secondDropdown,
                   width: "100%",
-                  height: 80
+                  height: 80,
                 }}
               >
                 <Dropdown
                   label="ชนิดของขยะ"
-                  value={subType}
+                  value={subTypeView}
                   data={subTypes}
-                  onChangeText={thisValue => {
+                  onChangeText={(thisValue) => {
                     onDropdownSelectSubType(thisValue);
                   }}
                 />
@@ -172,7 +191,7 @@ export default ModalShowSellersItemsScreen = props => {
                 ...styles.inputs_RightInputs,
                 width: "30%",
                 height: "100%",
-                padding: 10
+                padding: 10,
               }}
             >
               <View
@@ -183,7 +202,7 @@ export default ModalShowSellersItemsScreen = props => {
                   backgroundColor: Colors.secondary,
                   alignItems: "center",
                   justifyContent: "center",
-                  padding: 10
+                  padding: 10,
                 }}
               >
                 <View
@@ -195,7 +214,7 @@ export default ModalShowSellersItemsScreen = props => {
                     borderRadius: 8,
                     backgroundColor: Colors.soft_secondary,
                     borderColor: Colors.hard_secondary,
-                    borderWidth: 3
+                    borderWidth: 3,
                   }}
                 >
                   {/* + */}
@@ -206,12 +225,12 @@ export default ModalShowSellersItemsScreen = props => {
                       alignItems: "center",
                       justifyContent: "center",
                       borderBottomColor: Colors.hard_secondary,
-                      borderBottomWidth: 0.5
+                      borderBottomWidth: 0.5,
                     }}
                   >
                     <TouchableWithoutFeedback
                       onPress={() =>
-                        setAmount(preAmount =>
+                        setAmount((preAmount) =>
                           (Number(preAmount) + 1).toString()
                         )
                       }
@@ -219,7 +238,7 @@ export default ModalShowSellersItemsScreen = props => {
                       <AntDesign
                         name="plus"
                         size={24}
-                        color={Colors.hard_secondary}
+                        color={Colors.soft_primary_dark}
                       />
                     </TouchableWithoutFeedback>
                   </View>
@@ -229,7 +248,7 @@ export default ModalShowSellersItemsScreen = props => {
                       width: "100%",
                       height: "30%",
                       justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <TextInput
@@ -237,7 +256,7 @@ export default ModalShowSellersItemsScreen = props => {
                       selectTextOnFocus={true}
                       keyboardType="numeric"
                       value={amount}
-                      onChangeText={thisValue => {
+                      onChangeText={(thisValue) => {
                         setAmount(thisValue.toString());
                       }}
                     />
@@ -250,13 +269,13 @@ export default ModalShowSellersItemsScreen = props => {
                       alignItems: "center",
                       justifyContent: "center",
                       borderTopColor: Colors.hard_secondary,
-                      borderTopWidth: 0.5
+                      borderTopWidth: 0.5,
                     }}
                   >
                     <TouchableWithoutFeedback
                       onPress={() => {
                         if (amount !== "0")
-                          setAmount(preAmount =>
+                          setAmount((preAmount) =>
                             (Number(preAmount) - 1).toString()
                           );
                       }}
@@ -264,7 +283,7 @@ export default ModalShowSellersItemsScreen = props => {
                       <AntDesign
                         name="minus"
                         size={24}
-                        color={Colors.hard_secondary}
+                        color={Colors.soft_primary_dark}
                       />
                     </TouchableWithoutFeedback>
                   </View>
@@ -272,15 +291,14 @@ export default ModalShowSellersItemsScreen = props => {
               </View>
             </View>
           </View>
-
           <View
             style={{
               width: "100%",
-              height: "30%",
+              height: "10%",
               maxHeight: 50,
               flexDirection: "row",
               justifyContent: "space-around",
-              marginVertical: 10
+              marginVertical: 10,
             }}
           >
             <CustomButton
@@ -289,7 +307,7 @@ export default ModalShowSellersItemsScreen = props => {
                 height: "100%",
                 borderRadius: 5,
                 borderColor: Colors.button.cancel.btnText,
-                borderWidth: 1
+                borderWidth: 1,
               }}
               btnColor={Colors.button.cancel.btnBackground}
               onPress={() => {
