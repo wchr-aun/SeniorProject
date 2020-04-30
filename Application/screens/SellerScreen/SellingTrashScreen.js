@@ -6,6 +6,7 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -98,7 +99,145 @@ const trashSellingReducer = (state, action) => {
   }
 };
 
+const ModalBuyerRange = ({
+  distance,
+  setDistance,
+  modalVisible,
+  setModalVisable,
+  setSellerItemsForSell,
+}) => {
+  return (
+    <Modal animationType="fade" transparent={true} visible={modalVisible}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: 400,
+            justifyContent: "space-around",
+            alignItems: "center",
+            borderRadius: 3,
+            backgroundColor: Colors.secondary,
+          }}
+        >
+          <View style={{ height: 50, padding: 5 }}>
+            <ThaiRegText
+              style={{
+                fontSize: 12,
+                color: Colors.on_primary_bright.low_constrast,
+                textAlign: "center",
+              }}
+            >
+              ค้นหาผู้รับซื้อในระยะ (km.)
+            </ThaiRegText>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              padding: 5,
+              justifyContent: "center",
+            }}
+          >
+            <View style={{ marginHorizontal: 3 }}>
+              <TouchableOpacity
+                onPress={() =>
+                  setDistance((value) => (Number(value) + 1).toString())
+                }
+              >
+                <AntDesign
+                  name="plus"
+                  size={24}
+                  color={Colors.soft_primary_dark}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{ marginHorizontal: 3 }}>
+              <TextInput
+                style={{
+                  fontSize: 14,
+                  textAlign: "center",
+                  color: Colors.on_primary_bright.low_constrast,
+                }}
+                value={distance}
+                selectTextOnFocus={true}
+                onChangeText={(value) => {
+                  setDistance(value.toString());
+                }}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={{ marginHorizontal: 3 }}>
+              <TouchableOpacity
+                onPress={() =>
+                  setDistance((value) =>
+                    Number(value) > 1 ? (value - 1).toString() : "1"
+                  )
+                }
+              >
+                <AntDesign
+                  name="minus"
+                  size={24}
+                  color={Colors.soft_primary_dark}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              height: "10%",
+              maxHeight: 50,
+              flexDirection: "row",
+              justifyContent: "space-around",
+              marginVertical: 10,
+            }}
+          >
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "100%",
+                borderRadius: 5,
+                borderColor: Colors.button.cancel.btnText,
+                borderWidth: 1,
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => {
+                setModalVisable(false);
+              }}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={12}
+            >
+              ปิดหน้าต่าง
+            </CustomButton>
+
+            <CustomButton
+              style={{ width: "40%", height: "100%", borderRadius: 5 }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              onPress={setSellerItemsForSell}
+              btnTitleFontSize={12}
+            >
+              ยืนยันการเพิ่มขยะ
+            </CustomButton>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export default SellingTrashScreen = (props) => {
+  const [isModalBuyerRangeVisable, setIsModalBuyerRangeVisable] = useState(
+    false
+  );
   const [isInOperation, setIsInOperation] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -188,6 +327,22 @@ export default SellingTrashScreen = (props) => {
     }
   }, [sellerItemsForSell, sellerItemsFlatListFormat]);
 
+  // user must select at least 1 item so they can push the next button
+  const [haveItemSelected, setHaveItemSelected] = useState(false);
+  useEffect(() => {
+    let haveItemSelectedTmp = false;
+    for (const majorType in trashsState.sellerItemsForSell["_selected"]) {
+      for (const subType in trashsState.sellerItemsForSell["_selected"][
+        majorType
+      ]) {
+        haveItemSelectedTmp =
+          haveItemSelectedTmp ||
+          trashsState.sellerItemsForSell["_selected"][majorType][subType];
+      }
+    }
+    setHaveItemSelected(haveItemSelectedTmp);
+  }, [trashsState]);
+
   return (
     <View style={{ flex: 1 }}>
       <CustomStatusBar />
@@ -202,6 +357,13 @@ export default SellingTrashScreen = (props) => {
         }}
       >
         <ModalLoading modalVisible={isInOperation} userRole="seller" />
+        <ModalBuyerRange
+          modalVisible={isModalBuyerRangeVisable}
+          setModalVisable={setIsModalBuyerRangeVisable}
+          setDistance={setDistance}
+          distance={distance}
+          setSellerItemsForSell={setSellerItemsForSell}
+        />
         <KeyboardAvoidingView
           style={{ width: "100%", height: "100%" }}
           behavior={"padding"}
@@ -324,83 +486,6 @@ export default SellingTrashScreen = (props) => {
           >
             <View
               style={{
-                width: "100%",
-                height: 50,
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "center",
-                borderRadius: 3,
-                backgroundColor: Colors.secondary,
-              }}
-            >
-              <View style={{ width: "50%", padding: 5 }}>
-                <ThaiRegText
-                  style={{
-                    fontSize: 12,
-                    color: Colors.on_primary_bright.low_constrast,
-                    textAlign: "center",
-                  }}
-                >
-                  ค้นหาผู้รับซื้อในระยะ (km.)
-                </ThaiRegText>
-              </View>
-
-              <View
-                style={{
-                  width: "50%",
-                  flexDirection: "row",
-                  padding: 5,
-                  justifyContent: "center",
-                }}
-              >
-                <View style={{ marginHorizontal: 3 }}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      setDistance((value) => (Number(value) + 1).toString())
-                    }
-                  >
-                    <AntDesign
-                      name="plus"
-                      size={24}
-                      color={Colors.soft_primary_dark}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={{ marginHorizontal: 3 }}>
-                  <TextInput
-                    style={{
-                      fontSize: 14,
-                      textAlign: "center",
-                      color: Colors.on_primary_bright.low_constrast,
-                    }}
-                    value={distance}
-                    selectTextOnFocus={true}
-                    onChangeText={(value) => {
-                      setDistance(value.toString());
-                    }}
-                    keyboardType="number-pad"
-                  />
-                </View>
-                <View style={{ marginHorizontal: 3 }}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      setDistance((value) =>
-                        Number(value) > 1 ? (value - 1).toString() : "1"
-                      )
-                    }
-                  >
-                    <AntDesign
-                      name="minus"
-                      size={24}
-                      color={Colors.soft_primary_dark}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            <View
-              style={{
                 height: "70%",
                 width: "100%",
                 flexDirection: "row",
@@ -442,15 +527,29 @@ export default SellingTrashScreen = (props) => {
                   maxHeight: 40,
                   borderRadius: 8,
                 }}
-                btnColor={Colors.button.start_operation_info.btnBackground}
-                onPress={setSellerItemsForSell}
-                btnTitleColor={Colors.button.start_operation_info.btnText}
+                btnColor={
+                  haveItemSelected
+                    ? Colors.button.submit_primary_bright.btnBackground
+                    : Colors.button.disabled.btnBackground
+                }
+                onPress={() =>
+                  haveItemSelected ? setIsModalBuyerRangeVisable(true) : null
+                }
+                btnTitleColor={
+                  haveItemSelected
+                    ? Colors.button.submit_primary_bright.btnText
+                    : Colors.button.disabled.btnText
+                }
                 btnTitleFontSize={14}
               >
                 <MaterialCommunityIcons
                   name={"account-search"}
                   size={12}
-                  color={Colors.button.start_operation_info.btnText}
+                  color={
+                    haveItemSelected
+                      ? Colors.button.submit_primary_bright.btnText
+                      : Colors.button.disabled.btnText
+                  }
                 />
                 <ThaiRegText
                   style={{
