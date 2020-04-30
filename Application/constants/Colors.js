@@ -11,57 +11,57 @@ export default {
   soft_secondary: "#f4f4f4",
   on_primary_dark: {
     low_constrast: "#f0f0f0",
-    high_constrast: "#149c6a"
+    high_constrast: "#149c6a",
   },
   on_primary_bright: {
     low_constrast: "#272727",
-    high_constrast: "#f0f0f0"
+    high_constrast: "#f0f0f0",
   },
   on_secondary: {
     low_constrast: "#149c6a",
-    high_constrast: "#272727"
+    high_constrast: "#272727",
   },
   button: {
     disabled: {
       btnBackground: "#f2f2f2",
-      btnText: "#e6e6e6"
+      btnText: "#e6e6e6",
     },
     cancel: {
       btnBackground: "#f2f2f2",
-      btnText: "#272727"
+      btnText: "#272727",
     },
     start_operation_info: {
       btnBackground: "#ffffff",
-      btnText: "#0084ff"
+      btnText: "#0084ff",
     },
     finish_operation_info: {
       btnBackground: "#0084ff",
-      btnText: "#ffffff"
+      btnText: "#ffffff",
     },
     submit_primary_dark: {
       btnBackground: "#272727",
       btnBackgroundDisabled: "#424242",
       btnText: "#f0f0f0",
-      btnTextDisabled: "#636363"
+      btnTextDisabled: "#636363",
     },
     submit_soft_primary_dark: {
       btnBackground: "#414141",
       btnText: "#f0f0f0",
       btnBackgroundDisabled: "#525252",
-      btnTextDisabled: "#5e5e5e"
+      btnTextDisabled: "#5e5e5e",
     },
     submit_primary_bright: {
       btnBackground: "#149c6a",
       btnText: "#ffffff",
       btnBackgroundDisabled: "#083d2a",
-      btnTextDisabled: "#05291c"
+      btnTextDisabled: "#05291c",
     },
     danger_operation: {
-      btnBackground: "#ff386d",
-      btnText: "#ffffff",
+      btnBackground: "#ffffff",
+      btnText: "#ff386d",
       btnBackgroundDisabled: "#781a33",
-      btnTextDisabled: "#470e1d"
-    }
+      btnTextDisabled: "#470e1d",
+    },
   },
   error: "#8c0b04",
   linearGradient: ["#149c6a", "#0084ff"],
@@ -75,8 +75,8 @@ export default {
     two: "#c70a00",
     three: "#ff386d",
     four: "#B3B3B3",
-    five: "#3797f0"
-  }
+    five: "#3797f0",
+  },
 };
 //   Transaction Status
 // 0 - เพิ่งสร้าง

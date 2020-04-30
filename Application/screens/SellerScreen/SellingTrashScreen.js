@@ -118,18 +118,17 @@ const ModalBuyerRange = ({
       >
         <View
           style={{
-            width: "100%",
-            height: 400,
-            justifyContent: "space-around",
+            width: "90%",
             alignItems: "center",
-            borderRadius: 3,
+            justifyContent: "center",
+            borderRadius: 7,
             backgroundColor: Colors.secondary,
           }}
         >
-          <View style={{ height: 50, padding: 5 }}>
+          <View style={{ height: 50, padding: 10 }}>
             <ThaiRegText
               style={{
-                fontSize: 12,
+                fontSize: 16,
                 color: Colors.on_primary_bright.low_constrast,
                 textAlign: "center",
               }}
@@ -145,7 +144,7 @@ const ModalBuyerRange = ({
               justifyContent: "center",
             }}
           >
-            <View style={{ marginHorizontal: 3 }}>
+            {/* <View style={{ marginHorizontal: 3 }}>
               <TouchableOpacity
                 onPress={() =>
                   setDistance((value) => (Number(value) + 1).toString())
@@ -157,11 +156,11 @@ const ModalBuyerRange = ({
                   color={Colors.soft_primary_dark}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{ marginHorizontal: 3 }}>
               <TextInput
                 style={{
-                  fontSize: 14,
+                  fontSize: 24,
                   textAlign: "center",
                   color: Colors.on_primary_bright.low_constrast,
                 }}
@@ -173,7 +172,7 @@ const ModalBuyerRange = ({
                 keyboardType="number-pad"
               />
             </View>
-            <View style={{ marginHorizontal: 3 }}>
+            {/* <View style={{ marginHorizontal: 3 }}>
               <TouchableOpacity
                 onPress={() =>
                   setDistance((value) =>
@@ -187,17 +186,16 @@ const ModalBuyerRange = ({
                   color={Colors.soft_primary_dark}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
 
           <View
             style={{
               width: "100%",
-              height: "10%",
-              maxHeight: 50,
               flexDirection: "row",
               justifyContent: "space-around",
-              marginVertical: 10,
+              padding: 10,
+              maxHeight: 50,
             }}
           >
             <CustomButton
@@ -215,17 +213,20 @@ const ModalBuyerRange = ({
               btnTitleColor={Colors.button.cancel.btnText}
               btnTitleFontSize={12}
             >
-              ปิดหน้าต่าง
+              เลือกขยะต่อ
             </CustomButton>
 
             <CustomButton
               style={{ width: "40%", height: "100%", borderRadius: 5 }}
               btnColor={Colors.button.submit_primary_bright.btnBackground}
               btnTitleColor={Colors.button.submit_primary_bright.btnText}
-              onPress={setSellerItemsForSell}
+              onPress={() => {
+                setModalVisable(false);
+                setSellerItemsForSell();
+              }}
               btnTitleFontSize={12}
             >
-              ยืนยันการเพิ่มขยะ
+              ค้นหาผู้รับซื้อ
             </CustomButton>
           </View>
         </View>
