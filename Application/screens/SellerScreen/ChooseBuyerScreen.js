@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useReducer } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -28,7 +28,52 @@ import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
 import ThaiBoldText from "../../components/ThaiBoldText";
 
-const BuyerChoice = (props) => {
+const buyerChoiceReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_BUYER_LIST":
+      const updatedBuyerList = [...action.buyerList];
+      for (let i = 0; i < updatedBuyerList.length; i++) {
+        updatedBuyerList[i].selected = false;
+      }
+
+      return {
+        buyerList: [...updatedBuyerList],
+      };
+    case "SELECT":
+      const tempBuyerList = [...state.buyerList];
+      let haveEleSelected = true;
+
+      // for select other selected comp
+      for (let i = 0; i < tempBuyerList.length; i++) {
+        // the same
+        if (
+          tempBuyerList[i].selected &&
+          tempBuyerList[i].id === action.buyerName
+        ) {
+          tempBuyerList[i].selected = false;
+          haveEleSelected = false;
+          continue;
+        }
+
+        tempBuyerList[i].selected = false;
+        if (tempBuyerList[i].id === action.buyerName) {
+          tempBuyerList[i].selected = true;
+        }
+      }
+      return { buyerList: [...tempBuyerList], haveEleSelected };
+    default:
+      throw new Error();
+  }
+};
+
+const BuyerChoice = ({
+  selected,
+  onSelected,
+  sellerItemsForSell,
+  buyerName,
+  purchaseList,
+  totalPrice,
+}) => {
   return (
     <TouchableOpacity
       style={{
@@ -37,12 +82,16 @@ const BuyerChoice = (props) => {
         backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
-        margin: wp("3.75%"),
+        marginVertical: 5,
         justifyContent: "center",
         padding: 10,
         ...styles.shadow,
+        borderWidth: selected ? 2 : 0,
+        borderColor: selected ? "green" : "dark",
       }}
-      onPress={props.onSelected}
+      onPress={() => {
+        onSelected();
+      }}
     >
       <View
         style={{
@@ -65,14 +114,14 @@ const BuyerChoice = (props) => {
               <ThaiBoldText
                 style={{ fontSize: 12, color: Colors.primary_bright_variant }}
               >
-                {props.buyerName}
+                {buyerName}
               </ThaiBoldText>
             </ThaiRegText>
           </View>
           <View style={{ height: "70%", width: "100%" }}>
             <FlatList
               style={{ flex: 1 }}
-              data={props.sellerItemsForSell.getFlatListFormat(false)}
+              data={sellerItemsForSell.getFlatListFormat(false)}
               keyExtractor={(item) => item.type + item.subtype}
               renderItem={({ item }) => {
                 return (
@@ -94,31 +143,30 @@ const BuyerChoice = (props) => {
                       >
                         {item.subtype}
                       </ThaiMdText>
-                      {props.purchaseList[item.type] == undefined ? (
+                      {purchaseList[item.type] == undefined ? (
                         <ThaiRegText
                           style={{ color: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
-                      ) : props.purchaseList[item.type][item.subtype] ==
-                        undefined ? (
+                      ) : purchaseList[item.type][item.subtype] == undefined ? (
                         <ThaiRegText
                           style={{ color: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
                       ) : (
                         `  ${item.amount} X ${
-                          props.purchaseList[item.type][item.subtype]
+                          purchaseList[item.type][item.subtype]
                         } บาท/ชิ้น. = `
                       )}
-                      {props.purchaseList[item.type] == undefined ? null : props
-                          .purchaseList[item.type][item.subtype] ==
-                        undefined ? null : (
+                      {purchaseList[item.type] ==
+                      undefined ? null : purchaseList[item.type][
+                          item.subtype
+                        ] == undefined ? null : (
                         <ThaiMdText
                           style={{
                             fontSize: 10,
                             color: Colors.primary_bright_variant,
                           }}
                         >
-                          {item.amount *
-                            props.purchaseList[item.type][item.subtype]}
+                          {item.amount * purchaseList[item.type][item.subtype]}
                         </ThaiMdText>
                       )}
                     </ThaiRegText>
@@ -156,7 +204,7 @@ const BuyerChoice = (props) => {
                 color: Colors.on_primary_dark.high_constrast,
               }}
             >
-              {props.totalPrice}
+              {totalPrice}
             </ThaiBoldText>
           </View>
         </View>
@@ -191,7 +239,18 @@ export default ChooseBuyerScreen = (props) => {
   const sellerItemsForSell = useSelector(
     (state) => state.sellerItems.sellerItemsForSell
   );
+  const [selectedBuyer, setSelectedBuyer] = useState("");
   const buyerListRedux = useSelector((state) => state.sellerItems.buyerList);
+  const [buyerChoiceState, dispatchBuyerChoice] = useReducer(
+    buyerChoiceReducer,
+    { buyerList: [...buyerListRedux] }
+  );
+  useEffect(() => {
+    dispatchBuyerChoice({
+      type: "SET_BUYER_LIST",
+      buyerList: [...buyerListRedux],
+    });
+  }, [buyerListRedux]);
 
   // Callback fn
   const loadBuyer = useCallback(async () => {
@@ -236,8 +295,9 @@ export default ChooseBuyerScreen = (props) => {
       buyerPriceInfo,
       unavailableTypes,
     });
-    // ---
-    setDatapickerShow(true);
+
+    // setSelectedBuyer(buyerName);
+    dispatchBuyerChoice({ type: "SELECT", buyerName });
   };
 
   const quickSellHandler = () => {
@@ -456,7 +516,9 @@ export default ChooseBuyerScreen = (props) => {
 
           {buyerListRedux.length > 0 ? (
             <FlatList
-              data={buyerListRedux}
+              data={
+                buyerChoiceState.buyerList ? buyerChoiceState.buyerList : []
+              }
               keyExtractor={(item) => item.id}
               onRefresh={loadBuyer}
               refreshing={isRefreshing}
@@ -464,13 +526,14 @@ export default ChooseBuyerScreen = (props) => {
                 return (
                   <BuyerChoice
                     sellerItemsForSell={sellerItemsForSell}
-                    onSelected={() =>
+                    onSelected={() => {
                       buyerSelectHandler(
                         item.id,
                         item.purchaseList,
                         item.unavailableTypes
-                      )
-                    }
+                      );
+                    }}
+                    selected={item.selected}
                     buyerName={item.id}
                     purchaseList={item.purchaseList}
                     totalPrice={item.totalPrice}
@@ -527,9 +590,21 @@ export default ChooseBuyerScreen = (props) => {
               borderRadius: 8,
               maxHeight: 40,
             }}
-            btnColor={Colors.button.submit_primary_dark.btnBackground}
-            onPress={quickSellHandler}
-            btnTitleColor={Colors.button.submit_primary_dark.btnText}
+            btnColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            onPress={
+              buyerChoiceState.haveEleSelected
+                ? () => setDatapickerShow(true)
+                : null
+            }
+            btnTitleColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.disabled.btnText
+            }
             btnTitleFontSize={14}
           >
             <ThaiRegText
@@ -537,7 +612,7 @@ export default ChooseBuyerScreen = (props) => {
                 fontSize: 12,
               }}
             >
-              {` ขายด่วน`}
+              {`เลือกวันที่`}
             </ThaiRegText>
           </CustomButton>
         </View>
