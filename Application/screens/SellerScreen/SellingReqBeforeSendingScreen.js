@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, Alert, FlatList } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Alert,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
@@ -185,7 +192,7 @@ export default SellingReqBeforeSendingScreen = (props) => {
         <ThaiRegText
           style={{
             fontSize: 14,
-            color: Colors.on_primary_dark.low_constrast,
+            color: Colors.on_primary_bright.low_constrast,
           }}
         >
           {`ผู้รับซื้อ `}
@@ -198,7 +205,7 @@ export default SellingReqBeforeSendingScreen = (props) => {
         <ThaiRegText
           style={{
             fontSize: 14,
-            color: Colors.on_primary_dark.low_constrast,
+            color: Colors.on_primary_bright.low_constrast,
           }}
         >
           {`สถานที่รับขยะ `}
@@ -218,7 +225,10 @@ export default SellingReqBeforeSendingScreen = (props) => {
         }}
       >
         <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+          style={{
+            fontSize: 12,
+            color: Colors.on_primary_bright.low_constrast,
+          }}
         >
           วันเวลาที่เสนอขาย
         </ThaiMdText>
@@ -281,7 +291,10 @@ export default SellingReqBeforeSendingScreen = (props) => {
         }}
       >
         <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
+          style={{
+            fontSize: 12,
+            color: Colors.on_primary_bright.low_constrast,
+          }}
         >
           ประเภทขยะที่ขาย
         </ThaiMdText>
@@ -373,20 +386,27 @@ export default SellingReqBeforeSendingScreen = (props) => {
           horizontal={true}
           renderItem={({ item }) => {
             return (
-              <View
-                style={{
-                  width: 200,
-                  height: 200,
-                  borderRadius: 5,
-                  paddingHorizontal: 2,
-                  overflow: "hidden",
+              <TouchableOpacity
+                onPress={() => {
+                  setImgShowInModal(item.uri);
+                  setIsImgModalVisible(true);
                 }}
               >
-                <Image
-                  style={{ width: "100%", height: "100%" }}
-                  source={{ uri: item.uri }}
-                />
-              </View>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                    paddingHorizontal: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri: item.uri }}
+                  />
+                </View>
+              </TouchableOpacity>
             );
           }}
         />
@@ -436,7 +456,7 @@ export default SellingReqBeforeSendingScreen = (props) => {
               <ThaiBoldText
                 style={{
                   fontSize: 12,
-                  color: Colors.on_primary_dark.high_constrast,
+                  color: Colors.on_primary_bright.high_constrast,
                 }}
               >{` ${imgs.length}`}</ThaiBoldText>
             </ThaiMdText>
