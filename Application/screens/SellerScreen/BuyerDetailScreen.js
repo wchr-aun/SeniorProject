@@ -132,8 +132,13 @@ const BuyerPrice = (props) => {
           let subtypeIndex = Object.keys(item)[0];
           let subtypeName = item[Object.keys(item)[0]].name;
 
+          let price = 0;
           // Set price for showing
-          let price = props.purchaseList[type][subtypeIndex];
+          if (props.purchaseList[type] != undefined) {
+            if (props.purchaseList[type][subtypeIndex] != undefined) {
+              price = props.purchaseList[type][subtypeIndex];
+            }
+          }
 
           return (
             <View

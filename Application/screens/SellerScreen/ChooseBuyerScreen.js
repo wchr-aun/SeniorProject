@@ -239,7 +239,6 @@ export default ChooseBuyerScreen = (props) => {
   const sellerItemsForSell = useSelector(
     (state) => state.sellerItems.sellerItemsForSell
   );
-  const [selectedBuyer, setSelectedBuyer] = useState("");
   const buyerListRedux = useSelector((state) => state.sellerItems.buyerList);
   const [buyerChoiceState, dispatchBuyerChoice] = useReducer(
     buyerChoiceReducer,
@@ -286,6 +285,13 @@ export default ChooseBuyerScreen = (props) => {
 
   const [sellMode, setSellMode] = useState(0);
   const [buyerInfomation, setBuyerInfomation] = useState("");
+
+  const goBuyerDetail = (buyerName) => {
+    props.navigation.navigate({
+      routeName: "BuyerDetailScreen",
+      params: { buyerId: buyerName },
+    });
+  };
 
   const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
     // this should set to redux ---
@@ -460,7 +466,26 @@ export default ChooseBuyerScreen = (props) => {
             justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "20%" }} />
+          <View style={{ width: "20%" }}>
+            <CustomButton
+              style={{
+                height: "100%",
+                maxHeight: 30,
+                borderRadius: 5,
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => props.navigation.goBack()}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name={"ios-arrow-back"}
+                color={Colors.button.cancel.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
+            </CustomButton>
+          </View>
           <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
@@ -566,22 +591,29 @@ export default ChooseBuyerScreen = (props) => {
               borderRadius: 8,
               maxHeight: 40,
             }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={() => props.navigation.goBack()}
-            btnTitleColor={Colors.button.cancel.btnText}
+            btnColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_soft_primary_dark.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            onPress={
+              buyerChoiceState.haveEleSelected
+                ? () => goBuyerDetail(buyerInfomation.buyerName)
+                : null
+            }
+            btnTitleColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_soft_primary_dark.btnText
+                : Colors.button.disabled.btnText
+            }
             btnTitleFontSize={14}
           >
-            <Ionicons
-              name={"ios-arrow-back"}
-              size={12}
-              color={Colors.button.cancel.btnText}
-            />
             <ThaiRegText
               style={{
                 fontSize: 12,
               }}
             >
-              {` ย้อนกลับ`}
+              {`ดูรายละเอียดผู้รับซื้อ`}
             </ThaiRegText>
           </CustomButton>
 
