@@ -442,8 +442,21 @@ exports.querySellers = functions.https.onCall((data,context) => {
 
 exports.setFavBuyer = functions.https.onCall((data,context) => {
   if (context.auth != null) {
-    usersDB.doc(context.auth.uid).update({
-      favBuyers: admin.firestore.FieldValue.arrayUnion(data.favBuyer)
+    return usersDB.doc(context.auth.uid).get().then(doc => {
+      if (doc.exists) {
+        if (doc.data().favBuyers != undefined && doc.data().favBuyers.includes(data.favBuyer)) {
+          usersDB.doc(context.auth.uid).update({
+            favBuyers: admin.firestore.FieldValue.arrayRemove(data.favBuyer)
+          })
+          return 'unset'
+        }
+        else {
+          usersDB.doc(context.auth.uid).update({
+            favBuyers: admin.firestore.FieldValue.arrayUnion(data.favBuyer)
+          })
+          return 'set'
+        }
+      }
     })
   }
   else return {errorMessage: "The request is denied because of authetication"}
