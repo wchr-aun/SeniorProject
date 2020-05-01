@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useReducer } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -23,11 +23,57 @@ import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
+import ThaiBoldText from "../../components/ThaiBoldText";
 
-const BuyerChoice = (props) => {
+const buyerChoiceReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_BUYER_LIST":
+      const updatedBuyerList = [...action.buyerList];
+      for (let i = 0; i < updatedBuyerList.length; i++) {
+        updatedBuyerList[i].selected = false;
+      }
+
+      return {
+        buyerList: [...updatedBuyerList],
+      };
+    case "SELECT":
+      const tempBuyerList = [...state.buyerList];
+      let haveEleSelected = true;
+
+      // for select other selected comp
+      for (let i = 0; i < tempBuyerList.length; i++) {
+        // the same
+        if (
+          tempBuyerList[i].selected &&
+          tempBuyerList[i].id === action.buyerName
+        ) {
+          tempBuyerList[i].selected = false;
+          haveEleSelected = false;
+          continue;
+        }
+
+        tempBuyerList[i].selected = false;
+        if (tempBuyerList[i].id === action.buyerName) {
+          tempBuyerList[i].selected = true;
+        }
+      }
+      return { buyerList: [...tempBuyerList], haveEleSelected };
+    default:
+      throw new Error();
+  }
+};
+
+const BuyerChoice = ({
+  selected,
+  onSelected,
+  sellerItemsForSell,
+  buyerName,
+  purchaseList,
+  totalPrice,
+}) => {
   return (
     <TouchableOpacity
       style={{
@@ -36,12 +82,16 @@ const BuyerChoice = (props) => {
         backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
-        margin: wp("3.75%"),
+        marginVertical: 5,
         justifyContent: "center",
         padding: 10,
         ...styles.shadow,
+        borderWidth: selected ? 2 : 0,
+        borderColor: selected ? "green" : "dark",
       }}
-      onPress={props.onSelected}
+      onPress={() => {
+        onSelected();
+      }}
     >
       <View
         style={{
@@ -64,14 +114,14 @@ const BuyerChoice = (props) => {
               <ThaiBoldText
                 style={{ fontSize: 12, color: Colors.primary_bright_variant }}
               >
-                {props.buyerName}
+                {buyerName}
               </ThaiBoldText>
             </ThaiRegText>
           </View>
           <View style={{ height: "70%", width: "100%" }}>
             <FlatList
               style={{ flex: 1 }}
-              data={props.sellerItemsForSell.getFlatListFormat(false)}
+              data={sellerItemsForSell.getFlatListFormat(false)}
               keyExtractor={(item) => item.type + item.subtype}
               renderItem={({ item }) => {
                 return (
@@ -93,31 +143,30 @@ const BuyerChoice = (props) => {
                       >
                         {item.subtype}
                       </ThaiMdText>
-                      {props.purchaseList[item.type] == undefined ? (
+                      {purchaseList[item.type] == undefined ? (
                         <ThaiRegText
                           style={{ color: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
-                      ) : props.purchaseList[item.type][item.subtype] ==
-                        undefined ? (
+                      ) : purchaseList[item.type][item.subtype] == undefined ? (
                         <ThaiRegText
                           style={{ color: Colors.error }}
                         >{` ไม่รับซื้อ `}</ThaiRegText>
                       ) : (
                         `  ${item.amount} X ${
-                          props.purchaseList[item.type][item.subtype]
+                          purchaseList[item.type][item.subtype]
                         } บาท/ชิ้น. = `
                       )}
-                      {props.purchaseList[item.type] == undefined ? null : props
-                          .purchaseList[item.type][item.subtype] ==
-                        undefined ? null : (
+                      {purchaseList[item.type] ==
+                      undefined ? null : purchaseList[item.type][
+                          item.subtype
+                        ] == undefined ? null : (
                         <ThaiMdText
                           style={{
                             fontSize: 10,
                             color: Colors.primary_bright_variant,
                           }}
                         >
-                          {item.amount *
-                            props.purchaseList[item.type][item.subtype]}
+                          {item.amount * purchaseList[item.type][item.subtype]}
                         </ThaiMdText>
                       )}
                     </ThaiRegText>
@@ -155,7 +204,7 @@ const BuyerChoice = (props) => {
                 color: Colors.on_primary_dark.high_constrast,
               }}
             >
-              {props.totalPrice}
+              {totalPrice}
             </ThaiBoldText>
           </View>
         </View>
@@ -191,6 +240,16 @@ export default ChooseBuyerScreen = (props) => {
     (state) => state.sellerItems.sellerItemsForSell
   );
   const buyerListRedux = useSelector((state) => state.sellerItems.buyerList);
+  const [buyerChoiceState, dispatchBuyerChoice] = useReducer(
+    buyerChoiceReducer,
+    { buyerList: [...buyerListRedux] }
+  );
+  useEffect(() => {
+    dispatchBuyerChoice({
+      type: "SET_BUYER_LIST",
+      buyerList: [...buyerListRedux],
+    });
+  }, [buyerListRedux]);
 
   // Callback fn
   const loadBuyer = useCallback(async () => {
@@ -227,6 +286,13 @@ export default ChooseBuyerScreen = (props) => {
   const [sellMode, setSellMode] = useState(0);
   const [buyerInfomation, setBuyerInfomation] = useState("");
 
+  const goBuyerDetail = (buyerName) => {
+    props.navigation.navigate({
+      routeName: "BuyerDetailScreen",
+      params: { buyerId: buyerName },
+    });
+  };
+
   const buyerSelectHandler = (buyerName, buyerPriceInfo, unavailableTypes) => {
     // this should set to redux ---
     setSellMode(0);
@@ -235,8 +301,9 @@ export default ChooseBuyerScreen = (props) => {
       buyerPriceInfo,
       unavailableTypes,
     });
-    // ---
-    setDatapickerShow(true);
+
+    // setSelectedBuyer(buyerName);
+    dispatchBuyerChoice({ type: "SELECT", buyerName });
   };
 
   const quickSellHandler = () => {
@@ -371,6 +438,14 @@ export default ChooseBuyerScreen = (props) => {
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
       <ModalLoading modalVisible={isInOperation} userRole={"seller"} />
+      {datepickerShow ? (
+        <DateTimePicker
+          mode="date"
+          isVisible={datepickerShow}
+          onConfirm={handleDatePicked}
+          onCancel={hideDateTimePicker}
+        />
+      ) : null}
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{
@@ -385,26 +460,90 @@ export default ChooseBuyerScreen = (props) => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
             alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }}>
+            <CustomButton
+              style={{
+                height: "100%",
+                maxHeight: 30,
+                borderRadius: 5,
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={() => props.navigation.goBack()}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={10}
+            >
+              <Ionicons
+                name={"ios-arrow-back"}
+                color={Colors.button.cancel.btnText}
+                size={10}
+              />
+              <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
+            </CustomButton>
+          </View>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 20,
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
-              เลือกผู้รับซื้อ
+              เลือกผู้รับซื้อที่คุณสนใจ
             </ThaiBoldText>
           </View>
+          <View
+            style={{
+              width: "20%",
+            }}
+          />
         </View>
+
         <View style={{ width: "100%", height: "70%" }}>
+          <TouchableOpacity onPress={quickSellHandler}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: wp("90%"),
+                maxHeight: 50,
+                backgroundColor: Colors.primary_dark,
+                alignSelf: "center",
+                borderRadius: 10,
+                padding: 10,
+                ...styles.shadow,
+              }}
+            >
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <MaterialCommunityIcons
+                  name="truck-fast"
+                  color={Colors.on_primary_dark.low_constrast}
+                  size={30}
+                />
+              </View>
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <ThaiBoldText
+                  style={{
+                    fontSize: 30,
+                    color: Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  ขายด่วน
+                </ThaiBoldText>
+              </View>
+            </View>
+          </TouchableOpacity>
+
           {buyerListRedux.length > 0 ? (
             <FlatList
-              data={buyerListRedux}
+              data={
+                buyerChoiceState.buyerList ? buyerChoiceState.buyerList : []
+              }
               keyExtractor={(item) => item.id}
               onRefresh={loadBuyer}
               refreshing={isRefreshing}
@@ -412,13 +551,14 @@ export default ChooseBuyerScreen = (props) => {
                 return (
                   <BuyerChoice
                     sellerItemsForSell={sellerItemsForSell}
-                    onSelected={() =>
+                    onSelected={() => {
                       buyerSelectHandler(
                         item.id,
                         item.purchaseList,
                         item.unavailableTypes
-                      )
-                    }
+                      );
+                    }}
+                    selected={item.selected}
                     buyerName={item.id}
                     purchaseList={item.purchaseList}
                     totalPrice={item.totalPrice}
@@ -427,19 +567,13 @@ export default ChooseBuyerScreen = (props) => {
               }}
             />
           ) : (
-            <View>
-              <ThaiMdText>ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้ </ThaiMdText>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <ThaiMdText style={{ fontSize: 20 }}>
+                ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้{" "}
+              </ThaiMdText>
             </View>
           )}
         </View>
-        {datepickerShow ? (
-          <DateTimePicker
-            mode="date"
-            isVisible={datepickerShow}
-            onConfirm={handleDatePicked}
-            onCancel={hideDateTimePicker}
-          />
-        ) : null}
 
         <View
           style={{
@@ -457,22 +591,29 @@ export default ChooseBuyerScreen = (props) => {
               borderRadius: 8,
               maxHeight: 40,
             }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={() => props.navigation.goBack()}
-            btnTitleColor={Colors.button.cancel.btnText}
+            btnColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_soft_primary_dark.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            onPress={
+              buyerChoiceState.haveEleSelected
+                ? () => goBuyerDetail(buyerInfomation.buyerName)
+                : null
+            }
+            btnTitleColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_soft_primary_dark.btnText
+                : Colors.button.disabled.btnText
+            }
             btnTitleFontSize={14}
           >
-            <Ionicons
-              name={"ios-arrow-back"}
-              size={12}
-              color={Colors.button.cancel.btnText}
-            />
             <ThaiRegText
               style={{
                 fontSize: 12,
               }}
             >
-              {` ย้อนกลับ`}
+              {`ดูรายละเอียดผู้รับซื้อ`}
             </ThaiRegText>
           </CustomButton>
 
@@ -483,9 +624,21 @@ export default ChooseBuyerScreen = (props) => {
               borderRadius: 8,
               maxHeight: 40,
             }}
-            btnColor={Colors.button.submit_primary_dark.btnBackground}
-            onPress={quickSellHandler}
-            btnTitleColor={Colors.button.submit_primary_dark.btnText}
+            btnColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.button.disabled.btnBackground
+            }
+            onPress={
+              buyerChoiceState.haveEleSelected
+                ? () => setDatapickerShow(true)
+                : null
+            }
+            btnTitleColor={
+              buyerChoiceState.haveEleSelected
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.button.disabled.btnText
+            }
             btnTitleFontSize={14}
           >
             <ThaiRegText
@@ -493,7 +646,7 @@ export default ChooseBuyerScreen = (props) => {
                 fontSize: 12,
               }}
             >
-              {` ขายด่วน`}
+              {`เลือกวันที่`}
             </ThaiRegText>
           </CustomButton>
         </View>

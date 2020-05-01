@@ -1,20 +1,10 @@
-import React, { useState, useReducer, useEffect } from "react";
-import {
-  View,
-  Button,
-  Modal,
-  Text,
-  Alert,
-  FlatList,
-  TouchableOpacity
-} from "react-native";
+import React, { useReducer } from "react";
+import { View, Modal, Alert, FlatList } from "react-native";
 import Colors from "../constants/Colors";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import { AntDesign } from "@expo/vector-icons";
 import ThaiBoldText from "./ThaiBoldText";
 import ThaiRegText from "./ThaiRegText";
 import CustomButton from "./UI/CustomButton";
@@ -46,10 +36,6 @@ const DATA = [
   { hour: 17, minute: 30, selected: false },
   { hour: 18, minute: 0, selected: false },
   { hour: 18, minute: 30, selected: false },
-  { hour: 22, minute: 0, selected: false },
-  { hour: 22, minute: 30, selected: false },
-  { hour: 23, minute: 0, selected: false },
-  { hour: 23, minute: 30, selected: false }
 ];
 
 const SELECTED = "SELECTED";
@@ -64,14 +50,14 @@ const assignedTimeReducer = (state, action) => {
       updatedTimes[targetIndex].selected = !updatedTimes[targetIndex].selected;
       return {
         ...state,
-        times: [...updatedTimes]
+        times: [...updatedTimes],
       };
     case CONFIRM:
       console.log("CONFIRM");
 
       return {
         ...state,
-        selectedTimes: []
+        selectedTimes: [],
       };
     case CLEAR:
       console.log("CLEAR");
@@ -79,22 +65,21 @@ const assignedTimeReducer = (state, action) => {
         item.selected = false;
       });
       return {
-        selectedTimes: []
+        selectedTimes: [],
       };
     default:
       return state;
   }
 };
 
-export default ModalShowSellersItemsScreen = props => {
-  //   const [assignedTimeSelected, setAssignedTimeSelected] = useState("");
+export default ModalShowSellersItemsScreen = (props) => {
   const [assignedTime, dispatchAssignedTime] = useReducer(assignedTimeReducer, {
     times: [...DATA],
     selectedTimes: [],
-    date: props.date
+    date: props.date,
   });
 
-  onAssignedtimeSelectedHandler = time => {
+  onAssignedtimeSelectedHandler = (time) => {
     dispatchAssignedTime({ type: SELECTED, time });
   };
 
@@ -115,15 +100,6 @@ export default ModalShowSellersItemsScreen = props => {
     props.setModalVisible(false); //should unmound modal after everything finish
   };
 
-  // // When 'assignedTime.selectedTimes' got update (After CONFIRM) set back to ChooseBuyerScreen
-  // useEffect(() => {
-  //   if (assignedTime.selectedTimes.length) {
-  //     props.setSelectedTimes(assignedTime.selectedTimes);
-  //     dispatchAssignedTime({ type: CLEAR });
-  //     props.setModalVisible(false); //should unmound modal after everything finish
-  //   }
-  // }, [assignedTime.selectedTimes]);
-
   return (
     <Modal
       animationType="slide"
@@ -139,7 +115,7 @@ export default ModalShowSellersItemsScreen = props => {
           height: hp("100%"),
           width: wp("100%"),
           alignItems: "center",
-          backgroundColor: Colors.secondary
+          backgroundColor: Colors.secondary,
         }}
       >
         {/* Header */}
@@ -150,14 +126,14 @@ export default ModalShowSellersItemsScreen = props => {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: Colors.soft_primary_dark
+              backgroundColor: Colors.hard_secondary,
             }}
           >
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
+                color: Colors.on_primary_bright.low_constrast,
                 fontSize: 26,
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
               เลือกเวลารับซื้อที่คุณสะดวก
@@ -169,12 +145,14 @@ export default ModalShowSellersItemsScreen = props => {
           style={{
             width: "100%",
             height: "70%",
-            padding: 10
+            padding: 10,
           }}
         >
           <FlatList
             data={assignedTime.times}
-            keyExtractor={item => item.hour.toString() + item.minute.toString()}
+            keyExtractor={(item) =>
+              item.hour.toString() + item.minute.toString()
+            }
             renderItem={({ item }) => {
               return (
                 <CustomButton
@@ -182,7 +160,7 @@ export default ModalShowSellersItemsScreen = props => {
                     borderRadius: 8,
                     marginVertical: 2,
                     width: "80%",
-                    alignSelf: "center"
+                    alignSelf: "center",
                   }}
                   btnColor={
                     item.selected
@@ -217,7 +195,7 @@ export default ModalShowSellersItemsScreen = props => {
             height: "20%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -225,7 +203,7 @@ export default ModalShowSellersItemsScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 40
+              maxHeight: 40,
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => {
@@ -243,7 +221,7 @@ export default ModalShowSellersItemsScreen = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 40
+              maxHeight: 40,
             }}
             btnColor={Colors.button.submit_primary_bright.btnBackground}
             onPress={() => {
