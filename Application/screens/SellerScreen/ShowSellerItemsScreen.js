@@ -285,9 +285,11 @@ const ShowAllUserTrashScreen = (props) => {
   if (modalVisible) {
     return (
       <ModalShowSellerItemsScreen
+        style={{ width: "100%", height: "90%" }}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         wasteTypeDropdownFormat={wasteTypeDropdownFormat}
+        wasteTypes={wasteTypes}
         addNewWasteHandler={(majortype, subtype, addAmount) => {
           dispatchAmountTrashsState({
             type: ADD_NEW_SELLERITEMS_AMOUNT,

@@ -7,14 +7,8 @@ import ThaiRegText from "../../components/ThaiRegText";
 
 import CustomButton from "../../components/UI/CustomButton";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import ImageCircle from "../../components/UI/ImageCircle";
 
 import { Ionicons } from "@expo/vector-icons";
-
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
 

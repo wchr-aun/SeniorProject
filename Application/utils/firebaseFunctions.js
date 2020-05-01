@@ -13,7 +13,7 @@ export const getUsers = async () => {
     .collection("users")
     .doc(auth.currentUser.uid)
     .get()
-    .then(function(doc) {
+    .then(function (doc) {
       if (doc.exists) {
         return {
           uid: auth.currentUser.uid,
@@ -23,14 +23,14 @@ export const getUsers = async () => {
             readable: doc.data().addr,
             latitude: doc.data().addr_geopoint.geopoint.latitude,
             longitude: doc.data().addr_geopoint.geopoint.longitude,
-            zipcode: doc.data().zipcode
+            zipcode: doc.data().zipcode,
           },
           email: auth.currentUser.email,
-          phoneNo: doc.data().phoneNo
+          phoneNo: doc.data().phoneNo,
         };
       } else throw new Error("The document doesn't exist");
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -45,7 +45,7 @@ export const getBuyerInfo = async () => {
     .collection("buyerLists")
     .doc(auth.currentUser.uid)
     .get()
-    .then(doc => doc.data());
+    .then((doc) => doc.data());
 };
 
 // Get firebase document (trashOfUser)
@@ -54,12 +54,12 @@ export const getSellerItems = async () => {
     .collection("sellerItems")
     .doc(auth.currentUser.uid)
     .get()
-    .then(function(doc) {
+    .then(function (doc) {
       if (doc.exists) {
         return doc.data().items;
       } else return [];
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -74,25 +74,25 @@ export const getWasteType = async () => {
   return firestore
     .collection("wasteType")
     .get()
-    .then(docs => {
+    .then((docs) => {
       let wasteType = {};
       let wasteTypeDropdownFormat = []; //for dropdown value
 
-      docs.forEach(doc => {
+      docs.forEach((doc) => {
         wasteType = { ...wasteType, [doc.id]: doc.data() };
         let subTypes = [];
         for (let subType in doc.data()) {
           //PP, HDPE,
-          subTypes.push({ value: subType });
+          subTypes.push({ value: doc.data()[subType]["name"], subType });
         }
-        wasteTypeDropdownFormat.push({ value: doc.id, subTypes: subTypes });
+        wasteTypeDropdownFormat.push({ value: doc.id, subTypes });
       });
       return {
         wasteTypes: { ...wasteType },
-        wasteTypeDropdownFormat
+        wasteTypeDropdownFormat,
       };
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -108,9 +108,9 @@ export const getSectionListFormatWasteType = async () => {
   return firestore
     .collection("wasteType")
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       // loop type obj
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         let data = [];
         let type = "";
         type = doc.id;
@@ -131,14 +131,14 @@ export const getPurchaseList = async () => {
     .collection("buyerLists")
     .doc(auth.currentUser.uid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       if (doc.exists) {
         return {
-          ...doc.data().purchaseList
+          ...doc.data().purchaseList,
         };
       } else throw new Error("The document doesn't exist --- getPurchaseList!");
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -148,7 +148,7 @@ export const getPurchaseList = async () => {
     });
 };
 
-export const getTransactions = async role => {
+export const getTransactions = async (role) => {
   let allTx = [];
   let promises = [];
   for (let status = 0; status < 5; status++) {
@@ -159,14 +159,14 @@ export const getTransactions = async role => {
         .where("txStatus", "==", status)
         .orderBy("createTimestamp", "desc")
         .get()
-        .then(querySnapshot => {
+        .then((querySnapshot) => {
           let tx = [];
-          querySnapshot.forEach(doc => {
+          querySnapshot.forEach((doc) => {
             tx.push({ txId: doc.id, detail: doc.data() });
           });
           allTx[status] = tx;
         })
-        .catch(err => {
+        .catch((err) => {
           Alert.alert(
             "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
             err.message,
@@ -194,15 +194,15 @@ export const getTodayTxForPathOp = async () => {
     .where("txStatus", "==", 2)
     .where("chosenTime", ">=", timeNow)
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       let tx = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         if (doc.data().chosenTime.toMillis() < nextDay)
           tx.push({ txId: doc.id, detail: doc.data() });
       });
       return tx;
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -216,30 +216,30 @@ export const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
-    .then(doc => {
+    .then((doc) => {
       if (doc.data().favBuyers != null) return doc.data().favBuyers;
       else return [];
     })
-    .then(favBuyers => {
+    .then((favBuyers) => {
       let buyersInfo = [];
-      favBuyers.forEach(async buyer => {
+      favBuyers.forEach(async (buyer) => {
         await firestore
           .collection("buyerList")
           .doc(buyer)
           .get()
-          .then(doc => {
+          .then((doc) => {
             if (doc.exists)
               buyersInfo.push({ txId: doc.id, detail: doc.data() });
             else
               buyersInfo.push({
                 txId: doc.id,
-                detail: "The document doesn't exist"
+                detail: "The document doesn't exist",
               });
           });
       });
       return buyersInfo;
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -249,14 +249,14 @@ export const getFavBuyers = async () => {
     });
 };
 
-export const addWaste = async items => {
+export const addWaste = async (items) => {
   return functions
     .httpsCallable("addWaste")(items)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -265,15 +265,15 @@ export const addWaste = async items => {
     });
 };
 
-export const sellWaste = async transaction => {
+export const sellWaste = async (transaction) => {
   return functions
     .httpsCallable("sellWaste")(transaction)
-    .then(function(result) {
+    .then(function (result) {
       // Read result of the Cloud Function.
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -282,16 +282,16 @@ export const sellWaste = async transaction => {
     });
 };
 
-export const toggleSearch = async toggleSearch => {
+export const toggleSearch = async (toggleSearch) => {
   console.log("hello toggle");
   return functions
     .httpsCallable("toggleSearch")({ toggleSearch })
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) {
         return true;
       } else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -300,15 +300,15 @@ export const toggleSearch = async toggleSearch => {
     });
 };
 
-export const createAccount = async user => {
+export const createAccount = async (user) => {
   return functions
     .httpsCallable("createAccount")(user)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) {
         return true;
       } else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -332,14 +332,14 @@ updatedTx = {
   status: number from 0 to 5 as we have discussed
 } */
 
-export const updateTxStatus = async updatedTx => {
+export const updateTxStatus = async (updatedTx) => {
   return functions
     .httpsCallable("changeTxStatus")(updatedTx)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -362,10 +362,10 @@ newInfo = {
   phoneNo: "+666666666666"
 } */
 
-export const editUserInfo = async newInfo => {
+export const editUserInfo = async (newInfo) => {
   return functions
     .httpsCallable("editUserInfo")(newInfo)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
@@ -376,7 +376,7 @@ export const editUserInfo = async newInfo => {
         );
       }
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -390,11 +390,11 @@ export const updateNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
   return functions
     .httpsCallable("updateNotificationToken")({ notificationToken })
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -408,11 +408,11 @@ export const removeNotificationToken = async () => {
   let notificationToken = await Notifications.getExpoPushTokenAsync();
   return functions
     .httpsCallable("removeNotificationToken")({ notificationToken })
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       else throw new Error(result.data.errorMessage);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -436,10 +436,10 @@ buyerInfo = {
   }
 } */
 
-export const editBuyerInfo = async buyerInfo => {
+export const editBuyerInfo = async (buyerInfo) => {
   return functions
     .httpsCallable("editBuyerInfo")(buyerInfo)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return true;
       // else throw new Error(result.data.errorMessage);
       else {
@@ -450,7 +450,7 @@ export const editBuyerInfo = async buyerInfo => {
         );
       }
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -472,10 +472,10 @@ queryData = {
   }
 }*/
 
-export const queryBuyers = async queryData => {
+export const queryBuyers = async (queryData) => {
   return functions
     .httpsCallable("queryBuyers")(queryData)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return result.data;
       else {
         Alert.alert(
@@ -485,7 +485,7 @@ export const queryBuyers = async queryData => {
         );
       }
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -495,10 +495,10 @@ export const queryBuyers = async queryData => {
     });
 };
 
-export const querySellers = async queryData => {
+export const querySellers = async (queryData) => {
   return functions
     .httpsCallable("querySellers")(queryData)
-    .then(result => {
+    .then((result) => {
       if (result.data.errorMessage == null) return result.data;
       else {
         Alert.alert(
@@ -508,7 +508,7 @@ export const querySellers = async queryData => {
         );
       }
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -518,16 +518,16 @@ export const querySellers = async queryData => {
     });
 };
 
-export const searchBuyer = async uid => {
+export const searchBuyer = async (uid) => {
   return firestore
     .collection("buyerLists")
     .doc(uid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       if (doc.exists) return { txId: doc.id, detail: doc.data() };
       else return "No such users";
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
