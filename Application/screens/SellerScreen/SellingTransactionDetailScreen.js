@@ -6,7 +6,6 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  Modal,
   Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -35,137 +34,7 @@ import {
 } from "react-native-responsive-screen";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ModalLoading from "../../components/ModalLoading";
-
-const ModalShowImg = (props) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={props.modalVisible}
-      onRequestClose={props.onRequestClose}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.5)",
-        }}
-      >
-        <View
-          style={{
-            width: "80%",
-            height: "80%",
-            backgroundColor: "white",
-            borderRadius: 5,
-            padding: 5,
-          }}
-        >
-          <View
-            style={{
-              width: "100%",
-              height: "80%",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 5,
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                style={{ width: "100%", height: "100%" }}
-                source={{ uri: props.uri }}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              width: "100%",
-              height: "15%",
-              justifyContent: "space-around",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <CustomButton
-              style={{
-                width: "30%",
-                maxWidth: 40,
-                height: "100%",
-                maxHeight: 40,
-                borderRadius: 5,
-              }}
-              btnColor={Colors.button.submit_primary_dark.btnBackground}
-              onPress={() => {
-                props.slideImg(-1);
-              }}
-              btnTitleColor={Colors.button.submit_primary_dark.btnText}
-              btnTitleFontSize={10}
-            >
-              <Ionicons
-                name="ios-arrow-back"
-                color={Colors.button.submit_primary_dark.btnText}
-                size={10}
-              />
-              <ThaiMdText style={{ fontSize: 10 }}> </ThaiMdText>
-            </CustomButton>
-
-            <CustomButton
-              style={{
-                width: "30%",
-                maxWidth: 80,
-                height: "100%",
-                maxHeight: 50,
-                borderRadius: 5,
-              }}
-              btnColor={Colors.button.cancel.btnBackground}
-              onPress={() => {
-                props.setIsImgModalVisible(false);
-              }}
-              btnTitleColor={Colors.button.cancel.btnText}
-              btnTitleFontSize={10}
-            >
-              <MaterialIcons
-                name={"cancel"}
-                color={Colors.button.cancel.btnText}
-                size={10}
-              />
-              <ThaiMdText style={{ fontSize: 10 }}> ปิดหน้าต่าง</ThaiMdText>
-            </CustomButton>
-
-            <CustomButton
-              style={{
-                width: "30%",
-                maxWidth: 40,
-                height: "100%",
-                maxHeight: 40,
-                borderRadius: 5,
-              }}
-              btnColor={Colors.button.submit_primary_dark.btnBackground}
-              onPress={() => props.slideImg(1)}
-              btnTitleColor={Colors.button.submit_primary_dark.btnText}
-              btnTitleFontSize={10}
-            >
-              <Ionicons
-                name="ios-arrow-forward"
-                color={Colors.button.submit_primary_dark.btnText}
-                size={10}
-              />
-            </CustomButton>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+import ModalShowImg from "../../components/ModalShowImg";
 
 const getDisableStatusForSeller = (btnType, txStatus) => {
   /* 
@@ -344,14 +213,14 @@ export default SellingTransactionDetailScreen = (props) => {
         visible={confirmCancleVisible}
         onTouchOutside={() => setConfirmCancleVisible(false)}
         positiveButton={{
-          title: "ลบ",
+          title: "ยกเลิก",
           onPress: () => {
             cancelHandler();
             setConfirmCancleVisible(false);
           },
         }}
         negativeButton={{
-          title: "ยกเลิก",
+          title: "ไม่ต้องการ",
           onPress: () => {
             setConfirmCancleVisible(false);
           },
@@ -519,6 +388,7 @@ export default SellingTransactionDetailScreen = (props) => {
           />
         </View>
       </TouchableOpacity>
+
       <View
         style={{
           width: "100%",
@@ -541,6 +411,7 @@ export default SellingTransactionDetailScreen = (props) => {
       <View
         style={{
           width: "90%",
+          maxHeight: "15%",
           backgroundColor: Colors.hard_secondary,
           borderRadius: 5,
           paddingVertical: 5,
@@ -633,6 +504,7 @@ export default SellingTransactionDetailScreen = (props) => {
       <View
         style={{
           width: "90%",
+          maxHeight: "15%",
           backgroundColor: Colors.hard_secondary,
           borderRadius: 5,
           paddingVertical: 5,

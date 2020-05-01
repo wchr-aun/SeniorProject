@@ -17,19 +17,19 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import {
   Ionicons,
   MaterialCommunityIcons,
-  FontAwesome
+  FontAwesome,
 } from "@expo/vector-icons";
 
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ThaiBoldText from "../../components/ThaiBoldText";
-import { LinearGradient } from "expo-linear-gradient";
 import { NavigationEvents } from "react-navigation";
 import ModalLoading from "../../components/ModalLoading";
+import ModalShowImg from "../../components/ModalShowImg";
 
-export default SellingReqBeforeSendingScreen = props => {
+export default SellingReqBeforeSendingScreen = (props) => {
   const [isInOperation, setIsInOperation] = useState(false);
   const isOperationCompleted = useSelector(
-    state => state.navigation.isOperationCompleted
+    (state) => state.navigation.isOperationCompleted
   );
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
@@ -38,10 +38,20 @@ export default SellingReqBeforeSendingScreen = props => {
   };
   const sellReq = props.navigation.getParam("sellReq");
   const dispatch = useDispatch();
-  const sellerName = useSelector(state => state.user.userProfile.name);
+  const sellerName = useSelector((state) => state.user.userProfile.name);
+  const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
 
+  const [imgShowInModal, setImgShowInModal] = useState("");
+  const [isImgModalVisible, setIsImgModalVisible] = useState(false);
   const [imgs, setImgs] = useState([]);
   const [imgsName, setImgsName] = useState([]);
+  const slideImg = (indexSlide) => {
+    let oldIndex = imgs.indexOf(imgShowInModal);
+    let newIndex = oldIndex + indexSlide;
+    if (newIndex != -1 && newIndex < imgs.length) {
+      setImgShowInModal(imgs[newIndex]);
+    }
+  };
   const takeImgHandler = async () => {
     const img = await libary.takeAnImg();
     if (!img) {
@@ -79,7 +89,7 @@ export default SellingReqBeforeSendingScreen = props => {
       props.navigation.navigate("SellerHomepageScreen");
     } catch (err) {
       Alert.alert("ยอมรับข้อเสนอไม่สำเร็จ", "โปรดตรวจสอบข้อมูลอีกครั้ง", [
-        { text: "OK" }
+        { text: "OK" },
       ]);
     }
   };
@@ -88,34 +98,40 @@ export default SellingReqBeforeSendingScreen = props => {
     props.navigation.goBack();
   };
 
-  const goBuyerDetail = () => {
-    props.navigation.navigate({
-      routeName: "BuyerDetailScreen",
-      params: { buyerInfomation: sellReq.buyerInfomation }
-    });
-  };
+  // const goBuyerDetail = () => {
+  //   props.navigation.navigate({
+  //     routeName: "BuyerDetailScreen",
+  //     params: { buyerInfomation: sellReq.buyerInfomation }
+  //   });
+  // };
 
   return (
-    <LinearGradient
-      colors={Colors.linearGradientDark}
+    <View
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%"
+        height: "100%",
       }}
     >
       <NavigationEvents onWillFocus={checkIsOperationCompleted} />
       <CustomStatusBar />
+      <ModalShowImg
+        modalVisible={isImgModalVisible}
+        onRequestClose={() => console.log("modal close")}
+        setIsImgModalVisible={setIsImgModalVisible}
+        uri={imgShowInModal}
+        slideImg={slideImg}
+      />
       <ModalLoading modalVisible={isInOperation} userRole="seller" />
       <View
         style={{
           height: "10%",
           width: "100%",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark,
+          backgroundColor: Colors.hard_secondary,
           paddingVertical: 10,
+          justifyContent: "space-around",
           alignItems: "center",
-          justifyContent: "space-around"
         }}
       >
         <CustomButton
@@ -123,7 +139,7 @@ export default SellingReqBeforeSendingScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={Colors.button.cancel.btnBackground}
           onPress={backHandler}
@@ -137,79 +153,68 @@ export default SellingReqBeforeSendingScreen = props => {
           />
           <ThaiMdText style={{ fontSize: 10 }}> ย้อนกลับ</ThaiMdText>
         </CustomButton>
-
         <View
           style={{
             width: "50%",
             height: "100%",
-            alignItems: "flex-start",
-            justifyContent: "center"
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <ThaiBoldText
             style={{
-              color: Colors.on_primary_dark.low_constrast,
-              fontSize: 18
+              color: Colors.on_secondary.high_constrast,
+              fontSize: 18,
             }}
           >
             รายละเอียดคำขอ
           </ThaiBoldText>
         </View>
-        <CustomButton
-          style={{
-            width: "20%",
-            maxWidth: 30,
-            height: "100%",
-            maxHeight: 30,
-            borderRadius: 5
-          }}
-          btnColor={Colors.button.submit_primary_bright.btnBackground}
-          onPress={goBuyerDetail}
-          btnTitleColor={Colors.button.submit_primary_bright.btnText}
-          btnTitleFontSize={10}
-        >
-          <FontAwesome
-            name={"info-circle"}
-            color={Colors.button.cancel.btnText}
-            size={10}
-          />
-        </CustomButton>
+        <View style={{ width: "20%" }} />
       </View>
-      <View style={{ height: "10%", width: "100%" }}>
-        <View style={{ width: "100%", height: "100%", paddingHorizontal: 10 }}>
-          <ThaiRegText
-            style={{
-              fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
-            }}
+
+      {/* Req detail */}
+      <View
+        style={{
+          height: "10%",
+          width: "100%",
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+        }}
+      >
+        <ThaiRegText
+          style={{
+            fontSize: 14,
+            color: Colors.on_primary_dark.low_constrast,
+          }}
+        >
+          {`ผู้รับซื้อ `}
+          <ThaiMdText
+            style={{ fontSize: 14, color: Colors.primary_bright_variant }}
           >
-            {`ผู้รับซื้อ `}
-            <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-            >
-              {sellReq.buyerInfomation.buyerName}
-            </ThaiMdText>
-          </ThaiRegText>
-          <ThaiRegText
-            style={{
-              fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
-            }}
+            {sellReq.buyerInfomation.buyerName}
+          </ThaiMdText>
+        </ThaiRegText>
+        <ThaiRegText
+          style={{
+            fontSize: 14,
+            color: Colors.on_primary_dark.low_constrast,
+          }}
+        >
+          {`สถานที่รับขยะ `}
+          <ThaiMdText
+            style={{ fontSize: 14, color: Colors.primary_bright_variant }}
           >
-            {`สถานที่รับขยะ `}
-            <ThaiMdText
-              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-            >
-              {sellReq.sellerAddr.readable}
-            </ThaiMdText>
-          </ThaiRegText>
-        </View>
+            {sellReq.sellerAddr.readable}
+          </ThaiMdText>
+        </ThaiRegText>
       </View>
       <View
         style={{
           width: "100%",
           height: "5%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
+          paddingVertical: 5,
         }}
       >
         <ThaiMdText
@@ -220,61 +225,61 @@ export default SellingReqBeforeSendingScreen = props => {
       </View>
       <View
         style={{
-          width: "100%",
-          height: "15%",
-          padding: 10
+          width: "90%",
+          maxHeight: "15%",
+          backgroundColor: Colors.hard_secondary,
+          borderRadius: 5,
+          paddingVertical: 5,
+          alignSelf: "center",
+          ...styles.shadow,
         }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            paddingVertical: 5,
-            backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 10
-          }}
-        >
-          <FlatList
-            data={sellReq.assignedTime}
-            keyExtractor={item =>
-              libary.formatDate(new Date(item)) +
-              libary.formatTime(new Date(item))
-            }
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
-                  <ThaiRegText
+        <FlatList
+          data={sellReq.assignedTime}
+          keyExtractor={(item) =>
+            libary.formatDate(new Date(item)) +
+            libary.formatTime(new Date(item))
+          }
+          renderItem={({ item }) => {
+            return (
+              <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                <ThaiRegText
+                  style={{
+                    fontSize: 18,
+                    color: Colors.primary_bright_variant,
+                  }}
+                >
+                  <ThaiMdText
                     style={{
                       fontSize: 18,
-                      color: Colors.primary_bright_variant
+                      color: Colors.primary_bright_variant,
                     }}
                   >
-                    <ThaiMdText
-                      style={{
-                        fontSize: 18,
-                        color: Colors.primary_bright_variant
-                      }}
-                    >
-                      {libary.formatDate(new Date(item))}
-                    </ThaiMdText>
-                    {` `}
-                    <ThaiMdText
-                      style={{
-                        fontSize: 18,
-                        color: Colors.primary_bright_variant
-                      }}
-                    >
-                      {libary.formatTime(new Date(item))}
-                    </ThaiMdText>
-                  </ThaiRegText>
-                </View>
-              );
-            }}
-          />
-        </View>
+                    {libary.formatDate(new Date(item))}
+                  </ThaiMdText>
+                  {` `}
+                  <ThaiMdText
+                    style={{
+                      fontSize: 18,
+                      color: Colors.primary_bright_variant,
+                    }}
+                  >
+                    {libary.formatTime(new Date(item))}
+                  </ThaiMdText>
+                </ThaiRegText>
+              </View>
+            );
+          }}
+        />
       </View>
-      <View style={{ width: "100%", height: "5%", paddingHorizontal: 10 }}>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+        }}
+      >
         <ThaiMdText
           style={{ fontSize: 12, color: Colors.on_primary_dark.low_constrast }}
         >
@@ -283,122 +288,127 @@ export default SellingReqBeforeSendingScreen = props => {
       </View>
       <View
         style={{
+          width: "90%",
+          maxHeight: "15%",
+          backgroundColor: Colors.hard_secondary,
+          borderRadius: 5,
+          paddingVertical: 5,
+          alignSelf: "center",
+          ...styles.shadow,
+        }}
+      >
+        <FlatList
+          data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
+          keyExtractor={(item) => item.subtype}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 30,
+                  padding: 3,
+                  alignSelf: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <View style={{ width: "40%" }}>
+                    <ThaiRegText
+                      style={{ fontSize: 18, color: Colors.soft_primary_dark }}
+                    >
+                      {`${wasteTypes[item.type][item.subtype]["name"]}`}
+                    </ThaiRegText>
+                  </View>
+                  <View style={{ width: "40%" }}>
+                    <ThaiRegText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.soft_primary_dark,
+                        textAlign: "right",
+                      }}
+                    >
+                      {`จำนวน ${item.amount.amount}`}
+                    </ThaiRegText>
+                  </View>
+                </View>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: "5%",
+          padding: 2,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+        }}
+      >
+        <ThaiMdText
+          style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
+        >
+          รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
+        </ThaiMdText>
+      </View>
+      <View
+        style={{
+          height: "10%",
+          width: "100%",
+          padding: 5,
+        }}
+      >
+        {/* image */}
+        <FlatList
+          data={imgs}
+          keyExtractor={(item) => item.uri}
+          style={{ flex: 1 }}
+          horizontal={true}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: 5,
+                  paddingHorizontal: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <Image
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri: item.uri }}
+                />
+              </View>
+            );
+          }}
+        />
+      </View>
+      {/* Btn + number of pic */}
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
           width: "100%",
           height: "15%",
-          padding: 10
+          padding: 5,
+          paddingBottom: getStatusBarHeight(),
         }}
       >
         <View
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 10
-          }}
-        >
-          <FlatList
-            data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
-            keyExtractor={item => item.subtype}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    height: 30,
-                    padding: 3,
-                    alignSelf: "center",
-                    flexDirection: "row"
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      alignItems: "center"
-                    }}
-                  >
-                    <ThaiRegText
-                      style={{ fontSize: 18, color: Colors.soft_secondary }}
-                    >
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color: Colors.soft_secondary
-                        }}
-                      >
-                        {item.type}
-                      </ThaiMdText>
-                      {` ประเภท `}
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color: Colors.soft_secondary
-                        }}
-                      >
-                        {item.subtype}
-                      </ThaiMdText>
-                      {` จำนวน `}
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color: Colors.primary_bright_variant
-                        }}
-                      >
-                        {item.amount.amount}
-                      </ThaiMdText>
-                    </ThaiRegText>
-                  </View>
-                </View>
-              );
-            }}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          height: "40%",
-          width: "100%",
-          padding: 5,
-          paddingBottom: getStatusBarHeight()
-        }}
-      >
-        {/* image */}
-        <View
-          style={{ width: "100%", height: "60%", justifyContent: "center" }}
-        >
-          <FlatList
-            data={imgs}
-            keyExtractor={item => item.uri}
-            style={{ flex: 1 }}
-            horizontal={true}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    width: 200,
-                    height: 200,
-                    borderRadius: 5,
-                    paddingHorizontal: 2,
-                    overflow: "hidden"
-                  }}
-                >
-                  <Image
-                    style={{ width: "100%", height: "100%" }}
-                    source={{ uri: item.uri }}
-                  />
-                </View>
-              );
-            }}
-          />
-        </View>
-        {/* Btn + number of pic */}
-        <View
-          style={{
-            width: "100%",
-            height: "40%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -408,7 +418,7 @@ export default SellingReqBeforeSendingScreen = props => {
               height: "100%",
               maxHeight: 35,
               borderRadius: 5,
-              marginRight: 10
+              marginRight: 10,
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={takeImgHandler}
@@ -426,7 +436,7 @@ export default SellingReqBeforeSendingScreen = props => {
               <ThaiBoldText
                 style={{
                   fontSize: 12,
-                  color: Colors.on_primary_dark.high_constrast
+                  color: Colors.on_primary_dark.high_constrast,
                 }}
               >{` ${imgs.length}`}</ThaiBoldText>
             </ThaiMdText>
@@ -438,7 +448,7 @@ export default SellingReqBeforeSendingScreen = props => {
               height: "100%",
               maxHeight: 35,
               borderRadius: 5,
-              marginRight: 10
+              marginRight: 10,
             }}
             btnColor={
               imgs.length > 0
@@ -457,21 +467,31 @@ export default SellingReqBeforeSendingScreen = props => {
           </CustomButton>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   infoContainerCard: {
-    backgroundColor: Colors.primary_dark,
+    backgroundColor: Colors.secondary,
     alignSelf: "center",
-    alignItems: "center"
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
 });

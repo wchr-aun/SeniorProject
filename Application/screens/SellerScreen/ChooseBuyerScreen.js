@@ -542,8 +542,10 @@ export default ChooseBuyerScreen = (props) => {
               }}
             />
           ) : (
-            <View>
-              <ThaiMdText>ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้ </ThaiMdText>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <ThaiMdText style={{ fontSize: 20 }}>
+                ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้{" "}
+              </ThaiMdText>
             </View>
           )}
         </View>
