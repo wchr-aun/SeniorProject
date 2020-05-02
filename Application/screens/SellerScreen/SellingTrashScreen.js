@@ -25,7 +25,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
 import TrashCardForSell from "../../components/TrashCardForSell";
 import CustomButton from "../../components/UI/CustomButton";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import { LinearGradient } from "expo-linear-gradient";

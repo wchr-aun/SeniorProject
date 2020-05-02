@@ -1,6 +1,5 @@
 import firebaseUtil from "../firebase";
 import { Notifications } from "expo";
-import { Wastes } from "../models/AllUserTrash";
 import { Alert } from "react-native";
 
 const firestore = firebaseUtil.firestore();
@@ -533,5 +532,50 @@ export const searchBuyer = async (uid) => {
         err.message,
         [{ text: "OK" }]
       );
+    });
+};
+
+export const getIsFavBuyer = async (buyerId) => {
+  return firestore
+    .collection("users")
+    .doc(auth.currentUser.uid)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        const favBuyers = doc.data().favBuyers;
+        const found = favBuyers.includes(buyerId);
+        return found;
+      }
+    })
+    .catch((err) => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
+    });
+};
+
+export const setFavBuyer = async (favBuyer) => {
+  return functions
+    .httpsCallable("setFavBuyer")(favBuyer)
+    .then((result) => {
+      if (result) {
+        return result;
+      } else {
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
+      }
+    })
+    .catch((err) => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
+      throw new Error(err.message);
     });
 };
