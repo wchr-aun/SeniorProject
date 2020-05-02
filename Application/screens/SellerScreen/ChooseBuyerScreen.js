@@ -73,12 +73,13 @@ const BuyerCard = ({
   buyerName,
   purchaseList,
   totalPrice,
+  isFav,
+  wasteTypes,
 }) => {
   return (
     <TouchableOpacity
       style={{
         width: wp("90%"),
-        height: 100,
         backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
@@ -96,16 +97,14 @@ const BuyerCard = ({
       <View
         style={{
           width: "100%",
-          height: "100%",
           flexDirection: "row",
           justifyContent: "space-around",
         }}
       >
-        <View style={{ width: "70%", height: "100%", padding: 5 }}>
+        <View style={{ width: "70%", padding: 5 }}>
           <View
             style={{
               alignSelf: "center",
-              height: "30%",
               width: "100%",
             }}
           >
@@ -118,9 +117,8 @@ const BuyerCard = ({
               </ThaiBoldText>
             </ThaiRegText>
           </View>
-          <View style={{ height: "70%", width: "100%" }}>
+          <View style={{ width: "100%" }}>
             <FlatList
-              style={{ flex: 1 }}
               data={sellerItemsForSell.getFlatListFormat(false)}
               keyExtractor={(item) => item.type + item.subtype}
               renderItem={({ item }) => {
@@ -134,14 +132,14 @@ const BuyerCard = ({
                     }}
                   >
                     <ThaiRegText>
-                      {`ประเภท `}
                       <ThaiMdText
                         style={{
                           fontSize: 10,
                           color: Colors.primary_bright_variant,
                         }}
                       >
-                        {item.subtype}
+                        {/* {item.subtype} */}
+                        {wasteTypes[item.type][item.subtype]["name"]}}
                       </ThaiMdText>
                       {purchaseList[item.type] == undefined ? (
                         <ThaiRegText
@@ -179,7 +177,6 @@ const BuyerCard = ({
         <View
           style={{
             width: "30%",
-            height: "100%",
             justifyContent: "center",
             padding: 3,
           }}
@@ -188,7 +185,7 @@ const BuyerCard = ({
             style={{
               ...styles.shadow,
               width: "100%",
-              height: "100%",
+              height: 100,
               borderRadius: 8,
               backgroundColor: Colors.soft_secondary,
               justifyContent: "space-around",
@@ -221,6 +218,7 @@ export default ChooseBuyerScreen = (props) => {
   const isOperationCompleted = useSelector(
     (state) => state.navigation.isOperationCompleted
   );
+  const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
       props.navigation.navigate("ShowSellerItemsScreen");
@@ -558,9 +556,11 @@ export default ChooseBuyerScreen = (props) => {
                         item.unavailableTypes
                       );
                     }}
+                    isFav={item.isFav}
                     selected={item.selected}
                     buyerName={item.id}
                     purchaseList={item.purchaseList}
+                    wasteTypes={wasteTypes}
                     totalPrice={item.totalPrice}
                   />
                 );

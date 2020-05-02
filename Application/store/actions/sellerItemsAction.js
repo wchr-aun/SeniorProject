@@ -79,9 +79,16 @@ export const getBuyerList = (queryData) => {
     try {
       // search buyer
       let favBuyerList = await getFavBuyers();
-      console.log("From sellerItemActions -- favBuyerList");
-      console.log(favBuyerList);
       let buyerList = await queryBuyers(queryData);
+
+      // label fav flag
+      for (let i = 0; i < buyerList.length; i++) {
+        if (favBuyerList.includes(buyerList[i]["id"])) {
+          buyerList[i]["isFav"] = true;
+        } else {
+          buyerList[i]["isFav"] = false;
+        }
+      }
 
       // dispatch
       dispatch({

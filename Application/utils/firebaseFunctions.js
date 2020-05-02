@@ -219,40 +219,40 @@ export const getFavBuyers = async () => {
     .then((doc) => {
       if (doc.data().favBuyers != null) return doc.data().favBuyers;
       else return [];
-    })
-    .then((favBuyers) => {
-      // new code
-      let buyersInfo = [];
-      let promises = [];
-      for (let index = 0; index < favBuyers.length; index++) {
-        promises.push(
-          firestore
-            .collection("buyerLists")
-            .doc(favBuyers[index])
-            .get()
-            .then((doc) => {
-              if (doc.exists)
-                buyersInfo.push({ txId: doc.id, detail: doc.data() });
-              else
-                buyersInfo.push({
-                  txId: doc.id,
-                  detail: "The document doesn't exist",
-                });
-            })
-        );
-      }
-      return Promise.all(promises).then(() => {
-        return buyersInfo;
-      });
-    })
-    .catch((err) => {
-      Alert.alert(
-        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-        err.message,
-        [{ text: "OK" }]
-      );
-      throw new error(err.message);
     });
+  // .then((favBuyers) => {
+  //   // new code
+  //   let buyersInfo = [];
+  //   let promises = [];
+  //   for (let index = 0; index < favBuyers.length; index++) {
+  //     promises.push(
+  //       firestore
+  //         .collection("buyerLists")
+  //         .doc(favBuyers[index])
+  //         .get()
+  //         .then((doc) => {
+  //           if (doc.exists)
+  //             buyersInfo.push({ txId: doc.id, detail: doc.data() });
+  //           else
+  //             buyersInfo.push({
+  //               txId: doc.id,
+  //               detail: "The document doesn't exist",
+  //             });
+  //         })
+  //     );
+  //   }
+  //   return Promise.all(promises).then(() => {
+  //     return buyersInfo;
+  //   });
+  // })
+  // .catch((err) => {
+  //   Alert.alert(
+  //     "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+  //     err.message,
+  //     [{ text: "OK" }]
+  //   );
+  //   throw new error(err.message);
+  // });
 };
 
 export const addWaste = async (items) => {
