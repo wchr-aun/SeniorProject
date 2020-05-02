@@ -362,20 +362,24 @@ export default BuyerDetailScreen = (props) => {
             borderRadius: 5,
             alignItems: "center",
           }}
-          btnColor={Colors.button.cancel.btnBackground}
+          btnColor={Colors.button.submit_primary_dark.btnBackground}
           onPress={setBuyerFavhandler}
-          btnTitleColor={Colors.button.cancel.btnText}
+          btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={20}
         >
           <FontAwesome
             name={isFavBuyer ? "star" : "star-o"}
-            color={isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark}
+            color={
+              isFavBuyer ? "#ffdd00" : Colors.button.submit_primary_dark.btnText
+            }
             size={20}
           />
           <ThaiMdText
             style={{
               fontSize: 20,
-              color: isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark,
+              color: isFavBuyer
+                ? "#ffdd00"
+                : Colors.button.submit_primary_dark.btnText,
             }}
           >{` จดจำ`}</ThaiMdText>
         </CustomButton>
