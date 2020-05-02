@@ -69,15 +69,16 @@ export default TrashCard = (props) => {
             width: "30%",
             height: "100%",
             backgroundColor: Colors.secondary,
-            padding: wp("2.5%"),
             alignItems: "center",
             justifyContent: "space-around",
+            overflow: "hidden",
           }}
         >
-          <ImageCircle
-            avariableWidth={wp("20%")}
-            imgUrl={props.imgUrl}
-            style={{ borderWidth: 1, borderColor: Colors.soft_secondary }}
+          <Image
+            style={{ width: "100%", height: "100%" }}
+            source={{
+              uri: props.imgUrl,
+            }}
           />
         </View>
 
@@ -87,6 +88,7 @@ export default TrashCard = (props) => {
             width: "50%",
             height: "100%",
             backgroundColor: Colors.secondary,
+            padding: 10,
           }}
         >
           <View
@@ -97,16 +99,15 @@ export default TrashCard = (props) => {
               height: "30%",
             }}
           >
-            <ThaiRegText style={{ fontSize: 12 }}>ประเภท: </ThaiRegText>
-            <ThaiMdText
+            <ThaiBoldText
               style={{
                 ...styles.trashName,
                 color: Colors.primary_bright_variant,
-                fontSize: 12,
+                fontSize: 16,
               }}
             >
               {props.wasteName}
-            </ThaiMdText>
+            </ThaiBoldText>
           </View>
           {props.editingMode && !props.cameraMode ? (
             <>
@@ -118,11 +119,11 @@ export default TrashCard = (props) => {
                   height: "60%",
                 }}
               >
-                <ThaiRegText style={{ fontSize: 12 }}>
+                <ThaiRegText style={{ fontSize: 16 }}>
                   {`จำนวนเปลี่ยนแปลง   `}
                   <ThaiBoldText
                     style={{
-                      fontSize: 12,
+                      fontSize: 16,
                       color:
                         isNaN(props.changeAmount) || props.changeAmount === 0
                           ? Colors.primary_dark
@@ -144,26 +145,21 @@ export default TrashCard = (props) => {
                   ...styles.descriptionRow,
                   width: "100%",
                   height: "30%",
-                  justifyContent: "space-around",
                 }}
               >
-                <View style={{ width: "20%" }}>
-                  <Ionicons
-                    name="md-trash"
-                    size={25}
-                    color={getColorTag(props.wasteTag)}
-                  />
-                </View>
-                <View style={{ width: "80%" }}>
-                  <ThaiRegText
-                    style={{
-                      ...styles.trashDisposal,
-                      color: getColorTag(props.wasteTag),
-                    }}
-                  >
-                    {` ${getReadableTag(props.wasteTag)}`}
-                  </ThaiRegText>
-                </View>
+                <Ionicons
+                  name="md-trash"
+                  size={25}
+                  color={getColorTag(props.wasteTag)}
+                />
+                <ThaiRegText
+                  style={{
+                    fontSize: 16,
+                    color: getColorTag(props.wasteTag),
+                  }}
+                >
+                  {` ${getReadableTag(props.wasteTag)}`}
+                </ThaiRegText>
               </View>
               <View
                 style={{
@@ -173,17 +169,15 @@ export default TrashCard = (props) => {
                   height: "30%",
                 }}
               >
-                <ThaiRegText style={styles.trashAdjustPrice}>
-                  {`ราคารับซื้อเฉลี่ย `}
+                <ThaiRegText style={{ fontSize: 16 }}>
+                  {`รับซื้อเฉลี่ย `}
                 </ThaiRegText>
                 <ThaiBoldText
-                  style={{ fontSize: 12, color: Colors.soft_primary_bright }}
+                  style={{ fontSize: 16, color: Colors.soft_primary_bright }}
                 >
                   {props.trashAdjustPrice}
                 </ThaiBoldText>
-                <ThaiRegText style={styles.trashAdjustPrice}>
-                  {` บ./กก.`}
-                </ThaiRegText>
+                <ThaiRegText style={{ fontSize: 16 }}>{` บ./กก.`}</ThaiRegText>
               </View>
             </>
           )}
@@ -294,12 +288,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 5,
     alignItems: "center",
-  },
-  trashName: {
-    fontSize: 16,
-  },
-  trashDisposal: {
-    fontSize: 12,
   },
   shadow: {
     shadowColor: "#000",
