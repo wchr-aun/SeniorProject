@@ -23,7 +23,11 @@ import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
 import ThaiBoldText from "../../components/ThaiBoldText";
@@ -85,6 +89,7 @@ const BuyerCard = ({
         borderRadius: 10,
         marginVertical: 5,
         justifyContent: "center",
+        alignItems: "center",
         padding: 10,
         ...styles.shadow,
         borderWidth: selected ? 2 : 0,
@@ -96,27 +101,63 @@ const BuyerCard = ({
     >
       <View
         style={{
+          alignSelf: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          marginVertical: 4,
+          padding: 5,
+        }}
+      >
+        <View style={{ width: "40%", justifyContent: "center" }}>
+          <ThaiRegText style={{ fontSize: 16 }}>
+            {`ผู้รับซื้อ `}
+            <ThaiBoldText
+              style={{ fontSize: 16, color: Colors.primary_bright_variant }}
+            >
+              {buyerName}
+            </ThaiBoldText>
+          </ThaiRegText>
+        </View>
+
+        <View style={{ width: "40%", justifyContent: "center" }}>
+          {isFav ? (
+            <View
+              style={{
+                backgroundColor:
+                  Colors.button.submit_primary_dark.btnBackground,
+                flexDirection: "row",
+                padding: 5,
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 4,
+              }}
+            >
+              <FontAwesome
+                name={isFav ? "star" : "star-o"}
+                color={"#ffdd00"}
+                size={16}
+              />
+              <ThaiMdText
+                style={{
+                  fontSize: 16,
+                  color: "#ffdd00",
+                }}
+              >{` คุณชื่นชอบ`}</ThaiMdText>
+            </View>
+          ) : null}
+        </View>
+      </View>
+      <View
+        style={{
           width: "100%",
           flexDirection: "row",
           justifyContent: "space-around",
         }}
       >
-        <View style={{ width: "70%", padding: 5 }}>
-          <View
-            style={{
-              alignSelf: "center",
-              width: "100%",
-            }}
-          >
-            <ThaiRegText>
-              {`ผู้รับซื้อ `}
-              <ThaiBoldText
-                style={{ fontSize: 12, color: Colors.primary_bright_variant }}
-              >
-                {buyerName}
-              </ThaiBoldText>
-            </ThaiRegText>
-          </View>
+        <View style={{ width: "70%" }}>
           <View style={{ width: "100%" }}>
             <FlatList
               data={sellerItemsForSell.getFlatListFormat(false)}
@@ -138,8 +179,7 @@ const BuyerCard = ({
                           color: Colors.primary_bright_variant,
                         }}
                       >
-                        {/* {item.subtype} */}
-                        {wasteTypes[item.type][item.subtype]["name"]}}
+                        {wasteTypes[item.type][item.subtype]["name"]}
                       </ThaiMdText>
                       {purchaseList[item.type] == undefined ? (
                         <ThaiRegText
