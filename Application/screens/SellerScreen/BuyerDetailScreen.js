@@ -381,7 +381,7 @@ export default BuyerDetailScreen = (props) => {
                 ? "#ffdd00"
                 : Colors.button.submit_primary_dark.btnText,
             }}
-          >{` จดจำ`}</ThaiMdText>
+          >{` ชื่นชอบ`}</ThaiMdText>
         </CustomButton>
       </View>
 

@@ -615,81 +615,59 @@ export default ChooseBuyerScreen = (props) => {
           )}
         </View>
 
-        <View
-          style={{
-            height: "20%",
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <CustomButton
+        {buyerChoiceState.haveEleSelected ? (
+          <View
             style={{
-              width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40,
+              height: "20%",
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
-            btnColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_soft_primary_dark.btnBackground
-                : Colors.button.disabled.btnBackground
-            }
-            onPress={
-              buyerChoiceState.haveEleSelected
-                ? () => goBuyerDetail(buyerInfomation.buyerName)
-                : null
-            }
-            btnTitleColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_soft_primary_dark.btnText
-                : Colors.button.disabled.btnText
-            }
-            btnTitleFontSize={14}
           >
-            <ThaiRegText
+            <CustomButton
               style={{
-                fontSize: 12,
+                width: "40%",
+                height: "100%",
+                borderRadius: 8,
+                maxHeight: 40,
               }}
+              btnColor={Colors.button.submit_soft_primary_dark.btnBackground}
+              onPress={() => goBuyerDetail(buyerInfomation.buyerName)}
+              btnTitleColor={Colors.button.submit_soft_primary_dark.btnText}
+              btnTitleFontSize={14}
             >
-              {`ดูรายละเอียดผู้รับซื้อ`}
-            </ThaiRegText>
-          </CustomButton>
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                {`ดูรายละเอียดผู้รับซื้อ`}
+              </ThaiRegText>
+            </CustomButton>
 
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40,
-            }}
-            btnColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.disabled.btnBackground
-            }
-            onPress={
-              buyerChoiceState.haveEleSelected
-                ? () => setDatapickerShow(true)
-                : null
-            }
-            btnTitleColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.disabled.btnText
-            }
-            btnTitleFontSize={14}
-          >
-            <ThaiRegText
+            <CustomButton
               style={{
-                fontSize: 12,
+                width: "40%",
+                height: "100%",
+                borderRadius: 8,
+                maxHeight: 40,
               }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={() => setDatapickerShow(true)}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={14}
             >
-              {`เลือกวันที่`}
-            </ThaiRegText>
-          </CustomButton>
-        </View>
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                {`เลือกวันที่`}
+              </ThaiRegText>
+            </CustomButton>
+          </View>
+        ) : null}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
