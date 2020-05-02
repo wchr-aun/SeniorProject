@@ -66,7 +66,7 @@ const buyerChoiceReducer = (state, action) => {
   }
 };
 
-const BuyerChoice = ({
+const BuyerCard = ({
   selected,
   onSelected,
   sellerItemsForSell,
@@ -549,7 +549,7 @@ export default ChooseBuyerScreen = (props) => {
               refreshing={isRefreshing}
               renderItem={({ item }) => {
                 return (
-                  <BuyerChoice
+                  <BuyerCard
                     sellerItemsForSell={sellerItemsForSell}
                     onSelected={() => {
                       buyerSelectHandler(

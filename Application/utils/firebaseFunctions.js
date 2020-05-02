@@ -215,28 +215,35 @@ export const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
+    .get()
     .then((doc) => {
       if (doc.data().favBuyers != null) return doc.data().favBuyers;
       else return [];
     })
     .then((favBuyers) => {
+      // new code
       let buyersInfo = [];
-      favBuyers.forEach(async (buyer) => {
-        await firestore
-          .collection("buyerList")
-          .doc(buyer)
-          .get()
-          .then((doc) => {
-            if (doc.exists)
-              buyersInfo.push({ txId: doc.id, detail: doc.data() });
-            else
-              buyersInfo.push({
-                txId: doc.id,
-                detail: "The document doesn't exist",
-              });
-          });
+      let promises = [];
+      for (let index = 0; index < favBuyers.length; index++) {
+        promises.push(
+          firestore
+            .collection("buyerLists")
+            .doc(favBuyers[index])
+            .get()
+            .then((doc) => {
+              if (doc.exists)
+                buyersInfo.push({ txId: doc.id, detail: doc.data() });
+              else
+                buyersInfo.push({
+                  txId: doc.id,
+                  detail: "The document doesn't exist",
+                });
+            })
+        );
+      }
+      return Promise.all(promises).then(() => {
+        return buyersInfo;
       });
-      return buyersInfo;
     })
     .catch((err) => {
       Alert.alert(
