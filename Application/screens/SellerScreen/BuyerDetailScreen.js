@@ -13,7 +13,7 @@ import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
   widthPercentageToDP as wp,
@@ -21,8 +21,10 @@ import {
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
-import { searchBuyer } from "../../utils/firebaseFunctions";
+import { searchBuyer, getIsFavBuyer } from "../../utils/firebaseFunctions";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { setFavBuyer } from "../../utils/firebaseFunctions";
+import ModalLoading from "../../components/ModalLoading";
 
 const comments_temp = [
   {
@@ -216,15 +218,19 @@ const BuyerPrice = (props) => {
 export default BuyerDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
   const buyerId = props.navigation.getParam("buyerId");
-
+  const [isFavBuyer, setIsFavBuyer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(true);
+  const [isInOperation, setIsInOperation] = useState(false);
+  const [text, setText] = useState("กำลังดำเนินการ");
 
   // load buyer info function
   const [buyerInfo, setBuyerInfo] = useState({});
   const loadBuyerInfo = async (buyerId) => {
     const buyerInfo = await searchBuyer(buyerId);
+    const isFavBuyer = await getIsFavBuyer(buyerId);
     setBuyerInfo(buyerInfo);
+    setIsFavBuyer(isFavBuyer);
   };
 
   // load buyer img function
@@ -242,6 +248,15 @@ export default BuyerDetailScreen = (props) => {
     await loadBuyerImg(buyerId);
     await loadComments();
     setIsLoading(false);
+  };
+
+  const setBuyerFavhandler = async () => {
+    if (isFavBuyer) setText("นำออกจากรายการที่ชื่นชอบ");
+    else setText("จัดเก็บในรายการที่ชื่นชอบ");
+    setIsInOperation(true);
+    const result = await setFavBuyer({ favBuyer: buyerId });
+    setIsFavBuyer(result.data === "unset" ? false : true);
+    setIsInOperation(false);
   };
   // load buyer img and information
   useEffect(() => {
@@ -287,6 +302,11 @@ export default BuyerDetailScreen = (props) => {
       {props.navigation.getParam("haveHeaderHight") ? null : (
         <CustomStatusBar />
       )}
+      <ModalLoading
+        modalVisible={isInOperation}
+        userRole="seller"
+        text={text}
+      />
       <View
         style={{
           height: "10%",
@@ -334,7 +354,31 @@ export default BuyerDetailScreen = (props) => {
             รายละเอียดผู้รับซื้อ
           </ThaiBoldText>
         </View>
-        <View style={{ width: "20%" }} />
+        <CustomButton
+          style={{
+            width: "20%",
+            height: "100%",
+            maxHeight: 30,
+            borderRadius: 5,
+            alignItems: "center",
+          }}
+          btnColor={Colors.button.cancel.btnBackground}
+          onPress={setBuyerFavhandler}
+          btnTitleColor={Colors.button.cancel.btnText}
+          btnTitleFontSize={20}
+        >
+          <FontAwesome
+            name={isFavBuyer ? "star" : "star-o"}
+            color={isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark}
+            size={20}
+          />
+          <ThaiMdText
+            style={{
+              fontSize: 20,
+              color: isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark,
+            }}
+          >{` จดจำ`}</ThaiMdText>
+        </CustomButton>
       </View>
 
       {/* buyerInfo + sellerComment */}
