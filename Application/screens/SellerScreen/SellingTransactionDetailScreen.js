@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import {
   View,
   Image,
@@ -62,6 +62,31 @@ const getDisableStatusForSeller = (btnType, txStatus) => {
   }
 };
 
+const transactionReducer = (state, action) => {
+  switch (action.type) {
+    case "TIME_SELECT":
+      const updatedAssignedTime = [...state.assignedTimes];
+      let selectedTime = "";
+      for (let i = 0; i < updatedAssignedTime.length; i++) {
+        if (updatedAssignedTime[i].seconds === action.time.seconds) {
+          updatedAssignedTime[i].selected = !updatedAssignedTime[i].selected;
+          if (updatedAssignedTime[i].selected) {
+            selectedTime = updatedAssignedTime[i];
+          }
+        } else {
+          updatedAssignedTime[i].selected = false;
+        }
+      }
+      return {
+        assignedTimes: [...updatedAssignedTime],
+        selectedTime,
+      };
+
+    default:
+      return { ...state };
+  }
+};
+
 export default SellingTransactionDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
   const [isInOperation, setIsInOperation] = useState(false);
@@ -75,18 +100,17 @@ export default SellingTransactionDetailScreen = (props) => {
     );
   }
   const transactionItem = props.navigation.getParam("transactionItem");
+  const [time, dispatchTransactionItem] = useReducer(transactionReducer, {
+    assignedTimes: [...transactionItem.detail.assignedTime],
+    selectedTime: transactionItem.detail.assignedTime[0],
+  });
+
   const userRole = useSelector((state) => state.user.userRole);
   const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
-
-  const [timeSelected, setTimeSelected] = useState("");
-  const onTimeSelectedHandler = (timeItem) => {
-    if (timeSelected === timeItem) setTimeSelected("");
-    else setTimeSelected(timeItem);
-  };
 
   const dispatch = useDispatch();
   const cancelHandler = async () => {
@@ -135,7 +159,7 @@ export default SellingTransactionDetailScreen = (props) => {
         transactionAction.changeTransactionStatus({
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
-          chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
+          chosenTime: time.selectedTime.seconds * 1000, //formattedTime.seconds * 1000
           newStatus: 2,
           txType: transactionItem.detail.txType,
           assignedTime: transactionItem.detail.assignedTime,
@@ -420,13 +444,21 @@ export default SellingTransactionDetailScreen = (props) => {
         }}
       >
         <FlatList
-          data={transactionItem.detail.assignedTime}
-          keyExtractor={(item) =>
-            libary.formatDate(item.toDate()) + libary.formatTime(item.toDate())
+          data={time.assignedTimes}
+          keyExtractor={(timeObj) =>
+            libary.formatDate(timeObj.toDate()) +
+            libary.formatTime(timeObj.toDate())
           }
-          renderItem={({ item }) => {
+          renderItem={({ item: timeObj }) => {
             return (
-              <TouchableOpacity onPress={() => onTimeSelectedHandler(item)}>
+              <TouchableOpacity
+                onPress={() =>
+                  dispatchTransactionItem({
+                    type: "TIME_SELECT",
+                    time: timeObj,
+                  })
+                }
+              >
                 <View style={{ height: 25, alignSelf: "center" }}>
                   <ThaiRegText
                     style={{
@@ -434,7 +466,7 @@ export default SellingTransactionDetailScreen = (props) => {
                       color:
                         transactionItem.detail.chosenTime != undefined
                           ? transactionItem.detail.chosenTime.seconds ===
-                            item.seconds
+                            timeObj.seconds
                             ? Colors.soft_primary_bright
                             : Colors.soft_secondary
                           : Colors.soft_secondary,
@@ -446,15 +478,15 @@ export default SellingTransactionDetailScreen = (props) => {
                         color:
                           transactionItem.detail.chosenTime != undefined
                             ? transactionItem.detail.chosenTime.seconds ===
-                              item.seconds
+                              timeObj.seconds
                               ? Colors.soft_primary_bright
                               : Colors.soft_primary_dark
                             : Colors.soft_primary_dark,
                       }}
                     >
-                      {`${libary.formatDate(item.toDate())} ${libary.formatTime(
-                        item.toDate()
-                      )} `}
+                      {`${libary.formatDate(
+                        timeObj.toDate()
+                      )} ${libary.formatTime(timeObj.toDate())} `}
                     </ThaiMdText>
                     <ThaiMdText
                       style={{
@@ -462,7 +494,7 @@ export default SellingTransactionDetailScreen = (props) => {
                         color:
                           transactionItem.detail.chosenTime != undefined
                             ? transactionItem.detail.chosenTime.seconds ===
-                              item.seconds
+                              timeObj.seconds
                               ? Colors.soft_primary_bright
                               : Colors.soft_primary_dark
                             : Colors.soft_primary_dark,
@@ -471,7 +503,7 @@ export default SellingTransactionDetailScreen = (props) => {
                       {transactionItem.detail.txStatus === 1 ? (
                         <MaterialIcons
                           name={
-                            item.seconds === timeSelected.seconds
+                            timeObj.selected
                               ? "check-box"
                               : "check-box-outline-blank"
                           }
@@ -660,39 +692,38 @@ export default SellingTransactionDetailScreen = (props) => {
             <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
           </CustomButton>
 
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 40,
-              borderRadius: 5,
-            }}
-            btnColor={
-              !timeSelected ||
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_bright.btnBackgroundDisabled
-                : Colors.button.submit_primary_bright.btnBackground
-            }
-            btnTitleColor={
-              !timeSelected ||
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? Colors.button.submit_primary_bright.btnTextDisabled
-                : Colors.button.submit_primary_bright.btnText
-            }
-            onPress={
-              !timeSelected ||
-              getDisableStatusForSeller(2, transactionItem.detail.txStatus)
-                ? null
-                : acceptPreferedtimeHandler
-            }
-            btnTitleFontSize={12}
-          >
-            <MaterialCommunityIcons
-              name={"calendar-multiple-check"}
-              size={12}
-            />
-            <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
-          </CustomButton>
+          {time.selectedTime != "" ? (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5,
+              }}
+              btnColor={
+                getDisableStatusForSeller(2, transactionItem.detail.txStatus)
+                  ? Colors.button.submit_primary_bright.btnBackgroundDisabled
+                  : Colors.button.submit_primary_bright.btnBackground
+              }
+              btnTitleColor={
+                getDisableStatusForSeller(2, transactionItem.detail.txStatus)
+                  ? Colors.button.submit_primary_bright.btnTextDisabled
+                  : Colors.button.submit_primary_bright.btnText
+              }
+              onPress={
+                getDisableStatusForSeller(2, transactionItem.detail.txStatus)
+                  ? null
+                  : acceptPreferedtimeHandler
+              }
+              btnTitleFontSize={12}
+            >
+              <MaterialCommunityIcons
+                name={"calendar-multiple-check"}
+                size={12}
+              />
+              <ThaiMdText style={{ fontSize: 12 }}> ว่างในเวลาเสนอ</ThaiMdText>
+            </CustomButton>
+          ) : null}
         </View>
       </View>
     </View>

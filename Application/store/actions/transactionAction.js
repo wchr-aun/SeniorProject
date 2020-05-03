@@ -1,6 +1,6 @@
 import {
   getTransactions,
-  getTodayTxForPathOp
+  getTodayTxForPathOp,
 } from "../../utils/firebaseFunctions";
 import libary from "../../utils/libary";
 import { updateTxStatus, querySellers } from "../../utils/firebaseFunctions";
@@ -10,14 +10,14 @@ export const FETCH_QUICK_TRANSACTION = "FETCH_QUICK_TRANSACTION";
 export const FETCH_TODAY_TRANSACTION = "FETCH_TODAY_TRANSACTION";
 export const CHANGE_TRANSACTION_STATUS = "CHANGE_TRANSACTION_STATUS";
 
-export const fetchTransaction = role => {
-  return async dispatch => {
+export const fetchTransaction = (role) => {
+  return async (dispatch) => {
     try {
       let transactions = await getTransactions(role);
       dispatch({
         type: FETCH_TRANSACTION,
         transactions,
-        userRole: role
+        userRole: role,
       });
     } catch (err) {
       console.log(err.message);
@@ -27,8 +27,8 @@ export const fetchTransaction = role => {
   };
 };
 
-export const fetchQuickTransaction = queryData => {
-  return async dispatch => {
+export const fetchQuickTransaction = (queryData) => {
+  return async (dispatch) => {
     try {
       // search buyer
       let SellerList = await querySellers(queryData);
@@ -48,16 +48,16 @@ export const fetchQuickTransaction = queryData => {
           txId: item.id,
           detail: {
             ...item,
-            assignedTime: firebaseAssignedTime
+            assignedTime: firebaseAssignedTime,
             // assignedTimeForUpdatingTx
-          }
+          },
         });
       });
 
       // dispatch
       dispatch({
         type: FETCH_QUICK_TRANSACTION,
-        quickTransactions: cleanedFormatSellerList
+        quickTransactions: cleanedFormatSellerList,
       });
     } catch (err) {
       throw new Error(err.message);
@@ -65,14 +65,14 @@ export const fetchQuickTransaction = queryData => {
   };
 };
 
-export const changeTransactionStatus = updatedDetail => {
-  return async dispatch => {
+export const changeTransactionStatus = (updatedDetail) => {
+  return async (dispatch) => {
     try {
       await updateTxStatus({
         txID: updatedDetail.txID,
         chosenTime: updatedDetail.chosenTime,
         status: updatedDetail.newStatus,
-        assignedTime: updatedDetail.assignedTime
+        assignedTime: updatedDetail.assignedTime,
       });
 
       // move that item to new status
@@ -85,7 +85,7 @@ export const changeTransactionStatus = updatedDetail => {
 };
 
 export const fetchTransactionForPathOp = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       let transactionMode = await getTodayTxForPathOp();
       dispatch({ type: FETCH_TODAY_TRANSACTION, transactionMode });

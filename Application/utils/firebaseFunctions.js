@@ -150,7 +150,7 @@ export const getPurchaseList = async () => {
 export const getTransactions = async (role) => {
   let allTx = [];
   let promises = [];
-  for (let status = 0; status < 5; status++) {
+  for (let status = 0; status < 6; status++) {
     promises.push(
       firestore
         .collection("transactions")
