@@ -585,16 +585,3 @@ const sendNotification = (uid, title, body) => {
     return {errorMessage: err}
   })
 }
-
-// exports.temp = functions.https.onCall((data, context) => {
-//   txDB.get().then(querySnapshot => {
-//     querySnapshot.forEach(doc => {
-//       console.log(doc.data().addr)
-//       const addr = doc.data().addr.split(" ")
-//       const zipcode = addr[addr.length - 1]
-//       txDB.doc(doc.id).update({
-//         zipcode: Number(zipcode)
-//       }).catch(err => console.log)
-//     })
-//   })
-// })
