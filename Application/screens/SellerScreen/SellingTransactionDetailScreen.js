@@ -35,6 +35,8 @@ import {
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import ModalLoading from "../../components/ModalLoading";
 import ModalShowImg from "../../components/ModalShowImg";
+import ModalNewComment from "../../components/ModalNewComment";
+import ThaiBoldText from "../../components/ThaiBoldText";
 
 const getDisableStatusForSeller = (btnType, txStatus) => {
   /* 
@@ -107,6 +109,7 @@ export default SellingTransactionDetailScreen = (props) => {
 
   const userRole = useSelector((state) => state.user.userRole);
   const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
+  const userId = useSelector((state) => state.user.userProfile.uid);
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -179,6 +182,10 @@ export default SellingTransactionDetailScreen = (props) => {
       ]);
     }
   };
+
+  const [isModalNewCommentVisible, setIsModalNewCommentVisible] = useState(
+    false
+  );
 
   // load sellerItem imgs
   const [imgShowInModal, setImgShowInModal] = useState("");
@@ -256,6 +263,11 @@ export default SellingTransactionDetailScreen = (props) => {
         setIsImgModalVisible={setIsImgModalVisible}
         uri={imgShowInModal}
         slideImg={slideImg}
+      />
+      <ModalNewComment
+        modalVisible={isModalNewCommentVisible}
+        setIsImgModalVisible={setIsModalNewCommentVisible}
+        seller={userId}
       />
       <View
         style={{
@@ -664,35 +676,53 @@ export default SellingTransactionDetailScreen = (props) => {
             alignItems: "center",
           }}
         >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              maxHeight: 40,
-              borderRadius: 5,
-            }}
-            btnColor={
-              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
-                ? Colors.button.danger_operation.btnBackgroundDisabled
-                : Colors.button.danger_operation.btnBackground
-            }
-            onPress={
-              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
-                ? null
-                : () => setConfirmCancleVisible(true)
-            }
-            btnTitleColor={
-              getDisableStatusForSeller(4, transactionItem.detail.txStatus)
-                ? Colors.button.danger_operation.btnTextDisabled
-                : Colors.button.danger_operation.btnText
-            }
-            btnTitleFontSize={18}
-          >
-            <MaterialIcons name={"cancel"} size={14} />
-            <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
-          </CustomButton>
+          {transactionItem.detail.txStatus === 5 ? (
+            <CustomButton
+              style={{
+                width: "90%",
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5,
+              }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={() => setIsModalNewCommentVisible(true)}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={18}
+            >
+              <MaterialIcons name={"comment"} size={18} />
+              <ThaiBoldText style={{ fontSize: 18 }}> ให้ความเห็น</ThaiBoldText>
+            </CustomButton>
+          ) : (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "100%",
+                maxHeight: 40,
+                borderRadius: 5,
+              }}
+              btnColor={
+                getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                  ? Colors.button.danger_operation.btnBackgroundDisabled
+                  : Colors.button.danger_operation.btnBackground
+              }
+              onPress={
+                getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                  ? null
+                  : () => setConfirmCancleVisible(true)
+              }
+              btnTitleColor={
+                getDisableStatusForSeller(4, transactionItem.detail.txStatus)
+                  ? Colors.button.danger_operation.btnTextDisabled
+                  : Colors.button.danger_operation.btnText
+              }
+              btnTitleFontSize={18}
+            >
+              <MaterialIcons name={"cancel"} size={14} />
+              <ThaiMdText style={{ fontSize: 18 }}> ยกเลิก</ThaiMdText>
+            </CustomButton>
+          )}
 
-          {time.selectedTime != "" ? (
+          {time.selectedTime != "" && transactionItem.detail.txStatus != 5 ? (
             <CustomButton
               style={{
                 width: "40%",
