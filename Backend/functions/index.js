@@ -463,6 +463,7 @@ exports.setFavBuyer = functions.https.onCall((data,context) => {
 })
 
 exports.sendComment = functions.https.onCall((data,context) => {
+  console.log('WTF is happening? ' + context.auth.uid)
   if (context.auth != null) {
     if (data.comment.length < 5 && data.rating == 0)
       return {errorMessage: "Error has occurred due to incompleted data: The comment needs to have more than 5 characters, and the rating needs to be given"}
@@ -483,14 +484,14 @@ exports.sendComment = functions.https.onCall((data,context) => {
           review: admin.firestore.FieldValue.arrayUnion({
             comment: data.comment,
             rating: data.rating,
-            user: "wchr.aun",
+            user: context.auth.uid,
             timestamp: new Date()
           })
         })
         return true
       })
     }).catch(err => {
-      console.log("Error has occurred in sendComment() while updating transaction " + "wchr.aun")
+      console.log("Error has occurred in sendComment() while updating transaction " + context.auth.uid)
       console.log(err)
       return {errorMessage: err.message}
     })
