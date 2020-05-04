@@ -534,6 +534,7 @@ export const searchBuyer = async (uid) => {
       else return "No such users";
     })
     .catch((err) => {
+      console.log("can't searchBuyer");
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -588,9 +589,10 @@ export const setFavBuyer = async (favBuyer) => {
 };
 
 export const addNewComment = async (review) => {
+  console.log("auth.currentUser.uid");
   console.log(auth.currentUser.uid);
   return functions
-    .httpsCallable("sendComment")(review)
+    .httpsCallable("sendComments")(review)
     .then((result) => {
       console.log("result");
       console.log(result);
@@ -615,28 +617,3 @@ export const addNewComment = async (review) => {
       throw new Error(err.message);
     });
 };
-
-// export const addNewComment = async (comment) => {
-//   return functions
-//     .httpsCallable("sendComment")(comment)
-//     .then((result) => {
-//       if (result) {
-//         return result;
-//       } else {
-//         console.log("wrong result");
-//         Alert.alert(
-//           "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-//           result.data.errorMessage,
-//           [{ text: "OK" }]
-//         );
-//       }
-//     })
-//     .catch((err) => {
-//       Alert.alert(
-//         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-//         err.message,
-//         [{ text: "OK" }]
-//       );
-//       throw new Error(err.message);
-//     });
-// };

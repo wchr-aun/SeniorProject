@@ -37,6 +37,7 @@ import ModalLoading from "../../components/ModalLoading";
 import ModalShowImg from "../../components/ModalShowImg";
 import ModalNewComment from "../../components/ModalNewComment";
 import ThaiBoldText from "../../components/ThaiBoldText";
+import { addNewComment } from "../../utils/firebaseFunctions";
 
 const getDisableStatusForSeller = (btnType, txStatus) => {
   /* 
@@ -110,6 +111,21 @@ export default SellingTransactionDetailScreen = (props) => {
   const userRole = useSelector((state) => state.user.userRole);
   const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
   const userId = useSelector((state) => state.user.userProfile.uid);
+  const [rating, setRating] = useState("0");
+  const [comment, setComment] = useState("");
+
+  const sendCommentHandler = async () => {
+    const review = {
+      rating: Number(rating),
+      comment,
+      seller: userId,
+    };
+
+    console.log("review");
+    console.log(review);
+    await addNewComment(review);
+    setIsModalNewCommentVisible(false);
+  };
 
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
@@ -267,7 +283,11 @@ export default SellingTransactionDetailScreen = (props) => {
       <ModalNewComment
         modalVisible={isModalNewCommentVisible}
         setIsImgModalVisible={setIsModalNewCommentVisible}
-        seller={userId}
+        setRating={setRating}
+        setComment={setComment}
+        comment={comment}
+        rating={rating}
+        onSubmit={sendCommentHandler}
       />
       <View
         style={{

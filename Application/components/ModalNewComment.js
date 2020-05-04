@@ -7,30 +7,31 @@ import ThaiMdText from "../components/ThaiMdText";
 import CustomButton from "../components/UI/CustomButton";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { addNewComment } from "../utils/firebaseFunctions";
 
 export default ModalNewComment = ({
   modalVisible,
   setIsImgModalVisible,
-  seller,
+  setRating,
+  setComment,
+  comment,
+  rating,
+  onSubmit,
 }) => {
-  const [rating, setRating] = useState("0");
-  const [comment, setComment] = useState("");
+  // const [rating, setRating] = useState("0");
+  // const [comment, setComment] = useState("");
 
-  const sendCommentHandler = async () => {
-    console.log(rating);
-    console.log(comment);
-    console.log(seller);
+  // const sendCommentHandler = async () => {
 
-    const review = {
-      rating: Number(rating),
-      comment,
-      seller,
-    };
+  //   const review = {
+  //     rating: Number(rating),
+  //     comment,
+  //     seller,
+  //   };
 
-    console.log(review);
-    await addNewComment(review);
-  };
+  //   console.log("review");
+  //   console.log(review);
+  //   await addNewComment(review);
+  // };
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -160,10 +161,7 @@ export default ModalNewComment = ({
               style={{ width: "40%", height: "100%", borderRadius: 5 }}
               btnColor={Colors.button.submit_primary_bright.btnBackground}
               btnTitleColor={Colors.button.submit_primary_bright.btnText}
-              onPress={() => {
-                // setIsImgModalVisible(false);
-                sendCommentHandler();
-              }}
+              onPress={onSubmit}
               btnTitleFontSize={12}
             >
               ให้คะแนน
