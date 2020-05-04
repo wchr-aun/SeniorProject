@@ -7,6 +7,7 @@ import ThaiMdText from "../components/ThaiMdText";
 import CustomButton from "../components/UI/CustomButton";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { addNewComment } from "../utils/firebaseFunctions";
 
 export default ModalNewComment = ({
   modalVisible,
@@ -20,6 +21,15 @@ export default ModalNewComment = ({
     console.log(rating);
     console.log(comment);
     console.log(seller);
+
+    const review = {
+      rating: Number(rating),
+      comment,
+      seller,
+    };
+
+    console.log(review);
+    await addNewComment(review);
   };
 
   return (
@@ -151,7 +161,7 @@ export default ModalNewComment = ({
               btnColor={Colors.button.submit_primary_bright.btnBackground}
               btnTitleColor={Colors.button.submit_primary_bright.btnText}
               onPress={() => {
-                setIsImgModalVisible(false);
+                // setIsImgModalVisible(false);
                 sendCommentHandler();
               }}
               btnTitleFontSize={12}
