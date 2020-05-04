@@ -15,5 +15,8 @@
     "node-fetch": "^2.6.0",
     "rxjs": "^6.5.4"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "10"
+  }
 }
