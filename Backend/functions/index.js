@@ -463,7 +463,7 @@ exports.setFavBuyer = functions.https.onCall((data,context) => {
 })
 
 exports.sendComment = functions.https.onCall((data,context) => {
-  if (context.auth == null) {
+  if (context.auth != null) {
     if (data.comment.length < 5 && data.rating == 0)
       return {errorMessage: "Error has occurred due to incompleted data: The comment needs to have more than 5 characters, and the rating needs to be given"}
     return firestore.runTransaction(transaction => {
