@@ -150,7 +150,7 @@ export default SellerHomepageScreen = (props) => {
               imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
               address={userProfile.addr.readable}
-              onSignout={() => {
+              onClick={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
