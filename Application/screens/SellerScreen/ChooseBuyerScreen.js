@@ -121,7 +121,7 @@ const BuyerCard = ({
           </ThaiRegText>
         </View>
 
-        <View style={{ width: "40%", justifyContent: "center" }}>
+        <View style={{ justifyContent: "center" }}>
           {isFav ? (
             <View
               style={{
@@ -129,7 +129,7 @@ const BuyerCard = ({
                   Colors.button.submit_primary_dark.btnBackground,
                 flexDirection: "row",
                 padding: 5,
-                height: 40,
+                height: 30,
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 4,
@@ -138,11 +138,11 @@ const BuyerCard = ({
               <FontAwesome
                 name={isFav ? "star" : "star-o"}
                 color={"#ffdd00"}
-                size={16}
+                size={13}
               />
               <ThaiMdText
                 style={{
-                  fontSize: 16,
+                  fontSize: 13,
                   color: "#ffdd00",
                 }}
               >{` คุณชื่นชอบ`}</ThaiMdText>
@@ -637,12 +637,17 @@ export default ChooseBuyerScreen = (props) => {
               btnTitleColor={Colors.button.submit_soft_primary_dark.btnText}
               btnTitleFontSize={14}
             >
+              <FontAwesome
+                name="search"
+                size={12}
+                color={Colors.button.submit_primary_bright.btnText}
+              />
               <ThaiRegText
                 style={{
                   fontSize: 12,
                 }}
               >
-                {`ดูรายละเอียดผู้รับซื้อ`}
+                {` ดูรายละเอียดผู้รับซื้อ`}
               </ThaiRegText>
             </CustomButton>
 
@@ -658,12 +663,17 @@ export default ChooseBuyerScreen = (props) => {
               btnTitleColor={Colors.button.submit_primary_bright.btnText}
               btnTitleFontSize={14}
             >
+              <FontAwesome
+                name="calendar-plus-o"
+                size={12}
+                color={Colors.button.submit_primary_bright.btnText}
+              />
               <ThaiRegText
                 style={{
                   fontSize: 12,
                 }}
               >
-                {`เลือกวันที่`}
+                {` เลือกวันที่`}
               </ThaiRegText>
             </CustomButton>
           </View>
