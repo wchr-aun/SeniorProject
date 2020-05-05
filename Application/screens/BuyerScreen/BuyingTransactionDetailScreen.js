@@ -7,8 +7,7 @@ import {
   ActivityIndicator,
   Image,
   Modal,
-  TouchableHighlight,
-  Alert
+  Alert,
 } from "react-native";
 import { NavigationEvents } from "react-navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,17 +24,16 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   Ionicons,
-  FontAwesome
+  FontAwesome,
 } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
-import { Header } from "react-navigation-stack";
 import { ConfirmDialog } from "react-native-simple-dialogs";
 
 const getDisableStatusForBuyer = (btnType, txStatus) => {
@@ -67,7 +65,7 @@ const getDisableStatusForBuyer = (btnType, txStatus) => {
   }
 };
 
-const ModalShowImg = props => {
+const ModalShowImg = (props) => {
   return (
     <Modal
       animationType="slide"
@@ -80,7 +78,7 @@ const ModalShowImg = props => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.5"
+          backgroundColor: "rgba(255,255,255,0.5)",
         }}
       >
         <View
@@ -89,7 +87,7 @@ const ModalShowImg = props => {
             height: "80%",
             backgroundColor: "white",
             borderRadius: 5,
-            padding: 5
+            padding: 5,
           }}
         >
           <View
@@ -99,7 +97,7 @@ const ModalShowImg = props => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              padding: 10
+              padding: 10,
             }}
           >
             <View
@@ -107,7 +105,7 @@ const ModalShowImg = props => {
                 width: "100%",
                 height: "100%",
                 borderRadius: 5,
-                overflow: "hidden"
+                overflow: "hidden",
               }}
             >
               <Image
@@ -123,7 +121,7 @@ const ModalShowImg = props => {
               height: "15%",
               justifyContent: "space-around",
               alignItems: "center",
-              flexDirection: "row"
+              flexDirection: "row",
             }}
           >
             <CustomButton
@@ -132,7 +130,7 @@ const ModalShowImg = props => {
                 maxWidth: 40,
                 height: "100%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.submit_primary_dark.btnBackground}
               onPress={() => {
@@ -155,7 +153,7 @@ const ModalShowImg = props => {
                 maxWidth: 80,
                 height: "100%",
                 maxHeight: 50,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.cancel.btnBackground}
               onPress={() => {
@@ -178,7 +176,7 @@ const ModalShowImg = props => {
                 maxWidth: 40,
                 height: "100%",
                 maxHeight: 40,
-                borderRadius: 5
+                borderRadius: 5,
               }}
               btnColor={Colors.button.submit_primary_dark.btnBackground}
               onPress={() => props.slideImg(1)}
@@ -198,13 +196,13 @@ const ModalShowImg = props => {
   );
 };
 
-export default BuyingTransactionDetailScreen = props => {
+export default BuyingTransactionDetailScreen = (props) => {
   // Get a parameter that sent from the previous page.
   const transactionItem = props.navigation.getParam("transactionItem");
   const [isLoading, setIsLoading] = useState(false);
   const [isInOperation, setIsInOperation] = useState(false);
   const isOperationCompleted = useSelector(
-    state => state.navigation.isOperationCompleted
+    (state) => state.navigation.isOperationCompleted
   );
   // for refreshing
   const checkIsOperationCompleted = () => {
@@ -221,7 +219,7 @@ export default BuyingTransactionDetailScreen = props => {
     let imgs = await libary.downloadingImg(transactionItem.detail.img, "tx");
     setImgs(imgs);
   };
-  const slideImg = indexSlide => {
+  const slideImg = (indexSlide) => {
     let oldIndex = imgs.indexOf(imgShowInModal);
     let newIndex = oldIndex + indexSlide;
     if (newIndex != -1 && newIndex < imgs.length) {
@@ -258,7 +256,7 @@ export default BuyingTransactionDetailScreen = props => {
     transactionItem.detail.assignedTime
   );
   const [timeSelected, setTimeSelected] = useState("");
-  const onTimeSelectedHandler = timeItem => {
+  const onTimeSelectedHandler = (timeItem) => {
     if (timeSelected === timeItem) setTimeSelected("");
     else setTimeSelected(timeItem);
   };
@@ -275,7 +273,7 @@ export default BuyingTransactionDetailScreen = props => {
   hideDateTimePicker = () => {
     setDatapickerShow(false);
   };
-  handleDatePicked = date => {
+  handleDatePicked = (date) => {
     setDate(date);
     hideDateTimePicker();
     setAssignedTimeModalVisible(true);
@@ -297,7 +295,7 @@ export default BuyingTransactionDetailScreen = props => {
     setBuyerAssignedTime(updatedBuyerAssignedTime);
   }, [modalAssignedTime]);
 
-  const deleteBuyerTimeHandler = datetime => {
+  const deleteBuyerTimeHandler = (datetime) => {
     let updatedBuyerAssignedTime = [...buyerAssignedTimeFlatList];
     let deletedTarget = updatedBuyerAssignedTime.indexOf(datetime);
     if (deletedTarget != -1) {
@@ -314,7 +312,7 @@ export default BuyingTransactionDetailScreen = props => {
         transactionAction.changeTransactionStatus({
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
-          newStatus: 4
+          newStatus: 4,
         })
       );
       await dispatch(transactionAction.fetchTransaction("buyer"));
@@ -341,7 +339,7 @@ export default BuyingTransactionDetailScreen = props => {
             oldStatus: transactionItem.detail.txStatus, //for query
             newStatus: 1,
             txType: transactionItem.detail.txType,
-            assignedTime: buyerAssignedTime
+            assignedTime: buyerAssignedTime,
           })
         );
       } else {
@@ -352,7 +350,7 @@ export default BuyingTransactionDetailScreen = props => {
             oldStatus: transactionItem.detail.txStatus, //for query
             chosenTime: timeSelected.seconds * 1000, //formattedTime.seconds * 1000
             newStatus: 2,
-            txType: transactionItem.detail.txType
+            txType: transactionItem.detail.txType,
           })
         );
       }
@@ -378,7 +376,7 @@ export default BuyingTransactionDetailScreen = props => {
         transactionAction.changeTransactionStatus({
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
-          newStatus: 3
+          newStatus: 3,
         })
       );
       await dispatch(transactionAction.fetchTransaction("buyer"));
@@ -398,7 +396,7 @@ export default BuyingTransactionDetailScreen = props => {
         transactionAction.changeTransactionStatus({
           txID: transactionItem.txId,
           oldStatus: transactionItem.detail.txStatus, //for query
-          newStatus: 5
+          newStatus: 5,
         })
       );
       await dispatch(transactionAction.fetchTransaction("buyer"));
@@ -445,7 +443,7 @@ export default BuyingTransactionDetailScreen = props => {
       style={{
         ...styles.infoContainerCard,
         width: "100%",
-        height: "100%"
+        height: "100%",
       }}
     >
       {props.navigation.getParam("haveHeaderHight") ? null : (
@@ -463,13 +461,13 @@ export default BuyingTransactionDetailScreen = props => {
           onPress: () => {
             cancelHandler();
             setConfirmCancleVisible(false);
-          }
+          },
         }}
         negativeButton={{
           title: "ยกเลิก",
           onPress: () => {
             setConfirmCancleVisible(false);
-          }
+          },
         }}
       />
       <ModalShowImg
@@ -495,7 +493,7 @@ export default BuyingTransactionDetailScreen = props => {
           backgroundColor: Colors.soft_primary_dark,
           paddingVertical: 10,
           justifyContent: "space-around",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <CustomButton
@@ -503,7 +501,7 @@ export default BuyingTransactionDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={Colors.button.cancel.btnBackground}
           onPress={backHandler}
@@ -522,13 +520,13 @@ export default BuyingTransactionDetailScreen = props => {
             width: "50%",
             height: "100%",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ThaiBoldText
             style={{
               color: Colors.on_primary_dark.low_constrast,
-              fontSize: 18
+              fontSize: 18,
             }}
           >
             รายละเอียดคำขอ
@@ -539,7 +537,7 @@ export default BuyingTransactionDetailScreen = props => {
             width: "20%",
             height: "100%",
             maxHeight: 30,
-            borderRadius: 5
+            borderRadius: 5,
           }}
           btnColor={
             getDisableStatusForBuyer(3, transactionItem.detail.txStatus)
@@ -566,7 +564,7 @@ export default BuyingTransactionDetailScreen = props => {
           height: "20%",
           width: "100%",
           flexDirection: "row",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <View
@@ -575,7 +573,7 @@ export default BuyingTransactionDetailScreen = props => {
             height: "80%",
             padding: 5,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ImageCircle imgUrl={userImg} avariableWidth={wp("25%")} />
@@ -585,20 +583,20 @@ export default BuyingTransactionDetailScreen = props => {
             width: "70%",
             height: "80%",
             paddingHorizontal: 10,
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_primary_dark.low_constrast,
             }}
           >
             {`สถานะ `}
             <ThaiMdText
               style={{
                 fontSize: 14,
-                color: libary.getColorTxStatus(transactionItem.detail.txStatus)
+                color: libary.getColorTxStatus(transactionItem.detail.txStatus),
               }}
             >
               {libary.getReadableTxStatus(transactionItem.detail.txStatus)}
@@ -607,7 +605,7 @@ export default BuyingTransactionDetailScreen = props => {
           <ThaiRegText
             style={{
               fontSize: 14,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_primary_dark.low_constrast,
             }}
           >
             {`สถานที่รับขยะ `}
@@ -627,7 +625,7 @@ export default BuyingTransactionDetailScreen = props => {
           paddingHorizontal: 10,
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         <View
@@ -635,7 +633,7 @@ export default BuyingTransactionDetailScreen = props => {
             width: "50%",
             height: "80%",
             padding: 5,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           {buyerAssignedTimeFlatList.length > 0 ? (
@@ -644,7 +642,7 @@ export default BuyingTransactionDetailScreen = props => {
                 width: "100%",
                 height: "100%",
                 borderRadius: 5,
-                alignSelf: "flex-end"
+                alignSelf: "flex-end",
               }}
               btnColor={Colors.button.submit_primary_bright.btnBackground}
               btnTitleColor={Colors.button.submit_primary_bright.btnText}
@@ -658,7 +656,7 @@ export default BuyingTransactionDetailScreen = props => {
             <ThaiMdText
               style={{
                 fontSize: 12,
-                color: Colors.on_primary_dark.low_constrast
+                color: Colors.on_primary_dark.low_constrast,
               }}
             >
               {transactionItem.detail.txStatus === 0
@@ -674,7 +672,7 @@ export default BuyingTransactionDetailScreen = props => {
             width: "50%",
             height: "100%",
             flexDirection: "row",
-            padding: 5
+            padding: 5,
           }}
         >
           <CustomButton
@@ -682,7 +680,7 @@ export default BuyingTransactionDetailScreen = props => {
               width: "100%",
               height: "100%",
               borderRadius: 5,
-              alignSelf: "flex-end"
+              alignSelf: "flex-end",
             }}
             btnColor={
               getDisableStatusForBuyer(1, transactionItem.detail.txStatus)
@@ -716,7 +714,7 @@ export default BuyingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <View
@@ -724,7 +722,7 @@ export default BuyingTransactionDetailScreen = props => {
             width: "100%",
             height: "100%",
             backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 5
+            borderRadius: 5,
           }}
         >
           <FlatList
@@ -733,7 +731,7 @@ export default BuyingTransactionDetailScreen = props => {
                 ? buyerAssignedTimeFlatList
                 : assignedTime
             }
-            keyExtractor={item =>
+            keyExtractor={(item) =>
               libary.formatDate(item.toDate()) +
               libary.formatTime(item.toDate())
             }
@@ -752,14 +750,14 @@ export default BuyingTransactionDetailScreen = props => {
                       height: 25,
                       padding: 3,
                       alignSelf: "center",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <View
                       style={{
                         fontSize: 18,
                         alignItems: "center",
-                        flexDirection: "row"
+                        flexDirection: "row",
                       }}
                     >
                       <ThaiMdText
@@ -773,7 +771,7 @@ export default BuyingTransactionDetailScreen = props => {
                                 item.seconds
                                 ? Colors.soft_primary_bright
                                 : Colors.soft_secondary
-                              : Colors.soft_secondary
+                              : Colors.soft_secondary,
                         }}
                       >
                         {libary.formatDate(item.toDate())}
@@ -789,7 +787,7 @@ export default BuyingTransactionDetailScreen = props => {
                                 item.seconds
                                 ? Colors.soft_primary_bright
                                 : Colors.soft_secondary
-                              : Colors.soft_secondary
+                              : Colors.soft_secondary,
                         }}
                       >
                         {` ${libary.formatTime(item.toDate())}`}
@@ -824,7 +822,7 @@ export default BuyingTransactionDetailScreen = props => {
           width: "100%",
           height: "5%",
           padding: 2,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <ThaiMdText
@@ -837,7 +835,7 @@ export default BuyingTransactionDetailScreen = props => {
         style={{
           width: "100%",
           height: "15%",
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <View
@@ -846,12 +844,12 @@ export default BuyingTransactionDetailScreen = props => {
             height: "100%",
             backgroundColor: Colors.soft_primary_dark,
             borderRadius: 5,
-            paddingVertical: 10
+            paddingVertical: 10,
           }}
         >
           <FlatList
             data={saleList}
-            keyExtractor={item => item.subtype}
+            keyExtractor={(item) => item.subtype}
             style={{ flex: 1 }}
             renderItem={({ item }) => {
               return (
@@ -860,14 +858,14 @@ export default BuyingTransactionDetailScreen = props => {
                     height: 30,
                     padding: 3,
                     alignSelf: "center",
-                    flexDirection: "row"
+                    flexDirection: "row",
                   }}
                 >
                   <View
                     style={{
                       width: "100%",
                       height: "100%",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <ThaiRegText
@@ -888,7 +886,7 @@ export default BuyingTransactionDetailScreen = props => {
                       <ThaiMdText
                         style={{
                           fontSize: 18,
-                          color: Colors.primary_bright_variant
+                          color: Colors.primary_bright_variant,
                         }}
                       >
                         {item.amount.amount}
@@ -906,7 +904,7 @@ export default BuyingTransactionDetailScreen = props => {
           width: "100%",
           height: "5%",
           padding: 2,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <ThaiMdText
@@ -920,12 +918,12 @@ export default BuyingTransactionDetailScreen = props => {
           width: "100%",
           height: "10%",
           padding: 2,
-          paddingHorizontal: 10
+          paddingHorizontal: 10,
         }}
       >
         <FlatList
           data={imgs}
-          keyExtractor={item => item}
+          keyExtractor={(item) => item}
           style={{ flex: 1 }}
           horizontal={true}
           renderItem={({ item: uri }) => {
@@ -942,7 +940,7 @@ export default BuyingTransactionDetailScreen = props => {
                     height: 50,
                     borderRadius: 5,
                     paddingHorizontal: 2,
-                    overflow: "hidden"
+                    overflow: "hidden",
                   }}
                 >
                   <Image
@@ -962,7 +960,7 @@ export default BuyingTransactionDetailScreen = props => {
           width: "100%",
           height: "15%",
           padding: 5,
-          paddingBottom: getStatusBarHeight()
+          paddingBottom: getStatusBarHeight(),
         }}
       >
         <View
@@ -971,7 +969,7 @@ export default BuyingTransactionDetailScreen = props => {
             height: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -979,7 +977,7 @@ export default BuyingTransactionDetailScreen = props => {
               width: "40%",
               height: "100%",
               maxHeight: 40,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             btnColor={
               getDisableStatusForBuyer(4, transactionItem.detail.txStatus)
@@ -1006,7 +1004,7 @@ export default BuyingTransactionDetailScreen = props => {
               width: "40%",
               height: "100%",
               maxHeight: 40,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             btnColor={
               transactionItem.detail.txStatus === 3
@@ -1060,15 +1058,15 @@ export default BuyingTransactionDetailScreen = props => {
 const styles = StyleSheet.create({
   infoContainerCard: {
     backgroundColor: Colors.primary_dark,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   userInfo: {
-    alignItems: "center"
+    alignItems: "center",
   },
   userImg: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
 });
 
 /*

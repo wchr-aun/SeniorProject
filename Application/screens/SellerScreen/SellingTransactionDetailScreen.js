@@ -118,7 +118,7 @@ export default SellingTransactionDetailScreen = (props) => {
     const review = {
       rating: Number(rating),
       comment,
-      seller: userId,
+      buyer: transactionItem.detail.buyer,
     };
 
     console.log("review");
@@ -248,6 +248,7 @@ export default SellingTransactionDetailScreen = (props) => {
         ...styles.infoContainerCard,
         width: "100%",
         height: "100%",
+        justifyContent: "space-around",
       }}
     >
       {props.navigation.getParam("addCustomStatusbar") ? (
@@ -338,7 +339,7 @@ export default SellingTransactionDetailScreen = (props) => {
         </View>
         <View style={{ width: "20%" }} />
       </View>
-      {/* tx infomation */}
+      {/* buyer infomation */}
       <TouchableOpacity onPress={goBuyerDetail}>
         <View
           style={{
@@ -445,12 +446,14 @@ export default SellingTransactionDetailScreen = (props) => {
         </View>
       </TouchableOpacity>
 
+      {/* tx infomation */}
       <View
         style={{
           width: "100%",
-          height: "5%",
           paddingHorizontal: 10,
           paddingVertical: 5,
+          marginTop: 7,
+          justifyContent: "center",
         }}
       >
         <ThaiMdText
@@ -556,7 +559,8 @@ export default SellingTransactionDetailScreen = (props) => {
           width: "100%",
           height: "5%",
           paddingHorizontal: 10,
-          paddingVertical: 5,
+          marginTop: 7,
+          justifyContent: "center",
         }}
       >
         <ThaiMdText
@@ -628,6 +632,7 @@ export default SellingTransactionDetailScreen = (props) => {
           height: "5%",
           padding: 2,
           paddingHorizontal: 10,
+          marginTop: 7,
           paddingVertical: 5,
         }}
       >
@@ -685,6 +690,8 @@ export default SellingTransactionDetailScreen = (props) => {
           height: "15%",
           padding: 5,
           paddingBottom: getStatusBarHeight(),
+          alignSelf: "flex-end",
+          backgroundColor: "red",
         }}
       >
         <View

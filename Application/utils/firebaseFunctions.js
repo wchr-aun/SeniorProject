@@ -589,17 +589,12 @@ export const setFavBuyer = async (favBuyer) => {
 };
 
 export const addNewComment = async (review) => {
-  console.log("auth.currentUser.uid");
-  console.log(auth.currentUser.uid);
   return functions
-    .httpsCallable("sendComments")(review)
+    .httpsCallable("sendComment")(review)
     .then((result) => {
-      console.log("result");
-      console.log(result);
       if (result) {
         return result;
       } else {
-        console.log("something wrong. 1");
         Alert.alert(
           "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
           result.data.errorMessage,
@@ -608,7 +603,6 @@ export const addNewComment = async (review) => {
       }
     })
     .catch((err) => {
-      console.log("something wrong. 2");
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
