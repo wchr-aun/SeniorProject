@@ -111,6 +111,16 @@ const SellingTransactionNavigator = createStackNavigator(
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" },
     },
+  },
+  { headerMode: "none" }
+);
+
+const SearchBuyerNavigator = createStackNavigator(
+  {
+    SearchBuyerScreen: {
+      screen: SearchBuyerScreen,
+      navigationOptions: { headerTitle: "การขายขยะ" },
+    },
     BuyerDetailScreen,
   },
   { headerMode: "none" }
@@ -133,7 +143,7 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
       },
     },
     SearchBuyer: {
-      screen: SearchBuyerScreen,
+      screen: SearchBuyerNavigator,
       navigationOptions: {
         tabBarIcon: (tabInfo) => {
           return (

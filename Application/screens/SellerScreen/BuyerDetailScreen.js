@@ -228,7 +228,12 @@ export default BuyerDetailScreen = (props) => {
   // load buyer info function
   const [buyerInfo, setBuyerInfo] = useState({});
   const loadBuyerInfo = async (buyerId) => {
-    const buyerInfo = await searchBuyer(buyerId);
+    let buyerInfo = "";
+    if (props.navigation.getParam("buyerInfo")) {
+      buyerInfo = props.navigation.getParam("buyerInfo");
+    } else {
+      buyerInfo = await searchBuyer(buyerId);
+    }
     const isFavBuyer = await getIsFavBuyer(buyerId);
     setBuyerInfo(buyerInfo);
     setIsFavBuyer(isFavBuyer);

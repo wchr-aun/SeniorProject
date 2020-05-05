@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import Colors from "../../constants/Colors";
@@ -17,26 +17,26 @@ const inputReducer = (state, action) => {
       return {
         ...state,
         value: action.value,
-        isValid: action.isValid
+        isValid: action.isValid,
       };
     case INPUT_BLUR:
       return {
         ...state,
-        touched: true
+        touched: true,
       };
     default:
       return state;
   }
 };
 
-export default Input = props => {
+export default Input = (props) => {
   const [inputState, dispatchInputReducer] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : "",
     isValid: props.initialValid ? props.initialValid : false,
-    touched: false
+    touched: false,
   });
 
-  const textChangeHandler = text => {
+  const textChangeHandler = (text) => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
     if (props.required && text.trim().length === 0) {
@@ -75,14 +75,14 @@ export default Input = props => {
       style={{
         ...styles.formControl,
         ...props.style,
-        alignSelf: "center"
+        alignSelf: "center",
       }}
     >
       <Text
         style={{
           ...styles.label,
           color:
-            props.editable === true ? Colors.primary_dark : Colors.secondary
+            props.editable === true ? Colors.primary_dark : Colors.secondary,
         }}
       >
         {props.label}
@@ -93,14 +93,14 @@ export default Input = props => {
           width: "100%",
           borderRadius: 5,
           borderWidth: 1,
-          borderColor: "#ebebeb",
-          alignItems: "center"
+          borderColor: "#c9c9c9",
+          alignItems: "center",
         }}
       >
         <View style={{ marginHorizontal: "1.5%" }}>
           <MaterialCommunityIcons
             size={wp("7%")}
-            color="#ebebeb"
+            color="#c9c9c9"
             name={props.iconName}
           />
         </View>
@@ -110,7 +110,7 @@ export default Input = props => {
             ...styles.input,
             width: wp("70%"),
             color:
-              props.editable === true ? Colors.primary_dark : Colors.secondary
+              props.editable === true ? Colors.primary_dark : Colors.secondary,
           }}
           value={inputState.value}
           onChangeText={textChangeHandler}
@@ -128,20 +128,20 @@ export default Input = props => {
 
 const styles = StyleSheet.create({
   formControl: {
-    width: "100%"
+    width: "100%",
   },
   label: {
-    marginVertical: 8
+    marginVertical: 8,
   },
   input: {
     paddingHorizontal: 2,
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   errorContainer: {
-    marginVertical: 5
+    marginVertical: 5,
   },
   errorText: {
     color: Colors.error,
-    fontSize: 13
-  }
+    fontSize: 13,
+  },
 });
