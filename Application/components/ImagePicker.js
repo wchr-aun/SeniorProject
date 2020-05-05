@@ -1,43 +1,52 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 import Colors from "../constants/Colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import ThaiBoldText from "./ThaiBoldText";
-const ImgPicker = props => {
+const ImgPicker = (props) => {
   return (
-    <View style={{ ...styles.imagePicker, ...props.style }}>
-      <View style={styles.imagePreview}>
-        {!props.pickedImage ? (
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <MaterialCommunityIcons
-              name={"camera-off"}
-              size={40}
-              color={Colors.primary_dark}
+    <TouchableOpacity onPress={props.onClick} style={{ ...props.style }}>
+      <View style={{ ...styles.imagePicker }}>
+        <View style={styles.imagePreview}>
+          {!props.pickedImage ? (
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <View style={{ marginVertical: 3 }}>
+                <FontAwesome
+                  name={"file-picture-o"}
+                  size={60}
+                  color={Colors.primary_dark}
+                />
+              </View>
+              <View style={{ marginVertical: 3, width: "60%" }}>
+                <ThaiBoldText style={{ fontSize: 18, textAlign: "center" }}>
+                  กดตรงนี้เพื่อถ่ายรูป
+                </ThaiBoldText>
+              </View>
+            </View>
+          ) : (
+            <Image
+              style={styles.image}
+              source={{ uri: props.pickedImage.uri }}
             />
-            <ThaiBoldText style={{ fontSize: 20 }}>
-              ยังไม่มีการถ่ายรูป
-            </ThaiBoldText>
-          </View>
-        ) : (
-          <Image style={styles.image} source={{ uri: props.pickedImage.uri }} />
-        )}
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   imagePicker: {
-    alignItems: "center"
+    alignItems: "center",
   },
   imagePreview: {
     width: "100%",
@@ -46,12 +55,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#ccc",
-    borderWidth: 1
+    borderWidth: 1,
   },
   image: {
     width: "100%",
-    height: "100%"
-  }
+    height: "100%",
+  },
 });
 
 export default ImgPicker;

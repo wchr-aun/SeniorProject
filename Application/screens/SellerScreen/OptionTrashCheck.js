@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { StyleSheet, FlatList, View, Text, Button } from "react-native";
+import { StyleSheet, FlatList, View, Alert } from "react-native";
 import ImagePickerCmp from "../../components/ImagePicker";
 import { useDispatch, useSelector } from "react-redux";
 import * as imgActions from "../../store/actions/imageAction";
@@ -16,6 +16,7 @@ import libary from "../../utils/libary";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import ModalLoading from "../../components/ModalLoading";
 import TrashCard from "../../components/TrashCard";
+import { GET_PREDICTION } from "../../store/actions/imageAction";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
@@ -104,11 +105,28 @@ export default OptionTrashCheck = (props) => {
     if (!resultedImg) {
       return;
     }
-
-    // set react
+    // set image
     setPickedImage(resultedImg);
+  };
+
+  // use the picked image for prediction process
+  const getPredictionHandler = async () => {
     setIsInOperation(true);
-    await dispatch(imgActions.getPrediction(resultedImg, wasteTypesDB));
+    const result = await libary.getPrediction(pickedImage);
+    if (result) {
+      dispatch({
+        type: GET_PREDICTION,
+        results,
+        wasteTypesDB,
+      });
+    } else {
+      Alert.alert(
+        "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
+        "ไม่สามารถติดต่อกับ Server ได้",
+        [{ text: "OK" }]
+      );
+      setPickedImage("");
+    }
     setIsInOperation(false);
   };
 
@@ -134,31 +152,39 @@ export default OptionTrashCheck = (props) => {
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
         }}
       >
-        <ModalLoading modalVisible={isInOperation} />
+        <ModalLoading modalVisible={isInOperation} text={"ตรวจสอบรูปภาพ..."} />
         <View
           style={{
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
             alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }}></View>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 26,
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
               ตรวจสอบขยะด้วยกล้อง
             </ThaiBoldText>
           </View>
+          <View
+            style={{
+              width: "20%",
+            }}
+          />
         </View>
         <ImagePickerCmp
           style={{ height: "40%", width: "100%" }}
           pickedImage={pickedImage}
+          onClick={takeImageHandler}
         />
         <View style={{ width: "100%", height: "5%", padding: 10 }}>
           <ThaiBoldText
@@ -237,46 +263,41 @@ export default OptionTrashCheck = (props) => {
             paddingBottom: getStatusBarHeight(),
           }}
         >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 8,
-              maxHeight: 40,
-            }}
-            btnColor={Colors.button.start_operation_info.btnBackground}
-            onPress={takeImageHandler}
-            btnTitleColor={Colors.button.start_operation_info.btnText}
-            btnTitleFontSize={12}
-          >
-            ถ่ายรูป
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 8,
-              maxHeight: 40,
-            }}
-            btnColor={
-              sellerItemsCamera.length > 0
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.submit_primary_bright.btnBackgroundDisabled
-            }
-            onPress={sellerItemsCamera.length > 0 ? confirmHandler : null}
-            btnTitleColor={
-              sellerItemsCamera.length > 0
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.submit_primary_bright.btnTextDisabled
-            }
-            btnTitleFontSize={12}
-          >
-            ยืนยันจำนวน
-          </CustomButton>
+          {pickedImage ? (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "80%",
+                borderRadius: 8,
+                maxHeight: 40,
+              }}
+              btnColor={Colors.button.start_operation_info.btnBackground}
+              onPress={getPredictionHandler}
+              btnTitleColor={Colors.button.start_operation_info.btnText}
+              btnTitleFontSize={12}
+            >
+              ตรวจสอบประเภทขยะ
+            </CustomButton>
+          ) : null}
+
+          {sellerItemsCamera.length > 0 ? (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "80%",
+                borderRadius: 8,
+                maxHeight: 40,
+              }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={confirmHandler}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={12}
+            >
+              ยืนยันจำนวน
+            </CustomButton>
+          ) : null}
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
