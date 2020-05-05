@@ -37,7 +37,8 @@ export default UserInfoCard = (props) => {
           <View
             style={{
               flex: 1,
-              backgroundColor: "#ffffff",
+              backgroundColor:
+                props.userRole === "seller" ? "#ffffff" : Colors.primary_dark,
               borderBottomRightRadius: 4,
               borderBottomLeftRadius: 4,
               overflow: "hidden",
@@ -96,7 +97,16 @@ export default UserInfoCard = (props) => {
                   }}
                 >
                   {/* <View style={{ backgroundColor: "red" }}> */}
-                  <ThaiRegText style={{ fontSize: 12, textAlign: "right" }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 12,
+                      textAlign: "right",
+                      color:
+                        props.userRole === "seller"
+                          ? Colors.on_secondary.high_constrast
+                          : Colors.on_primary_dark.low_constrast,
+                    }}
+                  >
                     กดเพื่อแก้ไขข้อมูล
                   </ThaiRegText>
                   {/* </View> */}
