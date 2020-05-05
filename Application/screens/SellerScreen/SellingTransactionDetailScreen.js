@@ -691,7 +691,6 @@ export default SellingTransactionDetailScreen = (props) => {
           padding: 5,
           paddingBottom: getStatusBarHeight(),
           alignSelf: "flex-end",
-          backgroundColor: "red",
         }}
       >
         <View
