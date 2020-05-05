@@ -9,7 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   Button,
-  Platform
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -20,7 +20,7 @@ import ModalShowInteractMap from "../components/ModalShowInteractMap";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
@@ -33,7 +33,7 @@ import ThaiMdText from "../components/ThaiMdText";
 import ThaiRegText from "../components/ThaiRegText";
 import libary, {
   getCurrentLocation,
-  getManualStringLocation
+  getManualStringLocation,
 } from "../utils/libary";
 import SwitchToggle from "@dooboo-ui/native-switch-toggle";
 import ImageCircle from "../components/UI/ImageCircle";
@@ -50,11 +50,11 @@ const formReducer = (state, action) => {
     case FORM_INPUT_UPDATE:
       const updatedValues = {
         ...state.inputValues,
-        [action.inputIdentifier]: action.value
+        [action.inputIdentifier]: action.value,
       };
       const updatedValidities = {
         ...state.inputValidities,
-        [action.inputIdentifier]: action.isValid
+        [action.inputIdentifier]: action.isValid,
       };
       let updatedAllFormIsValid = true;
       for (const key in updatedValidities)
@@ -74,7 +74,7 @@ const formReducer = (state, action) => {
         inputValues: updatedValues,
         inputValidities: updatedValidities,
         allFormIsValid: updatedAllFormIsValid,
-        addrFormIsValid: updatedAddrFormIsValid
+        addrFormIsValid: updatedAddrFormIsValid,
       };
     case "CHOOSE_CURRENT_TIME":
       return {
@@ -85,23 +85,23 @@ const formReducer = (state, action) => {
           subdistrict: !action.prestateIsCur,
           district: !action.prestateIsCur,
           province: !action.prestateIsCur,
-          postalCode: !action.prestateIsCur
-        }
+          postalCode: !action.prestateIsCur,
+        },
       };
   }
   return state;
 };
 
-export default EditingUserprofileScreen = props => {
+export default EditingUserprofileScreen = (props) => {
   useEffect(() => {
     console.log("Edit page");
   }, []);
 
   // get all user data
-  const userProfile = useSelector(state => state.user.userProfile);
+  const userProfile = useSelector((state) => state.user.userProfile);
   // Role
   const [userRole, setUserRole] = useState(
-    useSelector(state => state.user.userRole)
+    useSelector((state) => state.user.userRole)
   );
   // User Address
   const [isCurrentAddr, setIsCurrentAddr] = useState(true);
@@ -126,7 +126,7 @@ export default EditingUserprofileScreen = props => {
       postalCode: "",
       phoneNo: userProfile.phoneNo
         ? userProfile.phoneNo.replace("+66", "0")
-        : ""
+        : "",
     },
     inputValidities: {
       name: true,
@@ -136,10 +136,10 @@ export default EditingUserprofileScreen = props => {
       district: true,
       province: true,
       postalCode: true,
-      phoneNo: true
+      phoneNo: true,
     },
     allFormIsValid: true,
-    addrFormIsValid: true
+    addrFormIsValid: true,
   });
 
   const inputChangeHandler = useCallback(
@@ -148,7 +148,7 @@ export default EditingUserprofileScreen = props => {
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        inputIdentifier: inputIdentifier
+        inputIdentifier: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -161,7 +161,7 @@ export default EditingUserprofileScreen = props => {
   useEffect(() => {
     if (error) {
       Alert.alert("มีข้อผิดพลาดบางอย่างเกิดขึ้น", error.message, [
-        { text: "OK" }
+        { text: "OK" },
       ]);
       setError("");
     }
@@ -204,7 +204,7 @@ export default EditingUserprofileScreen = props => {
     setIsAddrModalVisible(true);
   };
 
-  const changeRoleHandler = role => {
+  const changeRoleHandler = (role) => {
     // UI
     setUserRole(role);
     dispatch(authAction.changeRole(role));
@@ -214,7 +214,7 @@ export default EditingUserprofileScreen = props => {
   const editConfirmHandler = async () => {
     setIsLoading(true);
     setIsInOperation(true);
-    setTextInOperation("กำลังแก้ไขข้อมูล")
+    setTextInOperation("กำลังแก้ไขข้อมูล");
 
     if (!formState.allFormIsValid) {
       setError("โปรดกรอกข้อมูลให้ครบถ้วน");
@@ -227,10 +227,10 @@ export default EditingUserprofileScreen = props => {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
       addr: userAddrObj,
-      phoneNo: formState.inputValues.phoneNo.replace("0", "+66")
+      phoneNo: formState.inputValues.phoneNo.replace("0", "+66"),
     };
 
-    console.log(user)
+    console.log(user);
     editUserInfo(user)
       // .then(() => {
       //   AsyncStorage.clear()
@@ -243,7 +243,7 @@ export default EditingUserprofileScreen = props => {
       //       setError(err.message);
       //     });
       // }) //this will fire an error
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setIsInOperation(false);
         setError(err.message);
@@ -265,7 +265,7 @@ export default EditingUserprofileScreen = props => {
   }
 
   // For User signout
-  const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ")
+  const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ");
   const [isInOperation, setIsInOperation] = useState(false);
   const dispatch = useDispatch();
   const signOutHandler = async () => {
@@ -305,20 +305,20 @@ export default EditingUserprofileScreen = props => {
     <View
       style={{
         height: hp("100%") + getStatusBarHeight(),
-        width: wp("100%")
+        width: wp("100%"),
       }}
     >
       <ModalLoading modalVisible={isInOperation} text={textInOperation} />
       <LinearGradient colors={Colors.linearGradientDark}>
         <View
           style={{
-            padding: wp("3%"),
-            height: "15%",
-            paddingTop: getStatusBarHeight(),
-            alignSelf: "center",
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.secondary,
+            paddingVertical: 10,
             alignItems: "center",
             justifyContent: "space-around",
-            flexDirection: "row"
           }}
         >
           <CustomButton
@@ -326,7 +326,9 @@ export default EditingUserprofileScreen = props => {
               width: "20%",
               height: "80%",
               maxHeight: 40,
-              borderRadius: 10
+              borderRadius: 10,
+              justifyContent: "center",
+              alignItems: "center",
             }}
             onPress={() => {
               props.navigation.navigate("StartupScreen");
@@ -342,14 +344,14 @@ export default EditingUserprofileScreen = props => {
             />{" "}
             ย้อนกลับ
           </CustomButton>
-          <View style={{ width: "40%", height: "50%", paddingHorizontal: 5 }}>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_bright.high_constrast,
-                fontSize: 14
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
-              ตั้งค่าข้อมูลผู้ใช้งาน
+              ตั้งค่าข้อมูลผู้ใช้
             </ThaiBoldText>
           </View>
           <CustomButton
@@ -357,7 +359,9 @@ export default EditingUserprofileScreen = props => {
               width: "20%",
               height: "80%",
               borderRadius: 10,
-              maxHeight: 40
+              maxHeight: 40,
+              justifyContent: "center",
+              alignItems: "center",
             }}
             onPress={signOutHandler}
             btnColor={Colors.button.submit_primary_dark.btnBackground}
@@ -376,7 +380,7 @@ export default EditingUserprofileScreen = props => {
             paddingVertical: wp("8%"),
             borderRadius: 3,
             backgroundColor: "white",
-            paddingBottom: getStatusBarHeight()
+            paddingBottom: getStatusBarHeight(),
           }}
         >
           <KeyboardAvoidingView
@@ -392,7 +396,7 @@ export default EditingUserprofileScreen = props => {
                 style={{
                   flexDirection: "row",
                   alignContent: "center",
-                  justifyContent: "space-around"
+                  justifyContent: "space-around",
                 }}
               >
                 <TouchableOpacity
@@ -406,7 +410,7 @@ export default EditingUserprofileScreen = props => {
                     borderColor:
                       userRole === "seller"
                         ? Colors.primary_bright
-                        : Colors.secondary
+                        : Colors.secondary,
                   }}
                 >
                   <MaterialCommunityIcons
@@ -431,7 +435,7 @@ export default EditingUserprofileScreen = props => {
                     borderColor:
                       userRole === "buyer"
                         ? Colors.primary_bright
-                        : Colors.secondary
+                        : Colors.secondary,
                   }}
                 >
                   <MaterialCommunityIcons
@@ -458,7 +462,7 @@ export default EditingUserprofileScreen = props => {
                   borderRadius: 8,
                   backgroundColor: Colors.secondary,
                   alignSelf: "center",
-                  justifyContent: "space-around"
+                  justifyContent: "space-around",
                 }}
               >
                 <ImageCircle avariableWidth={120} imgUrl={userImgUri} />
@@ -468,7 +472,7 @@ export default EditingUserprofileScreen = props => {
                     height: "100%",
                     maxHeight: 40,
                     borderRadius: 5,
-                    padding: 5
+                    padding: 5,
                   }}
                   onPress={isImgEdit ? uploadImage : pickImage}
                   btnTitleFontSize={14}
@@ -557,7 +561,7 @@ export default EditingUserprofileScreen = props => {
                   marginTop: 15,
                   marginBottom: 10,
                   alignSelf: "center",
-                  ...styles.shadow
+                  ...styles.shadow,
                 }}
               >
                 <ThaiRegText style={{ textAlign: "center", fontSize: 16 }}>
@@ -569,7 +573,7 @@ export default EditingUserprofileScreen = props => {
                     fontSize: 12,
                     color: isCurrentAddr
                       ? Colors.primary_bright
-                      : Colors.secondary
+                      : Colors.secondary,
                   }}
                 >
                   {userProfile.addr.readable}
@@ -578,7 +582,7 @@ export default EditingUserprofileScreen = props => {
 
               <TouchableOpacity
                 onPress={() => {
-                  setIsCurrentAddr(preState => !preState);
+                  setIsCurrentAddr((preState) => !preState);
                 }}
               >
                 <View
@@ -587,7 +591,7 @@ export default EditingUserprofileScreen = props => {
                     marginVertical: 3,
                     alignSelf: "center",
                     flexDirection: "row",
-                    alignItems: "center"
+                    alignItems: "center",
                   }}
                 >
                   <SwitchToggle
@@ -597,7 +601,7 @@ export default EditingUserprofileScreen = props => {
                     backgroundColorOff="#808080"
                     circleColorOff="#ffffff"
                     circleColorOn="#ffffff"
-                    onPress={() => setIsCurrentAddr(preState => !preState)}
+                    onPress={() => setIsCurrentAddr((preState) => !preState)}
                   />
                   <View style={{ paddingHorizontal: 3 }}>
                     <ThaiRegText style={{ textAlign: "center", fontSize: 12 }}>
@@ -708,7 +712,7 @@ export default EditingUserprofileScreen = props => {
                   color:
                     isCurrentAddr === true
                       ? Colors.secondary
-                      : Colors.primary_dark
+                      : Colors.primary_dark,
                 }}
               >
                 กดปุ่ม 'ค้นหาสถานที่' หลังจากกรอกข้อมูลที่อยู่
@@ -720,7 +724,7 @@ export default EditingUserprofileScreen = props => {
                   height: hp("6%"),
                   borderRadius: 10,
                   margin: wp("1.25%"),
-                  alignSelf: "center"
+                  alignSelf: "center",
                 }}
                 onPress={searchMapHandler}
                 btnColor={Colors.secondary}
@@ -744,7 +748,7 @@ export default EditingUserprofileScreen = props => {
                       height: hp("6%"),
                       borderRadius: 10,
                       margin: wp("1.25%"),
-                      alignSelf: "center"
+                      alignSelf: "center",
                     }}
                     onPress={() => {
                       editConfirmHandler();
@@ -770,11 +774,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
-    elevation: 3
-  }
+    elevation: 3,
+  },
 });
