@@ -8,16 +8,14 @@ import {
   AsyncStorage,
   Alert,
   Text,
-  Platform
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { sha256 } from "js-sha256";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Animated, { Easing } from "react-native-reanimated";
-import { TapGestureHandler, State } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Card from "../components/UI/Card";
@@ -35,11 +33,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.inputIdentifier]: action.value
+      [action.inputIdentifier]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.inputIdentifier]: action.isValid
+      [action.inputIdentifier]: action.isValid,
     };
     let updatedAllFormIsValid = true;
     for (const key in updatedValidities) {
@@ -51,13 +49,13 @@ const formReducer = (state, action) => {
       ...state,
       inputValues: updatedValues,
       inputValidities: updatedValidities,
-      allFormIsValid: updatedAllFormIsValid
+      allFormIsValid: updatedAllFormIsValid,
     };
   }
   return state;
 };
 
-export default UserAuthenScreen = props => {
+export default UserAuthenScreen = (props) => {
   useEffect(() => {
     console.log("login");
   }, []);
@@ -69,13 +67,13 @@ export default UserAuthenScreen = props => {
     // these are initial-state
     inputValues: {
       email: "",
-      password: ""
+      password: "",
     },
     inputValidities: {
       email: false,
-      password: false
+      password: false,
     },
-    allFormIsValid: false
+    allFormIsValid: false,
   });
 
   // isClick = false;
@@ -98,10 +96,10 @@ export default UserAuthenScreen = props => {
       : sha256("sha256");
 
     // do async task
-    let recent_login = await AsyncStorage.getItem("RECENT_LOGIN")
+    let recent_login = await AsyncStorage.getItem("RECENT_LOGIN");
     if (recent_login != email) {
-      await AsyncStorage.clear()
-      await AsyncStorage.setItem("RECENT_LOGIN", email)
+      await AsyncStorage.clear();
+      await AsyncStorage.setItem("RECENT_LOGIN", email);
     }
     await firebaseUtil
       .auth()
@@ -109,10 +107,9 @@ export default UserAuthenScreen = props => {
       .then(() => {
         updateNotificationToken().then(() => {
           props.navigation.navigate("StartupScreen");
-        })
-        
+        });
       })
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setError(err.message);
       });
@@ -124,7 +121,7 @@ export default UserAuthenScreen = props => {
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        inputIdentifier: inputIdentifier
+        inputIdentifier: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -135,7 +132,7 @@ export default UserAuthenScreen = props => {
       enabled
       style={{
         ...styles.screen,
-        flex: 1
+        flex: 1,
       }}
     >
       <LinearGradient colors={Colors.linearGradient} style={styles.gradient}>
@@ -143,7 +140,7 @@ export default UserAuthenScreen = props => {
           <ThaiMdText
             style={{
               color: Colors.on_primary_bright.high_constrast,
-              fontSize: 24
+              fontSize: 24,
             }}
           >
             ลงชื่อเข้าใช้
@@ -153,9 +150,9 @@ export default UserAuthenScreen = props => {
           style={{
             ...styles.authContainer,
             width: wp("90%"),
-            height: hp("70%"),
+            height: hp("55%"),
             paddingHorizontal: wp("5%"),
-            paddingVertical: wp("8%")
+            paddingVertical: wp("8%"),
           }}
         >
           <KeyboardAvoidingView
@@ -203,7 +200,7 @@ export default UserAuthenScreen = props => {
                 style={{
                   ...styles.buttonContainer,
                   marginTop: hp("8%"),
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 {isLoading ? (
@@ -217,7 +214,7 @@ export default UserAuthenScreen = props => {
                       width: wp("40%"),
                       height: hp("6%"),
                       borderRadius: 10,
-                      margin: wp("1.25%")
+                      margin: wp("1.25%"),
                     }}
                     onPress={() => {
                       authHandler();
@@ -236,7 +233,7 @@ export default UserAuthenScreen = props => {
                   <ThaiRegText
                     style={{
                       color: Colors.primary,
-                      fontSize: 10
+                      fontSize: 10,
                     }}
                   >
                     หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
@@ -250,7 +247,7 @@ export default UserAuthenScreen = props => {
                     borderRadius: 10,
                     margin: wp("1.25%"),
                     borderWidth: 1,
-                    borderColor: Colors.button.submit_primary_dark.btnText
+                    borderColor: Colors.button.submit_primary_dark.btnText,
                   }}
                   onPress={() => {
                     props.navigation.navigate("UserSignupScreen");
@@ -276,16 +273,16 @@ export default UserAuthenScreen = props => {
 };
 
 UserAuthenScreen.navigationOptions = {
-  headerTitle: "UserAuthenScreen"
+  headerTitle: "UserAuthenScreen",
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
