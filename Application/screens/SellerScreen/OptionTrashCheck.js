@@ -112,21 +112,27 @@ export default OptionTrashCheck = (props) => {
   // use the picked image for prediction process
   const getPredictionHandler = async () => {
     setIsInOperation(true);
-    const result = await libary.getPrediction(pickedImage);
-    if (result) {
-      dispatch({
-        type: GET_PREDICTION,
-        results,
-        wasteTypesDB,
+
+    await libary
+      .timeout(10000, libary.getPrediction(pickedImage))
+      .then(function (result) {
+        // process response
+        dispatch({
+          type: GET_PREDICTION,
+          results,
+          wasteTypesDB,
+        });
+        return result;
+      })
+      .catch(function (error) {
+        // might be a timeout error
+        Alert.alert(
+          "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
+          "ไม่สามารถติดต่อกับ Server ได้",
+          [{ text: "OK" }]
+        );
+        setPickedImage("");
       });
-    } else {
-      Alert.alert(
-        "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
-        "ไม่สามารถติดต่อกับ Server ได้",
-        [{ text: "OK" }]
-      );
-      setPickedImage("");
-    }
     setIsInOperation(false);
   };
 

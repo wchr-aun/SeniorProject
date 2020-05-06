@@ -143,6 +143,15 @@ const getPrediction = async (image) => {
     });
 };
 
+const timeout = (ms, promise) => {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      reject(new Error("timeout"));
+    }, ms);
+    promise.then(resolve, reject);
+  });
+};
+
 const formatDate = (date) => {
   let monthNames = [
     "มกราคม",
@@ -410,4 +419,5 @@ export default {
   downloadingImg,
   pickedAnImg,
   getPrediction,
+  timeout,
 };
