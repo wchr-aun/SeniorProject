@@ -372,15 +372,7 @@ export const editUserInfo = async (newInfo) => {
   return functions
     .httpsCallable("editUserInfo")(newInfo)
     .then((result) => {
-      if (result.data.errorMessage == null) return true;
-      // else throw new Error(result.data.errorMessage);
-      else {
-        Alert.alert(
-          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-          result.data.errorMessage,
-          [{ text: "OK" }]
-        );
-      }
+      return true;
     })
     .catch((err) => {
       Alert.alert(
@@ -388,7 +380,6 @@ export const editUserInfo = async (newInfo) => {
         err.message,
         [{ text: "OK" }]
       );
-      throw new Error(err.message);
     });
 };
 

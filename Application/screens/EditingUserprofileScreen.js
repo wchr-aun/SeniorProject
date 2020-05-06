@@ -232,17 +232,17 @@ export default EditingUserprofileScreen = (props) => {
 
     console.log(user);
     editUserInfo(user)
-      // .then(() => {
-      //   AsyncStorage.clear()
-      //     .then(() => {
-      //       setIsLoading(false);
-      //       props.navigation.navigate("ConfigAccountScreen");
-      //     })
-      //     .catch(err => {
-      //       setIsLoading(false);
-      //       setError(err.message);
-      //     });
-      // }) //this will fire an error
+      .then(() => {
+        AsyncStorage.clear()
+          .then(() => {
+            setIsLoading(false);
+            props.navigation.navigate("ConfigAccountScreen");
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            setError(err.message);
+          });
+      }) //this will fire an error
       .catch((err) => {
         setIsLoading(false);
         setIsInOperation(false);
