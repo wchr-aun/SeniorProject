@@ -78,7 +78,7 @@ const Comment = (props) => {
       }}
     >
       <View style={{ flexDirection: "row" }}>
-        {Array.from(Array(props.rate)).map((x, index) => (
+        {Array.from(Array(Math.floor(props.rate))).map((x, index) => (
           <Ionicons
             key={index}
             name="md-star"
@@ -295,6 +295,9 @@ export default BuyerDetailScreen = (props) => {
       </View>
     );
   }
+
+  console.log("props.navigation.getParamhaveHeaderHight");
+  console.log(props.navigation.getParam("haveHeaderHight"));
 
   return (
     <LinearGradient

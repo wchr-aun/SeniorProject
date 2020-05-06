@@ -34,6 +34,7 @@ export default SellingTransactionScreen = (props) => {
       routeName: "SellingTransactionDetailScreen",
       params: {
         transactionItem,
+        haveHeaderHight: true,
       },
     });
   };

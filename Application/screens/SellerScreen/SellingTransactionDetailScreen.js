@@ -110,9 +110,9 @@ export default SellingTransactionDetailScreen = (props) => {
 
   const userRole = useSelector((state) => state.user.userRole);
   const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
-  const userId = useSelector((state) => state.user.userProfile.uid);
   const [rating, setRating] = useState("0");
   const [comment, setComment] = useState("");
+  const [isFinishComment, setIsFinishComment] = useState(false);
 
   const sendCommentHandler = async () => {
     const review = {
@@ -121,10 +121,9 @@ export default SellingTransactionDetailScreen = (props) => {
       buyer: transactionItem.detail.buyer,
     };
 
-    console.log("review");
-    console.log(review);
     await addNewComment(review);
     setIsModalNewCommentVisible(false);
+    setIsFinishComment(true);
   };
 
   const [saleList, setSetList] = useState(
@@ -163,7 +162,12 @@ export default SellingTransactionDetailScreen = (props) => {
   const goBuyerDetail = () => {
     props.navigation.navigate({
       routeName: "BuyerDetailScreen",
-      params: { buyerId: transactionItem.detail.buyer },
+      params: {
+        buyerId: transactionItem.detail.buyer,
+        haveHeaderHight: props.navigation.getParam("haveHeaderHight")
+          ? true
+          : false,
+      },
     });
   };
 
@@ -709,14 +713,32 @@ export default SellingTransactionDetailScreen = (props) => {
                 height: "100%",
                 maxHeight: 40,
                 borderRadius: 5,
+                alignItem: "center",
+                justifyContent: "center",
               }}
-              btnColor={Colors.button.submit_primary_bright.btnBackground}
-              onPress={() => setIsModalNewCommentVisible(true)}
-              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnColor={
+                isFinishComment
+                  ? Colors.button.disabled.btnBackground
+                  : Colors.button.submit_primary_bright.btnBackground
+              }
+              onPress={
+                isFinishComment ? null : () => setIsModalNewCommentVisible(true)
+              }
+              btnTitleColor={
+                isFinishComment
+                  ? Colors.button.disabled.btnText
+                  : Colors.button.submit_primary_bright.btnText
+              }
               btnTitleFontSize={18}
             >
-              <MaterialIcons name={"comment"} size={18} />
-              <ThaiBoldText style={{ fontSize: 18 }}> ให้ความเห็น</ThaiBoldText>
+              <MaterialIcons
+                name={isFinishComment ? "check" : "comment"}
+                size={18}
+              />
+              <ThaiBoldText style={{ fontSize: 18 }}>
+                {" "}
+                {isFinishComment ? ` ให้ความเห็นแล้ว` : ` ให้ความเห็น`}
+              </ThaiBoldText>
             </CustomButton>
           ) : (
             <CustomButton
