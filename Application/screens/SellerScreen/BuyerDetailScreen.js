@@ -27,38 +27,6 @@ import { setFavBuyer } from "../../utils/firebaseFunctions";
 import ModalLoading from "../../components/ModalLoading";
 import libary from "../../utils/libary";
 
-const comments_temp = [
-  {
-    commentId: "1",
-    seller: "สมศักดิ์ เจียม",
-    message: "บริการดีมากครับ",
-    rate: 5,
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "2",
-    seller: "ชยุตม์ เอี่ยมกลาน",
-    message: "มารับช้าไปหน่อย บางที",
-    rate: 3,
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "3",
-    seller: "นาวิช พงทาน",
-    message:
-      "แกสโซฮอล์แฟรนไชส์งั้น ดิสเครดิตแฮปปี้ซูเอี๋ยออกแบบ โดมิโนคอร์รัปชันคาร์โก้ ผลไม้ เฟิร์ม อัตลักษณ์ซากุระโนติสแชมเปญ คอนแทครุสโซสมิติเวชสะกอมสแควร์ โบรกเกอร์คอมพ์ไทเฮารีดไถเทอร์โบ ติงต๊องคันยิ เบอร์รีแฮมเบอร์เกอร์ อัตลักษณ์เพียบแปร้คูลเลอร์ฮอตดอกธุรกรรม เห่ย งี้เยอร์บีร่า ฮ่องเต้จิ๊กซอว์ชิฟฟอนซื่อบื้อ ยังไงเซ็กซ์ซีนตุ๊กตุ๊กเจ๊ เอ็นทรานซ์ฮองเฮา",
-    rate: 1,
-    time: new Date().getTime(),
-  },
-  {
-    commentId: "4",
-    seller: "พรเทพ วิชัยกร",
-    message: "ช้าไปหน่อย แต่ก็บริการดีนะครับ",
-    rate: 3,
-    time: new Date().getTime(),
-  },
-];
-
 const Comment = (props) => {
   return (
     <View
@@ -250,9 +218,10 @@ export default BuyerDetailScreen = (props) => {
   };
   const loadBuyerData = async () => {
     setIsLoading(true);
+    setIsRefreshing(true);
     await loadBuyerInfo(buyerId);
     await loadBuyerImg(buyerId);
-    await loadComments();
+    setIsRefreshing(false);
     setIsLoading(false);
   };
 
@@ -268,15 +237,6 @@ export default BuyerDetailScreen = (props) => {
   useEffect(() => {
     loadBuyerData();
   }, []);
-
-  // load comments about buyer
-  const [comments, setComments] = useState([]);
-  const loadComments = async () => {
-    // do some api
-    setIsRefreshing(true);
-    setComments(comments_temp);
-    setIsRefreshing(false);
-  };
 
   const wasteListSectionFormat = useSelector(
     (state) => state.wasteType.wasteListSectionFormat
@@ -552,7 +512,7 @@ export default BuyerDetailScreen = (props) => {
                 <ThaiMdText
                   style={{ fontSize: 16, color: Colors.primary_bright }}
                 >
-                  {buyerInfo.detail.rating}
+                  {buyerInfo.detail.rating.toFixed(3)}
                 </ThaiMdText>
               </View>
               <View
@@ -563,7 +523,7 @@ export default BuyerDetailScreen = (props) => {
               >
                 <FlatList
                   refreshing={isRefreshing}
-                  onRefresh={loadComments}
+                  onRefresh={loadBuyerData}
                   data={buyerInfo.detail.review}
                   keyExtractor={(item) =>
                     item.comment + item.user + item.rating
