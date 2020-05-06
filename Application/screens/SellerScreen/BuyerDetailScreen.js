@@ -296,9 +296,6 @@ export default BuyerDetailScreen = (props) => {
     );
   }
 
-  console.log("props.navigation.getParamhaveHeaderHight");
-  console.log(props.navigation.getParam("haveHeaderHight"));
-
   return (
     <LinearGradient
       colors={Colors.linearGradientBright}
@@ -539,30 +536,52 @@ export default BuyerDetailScreen = (props) => {
 
           {/* Content "comment" or "price" */}
           {isCommentMode ? (
-            <View
-              style={{
-                flex: 1,
-                padding: 10,
-              }}
-            >
-              <FlatList
-                refreshing={isRefreshing}
-                onRefresh={loadComments}
-                data={buyerInfo.detail.review}
-                keyExtractor={(item) => item.comment + item.user + item.rating}
-                renderItem={({ item }) => {
-                  return (
-                    <Comment
-                      style={{ flex: 0, background: Colors.secondary }}
-                      user={item.user}
-                      message={item.comment}
-                      rate={item.rating}
-                      time={libary.formatDate(item.timestamp.toDate())}
-                    />
-                  );
+            <>
+              {/* average score */}
+              <View
+                style={{
+                  width: "90%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
                 }}
-              />
-            </View>
+              >
+                <ThaiMdText style={{ fontSize: 16 }}>
+                  {`คะแนนผู้รับซื้อ `}
+                </ThaiMdText>
+                <ThaiMdText
+                  style={{ fontSize: 16, color: Colors.primary_bright }}
+                >
+                  {buyerInfo.detail.rating}
+                </ThaiMdText>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  padding: 10,
+                }}
+              >
+                <FlatList
+                  refreshing={isRefreshing}
+                  onRefresh={loadComments}
+                  data={buyerInfo.detail.review}
+                  keyExtractor={(item) =>
+                    item.comment + item.user + item.rating
+                  }
+                  renderItem={({ item }) => {
+                    return (
+                      <Comment
+                        style={{ flex: 0, background: Colors.secondary }}
+                        user={item.user}
+                        message={item.comment}
+                        rate={item.rating}
+                        time={libary.formatDate(item.timestamp.toDate())}
+                      />
+                    );
+                  }}
+                />
+              </View>
+            </>
           ) : (
             <BuyerPrice
               wasteListSectionFormat={wasteListSectionFormat}
