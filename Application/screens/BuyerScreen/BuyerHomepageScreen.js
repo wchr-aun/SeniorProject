@@ -5,13 +5,13 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
-  Alert
+  Alert,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import UserInfoCard from "../../components/UserInfoCard";
@@ -27,7 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../../components/UI/CustomButton";
 
-export default BuyerHomepageScreen = props => {
+export default BuyerHomepageScreen = (props) => {
   // Loading effect
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(true);
@@ -41,8 +41,8 @@ export default BuyerHomepageScreen = props => {
   }, [error]);
 
   // Get user profile
-  const userProfile = useSelector(state => state.user.userProfile);
-  const userRole = useSelector(state => state.user.userRole);
+  const userProfile = useSelector((state) => state.user.userProfile);
+  const userRole = useSelector((state) => state.user.userRole);
 
   const dispatch = useDispatch();
   // load Callback fn
@@ -59,13 +59,13 @@ export default BuyerHomepageScreen = props => {
     setIsLoading(true);
     refreshTxAndBuyerInfo()
       .then(() => setIsLoading(false))
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setError(err.message);
       });
   }, [refreshTxAndBuyerInfo, dispatch]);
 
-  const transactions = useSelector(state => state.transactions.transactions);
+  const transactions = useSelector((state) => state.transactions.transactions);
   const [txShow, setTxShow] = useState([]);
   useEffect(() => {
     if (transactions) {
@@ -75,12 +75,12 @@ export default BuyerHomepageScreen = props => {
   }, [transactions]);
 
   // For looking into transaction detail
-  const selectedHandler = transactionItem => {
+  const selectedHandler = (transactionItem) => {
     props.navigation.navigate({
       routeName: "BuyingTransactionDetailScreen",
       params: {
-        transactionItem: transactionItem
-      }
+        transactionItem: transactionItem,
+      },
     });
   };
 
@@ -121,7 +121,7 @@ export default BuyerHomepageScreen = props => {
         style={{
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
-          backgroundColor: Colors.primary_dark
+          backgroundColor: Colors.primary_dark,
         }}
       >
         {isLoading ? (
@@ -131,7 +131,7 @@ export default BuyerHomepageScreen = props => {
               height: "100%",
               backgroundColor: Colors.primary_bright,
               alignSelf: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <ActivityIndicator
@@ -147,16 +147,16 @@ export default BuyerHomepageScreen = props => {
               style={{
                 ...styles.userInfoCard,
                 height: "40%",
-                width: "100%"
+                width: "100%",
               }}
               imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
               address={userProfile.addr.readable}
-              onSignout={() => {
+              onClick={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
-              goAllTxQuickly={goAllTxQuickly}
+              onStatusClick={goAllTxQuickly}
             />
             <LinearGradient
               colors={Colors.linearGradientDark}
@@ -169,7 +169,7 @@ export default BuyerHomepageScreen = props => {
                 backgroundColor: Colors.primary_bright,
                 paddingBottom: getStatusBarHeight(),
                 borderTopRightRadius: 15,
-                borderTopLeftRadius: 15
+                borderTopLeftRadius: 15,
               }}
             >
               <View
@@ -179,14 +179,14 @@ export default BuyerHomepageScreen = props => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   width: "100%",
-                  height: 60
+                  height: 60,
                 }}
               >
                 <View style={{ width: "60%", height: "80%" }}>
                   <ThaiMdText
                     style={{
                       color: Colors.soft_primary_bright,
-                      fontSize: 18
+                      fontSize: 18,
                     }}
                   >
                     คำขอขายขยะที่ส่งหาคุณ
@@ -197,7 +197,7 @@ export default BuyerHomepageScreen = props => {
                     width: "30%",
                     height: "80%",
                     maxHeight: 40,
-                    borderRadius: 5
+                    borderRadius: 5,
                   }}
                   btnColor={Colors.button.submit_primary_bright.btnBackground}
                   onPress={refreshTxAndBuyerInfo}
@@ -217,7 +217,7 @@ export default BuyerHomepageScreen = props => {
                   width: "100%",
                   height: "90%",
                   justifyContent: "center",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 {isLoading ? (
@@ -225,7 +225,7 @@ export default BuyerHomepageScreen = props => {
                     style={{
                       flex: 1,
                       justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <ActivityIndicator
@@ -239,7 +239,7 @@ export default BuyerHomepageScreen = props => {
                     refreshing={isRefreshing}
                     // data={transactions ? transactions[0] : []}
                     data={txShow ? txShow : []}
-                    keyExtractor={item => item.txId}
+                    keyExtractor={(item) => item.txId}
                     renderItem={({ item }) => {
                       return (
                         <SellTransactionCard

@@ -1,14 +1,10 @@
 import React, { useReducer, useCallback, useState, useEffect } from "react";
-import {
-  View,
-  Alert,
-  FlatList
-} from "react-native";
+import { View, Alert, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import Colors from "../../constants/Colors";
@@ -28,17 +24,17 @@ const destinationReducer = (state, action) => {
       newGeopoint = geopoint.splice(0, index);
       geopoint.shift();
       return {
-        geopoint: newGeopoint.concat(geopoint)
+        geopoint: newGeopoint.concat(geopoint),
       };
     }
   }
   geopoint.push(action.geopoint);
   return {
-    geopoint
+    geopoint,
   };
 };
 
-export default PathOptimizationScreen = props => {
+export default PathOptimizationScreen = (props) => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +43,7 @@ export default PathOptimizationScreen = props => {
   const [addrModalVisible, setAddrModalVisible] = useState(false);
   const [addrReadable, setAddrReadable] = useState("");
   const [sellerAddr, setSellerAddr] = useState(""); // really used
-  const userProfile = useSelector(state => state.user.userProfile);
+  const userProfile = useSelector((state) => state.user.userProfile);
   const [currentLocation, setCurrentLocation] = useState("");
   const [destinationState, dispatchDestination] = useReducer(
     destinationReducer,
@@ -70,7 +66,7 @@ export default PathOptimizationScreen = props => {
       setError(err.message);
     }
   }, []);
-  const transactions = useSelector(state => state.transactions.todayTx);
+  const transactions = useSelector((state) => state.transactions.todayTx);
 
   useEffect(() => {
     if (error) {
@@ -91,7 +87,7 @@ export default PathOptimizationScreen = props => {
     setAddrModalVisible(true);
   };
 
-  const selectedHandler = tx => {
+  const selectedHandler = (tx) => {
     let temp = isSelected;
     if (temp[tx.txId] == undefined) temp[tx.txId] = true;
     else delete temp[tx.txId];
@@ -100,10 +96,10 @@ export default PathOptimizationScreen = props => {
       geopoint: {
         txId: tx.txId,
         latitude: tx.detail.addr_geopoint.geopoint.latitude,
-        longitude: tx.detail.addr_geopoint.geopoint.longitude
-      }
+        longitude: tx.detail.addr_geopoint.geopoint.longitude,
+      },
     });
-  }
+  };
 
   if (addrModalVisible) {
     return (
@@ -112,7 +108,7 @@ export default PathOptimizationScreen = props => {
         modalVisible={addrModalVisible}
         origin={{
           latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude
+          longitude: currentLocation.longitude,
         }}
         destination={destinationState.geopoint}
         pathOptimize={true}
@@ -132,7 +128,7 @@ export default PathOptimizationScreen = props => {
             transactionAction.changeTransactionStatus({
               txID,
               oldStatus: 2,
-              newStatus: 3
+              newStatus: 3,
             })
           )
         );
@@ -161,14 +157,14 @@ export default PathOptimizationScreen = props => {
             setConfirmVisible(false);
             changeTxStatus();
             searchMapHandler();
-          }
+          },
         }}
         negativeButton={{
           title: "เปลี่ยนด้วยตัวเอง",
           onPress: () => {
             setConfirmVisible(false);
             searchMapHandler();
-          }
+          },
         }}
       />
       <View
@@ -176,34 +172,30 @@ export default PathOptimizationScreen = props => {
           width: "100%",
           height: "10%",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark,
+          backgroundColor: Colors.hard_primary_dark,
           paddingVertical: 10,
-          alignItems: "center"
+          alignItems: "center",
+          justifyContent: "space-around",
         }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center"
-          }}
-        >
+        <View style={{ alignItems: "center" }}>
           <ThaiBoldText
             style={{
-              color: Colors.on_primary_bright.high_constrast,
-              fontSize: 20
+              color: Colors.on_primary_dark.low_constrast,
+              fontSize: 18,
             }}
           >
             เลือกคำขอที่ต้องการหาเส้นทาง
           </ThaiBoldText>
         </View>
       </View>
-      <View 
+
+      <View
         style={{
           width: "100%",
           height: "80%",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         {transactions && transactions.length > 0 ? (
@@ -211,7 +203,7 @@ export default PathOptimizationScreen = props => {
             onRefresh={loadTodayTx}
             refreshing={isInOperation}
             data={transactions}
-            keyExtractor={item => item.txId}
+            keyExtractor={(item) => item.txId}
             renderItem={({ item }) => {
               return (
                 <SellTransactionCard
@@ -230,28 +222,27 @@ export default PathOptimizationScreen = props => {
               );
             }}
           />
-          ) : (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                height: 60
-              }}
-            >
-              <ThaiRegText style={{ color: Colors.secondary }}>
-                ยังไม่มีรายการที่ต้องไปรับในวันนี้
-              </ThaiRegText>
-            </View>
-          )
-        }
+        ) : (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: 60,
+            }}
+          >
+            <ThaiRegText style={{ color: Colors.secondary }}>
+              ยังไม่มีรายการที่ต้องไปรับในวันนี้
+            </ThaiRegText>
+          </View>
+        )}
       </View>
       <View
         style={{
           width: "100%",
           height: "10%",
           justifyContent: "center",
-          padding: 10
+          padding: 10,
         }}
       >
         <CustomButton
@@ -261,13 +252,12 @@ export default PathOptimizationScreen = props => {
             height: "100%",
             borderRadius: 10,
             margin: wp("1.25%"),
-            alignSelf: "center"
+            alignSelf: "center",
           }}
           // onPress={searchMapHandler}
           onPress={() => {
-            if (Object.keys(isSelected).length != 0)
-              setConfirmVisible(true)}
-          }
+            if (Object.keys(isSelected).length != 0) setConfirmVisible(true);
+          }}
           btnColor={Colors.button.submit_primary_dark.btnBackground}
           btnTitleColor={Colors.button.submit_primary_dark.btnText}
           btnTitleFontSize={14}

@@ -12,7 +12,7 @@ import Colors from "../../constants/Colors";
 import ThaiMdText from "../../components/ThaiMdText";
 import ThaiRegText from "../../components/ThaiRegText";
 import CustomButton from "../../components/UI/CustomButton";
-import libary from "../../utils/libary";
+
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
@@ -25,6 +25,7 @@ import { searchBuyer, getIsFavBuyer } from "../../utils/firebaseFunctions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { setFavBuyer } from "../../utils/firebaseFunctions";
 import ModalLoading from "../../components/ModalLoading";
+import libary from "../../utils/libary";
 
 const comments_temp = [
   {
@@ -77,7 +78,7 @@ const Comment = (props) => {
       }}
     >
       <View style={{ flexDirection: "row" }}>
-        {Array.from(Array(props.rate)).map((x, index) => (
+        {Array.from(Array(Math.floor(props.rate))).map((x, index) => (
           <Ionicons
             key={index}
             name="md-star"
@@ -97,7 +98,7 @@ const Comment = (props) => {
         <View style={{ width: "50%" }}>
           <ThaiBoldText
             style={{ fontSize: 14, color: Colors.soft_primary_dark }}
-          >{`โดย ${props.seller}`}</ThaiBoldText>
+          >{`โดย ${props.user}`}</ThaiBoldText>
         </View>
         <View style={{ width: "50%" }}>
           <ThaiBoldText
@@ -106,7 +107,7 @@ const Comment = (props) => {
               color: Colors.soft_primary_dark,
               textAlign: "right",
             }}
-          >{`เมื่อ ${props.seller}`}</ThaiBoldText>
+          >{`เมื่อ ${props.time}`}</ThaiBoldText>
         </View>
       </View>
       <View>
@@ -227,7 +228,12 @@ export default BuyerDetailScreen = (props) => {
   // load buyer info function
   const [buyerInfo, setBuyerInfo] = useState({});
   const loadBuyerInfo = async (buyerId) => {
-    const buyerInfo = await searchBuyer(buyerId);
+    let buyerInfo = "";
+    if (props.navigation.getParam("buyerInfo")) {
+      buyerInfo = props.navigation.getParam("buyerInfo");
+    } else {
+      buyerInfo = await searchBuyer(buyerId);
+    }
     const isFavBuyer = await getIsFavBuyer(buyerId);
     setBuyerInfo(buyerInfo);
     setIsFavBuyer(isFavBuyer);
@@ -290,6 +296,9 @@ export default BuyerDetailScreen = (props) => {
     );
   }
 
+  console.log("props.navigation.getParamhaveHeaderHight");
+  console.log(props.navigation.getParam("haveHeaderHight"));
+
   return (
     <LinearGradient
       colors={Colors.linearGradientBright}
@@ -339,7 +348,6 @@ export default BuyerDetailScreen = (props) => {
         </CustomButton>
         <View
           style={{
-            width: "50%",
             height: "100%",
             alignItems: "center",
             justifyContent: "center",
@@ -362,22 +370,26 @@ export default BuyerDetailScreen = (props) => {
             borderRadius: 5,
             alignItems: "center",
           }}
-          btnColor={Colors.button.cancel.btnBackground}
+          btnColor={Colors.button.submit_primary_dark.btnBackground}
           onPress={setBuyerFavhandler}
-          btnTitleColor={Colors.button.cancel.btnText}
-          btnTitleFontSize={20}
+          btnTitleColor={Colors.button.submit_primary_dark.btnText}
+          btnTitleFontSize={16}
         >
           <FontAwesome
             name={isFavBuyer ? "star" : "star-o"}
-            color={isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark}
-            size={20}
+            color={
+              isFavBuyer ? "#ffdd00" : Colors.button.submit_primary_dark.btnText
+            }
+            size={16}
           />
           <ThaiMdText
             style={{
-              fontSize: 20,
-              color: isFavBuyer ? "#ffdd00" : Colors.hard_primary_dark,
+              fontSize: 16,
+              color: isFavBuyer
+                ? "#ffdd00"
+                : Colors.button.submit_primary_dark.btnText,
             }}
-          >{` จดจำ`}</ThaiMdText>
+          >{` ชื่นชอบ`}</ThaiMdText>
         </CustomButton>
       </View>
 
@@ -536,16 +548,16 @@ export default BuyerDetailScreen = (props) => {
               <FlatList
                 refreshing={isRefreshing}
                 onRefresh={loadComments}
-                data={comments}
-                keyExtractor={(item) => item.commentId}
+                data={buyerInfo.detail.review}
+                keyExtractor={(item) => item.comment + item.user + item.rating}
                 renderItem={({ item }) => {
                   return (
                     <Comment
-                      // style={{ width: "100%", height: 100, flex: 0 }}
                       style={{ flex: 0, background: Colors.secondary }}
-                      seller={item.seller}
-                      message={item.message}
-                      rate={item.rate}
+                      user={item.user}
+                      message={item.comment}
+                      rate={item.rating}
+                      time={libary.formatDate(item.timestamp.toDate())}
                     />
                   );
                 }}

@@ -7,8 +7,10 @@ import ThaiRegText from "./ThaiRegText";
 import ImageCircle from "./UI/ImageCircle";
 import { LinearGradient } from "expo-linear-gradient";
 import { widthPercentageToDP } from "react-native-responsive-screen";
+import ThaiMdText from "./ThaiMdText";
+import ThaiBoldText from "./ThaiBoldText";
 
-export default UserInfoCard = props => {
+export default UserInfoCard = (props) => {
   return (
     <LinearGradient
       colors={
@@ -24,83 +26,104 @@ export default UserInfoCard = props => {
           backgroundColor:
             props.userRole === "seller"
               ? Colors.soft_secondary
-              : Colors.primary_dark
+              : Colors.primary_dark,
+          padding: 10,
         }}
       >
-        {/* Row 1 */}
-        <View
-          style={{ ...styles.userInfoContentContainerRow1, ...styles.shadow }}
+        <TouchableOpacity
+          onPress={props.onClick}
+          style={{ width: "100%", height: "60%" }}
         >
-          <ImageCircle
-            imgUrl={props.imgUrl}
-            avariableWidth={props.avariableWidth * 0.25}
-          />
           <View
             style={{
-              width: props.avariableWidth * 0.5,
-              padding: 20
-            }}
-          >
-            <View style={{ width: "100%", flexDirection: "row" }}>
-              <ThaiRegText
-                style={{
-                  ...styles.userName,
-                  color:
-                    props.userRole === "seller"
-                      ? Colors.on_secondary.high_constrast
-                      : Colors.on_primary_dark.low_constrast
-                }}
-              >
-                {props.userName}
-              </ThaiRegText>
-            </View>
-            <ThaiRegText
-              style={{
-                color:
-                  props.userRole === "seller"
-                    ? Colors.on_secondary.high_constrast
-                    : Colors.on_primary_dark.low_constrast
-              }}
-            >
-              {props.address}
-            </ThaiRegText>
-          </View>
-          <View
-            style={{
-              width: props.avariableWidth * 0.2,
-              flexDirection: "row",
-              justifyContent: "center"
+              flex: 1,
+              backgroundColor:
+                props.userRole === "seller"
+                  ? "#ffffff"
+                  : Colors.soft_primary_dark,
+              borderRadius: 4,
+              overflow: "hidden",
+              ...styles.shadow,
             }}
           >
             <View
               style={{
-                backgroundColor:
-                  props.userRole === "seller"
-                    ? "white"
-                    : Colors.soft_primary_dark,
-                borderRadius: 5,
-                width: 35,
-                height: 35,
+                width: "100%",
+                height: "90%",
+                padding: 10,
                 flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                ...styles.shadow
               }}
             >
-              <TouchableOpacity onPress={props.onSignout}>
-                <Ionicons
-                  name="ios-settings"
-                  size={30}
-                  color={
-                    props.userRole === "seller"
-                      ? Colors.hard_secondary
-                      : Colors.hard_primary_dark
-                  }
-                />
-              </TouchableOpacity>
+              <ImageCircle
+                imgUrl={props.imgUrl}
+                avariableWidth={props.avariableWidth * 0.25}
+              />
+              <View
+                style={{
+                  flex: 1,
+                  padding: 10,
+                }}
+              >
+                <View style={{ width: "100%" }}>
+                  <ThaiBoldText
+                    style={{
+                      ...styles.userName,
+                      color:
+                        props.userRole === "seller"
+                          ? Colors.on_secondary.high_constrast
+                          : Colors.on_primary_dark.low_constrast,
+                    }}
+                  >
+                    {props.userName}
+                  </ThaiBoldText>
+                </View>
+                <View style={{ width: "100%" }}>
+                  <ThaiRegText
+                    style={{
+                      color:
+                        props.userRole === "seller"
+                          ? Colors.on_secondary.high_constrast
+                          : Colors.on_primary_dark.low_constrast,
+                      fontSize: 16,
+                    }}
+                  >
+                    {props.address}
+                  </ThaiRegText>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignSelf: "flex-end",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  {/* <View style={{ backgroundColor: "red" }}> */}
+                  <ThaiRegText
+                    style={{
+                      fontSize: 12,
+                      textAlign: "right",
+                      color:
+                        props.userRole === "seller"
+                          ? Colors.on_secondary.high_constrast
+                          : Colors.on_primary_dark.low_constrast,
+                    }}
+                  >
+                    กดเพื่อแก้ไขข้อมูล
+                  </ThaiRegText>
+                  {/* </View> */}
+                </View>
+              </View>
             </View>
+            <View
+              style={{
+                backgroundColor: Colors.primary_bright_variant,
+                height: "10%",
+                width: "100%",
+              }}
+            />
           </View>
-        </View>
+        </TouchableOpacity>
+
         {/* Row 2 */}
         <View
           style={{
@@ -109,21 +132,19 @@ export default UserInfoCard = props => {
               props.userRole === "seller"
                 ? Colors.soft_secondary
                 : Colors.hard_primary_dark,
-            justifyContent: "center",
-            alignItems: "center"
           }}
         >
           <View
             style={{
               width: "80%",
               flexDirection: "row",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <ThaiRegText
               style={{
                 fontSize: 20,
-                color: Colors.on_primary_dark.high_constrast
+                color: Colors.on_primary_dark.high_constrast,
               }}
             >
               {`${
@@ -140,7 +161,7 @@ export default UserInfoCard = props => {
                 color:
                   props.userRole === "seller"
                     ? Colors.on_secondary.high_constrast
-                    : Colors.on_primary_dark.low_constrast
+                    : Colors.on_primary_dark.low_constrast,
               }}
             >
               {props.userRole === "seller"
@@ -153,13 +174,13 @@ export default UserInfoCard = props => {
             style={{
               width: "80%",
               flexDirection: "row",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <ThaiRegText
               style={{
                 fontSize: 20,
-                color: Colors.on_primary_dark.high_constrast
+                color: Colors.on_primary_dark.high_constrast,
               }}
             >
               {`${
@@ -176,7 +197,7 @@ export default UserInfoCard = props => {
                 color:
                   props.userRole === "seller"
                     ? Colors.on_secondary.high_constrast
-                    : Colors.on_primary_dark.low_constrast
+                    : Colors.on_primary_dark.low_constrast,
               }}
             >
               {props.userRole === "seller"
@@ -194,39 +215,29 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     backgroundColor: Colors.primary_dark,
     alignSelf: "center",
-    width: "100%"
+    width: "100%",
   },
   userInfoContentContainer: {
-    flex: 1
+    flex: 1,
   },
   imgContainer: {
     width: "30%",
-    height: "100%"
-  },
-  userInfoContentContainerRow1: {
-    height: "60%",
-    width: "100%",
-    flexDirection: "row",
-    borderBottomRightRadius: 3,
-    borderBottomLeftRadius: 3,
-    padding: 10
+    height: "100%",
   },
   userInfoContentContainerRow2: {
     height: "40%",
     width: "100%",
-    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: 16
   },
   userImg: {
     // If don't specify this, img size can't resize and organize
     width: "100%",
     height: "100%",
-    paddingTop: 0
+    paddingTop: 0,
   },
   userName: {
-    fontSize: 18
+    fontSize: 20,
   },
   lineSeparate: {
     borderBottomWidth: 1,
@@ -235,21 +246,21 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowRadius: 6,
     shadowOpacity: 0.26,
-    elevation: 5 //for android
+    elevation: 5, //for android
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.18,
     shadowRadius: 1.0,
 
-    elevation: 1
-  }
+    elevation: 1,
+  },
 });

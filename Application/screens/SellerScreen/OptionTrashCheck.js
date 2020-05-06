@@ -1,12 +1,12 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { StyleSheet, FlatList, View, Text, Button } from "react-native";
+import { StyleSheet, FlatList, View, Alert } from "react-native";
 import ImagePickerCmp from "../../components/ImagePicker";
 import { useDispatch, useSelector } from "react-redux";
 import * as imgActions from "../../store/actions/imageAction";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AppVariableSetting from "../../constants/AppVariableSetting";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
@@ -15,6 +15,8 @@ import CustomButton from "../../components/UI/CustomButton";
 import libary from "../../utils/libary";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import ModalLoading from "../../components/ModalLoading";
+import TrashCard from "../../components/TrashCard";
+import { GET_PREDICTION } from "../../store/actions/imageAction";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
@@ -28,13 +30,13 @@ const sellerItemsCameraReducer = (state, action) => {
       return {
         ...state,
         sellerItemsCamera: [...action.sellerItemsCamera],
-        sellerItemsCameraObj: { ...action.sellerItemsCameraObj }
+        sellerItemsCameraObj: { ...action.sellerItemsCameraObj },
       };
     case ADD_SELLERITEMS_AMOUNT:
       //find that element
       targetIndex = updatedSellerItemsCamera.indexOf(
         updatedSellerItemsCamera.filter(
-          item => item.subtype === action.subtype
+          (item) => item.subtype === action.subtype
         )[0]
       );
       // updated flatList
@@ -45,13 +47,13 @@ const sellerItemsCameraReducer = (state, action) => {
       return {
         ...state,
         updatedSellerItemsCamera,
-        updatedSellerItemsCameraObj
+        updatedSellerItemsCameraObj,
       };
     case MINUS_SELLERITEMS_AMOUNT:
       //find that element
       targetIndex = updatedSellerItemsCamera.indexOf(
         updatedSellerItemsCamera.filter(
-          item => item.subtype === action.subtype
+          (item) => item.subtype === action.subtype
         )[0]
       );
       // update flatList
@@ -64,24 +66,24 @@ const sellerItemsCameraReducer = (state, action) => {
       return {
         ...state,
         updatedSellerItemsCamera,
-        updatedSellerItemsCameraObj
+        updatedSellerItemsCameraObj,
       };
     default:
       return { ...state };
   }
 };
 
-export default OptionTrashCheck = props => {
+export default OptionTrashCheck = (props) => {
   const dispatch = useDispatch();
 
   const sellerItemsCamera = useSelector(
-    state => state.sellerItems.sellerItemsCamera
+    (state) => state.sellerItems.sellerItemsCamera
   );
 
   const sellerItemsCameraObj = useSelector(
-    state => state.sellerItems.sellerItemsCameraObj
+    (state) => state.sellerItems.sellerItemsCameraObj
   );
-  const wasteTypesDB = useSelector(state => {
+  const wasteTypesDB = useSelector((state) => {
     return state.wasteType.wasteTypes;
   });
 
@@ -89,7 +91,7 @@ export default OptionTrashCheck = props => {
     sellerItemsCameraReducer,
     {
       sellerItemsCamera: [],
-      sellerItemsCameraObj: {}
+      sellerItemsCameraObj: {},
     }
   );
 
@@ -103,11 +105,28 @@ export default OptionTrashCheck = props => {
     if (!resultedImg) {
       return;
     }
-
-    // set react
+    // set image
     setPickedImage(resultedImg);
+  };
+
+  // use the picked image for prediction process
+  const getPredictionHandler = async () => {
     setIsInOperation(true);
-    await dispatch(imgActions.getPrediction(resultedImg, wasteTypesDB));
+    const result = await libary.getPrediction(pickedImage);
+    if (result) {
+      dispatch({
+        type: GET_PREDICTION,
+        results,
+        wasteTypesDB,
+      });
+    } else {
+      Alert.alert(
+        "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
+        "ไม่สามารถติดต่อกับ Server ได้",
+        [{ text: "OK" }]
+      );
+      setPickedImage("");
+    }
     setIsInOperation(false);
   };
 
@@ -120,7 +139,7 @@ export default OptionTrashCheck = props => {
     dispatchSellerItemsState({
       type: SET_LOCAL_SELLERITEMS,
       sellerItemsCamera,
-      sellerItemsCameraObj
+      sellerItemsCameraObj,
     });
   }, [sellerItemsCamera]);
 
@@ -130,34 +149,42 @@ export default OptionTrashCheck = props => {
       <View
         style={{
           width: wp("100%"),
-          height: hp("100%") - AppVariableSetting.bottomBarHeight
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
         }}
       >
-        <ModalLoading modalVisible={isInOperation} />
+        <ModalLoading modalVisible={isInOperation} text={"ตรวจสอบรูปภาพ..."} />
         <View
           style={{
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
-            alignItems: "center"
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }}></View>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 26
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
               ตรวจสอบขยะด้วยกล้อง
             </ThaiBoldText>
           </View>
+          <View
+            style={{
+              width: "20%",
+            }}
+          />
         </View>
         <ImagePickerCmp
           style={{ height: "40%", width: "100%" }}
           pickedImage={pickedImage}
+          onClick={takeImageHandler}
         />
         <View style={{ width: "100%", height: "5%", padding: 10 }}>
           <ThaiBoldText
@@ -165,7 +192,7 @@ export default OptionTrashCheck = props => {
               color:
                 sellerItemsCamera.length > 0
                   ? Colors.primary_bright
-                  : Colors.secondary
+                  : Colors.secondary,
             }}
           >
             ยืนยันจำนวนขยะที่ถ่าย
@@ -175,7 +202,7 @@ export default OptionTrashCheck = props => {
           style={{
             width: "100%",
             height: "25%",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <FlatList
@@ -185,9 +212,9 @@ export default OptionTrashCheck = props => {
                 : []
             }
             style={{
-              flex: 1
+              flex: 1,
             }}
-            keyExtractor={item => item.subtype}
+            keyExtractor={(item) => item.subtype}
             renderItem={({ item }) => {
               return (
                 <TrashCard
@@ -211,14 +238,14 @@ export default OptionTrashCheck = props => {
                     dispatchSellerItemsState({
                       type: ADD_SELLERITEMS_AMOUNT,
                       subtype: item.subtype,
-                      majortype: item.type
+                      majortype: item.type,
                     })
                   }
                   onDecrease={() => {
                     dispatchSellerItemsState({
                       type: MINUS_SELLERITEMS_AMOUNT,
                       subtype: item.subtype,
-                      majortype: item.type
+                      majortype: item.type,
                     });
                   }}
                 />
@@ -233,49 +260,44 @@ export default OptionTrashCheck = props => {
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            paddingBottom: getStatusBarHeight()
+            paddingBottom: getStatusBarHeight(),
           }}
         >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 8,
-              maxHeight: 40
-            }}
-            btnColor={Colors.button.start_operation_info.btnBackground}
-            onPress={takeImageHandler}
-            btnTitleColor={Colors.button.start_operation_info.btnText}
-            btnTitleFontSize={12}
-          >
-            ถ่ายรูป
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "80%",
-              borderRadius: 8,
-              maxHeight: 40
-            }}
-            btnColor={
-              sellerItemsCamera.length > 0
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.submit_primary_bright.btnBackgroundDisabled
-            }
-            onPress={sellerItemsCamera.length > 0 ? confirmHandler : null}
-            btnTitleColor={
-              sellerItemsCamera.length > 0
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.submit_primary_bright.btnTextDisabled
-            }
-            btnTitleFontSize={12}
-          >
-            ยืนยันจำนวน
-          </CustomButton>
+          {pickedImage ? (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "80%",
+                borderRadius: 8,
+                maxHeight: 40,
+              }}
+              btnColor={Colors.button.start_operation_info.btnBackground}
+              onPress={getPredictionHandler}
+              btnTitleColor={Colors.button.start_operation_info.btnText}
+              btnTitleFontSize={12}
+            >
+              ตรวจสอบประเภทขยะ
+            </CustomButton>
+          ) : null}
+
+          {sellerItemsCamera.length > 0 ? (
+            <CustomButton
+              style={{
+                width: "40%",
+                height: "80%",
+                borderRadius: 8,
+                maxHeight: 40,
+              }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={confirmHandler}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={12}
+            >
+              ยืนยันจำนวน
+            </CustomButton>
+          ) : null}
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});

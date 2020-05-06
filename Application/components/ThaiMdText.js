@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 
-export default ThaiMdText = props => {
+export default ThaiMdText = (props) => {
   return (
     <Text style={{ ...styles.customStyle, ...props.style }}>
       {props.children}
@@ -11,7 +11,7 @@ export default ThaiMdText = props => {
 
 const styles = StyleSheet.create({
   customStyle: {
-    fontSize: 10,
-    fontFamily: "MEDIUM_NOTO"
-  }
+    fontSize: 14,
+    fontFamily: "MEDIUM_NOTO",
+  },
 });

@@ -111,6 +111,16 @@ const SellingTransactionNavigator = createStackNavigator(
       screen: SellingTransactionDetailScreen,
       navigationOptions: { headerTitle: "รายละเอียด" },
     },
+  },
+  { headerMode: "none" }
+);
+
+const SearchBuyerNavigator = createStackNavigator(
+  {
+    SearchBuyerScreen: {
+      screen: SearchBuyerScreen,
+      navigationOptions: { headerTitle: "การขายขยะ" },
+    },
     BuyerDetailScreen,
   },
   { headerMode: "none" }
@@ -126,21 +136,21 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
             <MaterialCommunityIcons
               name="history"
               size={25}
-              color={Colors.on_primary_dark.low_constrast}
+              color={Colors.on_primary_bright.low_constrast}
             />
           );
         },
       },
     },
     SearchBuyer: {
-      screen: SearchBuyerScreen,
+      screen: SearchBuyerNavigator,
       navigationOptions: {
         tabBarIcon: (tabInfo) => {
           return (
             <MaterialCommunityIcons
               name="account-search"
               size={25}
-              color={Colors.on_primary_dark.low_constrast}
+              color={Colors.on_primary_bright.low_constrast}
             />
           );
         },
@@ -153,7 +163,7 @@ const SellingTxAndSearchBuyerTopNavigator = createMaterialTopTabNavigator(
       showIcon: true,
       showLabel: false,
       style: {
-        backgroundColor: Colors.soft_primary_dark,
+        backgroundColor: Colors.soft_secondary,
         paddingTop: getStatusBarHeight(),
       },
     },

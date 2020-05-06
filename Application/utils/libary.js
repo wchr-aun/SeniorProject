@@ -1,7 +1,7 @@
 import firebaseFunctions from "./firebaseFunctions";
 import {
   verifyLocationPermissions,
-  verifyCameraPermissions
+  verifyCameraPermissions,
 } from "./permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -15,12 +15,12 @@ import {
   getCurrentPositionAsync,
   reverseGeocodeAsync,
   geocodeAsync,
-  Accuracy
+  Accuracy,
 } from "expo-location";
 import Colors from "../constants/Colors";
 import firebaseUtil from "../firebase";
 
-const toDate = dateInSeccond => {
+const toDate = (dateInSeccond) => {
   return new firebase.firestore.Timestamp(dateInSeccond, 0);
 };
 
@@ -32,7 +32,7 @@ const takeImgForGetprediction = async () => {
   const image = await ImagePicker.launchCameraAsync({
     aspect: [16, 9],
     quality: 0.5,
-    base64: true
+    base64: true,
   });
 
   if (image.cancelled) {
@@ -53,7 +53,7 @@ const takeImgForGetprediction = async () => {
 const pickedAnImg = async () => {
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
-    quality: 1
+    quality: 1,
   });
 
   if (!result.cancelled) {
@@ -69,8 +69,8 @@ const takeAnImg = async () => {
   }
   const image = await ImagePicker.launchCameraAsync({
     aspect: [16, 9],
-    quality: 0.5
-  }).catch(err => {
+    quality: 0.5,
+  }).catch((err) => {
     Alert.alert(
       "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
       err.message,
@@ -92,7 +92,7 @@ const uploadingImg = async (image, fileName, mode) => {
     .child(
       `${mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR}${fileName}`
     );
-  return ref.put(blob).catch(err => {
+  return ref.put(blob).catch((err) => {
     Alert.alert(
       "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
       err.message,
@@ -115,7 +115,7 @@ const downloadingImg = async (imgNames, mode) => {
           }${imgName}`
         )
         .getDownloadURL()
-        .then(uri => {
+        .then((uri) => {
           allImgs.push(uri);
         })
     );
@@ -125,7 +125,25 @@ const downloadingImg = async (imgNames, mode) => {
   });
 };
 
-const formatDate = date => {
+const getPrediction = async (image) => {
+  // send an image
+  const PERDICT_LINK = "http://34.87.39.76:5000/predict";
+  return await fetch(PERDICT_LINK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ photo: image.base64 }),
+  })
+    .then((res) => {
+      return res.json().results;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const formatDate = (date) => {
   let monthNames = [
     "มกราคม",
     "กุมภาพันธ์",
@@ -138,7 +156,7 @@ const formatDate = date => {
     "กันยายน",
     "ตุลาคม",
     "พฤศจิกายน",
-    "ธันวาคม"
+    "ธันวาคม",
   ];
   return (
     date.getDate() +
@@ -149,13 +167,18 @@ const formatDate = date => {
   );
 };
 
-const formatTime = date => {
+const formatTime = (date) => {
   //   getHours() - Returns the hour of the day (0-23).
   // getMinutes() - Returns the minute (0-59).
   //   return date.toLocaleTimeString() + " น.";
-  return `${date.getHours().toString().match(/^[12]*/i)[0] !== "" ? date.getHours() : `0${date.getHours()}`}:${
-    date.getMinutes().toString() === "0" ? "00" : date.getMinutes()
-  } น.`;
+  return `${
+    date
+      .getHours()
+      .toString()
+      .match(/^[12]*/i)[0] !== ""
+      ? date.getHours()
+      : `0${date.getHours()}`
+  }:${date.getMinutes().toString() === "0" ? "00" : date.getMinutes()} น.`;
 };
 
 const getReadableTxStatus = (txStatus, userRole) => {
@@ -185,7 +208,7 @@ const getReadableTxStatus = (txStatus, userRole) => {
       break;
   }
 };
-const getColorTxStatus = txStatus => {
+const getColorTxStatus = (txStatus) => {
   //   Transaction Status
   // 0 - เพิ่งสร้าง
   // 1 - ถูกปฏิเสธ แบบมีเงื่อนไข
@@ -211,15 +234,15 @@ const getColorTxStatus = txStatus => {
   }
 };
 
-const getTransactionList = async role => {
+const getTransactionList = async (role) => {
   let allTx = [];
   for (let i = 0; i < 6; i++) {
     await firebaseFunctions
       .getTransactions(role, i)
-      .then(eachTxStatus => {
+      .then((eachTxStatus) => {
         allTx.push(eachTxStatus);
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.alert(
           "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
           err.message,
@@ -240,7 +263,7 @@ export const getCurrentLocation = async () => {
   try {
     const location = await getCurrentPositionAsync({
       timeout: 5000,
-      accuracy: Accuracy.BestForNavigation
+      accuracy: Accuracy.BestForNavigation,
     });
     // Step-2
     try {
@@ -256,7 +279,7 @@ export const getCurrentLocation = async () => {
           locationInfo[0].postalCode,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        zipcode: parseInt(locationInfo[0].postalCode, 10)
+        zipcode: parseInt(locationInfo[0].postalCode, 10),
       };
     } catch (err) {
       Alert.alert(
@@ -277,8 +300,8 @@ export const getCurrentLocation = async () => {
 export const getPostalcodeAddressFromCord = async (lat, long) => {
   const locationInfo = await reverseGeocodeAsync({
     latitude: lat,
-    longitude: long
-  }).catch(err => {
+    longitude: long,
+  }).catch((err) => {
     Alert.alert(
       "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
       err.message,
@@ -288,11 +311,11 @@ export const getPostalcodeAddressFromCord = async (lat, long) => {
   return locationInfo;
 };
 
-export const getManualStringLocation = async address => {
+export const getManualStringLocation = async (address) => {
   let userAddrCord = await geocodeAsync(address);
   return {
     latitude: userAddrCord[0].latitude,
-    longitude: userAddrCord[0].longitude
+    longitude: userAddrCord[0].longitude,
   };
 };
 
@@ -328,11 +351,11 @@ const getDirections = (originCoords, destinationCoords) => {
     "&mode=" +
     mode;
   return fetch(url)
-    .then(response => response.json())
-    .then(responseJson => {
+    .then((response) => response.json())
+    .then((responseJson) => {
       return decode(responseJson.routes[0].overview_polyline.points);
     })
-    .catch(err => {
+    .catch((err) => {
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -367,7 +390,7 @@ const decode = (t, e) => {
       (r += o),
       d.push([l / c, r / c]);
   }
-  return (d = d.map(function(t) {
+  return (d = d.map(function (t) {
     return { latitude: t[0], longitude: t[1] };
   }));
 };
@@ -385,5 +408,6 @@ export default {
   uploadingImg,
   takeAnImg,
   downloadingImg,
-  pickedAnImg
+  pickedAnImg,
+  getPrediction,
 };

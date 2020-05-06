@@ -6,200 +6,60 @@ import {
   Alert,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSelector, useDispatch } from "react-redux";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import { NavigationEvents } from "react-navigation";
 import Colors from "../../constants/Colors";
-import DateTimePicker from "react-native-modal-datetime-picker";
-import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
-import * as transactionAction from "../../store/actions/transactionAction";
-import * as navigationBehaviorAction from "../../store/actions/navigationBehaviorAction";
 
-import ModalShowAssignedTime from "../../components/ModalShowAssignedTime";
 import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
-import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { getFavBuyers } from "../../utils/firebaseFunctions";
+import { getFavBuyers, searchBuyer } from "../../utils/firebaseFunctions";
+import Input from "../../components/UI/Input";
+import CustomButton from "../../components/UI/CustomButton";
+import ThaiBoldText from "../../components/ThaiBoldText";
+import ImageCircle from "../../components/UI/ImageCircle";
+import libary from "../../utils/libary";
 
-const BuyerChoice = props => {
-  return (
-    <TouchableOpacity
-      style={{
-        width: wp("90%"),
-        height: hp("15%"),
-        backgroundColor: Colors.secondary,
-        alignSelf: "center",
-        borderRadius: 10,
-        margin: wp("3.75%"),
-        justifyContent: "center",
-        padding: 10,
-        ...styles.shadow
-      }}
-      onPress={props.onSelected}
-    >
-      <View
-        style={{
-          width: "100%",
-          height: "100%",
-          flexDirection: "row",
-          justifyContent: "space-around"
-        }}
-      >
-        <View style={{ width: "70%", height: "100%", padding: 5 }}>
-          <View
-            style={{
-              alignSelf: "center",
-              height: "30%",
-              width: "100%"
-            }}
-          >
-            <ThaiRegText>
-              {`ผู้รับซื้อ `}
-              <ThaiBoldText
-                style={{ fontSize: 12, color: Colors.primary_bright_variant }}
-              >
-                {props.buyerName}
-              </ThaiBoldText>
-            </ThaiRegText>
-          </View>
-          <View style={{ height: "70%", width: "100%" }}>
-            <FlatList
-              style={{ flex: 1 }}
-              data={props.sellerItemsForSell.getFlatListFormat(false)}
-              keyExtractor={item => item.type + item.subtype}
-              renderItem={({ item }) => {
-                return (
-                  <View
-                    style={{
-                      height: 20,
-                      width: "100%",
-                      backgroundColor: Colors.secondary,
-                      borderRadius: 5
-                    }}
-                  >
-                    <ThaiRegText>
-                      {`ประเภท `}
-                      <ThaiMdText
-                        style={{
-                          fontSize: 10,
-                          color: Colors.primary_bright_variant
-                        }}
-                      >
-                        {item.subtype}
-                      </ThaiMdText>
-                      {props.purchaseList[item.type] == undefined ? (
-                        <ThaiRegText
-                          style={{ fontSize: Colors.error }}
-                        >{` ไม่รับซื้อ `}</ThaiRegText>
-                      ) : props.purchaseList[item.type][item.subtype] ==
-                        undefined ? (
-                        <ThaiRegText
-                          style={{ fontSize: Colors.error }}
-                        >{` ไม่รับซื้อ `}</ThaiRegText>
-                      ) : (
-                        `  ${item.amount} X ${
-                          props.purchaseList[item.type][item.subtype]
-                        } บาท/ชิ้น. = `
-                      )}
-                      <ThaiMdText
-                        style={{
-                          fontSize: 10,
-                          color: Colors.primary_bright_variant
-                        }}
-                      >
-                        {item.amount *
-                          props.purchaseList[item.type][item.subtype]}
-                      </ThaiMdText>
-                    </ThaiRegText>
-                  </View>
-                );
-              }}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            width: "30%",
-            height: "100%",
-            justifyContent: "center",
-            padding: 3
-          }}
-        >
-          <View
-            style={{
-              ...styles.shadow,
-              width: "100%",
-              height: "100%",
-              borderRadius: 8,
-              backgroundColor: Colors.soft_secondary,
-              justifyContent: "space-around",
-              alignItems: "center"
-            }}
-          >
-            <ThaiRegText
-              style={{ color: Colors.on_primary_bright.low_constrast }}
-            >{`ราคารวม`}</ThaiRegText>
-            <ThaiBoldText
-              style={{
-                fontSize: 24,
-                color: Colors.on_primary_dark.high_constrast
-              }}
-            >
-              {props.totalPrice}
-            </ThaiBoldText>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export default SearchBuyerScreen = props => {
+export default SearchBuyerScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const dispatch = useDispatch();
-  const isOperationCompleted = useSelector(
-    state => state.navigation.isOperationCompleted
-  );
-  // const checkIsOperationCompleted = () => {
-  //   if (isOperationCompleted === true) {
-  //     props.navigation.navigate("ShowSellerItemsScreen");
-  //   } else {
-  //     setIsLoading(true);
-  //     loadBuyer();
-  //     setIsLoading(false);
-  //   }
-  // };
 
   useEffect(() => {
     console.log("Search Buyer Screen");
   }, []);
 
-  // Callback fn
-  const [buyerList, setBuyerList] = useState([]);
-  // const loadBuyer = useCallback(async () => {
-  //   setIsRefreshing(true);
-  //   // let buyerInfo = await getFavBuyers();
-  //   setBuyerList(buyerInfo);
-  //   setIsRefreshing(false);
-  // }, [dispatch, setIsRefreshing]);
+  const [buyerId, setBuyerId] = useState("");
+  const [buyerResult, setBuyerResult] = useState("");
 
-  // // Load sellerItems from firebase and store it to redux "initially"
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   loadBuyer().then(() => {
-  //     setIsLoading(false);
-  //   });
-  // }, [loadBuyer]);
+  //User image
+  const [userImg, setUserImg] = useState("");
+  const loadUserImg = async (buyerName) => {
+    let imgUri = await libary.downloadingImg([`${buyerName}.jpg`], "user");
+    setUserImg(imgUri[0] ? imgUri[0] : "");
+  };
+
+  const onSearchBarChangeHandler = async (a, buyerName, c) => {
+    setBuyerId(buyerName);
+  };
+
+  const onSearchHandler = async () => {
+    const buyerResult = await searchBuyer(buyerId);
+    setBuyerResult(buyerResult);
+    loadUserImg(buyerId);
+  };
+
+  const goBuyerDetail = () => {
+    props.navigation.navigate({
+      routeName: "BuyerDetailScreen",
+      params: { buyerId, haveHeaderHight: true },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -214,17 +74,17 @@ export default SearchBuyerScreen = props => {
       behavior="padding"
       style={{
         ...styles.screen,
-        flex: 1
+        flex: 1,
       }}
     >
-      {/* <NavigationEvents onWillFocus={checkIsOperationCompleted} /> */}
       <LinearGradient
         colors={Colors.linearGradientBright}
         style={{
           width: wp("100%"),
           height: hp("100%"),
           backgroundColor: Colors.secondary,
-          borderRadius: 10
+          borderRadius: 10,
+          alignItems: "center",
         }}
       >
         <View
@@ -232,105 +92,97 @@ export default SearchBuyerScreen = props => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
-            alignItems: "center"
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }}></View>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 20
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
               ค้นหาผู้รับซื้อ
             </ThaiBoldText>
           </View>
-        </View>
-        {/* <View style={{ width: "100%", height: "70%" }}>
-          <FlatList
-            data={buyerList}
-            keyExtractor={item => item.id}
-            onRefresh={loadBuyer}
-            refreshing={isRefreshing}
-            renderItem={({ item }) => {
-              return (
-                // <BuyerChoice
-                //   sellerItemsForSell={sellerItemsForSell}
-                //   onSelected={() =>
-                //     buyerSelectHandler(
-                //       item.id,
-                //       item.purchaseList,
-                //       item.unavailableTypes
-                //     )
-                //   }
-                //   buyerName={item.id}
-                //   purchaseList={item.purchaseList}
-                //   totalPrice={item.totalPrice}
-                // />
-                <></>
-              );
+          <View
+            style={{
+              width: "20%",
             }}
           />
-        </View> */}
+        </View>
 
-        {/* <View
+        {/* Search bar */}
+        <View
           style={{
-            height: "20%",
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center"
+            width: "80%",
+            alignItems: "center",
+            marginTop: 10,
+            marginBottom: 15,
           }}
         >
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40
-            }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={() => props.navigation.goBack()}
-            btnTitleColor={Colors.button.cancel.btnText}
-            btnTitleFontSize={14}
-          >
-            <Ionicons
-              name={"ios-arrow-back"}
-              size={12}
-              color={Colors.button.cancel.btnText}
-            />
-            <ThaiRegText
-              style={{
-                fontSize: 12
-              }}
-            >
-              {` ย้อนกลับ`}
-            </ThaiRegText>
-          </CustomButton>
+          <Input
+            label="ค้นหาโดยชื่อผู้รับซื้อ"
+            iconName="account-search"
+            editable={true}
+            errorText={"กรุณาใช้ตัวอักษร"}
+            required={true}
+            onInputChange={onSearchBarChangeHandler}
+            id="buyerName"
+            style={{ width: "80%", marginVertical: 5 }}
+          />
 
           <CustomButton
             style={{
+              borderRadius: 4,
+              maxHeight: 40,
               width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40
             }}
-            btnColor={Colors.button.submit_primary_dark.btnBackground}
-            onPress={quickSellHandler}
-            btnTitleColor={Colors.button.submit_primary_dark.btnText}
+            btnColor={Colors.button.submit_primary_bright.btnBackground}
+            onPress={onSearchHandler}
+            btnTitleColor={Colors.button.submit_primary_bright.btnText}
             btnTitleFontSize={14}
           >
-            <ThaiRegText
+            <ThaiBoldText>ค้นหา</ThaiBoldText>
+          </CustomButton>
+        </View>
+        {buyerResult ? (
+          <TouchableOpacity style={{ width: "80%" }} onPress={goBuyerDetail}>
+            <View
               style={{
-                fontSize: 12
+                width: "100%",
+                borderRadius: 5,
+                ...styles.shadow,
+                padding: 15,
+                alignItems: "center",
               }}
             >
-              {` ขายด่วน`}
-            </ThaiRegText>
-          </CustomButton>
-        </View> */}
+              <ImageCircle imgUrl={userImg} avariableWidth={wp("20%")} />
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  marginVertical: 3,
+                }}
+              >
+                <ThaiMdText
+                  style={{ fontSize: 16, color: Colors.primary_bright }}
+                >
+                  {buyerId}
+                </ThaiMdText>
+              </View>
+              <View style={{ width: "80%", alignItems: "center" }}>
+                <ThaiRegText style={{ fontSize: 14 }}>
+                  {buyerResult.detail.addr}
+                </ThaiRegText>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -338,17 +190,17 @@ export default SearchBuyerScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
 
-    elevation: 3
-  }
+    elevation: 2,
+  },
 });

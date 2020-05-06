@@ -150,7 +150,7 @@ export const getPurchaseList = async () => {
 export const getTransactions = async (role) => {
   let allTx = [];
   let promises = [];
-  for (let status = 0; status < 5; status++) {
+  for (let status = 0; status < 6; status++) {
     promises.push(
       firestore
         .collection("transactions")
@@ -215,37 +215,44 @@ export const getFavBuyers = async () => {
   return firestore
     .collection("users")
     .doc(auth.currentUser.uid)
+    .get()
     .then((doc) => {
       if (doc.data().favBuyers != null) return doc.data().favBuyers;
       else return [];
-    })
-    .then((favBuyers) => {
-      let buyersInfo = [];
-      favBuyers.forEach(async (buyer) => {
-        await firestore
-          .collection("buyerList")
-          .doc(buyer)
-          .get()
-          .then((doc) => {
-            if (doc.exists)
-              buyersInfo.push({ txId: doc.id, detail: doc.data() });
-            else
-              buyersInfo.push({
-                txId: doc.id,
-                detail: "The document doesn't exist",
-              });
-          });
-      });
-      return buyersInfo;
-    })
-    .catch((err) => {
-      Alert.alert(
-        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-        err.message,
-        [{ text: "OK" }]
-      );
-      throw new error(err.message);
     });
+  // .then((favBuyers) => {
+  //   // new code
+  //   let buyersInfo = [];
+  //   let promises = [];
+  //   for (let index = 0; index < favBuyers.length; index++) {
+  //     promises.push(
+  //       firestore
+  //         .collection("buyerLists")
+  //         .doc(favBuyers[index])
+  //         .get()
+  //         .then((doc) => {
+  //           if (doc.exists)
+  //             buyersInfo.push({ txId: doc.id, detail: doc.data() });
+  //           else
+  //             buyersInfo.push({
+  //               txId: doc.id,
+  //               detail: "The document doesn't exist",
+  //             });
+  //         })
+  //     );
+  //   }
+  //   return Promise.all(promises).then(() => {
+  //     return buyersInfo;
+  //   });
+  // })
+  // .catch((err) => {
+  //   Alert.alert(
+  //     "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+  //     err.message,
+  //     [{ text: "OK" }]
+  //   );
+  //   throw new error(err.message);
+  // });
 };
 
 export const addWaste = async (items) => {
@@ -365,15 +372,7 @@ export const editUserInfo = async (newInfo) => {
   return functions
     .httpsCallable("editUserInfo")(newInfo)
     .then((result) => {
-      if (result.data.errorMessage == null) return true;
-      // else throw new Error(result.data.errorMessage);
-      else {
-        Alert.alert(
-          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-          result.data.errorMessage,
-          [{ text: "OK" }]
-        );
-      }
+      return true;
     })
     .catch((err) => {
       Alert.alert(
@@ -381,7 +380,6 @@ export const editUserInfo = async (newInfo) => {
         err.message,
         [{ text: "OK" }]
       );
-      throw new Error(err.message);
     });
 };
 
@@ -527,6 +525,7 @@ export const searchBuyer = async (uid) => {
       else return "No such users";
     })
     .catch((err) => {
+      console.log("can't searchBuyer");
       Alert.alert(
         "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
         err.message,
@@ -559,6 +558,30 @@ export const getIsFavBuyer = async (buyerId) => {
 export const setFavBuyer = async (favBuyer) => {
   return functions
     .httpsCallable("setFavBuyer")(favBuyer)
+    .then((result) => {
+      if (result) {
+        return result;
+      } else {
+        Alert.alert(
+          "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+          result.data.errorMessage,
+          [{ text: "OK" }]
+        );
+      }
+    })
+    .catch((err) => {
+      Alert.alert(
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
+        err.message,
+        [{ text: "OK" }]
+      );
+      throw new Error(err.message);
+    });
+};
+
+export const addNewComment = async (review) => {
+  return functions
+    .httpsCallable("sendComment")(review)
     .then((result) => {
       if (result) {
         return result;

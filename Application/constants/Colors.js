@@ -23,8 +23,8 @@ export default {
   },
   button: {
     disabled: {
-      btnBackground: "#f2f2f2",
-      btnText: "#e6e6e6",
+      btnBackground: "#ededed",
+      btnText: "#d4d4d4",
     },
     cancel: {
       btnBackground: "#f2f2f2",

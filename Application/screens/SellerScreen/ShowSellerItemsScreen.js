@@ -7,6 +7,7 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -14,7 +15,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as sellerItemsAction from "../../store/actions/sellerItemsAction";
@@ -312,6 +313,7 @@ const ShowAllUserTrashScreen = (props) => {
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
           alignItems: "center",
+          paddingBottom: getStatusBarHeight(),
         }}
       >
         <ModalLoading
@@ -330,7 +332,19 @@ const ShowAllUserTrashScreen = (props) => {
             justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "20%" }} />
+          <View style={{ width: "20%" }}>
+            {editingMode ? (
+              <CustomButton
+                style={{ borderRadius: 5 }}
+                btnColor={Colors.button.submit_primary_dark.btnBackground}
+                btnTitleColor={Colors.button.submit_primary_dark.btnText}
+                onPress={cancelHandler}
+                btnTitleFontSize={14}
+              >
+                <ThaiRegText style={{ fontSize: 10 }}>ยกเลิกแก้ไข</ThaiRegText>
+              </CustomButton>
+            ) : null}
+          </View>
           <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
@@ -351,25 +365,24 @@ const ShowAllUserTrashScreen = (props) => {
             {editingMode ? (
               <CustomButton
                 style={{ borderRadius: 5 }}
-                btnColor={Colors.button.submit_primary_dark.btnBackground}
-                btnTitleColor={Colors.button.submit_primary_dark.btnText}
-                onPress={() => setModalVisible(true)}
+                btnColor={Colors.button.submit_primary_bright.btnBackground}
+                btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                onPress={confirmHandlerTricker}
                 btnTitleFontSize={14}
               >
-                <ThaiRegText style={{ fontSize: 10 }}>เพิ่มขยะ </ThaiRegText>
-                <AntDesign
-                  name="plus"
+                <MaterialCommunityIcons
+                  name="check"
                   size={10}
-                  color={Colors.button.submit_primary_dark.btnText}
+                  color={Colors.button.submit_primary_bright.btnText}
                 />
+                <ThaiRegText style={{ fontSize: 10 }}> ยืนยันแก้ไข</ThaiRegText>
               </CustomButton>
             ) : null}
           </View>
         </View>
         <View
           style={{
-            width: "100%",
-            height: "75%",
+            flex: 1,
             alignItems: "center",
           }}
         >
@@ -435,6 +448,8 @@ const ShowAllUserTrashScreen = (props) => {
                   ).toString()}
                   trashAdjustPrice={
                     wasteTypes[item.type][item.subtype]["price"]
+                      ? wasteTypes[item.type][item.subtype]["price"]
+                      : 0
                   }
                   editingMode={editingMode}
                   onIncrease={() =>
@@ -466,77 +481,97 @@ const ShowAllUserTrashScreen = (props) => {
             }}
           />
         </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "15%",
-            paddingBottom: getStatusBarHeight(), //unable it in future
-          }}
-        >
+
+        {editingMode ? (
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                maxHeight: 50,
+                width: wp("94%"),
+                backgroundColor: Colors.soft_secondary,
+                alignSelf: "center",
+                borderRadius: 10,
+                padding: 10,
+                margin: 5,
+                ...styles.shadow,
+              }}
+            >
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <AntDesign
+                  name="plus"
+                  color={Colors.on_secondary.high_constrast}
+                  size={25}
+                />
+              </View>
+              <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+                <ThaiBoldText
+                  style={{
+                    fontSize: 25,
+                    color: Colors.on_secondary.high_constrast,
+                  }}
+                >
+                  เพิ่มประเภทขยะ
+                </ThaiBoldText>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ) : null}
+
+        {!editingMode ? (
           <View
             style={{
-              width: "100%",
-              height: "100%",
-              flexDirection: "row",
-              justifyContent: "space-around",
+              justifyContent: "center",
               alignItems: "center",
+              width: "100%",
+              height: "15%",
             }}
           >
-            <CustomButton
+            <View
               style={{
-                width: "40%",
-                height: "80%",
-                maxHeight: 40,
-                borderRadius: 5,
+                width: "100%",
+                height: "100%",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
               }}
-              btnColor={
-                editingMode
-                  ? Colors.button.cancel.btnBackground
-                  : Colors.button.submit_primary_bright.btnBackground
-              }
-              onPress={editingMode ? cancelHandler : sellHandler}
-              btnTitleColor={
-                editingMode
-                  ? Colors.button.cancel.btnText
-                  : Colors.button.submit_primary_bright.btnText
-              }
-              btnTitleFontSize={14}
             >
-              {editingMode ? "ยกเลิก" : "ขายขยะ"}
-            </CustomButton>
+              <CustomButton
+                style={{
+                  width: "40%",
+                  height: "80%",
+                  maxHeight: 40,
+                  borderRadius: 5,
+                }}
+                btnColor={Colors.button.start_operation_info.btnBackground}
+                onPress={() => {
+                  setEditingMode(true);
+                }}
+                btnTitleColor={Colors.button.start_operation_info.btnText}
+                btnTitleFontSize={14}
+              >
+                <ThaiRegText style={{ fontSize: 12 }}>{"แก้ไขขยะ"}</ThaiRegText>
+              </CustomButton>
 
-            <CustomButton
-              style={{
-                width: "40%",
-                height: "80%",
-                maxHeight: 40,
-                borderRadius: 5,
-              }}
-              btnColor={
-                editingMode
-                  ? Colors.button.finish_operation_info.btnBackground
-                  : Colors.button.start_operation_info.btnBackground
-              }
-              onPress={() => {
-                if (editingMode === true) {
-                  confirmHandlerTricker();
-                } else setEditingMode(true);
-              }}
-              btnTitleColor={
-                editingMode
-                  ? Colors.button.finish_operation_info.btnText
-                  : Colors.button.start_operation_info.btnText
-              }
-              btnTitleFontSize={14}
-            >
-              <ThaiRegText style={{ fontSize: 12 }}>
-                {editingMode ? "ยืนยันการแก้ไข" : "แก้ไขขยะ"}
-              </ThaiRegText>
-            </CustomButton>
+              <CustomButton
+                style={{
+                  width: "40%",
+                  height: "80%",
+                  maxHeight: 40,
+                  borderRadius: 5,
+                }}
+                btnColor={Colors.button.submit_primary_bright.btnBackground}
+                onPress={sellHandler}
+                btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                btnTitleFontSize={14}
+              >
+                {"ขายขยะ"}
+              </CustomButton>
+            </View>
           </View>
-        </View>
+        ) : null}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -547,11 +582,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.screen,
   },
   eachSellerItemCard: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
   },
 });
 

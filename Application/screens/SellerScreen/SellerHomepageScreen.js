@@ -6,13 +6,13 @@ import {
   Dimensions,
   ActivityIndicator,
   Alert,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import UserInfoCard from "../../components/UserInfoCard";
@@ -28,7 +28,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import { Ionicons } from "@expo/vector-icons";
 
-export default SellerHomepageScreen = props => {
+export default SellerHomepageScreen = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const dispatch = useDispatch();
@@ -42,27 +42,29 @@ export default SellerHomepageScreen = props => {
   }, [error]);
 
   // Get user profile
-  const userProfile = useSelector(state => state.user.userProfile);
-  const userRole = useSelector(state => state.user.userRole);
-  const transactions = useSelector(state => state.transactions.transactions);
+  const userProfile = useSelector((state) => state.user.userProfile);
+  const userRole = useSelector((state) => state.user.userRole);
+  const transactions = useSelector((state) => state.transactions.transactions);
   const [txShow, setTxShow] = useState([]);
 
   // Show comming transaction
   useEffect(() => {
     if (transactions) {
-      let tmpTxShow = transactions[3].concat(transactions[1]).concat(transactions[0]);
+      let tmpTxShow = transactions[3]
+        .concat(transactions[1])
+        .concat(transactions[5]);
       setTxShow(tmpTxShow);
     }
   }, [transactions]);
 
   // For looking into transaction detail
-  const selectedHandler = transactionItem => {
+  const selectedHandler = (transactionItem) => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
       params: {
         transactionItem,
-        addCustomStatusbar: true
-      }
+        addCustomStatusbar: true,
+      },
     });
   };
 
@@ -90,7 +92,7 @@ export default SellerHomepageScreen = props => {
     loadUserImg();
     refreshTx()
       .then(() => setIsLoading(false))
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setError(err.message);
       });
@@ -117,7 +119,7 @@ export default SellerHomepageScreen = props => {
           width: wp("100%"),
           height: hp("100%") - AppVariableSetting.bottomBarHeight,
           backgroundColor:
-            userRole === "seller" ? Colors.soft_secondary : Colors.primary_dark
+            userRole === "seller" ? Colors.soft_secondary : Colors.primary_dark,
         }}
       >
         {isLoading ? (
@@ -127,7 +129,7 @@ export default SellerHomepageScreen = props => {
               height: "100%",
               backgroundColor: Colors.on_primary_dark.high_constrast,
               alignSelf: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <ActivityIndicator
@@ -143,12 +145,12 @@ export default SellerHomepageScreen = props => {
               style={{
                 ...styles.userInfoCard,
                 height: "40%",
-                width: "100%"
+                width: "100%",
               }}
               imgUrl={userImg}
               userName={userProfile.name + " " + userProfile.surname}
               address={userProfile.addr.readable}
-              onSignout={() => {
+              onClick={() => {
                 props.navigation.navigate("EditingUserprofileScreen");
               }}
               transactions={transactions}
@@ -166,7 +168,7 @@ export default SellerHomepageScreen = props => {
                 borderTopLeftRadius: 15,
                 ...styles.shadow,
                 backgroundColor:
-                  userRole === "seller" ? "white" : Colors.primary_dark
+                  userRole === "seller" ? "white" : Colors.primary_dark,
               }}
             >
               <View
@@ -176,14 +178,14 @@ export default SellerHomepageScreen = props => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   width: "100%",
-                  height: 60
+                  height: 60,
                 }}
               >
                 <View style={{ width: "60%", height: "80%" }}>
                   <ThaiTitleText
                     style={{
                       color: Colors.soft_primary_bright,
-                      fontSize: 18
+                      fontSize: 18,
                     }}
                   >
                     การรับซื้อขยะล่าสุด
@@ -194,7 +196,7 @@ export default SellerHomepageScreen = props => {
                     width: "30%",
                     height: "80%",
                     maxHeight: 40,
-                    borderRadius: 5
+                    borderRadius: 5,
                   }}
                   btnColor={Colors.button.submit_primary_bright.btnBackground}
                   onPress={refreshTx}
@@ -219,7 +221,7 @@ export default SellerHomepageScreen = props => {
                   refreshing={isRefreshing}
                   onRefresh={refreshTx}
                   data={txShow}
-                  keyExtractor={item => item.txId}
+                  keyExtractor={(item) => item.txId}
                   renderItem={({ item }) => {
                     return (
                       <SellTransactionCard
@@ -244,7 +246,7 @@ export default SellerHomepageScreen = props => {
                   style={{
                     flex: 1,
                     justifyContent: "center",
-                    alignSelf: "center"
+                    alignSelf: "center",
                   }}
                 >
                   <ThaiBoldText
@@ -266,17 +268,17 @@ export default SellerHomepageScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Colors.secondary
+    backgroundColor: Colors.secondary,
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
 
-    elevation: 2
-  }
+    elevation: 2,
+  },
 });

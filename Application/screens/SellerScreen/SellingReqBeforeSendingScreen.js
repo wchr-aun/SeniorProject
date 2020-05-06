@@ -183,308 +183,319 @@ export default SellingReqBeforeSendingScreen = (props) => {
       {/* Req detail */}
       <View
         style={{
-          height: "10%",
-          width: "100%",
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-        }}
-      >
-        <ThaiRegText
-          style={{
-            fontSize: 14,
-            color: Colors.on_primary_bright.low_constrast,
-          }}
-        >
-          {`ผู้รับซื้อ `}
-          <ThaiMdText
-            style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-          >
-            {sellReq.buyerInfomation.buyerName}
-          </ThaiMdText>
-        </ThaiRegText>
-        <ThaiRegText
-          style={{
-            fontSize: 14,
-            color: Colors.on_primary_bright.low_constrast,
-          }}
-        >
-          {`สถานที่รับขยะ `}
-          <ThaiMdText
-            style={{ fontSize: 14, color: Colors.primary_bright_variant }}
-          >
-            {sellReq.sellerAddr.readable}
-          </ThaiMdText>
-        </ThaiRegText>
-      </View>
-      <View
-        style={{
-          width: "100%",
-          height: "5%",
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-        }}
-      >
-        <ThaiMdText
-          style={{
-            fontSize: 12,
-            color: Colors.on_primary_bright.low_constrast,
-          }}
-        >
-          วันเวลาที่เสนอขาย
-        </ThaiMdText>
-      </View>
-      <View
-        style={{
-          width: "90%",
-          maxHeight: "15%",
-          backgroundColor: Colors.hard_secondary,
-          borderRadius: 5,
-          paddingVertical: 5,
-          alignSelf: "center",
-          ...styles.shadow,
-        }}
-      >
-        <FlatList
-          data={sellReq.assignedTime}
-          keyExtractor={(item) =>
-            libary.formatDate(new Date(item)) +
-            libary.formatTime(new Date(item))
-          }
-          renderItem={({ item }) => {
-            return (
-              <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
-                <ThaiRegText
-                  style={{
-                    fontSize: 18,
-                    color: Colors.primary_bright_variant,
-                  }}
-                >
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color: Colors.primary_bright_variant,
-                    }}
-                  >
-                    {libary.formatDate(new Date(item))}
-                  </ThaiMdText>
-                  {` `}
-                  <ThaiMdText
-                    style={{
-                      fontSize: 18,
-                      color: Colors.primary_bright_variant,
-                    }}
-                  >
-                    {libary.formatTime(new Date(item))}
-                  </ThaiMdText>
-                </ThaiRegText>
-              </View>
-            );
-          }}
-        />
-      </View>
-      <View
-        style={{
-          width: "100%",
-          height: "5%",
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-        }}
-      >
-        <ThaiMdText
-          style={{
-            fontSize: 12,
-            color: Colors.on_primary_bright.low_constrast,
-          }}
-        >
-          ประเภทขยะที่ขาย
-        </ThaiMdText>
-      </View>
-      <View
-        style={{
-          width: "90%",
-          maxHeight: "15%",
-          backgroundColor: Colors.hard_secondary,
-          borderRadius: 5,
-          paddingVertical: 5,
-          alignSelf: "center",
-          ...styles.shadow,
-        }}
-      >
-        <FlatList
-          data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
-          keyExtractor={(item) => item.subtype}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  height: 30,
-                  padding: 3,
-                  alignSelf: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <View
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  <View style={{ width: "40%" }}>
-                    <ThaiRegText
-                      style={{ fontSize: 18, color: Colors.soft_primary_dark }}
-                    >
-                      {`${wasteTypes[item.type][item.subtype]["name"]}`}
-                    </ThaiRegText>
-                  </View>
-                  <View style={{ width: "40%" }}>
-                    <ThaiRegText
-                      style={{
-                        fontSize: 18,
-                        color: Colors.soft_primary_dark,
-                        textAlign: "right",
-                      }}
-                    >
-                      {`จำนวน ${item.amount.amount}`}
-                    </ThaiRegText>
-                  </View>
-                </View>
-              </View>
-            );
-          }}
-        />
-      </View>
-      <View
-        style={{
-          width: "100%",
-          height: "5%",
-          padding: 2,
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-        }}
-      >
-        <ThaiMdText
-          style={{ fontSize: 12, color: Colors.on_secondary.high_constrast }}
-        >
-          รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
-        </ThaiMdText>
-      </View>
-      <View
-        style={{
-          height: "10%",
-          width: "100%",
-          padding: 5,
-        }}
-      >
-        {/* image */}
-        <FlatList
-          data={imgs}
-          keyExtractor={(item) => item.uri}
-          style={{ flex: 1 }}
-          horizontal={true}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  setImgShowInModal(item.uri);
-                  setIsImgModalVisible(true);
-                }}
-              >
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 5,
-                    paddingHorizontal: 2,
-                    overflow: "hidden",
-                  }}
-                >
-                  <Image
-                    style={{ width: "100%", height: "100%" }}
-                    source={{ uri: item.uri }}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      {/* Btn + number of pic */}
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "15%",
-          padding: 5,
+          flex: 1,
           paddingBottom: getStatusBarHeight(),
+          justifyContent: "space-around",
         }}
       >
         <View
           style={{
+            height: "10%",
             width: "100%",
-            height: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
           }}
         >
-          <CustomButton
+          <ThaiRegText
             style={{
-              width: "50%",
-              maxWidth: 100,
-              height: "100%",
-              maxHeight: 35,
-              borderRadius: 5,
-              marginRight: 10,
+              fontSize: 14,
+              color: Colors.on_primary_bright.low_constrast,
             }}
-            btnColor={Colors.button.cancel.btnBackground}
-            onPress={takeImgHandler}
-            btnTitleColor={Colors.button.cancel.btnText}
-            btnTitleFontSize={18}
           >
-            <Ionicons
-              name={"md-camera"}
-              size={14}
-              color={Colors.button.cancel.btnText}
-            />
-            <ThaiMdText style={{ fontSize: 12 }}>
-              {" "}
-              ถ่ายภาพ
-              <ThaiBoldText
-                style={{
-                  fontSize: 12,
-                  color: Colors.on_primary_bright.high_constrast,
-                }}
-              >{` ${imgs.length}`}</ThaiBoldText>
+            {`ผู้รับซื้อ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {sellReq.buyerInfomation.buyerName}
             </ThaiMdText>
-          </CustomButton>
-          <CustomButton
+          </ThaiRegText>
+          <ThaiRegText
             style={{
-              width: "50%",
-              maxWidth: 100,
-              height: "100%",
-              maxHeight: 35,
-              borderRadius: 5,
-              marginRight: 10,
+              fontSize: 14,
+              color: Colors.on_primary_bright.low_constrast,
             }}
-            btnColor={
-              imgs.length > 0
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.submit_primary_bright.btnBackgroundDisabled
-            }
-            onPress={imgs.length > 0 ? acceptHandler : null}
-            btnTitleColor={
-              imgs.length > 0
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.submit_primary_bright.btnTextDisabled
-            }
-            btnTitleFontSize={10}
           >
-            <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
-          </CustomButton>
+            {`สถานที่รับขยะ `}
+            <ThaiMdText
+              style={{ fontSize: 14, color: Colors.primary_bright_variant }}
+            >
+              {sellReq.sellerAddr.readable}
+            </ThaiMdText>
+          </ThaiRegText>
+        </View>
+
+        <View
+          style={{
+            width: "100%",
+            height: "5%",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+          }}
+        >
+          <ThaiMdText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_bright.low_constrast,
+            }}
+          >
+            วันเวลาที่เสนอขาย
+          </ThaiMdText>
+        </View>
+
+        <View
+          style={{
+            width: "90%",
+            maxHeight: "20%",
+            backgroundColor: Colors.hard_secondary,
+            borderRadius: 5,
+            paddingVertical: 5,
+            alignSelf: "center",
+            ...styles.shadow,
+            paddingVertical: 5,
+          }}
+        >
+          <FlatList
+            data={sellReq.assignedTime}
+            keyExtractor={(item) =>
+              libary.formatDate(new Date(item)) +
+              libary.formatTime(new Date(item))
+            }
+            renderItem={({ item }) => {
+              return (
+                <View style={{ height: 25, padding: 3, alignSelf: "center" }}>
+                  <ThaiRegText
+                    style={{
+                      fontSize: 18,
+                      color: Colors.primary_bright_variant,
+                    }}
+                  >
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.primary_bright_variant,
+                      }}
+                    >
+                      {libary.formatDate(new Date(item))}
+                    </ThaiMdText>
+                    {` `}
+                    <ThaiMdText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.primary_bright_variant,
+                      }}
+                    >
+                      {libary.formatTime(new Date(item))}
+                    </ThaiMdText>
+                  </ThaiRegText>
+                </View>
+              );
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            width: "100%",
+            height: "5%",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+          }}
+        >
+          <ThaiMdText
+            style={{
+              fontSize: 14,
+              color: Colors.on_primary_bright.low_constrast,
+            }}
+          >
+            ประเภทขยะที่ขาย
+          </ThaiMdText>
+        </View>
+
+        <View
+          style={{
+            width: "90%",
+            maxHeight: "20%",
+            backgroundColor: Colors.hard_secondary,
+            borderRadius: 5,
+            paddingVertical: 5,
+            alignSelf: "center",
+            ...styles.shadow,
+          }}
+        >
+          <FlatList
+            data={new Wastes(sellReq.saleList).getFlatListFormat(true)}
+            keyExtractor={(item) => item.subtype}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    height: 30,
+                    padding: 3,
+                    alignSelf: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <View style={{ width: "40%" }}>
+                      <ThaiRegText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.soft_primary_dark,
+                        }}
+                      >
+                        {`${wasteTypes[item.type][item.subtype]["name"]}`}
+                      </ThaiRegText>
+                    </View>
+                    <View style={{ width: "40%" }}>
+                      <ThaiRegText
+                        style={{
+                          fontSize: 18,
+                          color: Colors.soft_primary_dark,
+                          textAlign: "right",
+                        }}
+                      >
+                        {`จำนวน ${item.amount.amount}`}
+                      </ThaiRegText>
+                    </View>
+                  </View>
+                </View>
+              );
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            width: "100%",
+            height: "5%",
+            padding: 2,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+          }}
+        >
+          <ThaiMdText
+            style={{ fontSize: 14, color: Colors.on_secondary.high_constrast }}
+          >
+            รูปภาพขยะ (กดที่ภาพ เพื่อขยาย)
+          </ThaiMdText>
+        </View>
+
+        <View
+          style={{
+            height: "20%",
+            width: "100%",
+            padding: 5,
+          }}
+        >
+          {/* image */}
+          <FlatList
+            data={imgs}
+            keyExtractor={(item) => item.uri}
+            style={{ flex: 1 }}
+            horizontal={true}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setImgShowInModal(item.uri);
+                    setIsImgModalVisible(true);
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
+                      paddingHorizontal: 2,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "100%", height: "100%" }}
+                      source={{ uri: item.uri }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "15%",
+            padding: 5,
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <CustomButton
+              style={{
+                width: "50%",
+                maxWidth: 100,
+                height: "100%",
+                maxHeight: 35,
+                borderRadius: 5,
+                marginRight: 10,
+              }}
+              btnColor={Colors.button.cancel.btnBackground}
+              onPress={takeImgHandler}
+              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleFontSize={18}
+            >
+              <Ionicons
+                name={"md-camera"}
+                size={14}
+                color={Colors.button.cancel.btnText}
+              />
+              <ThaiMdText style={{ fontSize: 12 }}>
+                {" "}
+                ถ่ายภาพ
+                <ThaiBoldText
+                  style={{
+                    fontSize: 12,
+                    color: Colors.on_primary_bright.high_constrast,
+                  }}
+                >{` ${imgs.length}`}</ThaiBoldText>
+              </ThaiMdText>
+            </CustomButton>
+            {imgs.length > 0 ? (
+              <CustomButton
+                style={{
+                  width: "50%",
+                  maxWidth: 100,
+                  height: "100%",
+                  maxHeight: 35,
+                  borderRadius: 5,
+                  marginRight: 10,
+                }}
+                btnColor={Colors.button.submit_primary_bright.btnBackground}
+                onPress={acceptHandler}
+                btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                btnTitleFontSize={10}
+              >
+                <ThaiMdText style={{ fontSize: 10 }}> ยืนยันขาย</ThaiMdText>
+              </CustomButton>
+            ) : null}
+          </View>
         </View>
       </View>
     </View>

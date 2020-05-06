@@ -23,7 +23,11 @@ import ThaiRegText from "../../components/ThaiRegText";
 import ThaiMdText from "../../components/ThaiMdText";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import ModalLoading from "../../components/ModalLoading";
 import ThaiBoldText from "../../components/ThaiBoldText";
@@ -66,24 +70,26 @@ const buyerChoiceReducer = (state, action) => {
   }
 };
 
-const BuyerChoice = ({
+const BuyerCardForSell = ({
   selected,
   onSelected,
   sellerItemsForSell,
   buyerName,
   purchaseList,
   totalPrice,
+  isFav,
+  wasteTypes,
 }) => {
   return (
     <TouchableOpacity
       style={{
         width: wp("90%"),
-        height: 100,
         backgroundColor: Colors.secondary,
         alignSelf: "center",
         borderRadius: 10,
         marginVertical: 5,
         justifyContent: "center",
+        alignItems: "center",
         padding: 10,
         ...styles.shadow,
         borderWidth: selected ? 2 : 0,
@@ -95,32 +101,65 @@ const BuyerChoice = ({
     >
       <View
         style={{
+          alignSelf: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           width: "100%",
-          height: "100%",
+          marginVertical: 4,
+          padding: 5,
+        }}
+      >
+        <View style={{ width: "40%", justifyContent: "center" }}>
+          <ThaiRegText style={{ fontSize: 16 }}>
+            {`ผู้รับซื้อ `}
+            <ThaiBoldText
+              style={{ fontSize: 16, color: Colors.primary_bright_variant }}
+            >
+              {buyerName}
+            </ThaiBoldText>
+          </ThaiRegText>
+        </View>
+
+        <View style={{ justifyContent: "center" }}>
+          {isFav ? (
+            <View
+              style={{
+                backgroundColor:
+                  Colors.button.submit_primary_dark.btnBackground,
+                flexDirection: "row",
+                padding: 5,
+                height: 30,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 4,
+              }}
+            >
+              <FontAwesome
+                name={isFav ? "star" : "star-o"}
+                color={"#ffdd00"}
+                size={13}
+              />
+              <ThaiMdText
+                style={{
+                  fontSize: 13,
+                  color: "#ffdd00",
+                }}
+              >{` คุณชื่นชอบ`}</ThaiMdText>
+            </View>
+          ) : null}
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
           flexDirection: "row",
           justifyContent: "space-around",
         }}
       >
-        <View style={{ width: "70%", height: "100%", padding: 5 }}>
-          <View
-            style={{
-              alignSelf: "center",
-              height: "30%",
-              width: "100%",
-            }}
-          >
-            <ThaiRegText>
-              {`ผู้รับซื้อ `}
-              <ThaiBoldText
-                style={{ fontSize: 12, color: Colors.primary_bright_variant }}
-              >
-                {buyerName}
-              </ThaiBoldText>
-            </ThaiRegText>
-          </View>
-          <View style={{ height: "70%", width: "100%" }}>
+        <View style={{ width: "70%" }}>
+          <View style={{ width: "100%" }}>
             <FlatList
-              style={{ flex: 1 }}
               data={sellerItemsForSell.getFlatListFormat(false)}
               keyExtractor={(item) => item.type + item.subtype}
               renderItem={({ item }) => {
@@ -134,14 +173,13 @@ const BuyerChoice = ({
                     }}
                   >
                     <ThaiRegText>
-                      {`ประเภท `}
                       <ThaiMdText
                         style={{
                           fontSize: 10,
                           color: Colors.primary_bright_variant,
                         }}
                       >
-                        {item.subtype}
+                        {wasteTypes[item.type][item.subtype]["name"]}
                       </ThaiMdText>
                       {purchaseList[item.type] == undefined ? (
                         <ThaiRegText
@@ -179,7 +217,6 @@ const BuyerChoice = ({
         <View
           style={{
             width: "30%",
-            height: "100%",
             justifyContent: "center",
             padding: 3,
           }}
@@ -188,7 +225,7 @@ const BuyerChoice = ({
             style={{
               ...styles.shadow,
               width: "100%",
-              height: "100%",
+              height: 100,
               borderRadius: 8,
               backgroundColor: Colors.soft_secondary,
               justifyContent: "space-around",
@@ -221,6 +258,7 @@ export default ChooseBuyerScreen = (props) => {
   const isOperationCompleted = useSelector(
     (state) => state.navigation.isOperationCompleted
   );
+  const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
   const checkIsOperationCompleted = () => {
     if (isOperationCompleted === true) {
       props.navigation.navigate("ShowSellerItemsScreen");
@@ -549,7 +587,7 @@ export default ChooseBuyerScreen = (props) => {
               refreshing={isRefreshing}
               renderItem={({ item }) => {
                 return (
-                  <BuyerChoice
+                  <BuyerCardForSell
                     sellerItemsForSell={sellerItemsForSell}
                     onSelected={() => {
                       buyerSelectHandler(
@@ -558,9 +596,11 @@ export default ChooseBuyerScreen = (props) => {
                         item.unavailableTypes
                       );
                     }}
+                    isFav={item.isFav}
                     selected={item.selected}
                     buyerName={item.id}
                     purchaseList={item.purchaseList}
+                    wasteTypes={wasteTypes}
                     totalPrice={item.totalPrice}
                   />
                 );
@@ -575,81 +615,69 @@ export default ChooseBuyerScreen = (props) => {
           )}
         </View>
 
-        <View
-          style={{
-            height: "20%",
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <CustomButton
+        {buyerChoiceState.haveEleSelected ? (
+          <View
             style={{
-              width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40,
+              height: "20%",
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
-            btnColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_soft_primary_dark.btnBackground
-                : Colors.button.disabled.btnBackground
-            }
-            onPress={
-              buyerChoiceState.haveEleSelected
-                ? () => goBuyerDetail(buyerInfomation.buyerName)
-                : null
-            }
-            btnTitleColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_soft_primary_dark.btnText
-                : Colors.button.disabled.btnText
-            }
-            btnTitleFontSize={14}
           >
-            <ThaiRegText
+            <CustomButton
               style={{
-                fontSize: 12,
+                width: "40%",
+                height: "100%",
+                borderRadius: 8,
+                maxHeight: 40,
               }}
+              btnColor={Colors.button.submit_soft_primary_dark.btnBackground}
+              onPress={() => goBuyerDetail(buyerInfomation.buyerName)}
+              btnTitleColor={Colors.button.submit_soft_primary_dark.btnText}
+              btnTitleFontSize={14}
             >
-              {`ดูรายละเอียดผู้รับซื้อ`}
-            </ThaiRegText>
-          </CustomButton>
+              <FontAwesome
+                name="search"
+                size={12}
+                color={Colors.button.submit_primary_bright.btnText}
+              />
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                {` ดูรายละเอียดผู้รับซื้อ`}
+              </ThaiRegText>
+            </CustomButton>
 
-          <CustomButton
-            style={{
-              width: "40%",
-              height: "100%",
-              borderRadius: 8,
-              maxHeight: 40,
-            }}
-            btnColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.button.disabled.btnBackground
-            }
-            onPress={
-              buyerChoiceState.haveEleSelected
-                ? () => setDatapickerShow(true)
-                : null
-            }
-            btnTitleColor={
-              buyerChoiceState.haveEleSelected
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.button.disabled.btnText
-            }
-            btnTitleFontSize={14}
-          >
-            <ThaiRegText
+            <CustomButton
               style={{
-                fontSize: 12,
+                width: "40%",
+                height: "100%",
+                borderRadius: 8,
+                maxHeight: 40,
               }}
+              btnColor={Colors.button.submit_primary_bright.btnBackground}
+              onPress={() => setDatapickerShow(true)}
+              btnTitleColor={Colors.button.submit_primary_bright.btnText}
+              btnTitleFontSize={14}
             >
-              {`เลือกวันที่`}
-            </ThaiRegText>
-          </CustomButton>
-        </View>
+              <FontAwesome
+                name="calendar-plus-o"
+                size={12}
+                color={Colors.button.submit_primary_bright.btnText}
+              />
+              <ThaiRegText
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                {` เลือกวันที่`}
+              </ThaiRegText>
+            </CustomButton>
+          </View>
+        ) : null}
       </LinearGradient>
     </KeyboardAvoidingView>
   );

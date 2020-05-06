@@ -4,7 +4,7 @@ import { StyleSheet, FlatList, View, ActivityIndicator } from "react-native";
 import { Dropdown } from "react-native-material-dropdown";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import AppVariableSetting from "../../constants/AppVariableSetting";
@@ -17,24 +17,25 @@ import * as transactionAction from "../../store/actions/transactionAction";
 import CustomStatusBar from "../../components/UI/CustomStatusBar";
 import { Header } from "react-navigation-stack";
 
-export default SellingTransactionScreen = props => {
+export default SellingTransactionScreen = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   // Get transactions for initially
   const transactionsDropdownFormat = useSelector(
-    state => state.transactions.transactionsDropdownFormat
+    (state) => state.transactions.transactionsDropdownFormat
   );
-  const userRole = useSelector(state => state.user.userRole);
+  const userRole = useSelector((state) => state.user.userRole);
 
   // For looking into transaction detail
-  const selectedHandler = transactionItem => {
+  const selectedHandler = (transactionItem) => {
     props.navigation.navigate({
       routeName: "SellingTransactionDetailScreen",
       params: {
-        transactionItem
-      }
+        transactionItem,
+        haveHeaderHight: true,
+      },
     });
   };
 
@@ -52,7 +53,7 @@ export default SellingTransactionScreen = props => {
     setIsLoading(true);
     refreshTx()
       .then(() => setIsLoading(false))
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         setError(err.message);
       });
@@ -64,16 +65,16 @@ export default SellingTransactionScreen = props => {
   );
   useEffect(() => {
     let txOld = transactionsDropdownFormat.filter(
-      txs => txs.value === txStatus
+      (txs) => txs.value === txStatus
     )[0];
     setTxShow(txOld.transactions.length > 0 ? txOld.transactions : []);
   }, [transactionsDropdownFormat]);
 
-  const onTxStatusDropdownChange = txStatus => {
+  const onTxStatusDropdownChange = (txStatus) => {
     setTxStatus(txStatus);
 
     targetDropdownSection = transactionsDropdownFormat.filter(
-      eachDropdownSection => eachDropdownSection.value === txStatus
+      (eachDropdownSection) => eachDropdownSection.value === txStatus
     )[0];
     setTxShow(targetDropdownSection.transactions);
   };
@@ -95,7 +96,7 @@ export default SellingTransactionScreen = props => {
           hp("100%") -
           AppVariableSetting.bottomBarHeight -
           Header.HEIGHT +
-          getStatusBarHeight()
+          getStatusBarHeight(),
       }}
     >
       <LinearGradient
@@ -104,7 +105,7 @@ export default SellingTransactionScreen = props => {
           width: "100%",
           height: "100%",
           alignSelf: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <View
@@ -112,41 +113,49 @@ export default SellingTransactionScreen = props => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
-            alignItems: "center"
+            backgroundColor: Colors.hard_secondary,
+            paddingVertical: 10,
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <View style={{ width: "20%" }}></View>
+          <View style={{ width: "50%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 26
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
               }}
             >
-              รายการการขายขยะของคุณ
+              รายการขายขยะของคุณ
             </ThaiBoldText>
           </View>
+          <View
+            style={{
+              width: "20%",
+            }}
+          />
         </View>
         <View
           style={{
             width: "100%",
             height: "20%",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <View
             style={{
               ...styles.firstDropdown,
               width: "60%",
-              height: 80
+              height: 80,
             }}
           >
             <Dropdown
               label="ประเภทของรายการ"
               value={txStatus}
               data={transactionsDropdownFormat} //Plastic, Glass --- [{value: Plastic}, {value: Glass},]
-              onChangeText={thisValue => {
+              onChangeText={(thisValue) => {
                 onTxStatusDropdownChange(thisValue);
               }}
               animationDuration={50}
@@ -158,7 +167,7 @@ export default SellingTransactionScreen = props => {
           style={{
             width: "100%",
             height: "70%",
-            paddingBottom: getStatusBarHeight() * 2
+            paddingBottom: getStatusBarHeight() * 2,
           }}
         >
           <FlatList

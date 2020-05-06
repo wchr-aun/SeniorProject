@@ -5,13 +5,13 @@ import {
   View,
   Text,
   SectionList,
-  TextInput
+  TextInput,
 } from "react-native";
 import { useSelector } from "react-redux";
 
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Header } from "react-navigation-stack";
@@ -30,10 +30,10 @@ import ThaiBoldText from "../../components/ThaiBoldText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default SearchQuicksellingScreen = props => {
+export default SearchQuicksellingScreen = (props) => {
   const dispatch = useDispatch();
-  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); // sure data is ready
-  const buyerAddr = useSelector(state => state.user.userProfile.addr);
+  const purchaseList = useSelector((state) => state.buyerInfo.purchaseList); // sure data is ready
+  const buyerAddr = useSelector((state) => state.user.userProfile.addr);
 
   useEffect(() => {
     if (purchaseList != undefined)
@@ -49,22 +49,22 @@ export default SearchQuicksellingScreen = props => {
       transactionAction.fetchQuickTransaction({
         distance: Number(distance),
         saleList: purchaseList.getObject(),
-        addr: buyerAddr
+        addr: buyerAddr,
       })
     );
     setIsRefreshing(false);
   }, [dispatch, buyerAddr]);
   const quickTransactions = useSelector(
-    state => state.transactions.quickTransactions
+    (state) => state.transactions.quickTransactions
   ); // sure data is ready
 
   // For looking into transaction detail
-  const selectedHandler = transactionItem => {
+  const selectedHandler = (transactionItem) => {
     props.navigation.navigate({
       routeName: "BuyingTransactionDetailScreen",
       params: {
-        transactionItem
-      }
+        transactionItem,
+      },
     });
   };
 
@@ -73,7 +73,9 @@ export default SearchQuicksellingScreen = props => {
       style={{
         width: wp("100%"),
         height:
-          hp("100%") - AppVariableSetting.bottomBarHeight + getStatusBarHeight()
+          hp("100%") -
+          AppVariableSetting.bottomBarHeight +
+          getStatusBarHeight(),
       }}
     >
       <CustomStatusBar />
@@ -81,19 +83,29 @@ export default SearchQuicksellingScreen = props => {
         style={{
           width: "100%",
           height: "10%",
-          backgroundColor: Colors.soft_primary_dark,
+          flexDirection: "row",
+          backgroundColor: Colors.hard_primary_dark,
+          paddingVertical: 10,
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "space-around",
         }}
       >
-        <ThaiBoldText
+        <View style={{ width: "20%" }} />
+        <View style={{ width: "50%", alignItems: "center" }}>
+          <ThaiBoldText
+            style={{
+              color: Colors.on_primary_dark.low_constrast,
+              fontSize: 18,
+            }}
+          >
+            คำขอขายขยะด่วน
+          </ThaiBoldText>
+        </View>
+        <View
           style={{
-            color: Colors.on_primary_dark.low_constrast,
-            fontSize: 26
+            width: "20%",
           }}
-        >
-          คำขอขายขยะด่วน
-        </ThaiBoldText>
+        />
       </View>
       <View
         style={{
@@ -102,7 +114,7 @@ export default SearchQuicksellingScreen = props => {
           justifyContent: "space-around",
           alignItems: "center",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark
+          backgroundColor: Colors.soft_primary_dark,
         }}
       >
         <View
@@ -111,13 +123,13 @@ export default SearchQuicksellingScreen = props => {
             height: "100%",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <ThaiRegText
             style={{
               fontSize: 12,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_primary_dark.low_constrast,
             }}
           >
             ค้นหาในระยะ{" "}
@@ -126,17 +138,17 @@ export default SearchQuicksellingScreen = props => {
             style={{
               fontSize: 14,
               textAlign: "center",
-              color: Colors.on_primary_dark.high_constrast
+              color: Colors.on_primary_dark.high_constrast,
             }}
             selectTextOnFocus={true}
             value={distance}
-            onChangeText={value => setDistance(value)}
+            onChangeText={(value) => setDistance(value)}
             keyboardType="number-pad"
           />
           <ThaiRegText
             style={{
               fontSize: 12,
-              color: Colors.on_primary_dark.low_constrast
+              color: Colors.on_primary_dark.low_constrast,
             }}
           >
             {" "}
@@ -148,7 +160,7 @@ export default SearchQuicksellingScreen = props => {
             width: "40%",
             height: "100%",
             borderRadius: 8,
-            maxHeight: 50
+            maxHeight: 50,
           }}
           btnColor={Colors.button.submit_primary_dark.btnBackground}
           btnTitleColor={Colors.button.submit_primary_dark.btnText}
@@ -162,7 +174,7 @@ export default SearchQuicksellingScreen = props => {
           />
           <ThaiRegText
             style={{
-              fontSize: 12
+              fontSize: 12,
             }}
           >
             {` ค้นหาคำขอใหม่`}
@@ -176,14 +188,14 @@ export default SearchQuicksellingScreen = props => {
           height: "80%",
           alignSelf: "center",
           alignItems: "center",
-          paddingVertical: 10
+          paddingVertical: 10,
         }}
       >
         <FlatList
           refreshing={isRefreshing}
           onRefresh={loadSeller}
           data={quickTransactions ? quickTransactions : []}
-          keyExtractor={item => item.txId}
+          keyExtractor={(item) => item.txId}
           renderItem={({ item }) => {
             return (
               <SellTransactionCard
