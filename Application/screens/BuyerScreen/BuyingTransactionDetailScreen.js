@@ -487,13 +487,13 @@ export default BuyingTransactionDetailScreen = (props) => {
       ) : null}
       <View
         style={{
-          height: "10%",
           width: "100%",
+          height: "10%",
           flexDirection: "row",
-          backgroundColor: Colors.soft_primary_dark,
+          backgroundColor: Colors.hard_primary_dark,
           paddingVertical: 10,
-          justifyContent: "space-around",
           alignItems: "center",
+          justifyContent: "space-around",
         }}
       >
         <CustomButton
@@ -518,7 +518,6 @@ export default BuyingTransactionDetailScreen = (props) => {
         <View
           style={{
             width: "50%",
-            height: "100%",
             alignItems: "center",
             justifyContent: "center",
           }}

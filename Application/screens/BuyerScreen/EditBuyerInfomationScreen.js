@@ -4,13 +4,13 @@ import {
   View,
   SectionList,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -25,7 +25,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default EditBuyerInfomationScreen = props => {
+export default EditBuyerInfomationScreen = (props) => {
   // initially fetch
   const dispatch = useDispatch();
 
@@ -33,14 +33,14 @@ export default EditBuyerInfomationScreen = props => {
 
   // ------------- DATA ------------- //
   const wasteListSectionFormat = useSelector(
-    state => state.buyerInfo.wasteListSectionFormat
+    (state) => state.buyerInfo.wasteListSectionFormat
   );
-  const purchaseList = useSelector(state => state.buyerInfo.purchaseList); // sure data is ready
-  const buyerUserInfo = useSelector(state => state.user.userProfile);
+  const purchaseList = useSelector((state) => state.buyerInfo.purchaseList); // sure data is ready
+  const buyerUserInfo = useSelector((state) => state.user.userProfile);
 
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [enableSearch, setEnableSearch] = useState(
-    useSelector(state => state.buyerInfo.enableSearch)
+    useSelector((state) => state.buyerInfo.enableSearch)
   );
 
   const toggleModeHandler = () => {
@@ -70,7 +70,7 @@ export default EditBuyerInfomationScreen = props => {
       <KeyboardAvoidingView
         style={{
           width: wp("100%"),
-          height: hp("100%") - AppVariableSetting.bottomBarHeight
+          height: hp("100%") - AppVariableSetting.bottomBarHeight,
         }}
         behavior="padding"
         keyboardVerticalOffset={0}
@@ -80,28 +80,93 @@ export default EditBuyerInfomationScreen = props => {
             width: "100%",
             height: "10%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
-            paddingVertical: 5,
-            alignItems: "center"
+            backgroundColor: Colors.hard_primary_dark,
+            paddingVertical: 10,
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <CustomButton
+            onPress={
+              isEditingMode
+                ? () => setEnableSearch((preState) => !preState)
+                : null
+            }
+            style={{
+              width: "20%",
+              maxHeight: 50,
+              borderRadius: 5,
+            }}
+            btnColor={
+              enableSearch
+                ? Colors.button.submit_primary_bright.btnBackground
+                : Colors.soft_primary_dark
+            }
+            btnTitleColor={
+              enableSearch
+                ? Colors.button.submit_primary_bright.btnText
+                : Colors.primary_dark
+            }
+            btnTitleFontSize={10}
+          >
+            {isEditingMode ? (
+              <MaterialIcons
+                name={enableSearch ? "check-box" : "check-box-outline-blank"}
+                size={14}
+              />
+            ) : null}
+            <ThaiBoldText
+              style={{
+                fontSize: 14,
+              }}
+            >
+              {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
+            </ThaiBoldText>
+          </CustomButton>
+          <View style={{ alignItems: "center", width: "50%" }}>
             <ThaiBoldText
               style={{
                 color: Colors.on_primary_dark.low_constrast,
-                fontSize: 20
+                fontSize: 18,
               }}
             >
-              กำหนดราคารับซื้อขยะของคุณ
+              กำหนดราคารับซื้อขยะ
             </ThaiBoldText>
           </View>
+          <CustomButton
+            style={{
+              width: "20%",
+              maxHeight: 50,
+              marginHorizontal: 5,
+              borderRadius: 5,
+              borderColor: isEditingMode
+                ? Colors.button.start_operation_info.btnText
+                : Colors.button.finish_operation_info.btnText,
+              borderWidth: 0.75,
+            }}
+            onPress={toggleModeHandler}
+            btnColor={
+              isEditingMode
+                ? Colors.button.start_operation_info.btnBackground
+                : Colors.button.finish_operation_info.btnBackground
+            }
+            btnTitleColor={
+              isEditingMode
+                ? Colors.button.start_operation_info.btnText
+                : Colors.button.finish_operation_info.btnText
+            }
+            btnTitleFontSize={10}
+          >
+            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขข้อมูล"}
+          </CustomButton>
         </View>
+
         <View
           style={{
             width: "100%",
-            height: "80%",
+            height: "90%",
             paddingHorizontal: 10,
-            paddingBottom: getStatusBarHeight()
+            paddingBottom: getStatusBarHeight(),
           }}
         >
           <SectionList
@@ -145,7 +210,7 @@ export default EditBuyerInfomationScreen = props => {
                     borderBottomColor: Colors.hard_secondary,
                     borderBottomWidth: 0.75,
                     marginBottom: 2,
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                 >
                   <View
@@ -154,14 +219,14 @@ export default EditBuyerInfomationScreen = props => {
                       height: "50%",
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <View style={{ width: "50%" }}>
                       <ThaiRegText
                         style={{
                           fontSize: 15,
-                          color: Colors.soft_primary_bright
+                          color: Colors.soft_primary_bright,
                         }}
                       >
                         {subtypeName}
@@ -170,7 +235,7 @@ export default EditBuyerInfomationScreen = props => {
                     <View
                       style={{
                         width: "50%",
-                        flexDirection: "row"
+                        flexDirection: "row",
                       }}
                     >
                       <View
@@ -180,7 +245,7 @@ export default EditBuyerInfomationScreen = props => {
                           borderRadius: 3,
                           borderColor: Colors.soft_secondary,
                           backgroundColor: Colors.soft_secondary,
-                          alignItems: "center"
+                          alignItems: "center",
                         }}
                       >
                         {!isEditingMode ? (
@@ -194,7 +259,7 @@ export default EditBuyerInfomationScreen = props => {
                             placeholder={price.toString()}
                             clearTextOnFocus={true}
                             selectTextOnFocus={true}
-                            onChangeText={price => {
+                            onChangeText={(price) => {
                               dispatch(
                                 buyerAction.editPurchaseList(
                                   type,
@@ -209,7 +274,7 @@ export default EditBuyerInfomationScreen = props => {
                                 ? Colors.primary_bright
                                 : "black",
                               textAlign: "center",
-                              fontSize: 15
+                              fontSize: 15,
                             }}
                           />
                         )}
@@ -234,7 +299,7 @@ export default EditBuyerInfomationScreen = props => {
             }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             height: "10%",
             width: "100%",
@@ -242,20 +307,21 @@ export default EditBuyerInfomationScreen = props => {
             justifyContent: "space-around",
             alignItems: "center",
             paddingHorizontal: 5,
-            backgroundColor: Colors.hard_primary_dark
+            backgroundColor: Colors.hard_primary_dark,
+            paddingBottom: getStatusBarHeight(),
           }}
         >
           <CustomButton
             onPress={
               isEditingMode
-                ? () => setEnableSearch(preState => !preState)
+                ? () => setEnableSearch((preState) => !preState)
                 : null
             }
             style={{
               width: "50%",
               height: "80%",
               maxHeight: 50,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             btnColor={
               enableSearch
@@ -277,7 +343,7 @@ export default EditBuyerInfomationScreen = props => {
             ) : null}
             <ThaiBoldText
               style={{
-                fontSize: 14
+                fontSize: 14,
               }}
             >
               {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
@@ -293,7 +359,7 @@ export default EditBuyerInfomationScreen = props => {
               borderColor: isEditingMode
                 ? Colors.button.start_operation_info.btnText
                 : Colors.button.finish_operation_info.btnText,
-              borderWidth: 0.75
+              borderWidth: 0.75,
             }}
             onPress={toggleModeHandler}
             btnColor={
@@ -310,25 +376,8 @@ export default EditBuyerInfomationScreen = props => {
           >
             {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขข้อมูล"}
           </CustomButton>
-        </View>
+        </View> */}
       </KeyboardAvoidingView>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 16
-  },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8
-  },
-  header: {
-    fontSize: 32
-  },
-  title: {
-    fontSize: 24
-  }
-});
