@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { View, Image, Modal, TextInput } from "react-native";
+import { View, Modal, TextInput, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
 import ThaiMdText from "../components/ThaiMdText";
 
 import CustomButton from "../components/UI/CustomButton";
-
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import ThaiBoldText from "./ThaiBoldText";
 
 export default ModalNewComment = ({
   modalVisible,
@@ -17,22 +16,6 @@ export default ModalNewComment = ({
   rating,
   onSubmit,
 }) => {
-  // const [rating, setRating] = useState("0");
-  // const [comment, setComment] = useState("");
-
-  // const sendCommentHandler = async () => {
-
-  //   const review = {
-  //     rating: Number(rating),
-  //     comment,
-  //     seller,
-  //   };
-
-  //   console.log("review");
-  //   console.log(review);
-  //   await addNewComment(review);
-  // };
-
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <View
@@ -71,24 +54,159 @@ export default ModalNewComment = ({
               justifyContent: "center",
             }}
           >
-            <View style={{ marginHorizontal: 3 }}>
-              <TextInput
+            <TouchableOpacity
+              onPress={() => setRating("1")}
+              style={{ width: 50, height: 50, marginHorizontal: 2 }}
+            >
+              <View
                 style={{
-                  fontSize: 24,
-                  textAlign: "center",
-                  color: Colors.on_primary_bright.low_constrast,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "1" === rating
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
                 }}
-                value={rating}
-                selectTextOnFocus={true}
-                onChangeText={(value) => {
-                  setRating(value.toString());
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 15,
+                    color:
+                      "1" === rating
+                        ? Colors.on_primary_bright.high_constrast
+                        : Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  1
+                </ThaiBoldText>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setRating("2")}
+              style={{ width: 50, height: 50, marginHorizontal: 2 }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "2" === rating
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
                 }}
-                keyboardType="number-pad"
-              />
-            </View>
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 15,
+                    color:
+                      "2" === rating
+                        ? Colors.on_primary_bright.high_constrast
+                        : Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  2
+                </ThaiBoldText>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setRating("3")}
+              style={{ width: 50, height: 50, marginHorizontal: 2 }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "3" === rating
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                }}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 15,
+                    color:
+                      "3" === rating
+                        ? Colors.on_primary_bright.high_constrast
+                        : Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  3
+                </ThaiBoldText>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setRating("4")}
+              style={{ width: 50, height: 50, marginHorizontal: 2 }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "4" === rating
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                }}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 15,
+                    color:
+                      "4" === rating
+                        ? Colors.on_primary_bright.high_constrast
+                        : Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  4
+                </ThaiBoldText>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setRating("5")}
+              style={{ width: 50, height: 50, marginHorizontal: 2 }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "5" === rating
+                      ? Colors.primary_bright
+                      : Colors.soft_primary_dark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                }}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 15,
+                    color:
+                      "5" === rating
+                        ? Colors.on_primary_bright.high_constrast
+                        : Colors.on_primary_dark.low_constrast,
+                  }}
+                >
+                  5
+                </ThaiBoldText>
+              </View>
+            </TouchableOpacity>
           </View>
 
-          <View style={{ height: 50, padding: 5 }}>
+          <View style={{ height: 50, padding: 5, marginTop: 5 }}>
             <ThaiMdText
               style={{
                 fontSize: 16,
@@ -104,7 +222,7 @@ export default ModalNewComment = ({
             style={{
               flexDirection: "row",
               padding: 10,
-              margin: 10,
+              marginHorizontal: 10,
               justifyContent: "center",
               borderWidth: 2,
               borderRadius: 5,

@@ -521,8 +521,17 @@ export const searchBuyer = async (uid) => {
     .doc(uid)
     .get()
     .then((doc) => {
-      if (doc.exists) return { txId: doc.id, detail: doc.data() };
-      else return "No such users";
+      // if (doc.exists) return { txId: doc.id, detail: doc.data() };
+      if (doc.exists) {
+        // console.log(doc.data().review[0].timestamp.seconds);
+        const sorted_comments = doc.data().review.sort((a, b) => {
+          return b.timestamp.seconds - a.timestamp.seconds;
+        });
+        return {
+          txId: doc.id,
+          detail: { ...doc.data(), review: sorted_comments },
+        };
+      } else return "No such users";
     })
     .catch((err) => {
       console.log("can't searchBuyer");

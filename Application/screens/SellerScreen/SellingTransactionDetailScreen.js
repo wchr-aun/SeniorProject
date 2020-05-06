@@ -121,9 +121,11 @@ export default SellingTransactionDetailScreen = (props) => {
       buyer: transactionItem.detail.buyer,
     };
 
+    setIsInOperation(true);
     await addNewComment(review);
     setIsModalNewCommentVisible(false);
     setIsFinishComment(true);
+    setIsInOperation(false);
   };
 
   const [saleList, setSetList] = useState(
