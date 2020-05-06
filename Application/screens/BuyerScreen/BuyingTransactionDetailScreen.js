@@ -24,7 +24,6 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   Ionicons,
-  FontAwesome,
 } from "@expo/vector-icons";
 import ThaiBoldText from "../../components/ThaiBoldText";
 import {
@@ -243,6 +242,7 @@ export default BuyingTransactionDetailScreen = (props) => {
     setIsLoading(false);
   }, []);
 
+  const wasteTypes = useSelector((state) => state.wasteType.wasteTypes);
   const [saleList, setSetList] = useState(
     new Wastes(transactionItem.detail.saleList).getFlatListFormat(true)
   );
@@ -657,6 +657,7 @@ export default BuyingTransactionDetailScreen = (props) => {
               style={{
                 fontSize: 12,
                 color: Colors.on_primary_dark.low_constrast,
+                textAlign: "left",
               }}
             >
               {transactionItem.detail.txStatus === 0
@@ -712,9 +713,9 @@ export default BuyingTransactionDetailScreen = (props) => {
       </View>
       <View
         style={{
-          width: "100%",
+          width: "90%",
           height: "15%",
-          paddingHorizontal: 10,
+          alignSelf: "center",
         }}
       >
         <View
@@ -823,6 +824,7 @@ export default BuyingTransactionDetailScreen = (props) => {
           height: "5%",
           padding: 2,
           paddingHorizontal: 10,
+          justifyContent: "center",
         }}
       >
         <ThaiMdText
@@ -833,71 +835,63 @@ export default BuyingTransactionDetailScreen = (props) => {
       </View>
       <View
         style={{
-          width: "100%",
-          height: "15%",
-          paddingHorizontal: 10,
+          width: "90%",
+          maxHeight: "15%",
+          borderRadius: 5,
+          backgroundColor: Colors.soft_primary_dark,
+          paddingVertical: 5,
+          alignSelf: "center",
+          ...styles.shadow,
         }}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: Colors.soft_primary_dark,
-            borderRadius: 5,
-            paddingVertical: 10,
-          }}
-        >
-          <FlatList
-            data={saleList}
-            keyExtractor={(item) => item.subtype}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => {
-              return (
+        <FlatList
+          data={saleList}
+          keyExtractor={(item) => item.subtype}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 30,
+                  padding: 3,
+                  alignSelf: "center",
+                  flexDirection: "row",
+                }}
+              >
                 <View
                   style={{
-                    height: 30,
-                    padding: 3,
-                    alignSelf: "center",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
                     flexDirection: "row",
+                    justifyContent: "space-around",
                   }}
                 >
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      alignItems: "center",
-                    }}
-                  >
+                  <View style={{ width: "40%" }}>
                     <ThaiRegText
-                      style={{ fontSize: 18, color: Colors.soft_secondary }}
+                      style={{
+                        fontSize: 18,
+                        color: Colors.on_primary_dark.low_constrast,
+                      }}
                     >
-                      <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.soft_secondary }}
-                      >
-                        {item.type}
-                      </ThaiMdText>
-                      {` ประเภท `}
-                      <ThaiMdText
-                        style={{ fontSize: 18, color: Colors.soft_secondary }}
-                      >
-                        {item.subtype}
-                      </ThaiMdText>
-                      {` จำนวน `}
-                      <ThaiMdText
-                        style={{
-                          fontSize: 18,
-                          color: Colors.primary_bright_variant,
-                        }}
-                      >
-                        {item.amount.amount}
-                      </ThaiMdText>
+                      {`${wasteTypes[item.type][item.subtype]["name"]}`}
+                    </ThaiRegText>
+                  </View>
+                  <View style={{ width: "40%" }}>
+                    <ThaiRegText
+                      style={{
+                        fontSize: 18,
+                        color: Colors.on_primary_dark.low_constrast,
+                        textAlign: "right",
+                      }}
+                    >
+                      {`จำนวน ${item.amount.amount}`}
                     </ThaiRegText>
                   </View>
                 </View>
-              );
-            }}
-          />
-        </View>
+              </View>
+            );
+          }}
+        />
       </View>
       <View
         style={{
@@ -905,6 +899,7 @@ export default BuyingTransactionDetailScreen = (props) => {
           height: "5%",
           padding: 2,
           paddingHorizontal: 10,
+          justifyContent: "center",
         }}
       >
         <ThaiMdText

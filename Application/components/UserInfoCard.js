@@ -38,9 +38,10 @@ export default UserInfoCard = (props) => {
             style={{
               flex: 1,
               backgroundColor:
-                props.userRole === "seller" ? "#ffffff" : Colors.primary_dark,
-              borderBottomRightRadius: 4,
-              borderBottomLeftRadius: 4,
+                props.userRole === "seller"
+                  ? "#ffffff"
+                  : Colors.soft_primary_dark,
+              borderRadius: 4,
               overflow: "hidden",
               ...styles.shadow,
             }}

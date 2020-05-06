@@ -161,108 +161,114 @@ export default UserAuthenScreen = (props) => {
             style={{ flex: 1 }}
           >
             <ScrollView keyboardShouldPersistTaps="handled">
-              {signupBeforeSignin ? (
-                <View>
-                  <Text style={{ color: "green" }}>
-                    Great! Your account has been created.
-                  </Text>
-                </View>
-              ) : null}
+              <View style={{ flex: 1, justifyContent: "space-around" }}>
+                {signupBeforeSignin ? (
+                  <View>
+                    <Text style={{ color: "green" }}>
+                      Great! Your account has been created.
+                    </Text>
+                  </View>
+                ) : null}
 
-              <Input
-                editable={true}
-                id="email"
-                label="อีเมล"
-                keyboardType="email-address"
-                required
-                email
-                autoCapitalize="none"
-                errorText="Please enter a valid email address."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-                iconName="email"
-              />
-              <Input
-                editable={true}
-                id="password"
-                label="รหัสผ่าน"
-                keyboardType="default"
-                secureTextEntry
-                required
-                minLength={5}
-                autoCapitalize="none"
-                errorText="Please enter a valid password."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-                iconName="key-variant"
-              />
-              <View
-                style={{
-                  ...styles.buttonContainer,
-                  marginTop: hp("8%"),
-                  alignItems: "center",
-                }}
-              >
-                {isLoading ? (
-                  <ActivityIndicator
-                    size="small"
-                    color={Colors.on_primary_bright.high_constrast}
-                  />
-                ) : (
+                <Input
+                  editable={true}
+                  id="email"
+                  label="อีเมล"
+                  keyboardType="email-address"
+                  required
+                  email
+                  autoCapitalize="none"
+                  errorText="Please enter a valid email address."
+                  onInputChange={inputChangeHandler}
+                  initialValue=""
+                  iconName="email"
+                />
+                <Input
+                  editable={true}
+                  id="password"
+                  label="รหัสผ่าน"
+                  keyboardType="default"
+                  secureTextEntry
+                  required
+                  minLength={5}
+                  autoCapitalize="none"
+                  errorText="Please enter a valid password."
+                  onInputChange={inputChangeHandler}
+                  initialValue=""
+                  iconName="key-variant"
+                />
+                <View
+                  style={{
+                    ...styles.buttonContainer,
+                    marginTop: hp("8%"),
+                    alignItems: "center",
+                  }}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      color={Colors.on_primary_bright.high_constrast}
+                    />
+                  ) : (
+                    <CustomButton
+                      style={{
+                        width: wp("40%"),
+                        height: hp("6%"),
+                        borderRadius: 10,
+                        margin: wp("1.25%"),
+                      }}
+                      onPress={() => {
+                        authHandler();
+                      }}
+                      btnColor={
+                        Colors.button.submit_primary_bright.btnBackground
+                      }
+                      btnTitleColor={
+                        Colors.button.submit_primary_bright.btnText
+                      }
+                      btnTitleFontSize={14}
+                    >
+                      ลงชื่อเข้าใช้
+                    </CustomButton>
+                  )}
+
+                  <View
+                    style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}
+                  >
+                    <ThaiRegText
+                      style={{
+                        color: Colors.primary,
+                        fontSize: 10,
+                      }}
+                    >
+                      หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
+                    </ThaiRegText>
+                  </View>
+
                   <CustomButton
                     style={{
                       width: wp("40%"),
                       height: hp("6%"),
                       borderRadius: 10,
                       margin: wp("1.25%"),
+                      borderWidth: 1,
+                      borderColor: Colors.button.submit_primary_dark.btnText,
                     }}
                     onPress={() => {
-                      authHandler();
+                      props.navigation.navigate("UserSignupScreen");
                     }}
-                    btnColor={Colors.button.submit_primary_bright.btnBackground}
-                    btnTitleColor={Colors.button.submit_primary_bright.btnText}
+                    btnColor={Colors.button.submit_primary_dark.btnBackground}
+                    btnTitleColor={Colors.button.submit_primary_dark.btnText}
                     btnTitleFontSize={14}
                   >
-                    ลงชื่อเข้าใช้
+                    ลงทะเบียน{" "}
+                    <MaterialCommunityIcons
+                      name="account-plus"
+                      size={14}
+                      color={Colors.button.submit_primary_dark.btnText}
+                    />
                   </CustomButton>
-                )}
-
-                <View
-                  style={{ marginTop: hp("1.75%"), marginTop: hp("1.25%") }}
-                >
-                  <ThaiRegText
-                    style={{
-                      color: Colors.primary,
-                      fontSize: 10,
-                    }}
-                  >
-                    หรือ "ลงทะเบียน" หากว่ายังไม่มีบัญชีในระบบ
-                  </ThaiRegText>
                 </View>
-
-                <CustomButton
-                  style={{
-                    width: wp("40%"),
-                    height: hp("6%"),
-                    borderRadius: 10,
-                    margin: wp("1.25%"),
-                    borderWidth: 1,
-                    borderColor: Colors.button.submit_primary_dark.btnText,
-                  }}
-                  onPress={() => {
-                    props.navigation.navigate("UserSignupScreen");
-                  }}
-                  btnColor={Colors.button.submit_primary_dark.btnBackground}
-                  btnTitleColor={Colors.button.submit_primary_dark.btnText}
-                  btnTitleFontSize={14}
-                >
-                  ลงทะเบียน{" "}
-                  <MaterialCommunityIcons
-                    name="account-plus"
-                    size={14}
-                    color={Colors.button.submit_primary_dark.btnText}
-                  />
-                </CustomButton>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
