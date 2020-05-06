@@ -325,6 +325,7 @@ export default BuyingTransactionDetailScreen = (props) => {
       props.navigation.goBack();
     } catch (err) {
       Alert.alert("เกิดปัญหาบางอย่าง!", err.message, [{ text: "OK" }]);
+      setIsInOperation(false);
     }
   };
 
@@ -457,14 +458,14 @@ export default BuyingTransactionDetailScreen = (props) => {
         visible={confirmCancleVisible}
         onTouchOutside={() => setConfirmCancleVisible(false)}
         positiveButton={{
-          title: "ลบ",
+          title: "ยกเลิก",
           onPress: () => {
             cancelHandler();
             setConfirmCancleVisible(false);
           },
         }}
         negativeButton={{
-          title: "ยกเลิก",
+          title: "ยังก่อน",
           onPress: () => {
             setConfirmCancleVisible(false);
           },
