@@ -4,11 +4,11 @@ import {
   GET_BUYER_LIST,
   FETCH_SELLER_ITEMS,
   SET_SELLERITEMS,
-  CLEAR_SELLERITEMSCAMERA
+  CLEAR_SELLERITEMSCAMERA,
 } from "../actions/sellerItemsAction";
 import {
   GET_PREDICTION,
-  CONFIRM_SELLERITEMSCAMERA
+  CONFIRM_SELLERITEMSCAMERA,
 } from "../actions/imageAction";
 import { LOGOUT } from "../actions/authAction";
 
@@ -20,10 +20,10 @@ const initialState = {
   sellerItemsCameraObj: {},
   buyerList: [],
   buyerInfomation: "",
-  assignedTime: ""
+  assignedTime: "",
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   let sellerItemsForSellCloned = "";
   switch (action.type) {
     case SET_SELLERITEMS:
@@ -32,10 +32,10 @@ export default function(state = initialState, action) {
         ...state,
         sellerItems: action.sellerItems,
         sellerItemsForSell: action.sellerItemsForSell,
-        sellerItemsFlatListFormat: action.sellerItemsFlatListFormat
+        sellerItemsFlatListFormat: action.sellerItemsFlatListFormat,
       };
     case GET_PREDICTION:
-      console.log("GET_PREDICTION");
+      console.log("GET_PREDICTION Redux SellerItem Reducer execute");
 
       let foundedSubtype = [];
       let sellerItemsFromCamera = [];
@@ -45,7 +45,7 @@ export default function(state = initialState, action) {
           // already pushed
           let targetIndex = sellerItemsFromCamera.indexOf(
             sellerItemsFromCamera.filter(
-              waste => waste.subtype === item.class
+              (waste) => waste.subtype === item.class
             )[0]
           );
           sellerItemsFromCamera[targetIndex].amount += 1;
@@ -63,7 +63,7 @@ export default function(state = initialState, action) {
           sellerItemsFromCamera.push({
             subtype: item.class,
             amount: 1,
-            type: majortype
+            type: majortype,
           });
           // obj
           if (sellerItemsCameraObj[majortype] == undefined) {
@@ -76,18 +76,18 @@ export default function(state = initialState, action) {
       return {
         ...state,
         sellerItemsCamera: [...sellerItemsFromCamera],
-        sellerItemsCameraObj: sellerItemsCameraObj
+        sellerItemsCameraObj: sellerItemsCameraObj,
       };
     case CONFIRM_SELLERITEMSCAMERA:
       console.log("CONFIRM_CAMERA Reducer Run");
       return {
         ...state,
-        sellerItemsCameraObj: action.sellerItemsCameraObj
+        sellerItemsCameraObj: action.sellerItemsCameraObj,
       };
     case CLEAR_SELLERITEMSCAMERA:
       return {
         ...state,
-        sellerItemsCameraObj: {}
+        sellerItemsCameraObj: {},
       };
     case SET_WASTE_FOR_SELL:
       console.log("SET_WASTE_FOR_SELL Reducer Run");
@@ -101,8 +101,8 @@ export default function(state = initialState, action) {
         ...state,
         sellerItemsForSell: sellerItemsForSellCloned,
         sellerItemsFlatListFormat: [
-          ...sellerItemsForSellCloned.getFlatListFormat(true)
-        ]
+          ...sellerItemsForSellCloned.getFlatListFormat(true),
+        ],
       };
     case SELLED_SELLERITEMS:
       console.log("CHOOSEBUYER_SELL Reducer Run");
@@ -133,13 +133,13 @@ export default function(state = initialState, action) {
         ...state,
         sellerItems: sellerItemsCloned,
         sellerItemsForSell: sellerItemsForSellCloned,
-        sellerItemsFlatListFormat: sellerItemsCloned.getFlatListFormat(true)
+        sellerItemsFlatListFormat: sellerItemsCloned.getFlatListFormat(true),
       };
     case GET_BUYER_LIST:
       console.log("GET_BUYER_LIST Reducer Run");
       return {
         ...state,
-        buyerList: [...action.buyerList]
+        buyerList: [...action.buyerList],
       };
     case LOGOUT:
       return initialState;

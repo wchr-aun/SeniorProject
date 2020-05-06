@@ -17,16 +17,20 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import ModalLoading from "../../components/ModalLoading";
 import TrashCard from "../../components/TrashCard";
 import { GET_PREDICTION } from "../../store/actions/imageAction";
+import ThaiMdText from "../../components/ThaiMdText";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
 const MINUS_SELLERITEMS_AMOUNT = "MINUS_SELLERITEMS_AMOUNT";
+const RESET = "RESET";
 const sellerItemsCameraReducer = (state, action) => {
   let targetIndex = "";
   let updatedSellerItemsCamera = [...state.sellerItemsCamera];
   let updatedSellerItemsCameraObj = { ...state.sellerItemsCameraObj };
   switch (action.type) {
     case SET_LOCAL_SELLERITEMS:
+      console.log("From file OptionTrashCheck action");
+      console.log(action);
       return {
         ...state,
         sellerItemsCamera: [...action.sellerItemsCamera],
@@ -67,6 +71,11 @@ const sellerItemsCameraReducer = (state, action) => {
         ...state,
         updatedSellerItemsCamera,
         updatedSellerItemsCameraObj,
+      };
+    case RESET:
+      return {
+        sellerItemsCamera: [],
+        sellerItemsCameraObj: {},
       };
     default:
       return { ...state };
@@ -112,32 +121,32 @@ export default OptionTrashCheck = (props) => {
   // use the picked image for prediction process
   const getPredictionHandler = async () => {
     setIsInOperation(true);
-
-    await libary
-      .timeout(10000, libary.getPrediction(pickedImage))
-      .then(function (result) {
-        // process response
-        dispatch({
-          type: GET_PREDICTION,
-          results,
-          wasteTypesDB,
-        });
-        return result;
-      })
-      .catch(function (error) {
-        // might be a timeout error
-        Alert.alert(
-          "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
-          "ไม่สามารถติดต่อกับ Server ได้",
-          [{ text: "OK" }]
-        );
-        setPickedImage("");
+    const result = await libary.getPrediction(pickedImage, 5000);
+    if (result) {
+      dispatch({
+        type: GET_PREDICTION,
+        results: result,
+        wasteTypesDB,
       });
+    } else {
+      Alert.alert(
+        "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
+        "ไม่สามารถติดต่อกับ Server ได้",
+        [{ text: "OK" }]
+      );
+      setPickedImage("");
+    }
     setIsInOperation(false);
+  };
+
+  const reset = () => {
+    setPickedImage("");
+    dispatchSellerItemsState({ type: RESET });
   };
 
   const confirmHandler = () => {
     dispatch(imgActions.confirmSellerItemsCamera(sellerItemsCameraObj));
+    reset();
     props.navigation.navigate("ShowSellerItemsScreen");
   };
 
@@ -192,17 +201,24 @@ export default OptionTrashCheck = (props) => {
           pickedImage={pickedImage}
           onClick={takeImageHandler}
         />
-        <View style={{ width: "100%", height: "5%", padding: 10 }}>
-          <ThaiBoldText
+        <View
+          style={{
+            width: "100%",
+            height: "5%",
+            padding: 10,
+            margin: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ThaiMdText
             style={{
-              color:
-                sellerItemsCamera.length > 0
-                  ? Colors.primary_bright
-                  : Colors.secondary,
+              color: Colors.hard_primary_dark,
+              fontSize: 15,
             }}
           >
             ยืนยันจำนวนขยะที่ถ่าย
-          </ThaiBoldText>
+          </ThaiMdText>
         </View>
         <View
           style={{
@@ -286,7 +302,7 @@ export default OptionTrashCheck = (props) => {
             </CustomButton>
           ) : null}
 
-          {sellerItemsCamera.length > 0 ? (
+          {sellerItemsState.sellerItemsCamera.length > 0 ? (
             <CustomButton
               style={{
                 width: "40%",

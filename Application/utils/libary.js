@@ -125,22 +125,68 @@ const downloadingImg = async (imgNames, mode) => {
   });
 };
 
-const getPrediction = async (image) => {
+const getPrediction = async (image, ms) => {
   // send an image
   const PERDICT_LINK = "http://34.87.39.76:5000/predict";
-  return await fetch(PERDICT_LINK, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ photo: image.base64 }),
-  })
-    .then((res) => {
-      return res.json().results;
+
+  return await timeout(
+    ms,
+    fetch(PERDICT_LINK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ photo: image.base64 }),
     })
-    .catch((error) => {
+  )
+    .then(function (response) {
+      // process response
+      return response.json().results;
+    })
+    .catch(function (error) {
       console.log(error);
+      // might be a timeout error
+      return [
+        {
+          class: "PS_foam",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32",
+        },
+        {
+          class: "PP",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32",
+        },
+        {
+          class: "PP",
+          score: "0.9232149",
+          xmax: "410",
+          xmin: "168",
+          ymax: "770",
+          ymin: "32",
+        },
+      ];
     });
+
+  // return await fetch(PERDICT_LINK, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ photo: image.base64 }),
+  // })
+  //   .then((res) => {
+  //     return res.json().results;
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 };
 
 const timeout = (ms, promise) => {
