@@ -29,8 +29,6 @@ const sellerItemsCameraReducer = (state, action) => {
   let updatedSellerItemsCameraObj = { ...state.sellerItemsCameraObj };
   switch (action.type) {
     case SET_LOCAL_SELLERITEMS:
-      console.log("From file OptionTrashCheck action");
-      console.log(action);
       return {
         ...state,
         sellerItemsCamera: [...action.sellerItemsCamera],
@@ -47,11 +45,12 @@ const sellerItemsCameraReducer = (state, action) => {
       updatedSellerItemsCamera[targetIndex].amount += 1;
       // updated Payload
       updatedSellerItemsCameraObj[action.majortype][action.subtype] += 1;
-      console.log(updatedSellerItemsCameraObj);
       return {
         ...state,
         updatedSellerItemsCamera,
         updatedSellerItemsCameraObj,
+        sellerItemsCamera: updatedSellerItemsCamera,
+        sellerItemsCameraObj: updatedSellerItemsCameraObj,
       };
     case MINUS_SELLERITEMS_AMOUNT:
       //find that element
@@ -65,12 +64,13 @@ const sellerItemsCameraReducer = (state, action) => {
         updatedSellerItemsCamera[targetIndex].amount -= 1;
         updatedSellerItemsCameraObj[action.majortype][action.subtype] -= 1;
       }
-      console.log(updatedSellerItemsCameraObj);
 
       return {
         ...state,
         updatedSellerItemsCamera,
         updatedSellerItemsCameraObj,
+        sellerItemsCamera: updatedSellerItemsCamera,
+        sellerItemsCameraObj: updatedSellerItemsCameraObj,
       };
     case RESET:
       return {
@@ -121,17 +121,20 @@ export default OptionTrashCheck = (props) => {
   // use the picked image for prediction process
   const getPredictionHandler = async () => {
     setIsInOperation(true);
-    const result = await libary.getPrediction(pickedImage, 5000);
-    if (result) {
-      dispatch({
-        type: GET_PREDICTION,
-        results: result,
-        wasteTypesDB,
-      });
-    } else {
+    try {
+      const res = await libary.getPrediction(pickedImage, 10000);
+      if (res.results) {
+        dispatch({
+          type: GET_PREDICTION,
+          results: res.results,
+          wasteTypesDB,
+        });
+      }
+    } catch (error) {
       Alert.alert(
         "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
-        "ไม่สามารถติดต่อกับ Server ได้",
+        // "ไม่สามารถติดต่อกับ Server ได้",
+        error,
         [{ text: "OK" }]
       );
       setPickedImage("");
@@ -201,25 +204,28 @@ export default OptionTrashCheck = (props) => {
           pickedImage={pickedImage}
           onClick={takeImageHandler}
         />
-        <View
-          style={{
-            width: "100%",
-            height: "5%",
-            padding: 10,
-            margin: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ThaiMdText
+        {sellerItemsState.sellerItemsCamera.length > 0 ? (
+          <View
             style={{
-              color: Colors.hard_primary_dark,
-              fontSize: 15,
+              width: "100%",
+              height: "5%",
+              padding: 10,
+              margin: 10,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            ยืนยันจำนวนขยะที่ถ่าย
-          </ThaiMdText>
-        </View>
+            <ThaiMdText
+              style={{
+                color: Colors.hard_primary_dark,
+                fontSize: 15,
+              }}
+            >
+              ยืนยันจำนวนขยะที่ถ่าย
+            </ThaiMdText>
+          </View>
+        ) : null}
+
         <View
           style={{
             width: "100%",
@@ -233,9 +239,6 @@ export default OptionTrashCheck = (props) => {
                 ? sellerItemsState.sellerItemsCamera
                 : []
             }
-            style={{
-              flex: 1,
-            }}
             keyExtractor={(item) => item.subtype}
             renderItem={({ item }) => {
               return (
