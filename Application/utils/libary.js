@@ -125,22 +125,41 @@ const downloadingImg = async (imgNames, mode) => {
   });
 };
 
-const getPrediction = async (image) => {
+const getPrediction = async (image, ms) => {
   // send an image
-  const PERDICT_LINK = "http://34.87.39.76:5000/predict";
-  return await fetch(PERDICT_LINK, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ photo: image.base64 }),
-  })
-    .then((res) => {
-      return res.json().results;
+  const PERDICT_LINK = "http://34.87.5.99:5000/predict";
+
+  return await timeout(
+    ms,
+    fetch(PERDICT_LINK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ photo: image.base64 }),
     })
-    .catch((error) => {
+  )
+    .then(function (response) {
+      // process response
+      return response.json();
+    })
+    .catch(function (error) {
       console.log(error);
+      // might be a timeout error
+      throw new Error(error.message);
     });
+};
+
+const timeout = (ms, promise) => {
+  return new Promise(function (resolve, reject) {
+    console.log("1");
+    setTimeout(function () {
+      console.log("2");
+      reject(new Error("timeout"));
+    }, ms);
+    console.log("3");
+    promise.then(resolve, reject);
+  });
 };
 
 const formatDate = (date) => {
@@ -410,4 +429,5 @@ export default {
   downloadingImg,
   pickedAnImg,
   getPrediction,
+  timeout,
 };

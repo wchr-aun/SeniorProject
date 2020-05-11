@@ -21,7 +21,7 @@ const ImgPicker = (props) => {
             >
               <View style={{ marginVertical: 3 }}>
                 <FontAwesome
-                  name={"file-picture-o"}
+                  name={"camera"}
                   size={60}
                   color={Colors.primary_dark}
                 />

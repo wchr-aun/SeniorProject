@@ -17,10 +17,12 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import ModalLoading from "../../components/ModalLoading";
 import TrashCard from "../../components/TrashCard";
 import { GET_PREDICTION } from "../../store/actions/imageAction";
+import ThaiMdText from "../../components/ThaiMdText";
 
 const SET_LOCAL_SELLERITEMS = "SET_LOCAL_SELLERITEMS";
 const ADD_SELLERITEMS_AMOUNT = "ADD_SELLERITEMS_AMOUNT";
 const MINUS_SELLERITEMS_AMOUNT = "MINUS_SELLERITEMS_AMOUNT";
+const RESET = "RESET";
 const sellerItemsCameraReducer = (state, action) => {
   let targetIndex = "";
   let updatedSellerItemsCamera = [...state.sellerItemsCamera];
@@ -43,11 +45,12 @@ const sellerItemsCameraReducer = (state, action) => {
       updatedSellerItemsCamera[targetIndex].amount += 1;
       // updated Payload
       updatedSellerItemsCameraObj[action.majortype][action.subtype] += 1;
-      console.log(updatedSellerItemsCameraObj);
       return {
         ...state,
         updatedSellerItemsCamera,
         updatedSellerItemsCameraObj,
+        sellerItemsCamera: updatedSellerItemsCamera,
+        sellerItemsCameraObj: updatedSellerItemsCameraObj,
       };
     case MINUS_SELLERITEMS_AMOUNT:
       //find that element
@@ -61,12 +64,18 @@ const sellerItemsCameraReducer = (state, action) => {
         updatedSellerItemsCamera[targetIndex].amount -= 1;
         updatedSellerItemsCameraObj[action.majortype][action.subtype] -= 1;
       }
-      console.log(updatedSellerItemsCameraObj);
 
       return {
         ...state,
         updatedSellerItemsCamera,
         updatedSellerItemsCameraObj,
+        sellerItemsCamera: updatedSellerItemsCamera,
+        sellerItemsCameraObj: updatedSellerItemsCameraObj,
+      };
+    case RESET:
+      return {
+        sellerItemsCamera: [],
+        sellerItemsCameraObj: {},
       };
     default:
       return { ...state };
@@ -112,17 +121,20 @@ export default OptionTrashCheck = (props) => {
   // use the picked image for prediction process
   const getPredictionHandler = async () => {
     setIsInOperation(true);
-    const result = await libary.getPrediction(pickedImage);
-    if (result) {
-      dispatch({
-        type: GET_PREDICTION,
-        results,
-        wasteTypesDB,
-      });
-    } else {
+    try {
+      const res = await libary.getPrediction(pickedImage, 10000);
+      if (res.results) {
+        dispatch({
+          type: GET_PREDICTION,
+          results: res.results,
+          wasteTypesDB,
+        });
+      }
+    } catch (error) {
       Alert.alert(
         "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
-        "ไม่สามารถติดต่อกับ Server ได้",
+        // "ไม่สามารถติดต่อกับ Server ได้",
+        error,
         [{ text: "OK" }]
       );
       setPickedImage("");
@@ -130,8 +142,14 @@ export default OptionTrashCheck = (props) => {
     setIsInOperation(false);
   };
 
+  const reset = () => {
+    setPickedImage("");
+    dispatchSellerItemsState({ type: RESET });
+  };
+
   const confirmHandler = () => {
     dispatch(imgActions.confirmSellerItemsCamera(sellerItemsCameraObj));
+    reset();
     props.navigation.navigate("ShowSellerItemsScreen");
   };
 
@@ -186,18 +204,28 @@ export default OptionTrashCheck = (props) => {
           pickedImage={pickedImage}
           onClick={takeImageHandler}
         />
-        <View style={{ width: "100%", height: "5%", padding: 10 }}>
-          <ThaiBoldText
+        {sellerItemsState.sellerItemsCamera.length > 0 ? (
+          <View
             style={{
-              color:
-                sellerItemsCamera.length > 0
-                  ? Colors.primary_bright
-                  : Colors.secondary,
+              width: "100%",
+              height: "5%",
+              padding: 10,
+              margin: 10,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            ยืนยันจำนวนขยะที่ถ่าย
-          </ThaiBoldText>
-        </View>
+            <ThaiMdText
+              style={{
+                color: Colors.hard_primary_dark,
+                fontSize: 15,
+              }}
+            >
+              ยืนยันจำนวนขยะที่ถ่าย
+            </ThaiMdText>
+          </View>
+        ) : null}
+
         <View
           style={{
             width: "100%",
@@ -211,9 +239,6 @@ export default OptionTrashCheck = (props) => {
                 ? sellerItemsState.sellerItemsCamera
                 : []
             }
-            style={{
-              flex: 1,
-            }}
             keyExtractor={(item) => item.subtype}
             renderItem={({ item }) => {
               return (
@@ -280,7 +305,7 @@ export default OptionTrashCheck = (props) => {
             </CustomButton>
           ) : null}
 
-          {sellerItemsCamera.length > 0 ? (
+          {sellerItemsState.sellerItemsCamera.length > 0 ? (
             <CustomButton
               style={{
                 width: "40%",

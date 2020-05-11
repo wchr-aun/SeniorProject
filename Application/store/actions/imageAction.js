@@ -9,8 +9,8 @@ export const CONFIRM_SELLERITEMSCAMERA = "CONFIRM_SELLERITEMSCAMERA";
 const PERDICT_LINK = "http://34.87.39.76:5000/predict";
 const SELLERITEMS_UPLOAD_FILEDIR = "sellReq_imgs/";
 
-export const confirmSellerItemsCamera = sellerItemsCameraObj => {
-  return async dispatch => {
+export const confirmSellerItemsCamera = (sellerItemsCameraObj) => {
+  return async (dispatch) => {
     console.log("confirmSellerItemsCamera");
 
     dispatch({ type: CONFIRM_SELLERITEMSCAMERA, sellerItemsCameraObj });
@@ -36,7 +36,7 @@ export const confirmSellerItemsCamera = sellerItemsCameraObj => {
 // };
 
 export const getPrediction = (image, wasteTypesDB) => {
-  return async dispatch => {
+  return async (dispatch) => {
     console.log("getPrediction action!");
 
     // Move to new directory
@@ -46,7 +46,7 @@ export const getPrediction = (image, wasteTypesDB) => {
     try {
       await FileSystem.copyAsync({
         from: image.uri,
-        to: newImageUrl
+        to: newImageUrl,
       });
     } catch (err) {
       console.log(err);
@@ -63,38 +63,38 @@ export const getPrediction = (image, wasteTypesDB) => {
     formData.append("photo", {
       uri: newImageUrl,
       name: fileName,
-      type
+      type,
     });
 
     // // //tmp
     // dispatch({
     //   type: GET_PREDICTION,
-    //   results: [
-    //     {
-    //       class: "PETE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     },
-    //     {
-    //       class: "PETE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     },
-    //     {
-    //       class: "HDPE",
-    //       score: "0.9232149",
-    //       xmax: "410",
-    //       xmin: "168",
-    //       ymax: "770",
-    //       ymin: "32"
-    //     }
-    //   ],
+    // results: [
+    //   {
+    //     class: "PETE",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32"
+    //   },
+    //   {
+    //     class: "PETE",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32"
+    //   },
+    //   {
+    //     class: "HDPE",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32"
+    //   }
+    // ],
     //   wasteTypesDB
     // });
 
@@ -102,22 +102,22 @@ export const getPrediction = (image, wasteTypesDB) => {
     fetch(PERDICT_LINK, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ photo: image.base64 })
+      body: JSON.stringify({ photo: image.base64 }),
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(res => {
+      .then((res) => {
         console.log("res.results");
         dispatch({
           type: GET_PREDICTION,
           results: res.results,
-          wasteTypesDB
+          wasteTypesDB,
         });
         return res;
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   };
 };
