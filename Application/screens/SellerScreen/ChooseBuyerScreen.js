@@ -607,7 +607,13 @@ export default ChooseBuyerScreen = (props) => {
               }}
             />
           ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 10,
+              }}
+            >
               <ThaiMdText style={{ fontSize: 20 }}>
                 ไม่มีผู้ซื้อที่รับซื้อขยะของ ในตอนนี้{" "}
               </ThaiMdText>

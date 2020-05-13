@@ -337,11 +337,11 @@ export default BuyerDetailScreen = (props) => {
             color={
               isFavBuyer ? "#ffdd00" : Colors.button.submit_primary_dark.btnText
             }
-            size={16}
+            size={14}
           />
           <ThaiMdText
             style={{
-              fontSize: 16,
+              fontSize: 14,
               color: isFavBuyer
                 ? "#ffdd00"
                 : Colors.button.submit_primary_dark.btnText,
@@ -462,7 +462,7 @@ export default BuyerDetailScreen = (props) => {
               >
                 <ThaiBoldText
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: isCommentMode
                       ? Colors.primary_bright
                       : Colors.soft_primary_dark,
@@ -481,7 +481,7 @@ export default BuyerDetailScreen = (props) => {
               >
                 <ThaiBoldText
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: !isCommentMode
                       ? Colors.primary_bright
                       : Colors.soft_primary_dark,
