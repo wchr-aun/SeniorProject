@@ -521,25 +521,24 @@ export const searchBuyer = async (uid) => {
     .doc(uid.toLowerCase())
     .get()
     .then((doc) => {
-      // if (doc.exists) return { txId: doc.id, detail: doc.data() };
       if (doc.exists) {
-        // console.log(doc.data().review[0].timestamp.seconds);
-        const sorted_comments = doc.data().review.sort((a, b) => {
-          return b.timestamp.seconds - a.timestamp.seconds;
-        });
+        let sorted_comments = [];
+        if (doc.data().review) {
+          sorted_comments = doc.data().review.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+          });
+        }
+
         return {
-          txId: doc.id,
+          buyerId: doc.id,
           detail: { ...doc.data(), review: sorted_comments },
         };
       } else throw new Error("no such user");
     })
     .catch((err) => {
-      console.log("can't searchBuyer");
-      Alert.alert(
-        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล",
-        "ไม่พบผู้รับซื้อดังกล่าว",
-        [{ text: "OK" }]
-      );
+      Alert.alert("เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล", err.message, [
+        { text: "OK" },
+      ]);
     });
 };
 

@@ -430,7 +430,9 @@ export default BuyerDetailScreen = (props) => {
               <ThaiMdText
                 style={{ fontSize: 14, color: Colors.primary_bright_variant }}
               >
-                {buyerInfo.detail.description}
+                {buyerInfo.detail.description
+                  ? buyerInfo.detail.description
+                  : ""}
               </ThaiMdText>
             </ThaiRegText>
           </View>
@@ -512,7 +514,9 @@ export default BuyerDetailScreen = (props) => {
                 <ThaiMdText
                   style={{ fontSize: 16, color: Colors.primary_bright }}
                 >
-                  {buyerInfo.detail.rating.toFixed(3)}
+                  {buyerInfo.detail.rating
+                    ? buyerInfo.detail.rating.toFixed(3)
+                    : ""}
                 </ThaiMdText>
               </View>
               <View
@@ -575,6 +579,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4,
+    elevation: 2,
   },
 });
