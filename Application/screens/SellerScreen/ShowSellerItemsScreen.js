@@ -482,8 +482,13 @@ const ShowAllUserTrashScreen = (props) => {
           />
         </View>
 
-        {editingMode ? (
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+        {editingMode || !trashsState.sellerItemsFlatListFormat.length > 0 ? (
+          <TouchableOpacity
+            onPress={() => {
+              setEditingMode(true);
+              setModalVisible(true);
+            }}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -520,7 +525,7 @@ const ShowAllUserTrashScreen = (props) => {
           </TouchableOpacity>
         ) : null}
 
-        {!editingMode ? (
+        {!editingMode && trashsState.sellerItemsFlatListFormat.length > 0 ? (
           <View
             style={{
               justifyContent: "center",
