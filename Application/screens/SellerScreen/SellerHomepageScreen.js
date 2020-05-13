@@ -52,6 +52,7 @@ export default SellerHomepageScreen = (props) => {
     if (transactions) {
       let tmpTxShow = transactions[3]
         .concat(transactions[1])
+        .concat(transactions[2])
         .concat(transactions[5]);
       setTxShow(tmpTxShow);
     }

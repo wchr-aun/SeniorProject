@@ -346,7 +346,9 @@ export default SellingTransactionDetailScreen = (props) => {
         <View style={{ width: "20%" }} />
       </View>
       {/* buyer infomation */}
-      <TouchableOpacity onPress={goBuyerDetail}>
+      <TouchableOpacity
+        onPress={transactionItem.detail.buyer ? goBuyerDetail : null}
+      >
         <View
           style={{
             width: "95%",

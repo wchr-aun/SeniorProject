@@ -53,7 +53,7 @@ export default SearchQuicksellingScreen = (props) => {
       })
     );
     setIsRefreshing(false);
-  }, [dispatch, buyerAddr]);
+  }, [dispatch, buyerAddr, distance]);
   const quickTransactions = useSelector(
     (state) => state.transactions.quickTransactions
   ); // sure data is ready
