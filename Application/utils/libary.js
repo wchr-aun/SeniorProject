@@ -149,7 +149,6 @@ const getPrediction = async (image, ms) => {
       return response.json();
     })
     .catch(function (error) {
-      console.log(error);
       // might be a timeout error
       throw new Error(error.message);
     });

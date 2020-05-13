@@ -129,13 +129,20 @@ export default OptionTrashCheck = (props) => {
           results: res.results,
           wasteTypesDB,
         });
+      } else {
+        Alert.alert(
+          "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
+          // "ไม่สามารถติดต่อกับ Server ได้",
+          error,
+          [{ text: "OK" }]
+        );
+        setPickedImage("");
       }
     } catch (error) {
       Alert.alert(
-        "มีข้อผิดพลาดบางอย่างเกิดขึ้น!",
         // "ไม่สามารถติดต่อกับ Server ได้",
-        error,
-        [{ text: "OK" }]
+        error.message,
+        "ไม่สามารถติดต่อ Server ได้"[{ text: "OK" }]
       );
       setPickedImage("");
     }
