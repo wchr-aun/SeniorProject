@@ -277,34 +277,59 @@ export default UserSignupScreen = (props) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
     >
       <CustomStatusBar />
       <LinearGradient colors={Colors.linearGradientB} style={styles.gradient}>
         <View
           style={{
-            marginVertical: wp("3%"),
-            height: hp("10%"),
-            paddingTop: getStatusBarHeight(),
+            width: "100%",
+            height: "10%",
+            flexDirection: "row",
+            backgroundColor: Colors.secondary,
+            paddingVertical: 10,
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
         >
-          <ThaiMdText
+          <View style={{ width: "20%" }}>
+            <CustomButton
+              style={{ borderRadius: 5 }}
+              btnColor={Colors.button.submit_primary_dark.btnBackground}
+              btnTitleColor={Colors.button.submit_primary_dark.btnText}
+              onPress={() => {
+                props.navigation.navigate("UserSigninScreen");
+              }}
+              btnTitleFontSize={14}
+            >
+              <ThaiRegText style={{ fontSize: 10 }}>ย้อนกลับ</ThaiRegText>
+            </CustomButton>
+          </View>
+          <View style={{ width: "50%", alignItems: "center" }}>
+            <ThaiBoldText
+              style={{
+                color: Colors.on_secondary.high_constrast,
+                fontSize: 18,
+              }}
+            >
+              สร้างบัญชีผู้ใช้
+            </ThaiBoldText>
+          </View>
+          <View
             style={{
-              color: Colors.on_primary_bright.high_constrast,
-              fontSize: 18,
+              width: "20%",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          >
-            สร้างบัญชีผู้ใช้
-          </ThaiMdText>
+          />
         </View>
+
         <View
           style={{
-            width: wp("100%"),
-            height: hp("75%"),
+            width: "100%",
+            height: "90%",
             backgroundColor: "white",
             paddingHorizontal: wp("5%"),
             paddingVertical: wp("8%"),
-            borderRadius: 3,
           }}
         >
           {/* <KeyboardAvoidingView
@@ -655,10 +680,10 @@ export default UserSignupScreen = (props) => {
           </ScrollView>
           {/* </KeyboardAvoidingView> */}
         </View>
-        <View
+        {/* <View
           style={{
-            width: wp("90%"),
-            height: hp("15%"),
+            width: "90%",
+            height: "15%",
             justifyContent: "center",
             paddingBottom: getStatusBarHeight(),
           }}
@@ -687,7 +712,7 @@ export default UserSignupScreen = (props) => {
             />{" "}
             ย้อนกลับ
           </CustomButton>
-        </View>
+        </View> */}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -695,7 +720,8 @@ export default UserSignupScreen = (props) => {
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1,
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
