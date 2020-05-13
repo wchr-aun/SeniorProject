@@ -114,7 +114,7 @@ export default ModalShowInteractMap = (props) => {
             width: "100%",
             height: "5%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
             alignItems: "center",
           }}
@@ -122,7 +122,7 @@ export default ModalShowInteractMap = (props) => {
           <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
+                color: Colors.on_primary_bright.low_constrast,
                 fontSize: 15,
               }}
             >
@@ -173,7 +173,8 @@ export default ModalShowInteractMap = (props) => {
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            backgroundColor: Colors.hard_primary_dark,
+            backgroundColor: Colors.secondary,
+            paddingBottom: getStatusBarHeight(),
           }}
         >
           <CustomButton
