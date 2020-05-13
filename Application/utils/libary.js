@@ -132,7 +132,7 @@ const downloadingImg = async (imgNames, mode) => {
 
 const getPrediction = async (image, ms) => {
   // send an image
-  const PERDICT_LINK = "http://34.87.5.99:5000/predict";
+  const PERDICT_LINK = "http://35.213.140.234:5000/predict";
 
   return await timeout(
     ms,

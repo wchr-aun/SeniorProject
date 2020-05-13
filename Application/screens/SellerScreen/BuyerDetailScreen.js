@@ -413,7 +413,11 @@ export default BuyerDetailScreen = (props) => {
               <ThaiMdText
                 style={{ fontSize: 14, color: Colors.primary_bright_variant }}
               >
-                {buyerInfo.detail.tel ? buyerInfo.detail.phoneNo : "0963061333"}
+                {buyerInfo.detail.phoneNo
+                  ? buyerInfo.detail.phoneNo
+                      .replace("+660", "0")
+                      .replace("+66", "0")
+                  : "0963061333"}
               </ThaiMdText>
             </ThaiRegText>
             <ThaiRegText

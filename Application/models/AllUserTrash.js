@@ -79,6 +79,11 @@ export class Wastes {
   addWasteObj(obj) {
     for (let type in obj) {
       for (let subtype in obj[type]) {
+        // if obj[type][subtype] = 0, continue
+        if (obj[type][subtype] == 0) {
+          continue;
+        }
+
         if (this[type] == undefined || this._count[type] == undefined) {
           // for showing dif
           this._count[type] = {};
