@@ -438,6 +438,9 @@ export default SellingReqBeforeSendingScreen = (props) => {
             padding: 5,
           }}
         >
+          {!imgs.length > 0 ? (
+            <ThaiMdText>ถ่ายภาพขยะที่ขายอย่างน้อย 1 รูป</ThaiMdText>
+          ) : null}
           <View
             style={{
               width: "100%",
@@ -456,15 +459,27 @@ export default SellingReqBeforeSendingScreen = (props) => {
                 borderRadius: 5,
                 marginRight: 10,
               }}
-              btnColor={Colors.button.cancel.btnBackground}
+              btnColor={
+                imgs.length > 0
+                  ? Colors.button.cancel.btnBackground
+                  : Colors.button.submit_primary_bright.btnBackground
+              }
               onPress={takeImgHandler}
-              btnTitleColor={Colors.button.cancel.btnText}
+              btnTitleColor={
+                imgs.length > 0
+                  ? Colors.button.cancel.btnText
+                  : Colors.button.submit_primary_bright.btnText
+              }
               btnTitleFontSize={18}
             >
               <Ionicons
                 name={"md-camera"}
                 size={14}
-                color={Colors.button.cancel.btnText}
+                color={
+                  imgs.length > 0
+                    ? Colors.button.cancel.btnText
+                    : Colors.button.submit_primary_bright.btnText
+                }
               />
               <ThaiMdText style={{ fontSize: 12 }}>
                 {" "}
