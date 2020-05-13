@@ -49,9 +49,12 @@ export default SearchBuyerScreen = (props) => {
   };
 
   const onSearchHandler = async () => {
+    setBuyerResult("");
     const buyerResult = await searchBuyer(buyerId);
-    setBuyerResult(buyerResult);
-    loadUserImg(buyerId);
+    if (buyerResult) {
+      setBuyerResult(buyerResult);
+      loadUserImg(buyerId);
+    }
   };
 
   const goBuyerDetail = () => {
@@ -172,7 +175,7 @@ export default SearchBuyerScreen = (props) => {
                 <ThaiMdText
                   style={{ fontSize: 16, color: Colors.primary_bright }}
                 >
-                  {buyerId}
+                  {buyerResult.txId}
                 </ThaiMdText>
               </View>
               <View style={{ width: "80%", alignItems: "center" }}>

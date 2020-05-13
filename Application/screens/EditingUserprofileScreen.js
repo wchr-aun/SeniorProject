@@ -114,6 +114,8 @@ export default EditingUserprofileScreen = (props) => {
   const [isAddrModalVisible, setIsAddrModalVisible] = useState(false);
 
   // 'formState (state snapshot) will be updated when state changed
+  console.log("userProfile.phoneNo");
+  console.log(userProfile.phoneNo);
   const [formState, dispatchFormState] = useReducer(formReducer, {
     // these are initial-state
     inputValues: {

@@ -518,7 +518,7 @@ export const querySellers = async (queryData) => {
 export const searchBuyer = async (uid) => {
   return firestore
     .collection("buyerLists")
-    .doc(uid)
+    .doc(uid.toLowerCase())
     .get()
     .then((doc) => {
       // if (doc.exists) return { txId: doc.id, detail: doc.data() };
@@ -531,13 +531,13 @@ export const searchBuyer = async (uid) => {
           txId: doc.id,
           detail: { ...doc.data(), review: sorted_comments },
         };
-      } else return "No such users";
+      } else throw new Error("no such user");
     })
     .catch((err) => {
       console.log("can't searchBuyer");
       Alert.alert(
-        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-        err.message,
+        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล",
+        "ไม่พบผู้รับซื้อดังกล่าว",
         [{ text: "OK" }]
       );
     });
