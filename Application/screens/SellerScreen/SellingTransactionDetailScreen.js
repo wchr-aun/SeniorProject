@@ -119,6 +119,7 @@ export default SellingTransactionDetailScreen = (props) => {
       rating: Number(rating),
       comment,
       buyer: transactionItem.detail.buyer,
+      txID: transactionItem.txId,
     };
 
     setIsInOperation(true);
