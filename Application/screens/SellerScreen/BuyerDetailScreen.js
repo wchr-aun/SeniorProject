@@ -196,12 +196,7 @@ export default BuyerDetailScreen = (props) => {
   // load buyer info function
   const [buyerInfo, setBuyerInfo] = useState({});
   const loadBuyerInfo = async (buyerId) => {
-    let buyerInfo = "";
-    if (props.navigation.getParam("buyerInfo")) {
-      buyerInfo = props.navigation.getParam("buyerInfo");
-    } else {
-      buyerInfo = await searchBuyer(buyerId);
-    }
+    const buyerInfo = await searchBuyer(buyerId);
     const isFavBuyer = await getIsFavBuyer(buyerId);
     setBuyerInfo(buyerInfo);
     setIsFavBuyer(isFavBuyer);
@@ -219,7 +214,8 @@ export default BuyerDetailScreen = (props) => {
   const loadBuyerData = async () => {
     setIsLoading(true);
     setIsRefreshing(true);
-    await loadBuyerInfo(buyerId);
+    const result = await loadBuyerInfo(buyerId);
+    console.log(result);
     await loadBuyerImg(buyerId);
     setIsRefreshing(false);
     setIsLoading(false);
@@ -417,7 +413,7 @@ export default BuyerDetailScreen = (props) => {
               <ThaiMdText
                 style={{ fontSize: 14, color: Colors.primary_bright_variant }}
               >
-                {buyerInfo.detail.tel ? buyerInfo.detail.tel : "0963061333"}
+                {buyerInfo.detail.tel ? buyerInfo.detail.phoneNo : "0963061333"}
               </ThaiMdText>
             </ThaiRegText>
             <ThaiRegText
@@ -512,7 +508,9 @@ export default BuyerDetailScreen = (props) => {
                 <ThaiMdText
                   style={{ fontSize: 16, color: Colors.primary_bright }}
                 >
-                  {buyerInfo.detail.rating.toFixed(3)}
+                  {buyerInfo.detail.rating
+                    ? buyerInfo.detail.rating.toFixed(3)
+                    : 0}
                 </ThaiMdText>
               </View>
               <View
