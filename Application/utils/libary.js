@@ -119,6 +119,7 @@ const downloadingImg = async (imgNames, mode) => {
           .then((uri) => {
             allImgs.push(uri);
           })
+          .catch((err) => console.log(err.message))
       );
     }
     return Promise.all(promises).then(() => {
