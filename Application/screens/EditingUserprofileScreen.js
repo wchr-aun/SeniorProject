@@ -126,9 +126,7 @@ export default EditingUserprofileScreen = (props) => {
       district: "",
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
-      phoneNo: userProfile.phoneNo
-        ? userProfile.phoneNo.replace("+66", "0")
-        : "",
+      phoneNo: userProfile.phoneNo,
     },
     inputValidities: {
       name: true,

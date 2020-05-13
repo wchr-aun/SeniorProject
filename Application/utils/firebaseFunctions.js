@@ -25,7 +25,7 @@ export const getUsers = async () => {
             zipcode: doc.data().zipcode,
           },
           email: auth.currentUser.email,
-          phoneNo: doc.data().phoneNo,
+          phoneNo: doc.data().phoneNo.replace("+660", "0").replace("+66", "0"),
         };
       } else throw new Error("The document doesn't exist");
     })

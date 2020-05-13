@@ -105,9 +105,14 @@ export default UserAuthenScreen = (props) => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        updateNotificationToken().then(() => {
-          props.navigation.navigate("StartupScreen");
-        });
+        updateNotificationToken()
+          .then(() => {
+            props.navigation.navigate("StartupScreen");
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            props.navigation.navigate("StartupScreen");
+          });
       })
       .catch((err) => {
         setIsLoading(false);
