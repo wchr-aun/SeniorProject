@@ -230,7 +230,6 @@ export default EditingUserprofileScreen = (props) => {
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66"),
     };
 
-    console.log(user);
     editUserInfo(user)
       .then(() => {
         AsyncStorage.clear()

@@ -297,11 +297,17 @@ export default OptionTrashCheck = (props) => {
                 maxHeight: 40,
               }}
               btnColor={Colors.button.start_operation_info.btnBackground}
-              onPress={getPredictionHandler}
+              onPress={
+                sellerItemsState.sellerItemsCamera.length
+                  ? reset
+                  : getPredictionHandler
+              }
               btnTitleColor={Colors.button.start_operation_info.btnText}
               btnTitleFontSize={12}
             >
-              ตรวจสอบประเภทขยะ
+              {sellerItemsState.sellerItemsCamera.length
+                ? "ยกเลิก"
+                : "ตรวจสอบประเภทขยะ"}
             </CustomButton>
           ) : null}
 

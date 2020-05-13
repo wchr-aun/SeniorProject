@@ -102,27 +102,32 @@ const uploadingImg = async (image, fileName, mode) => {
 };
 
 const downloadingImg = async (imgNames, mode) => {
-  let allImgs = [];
-  let promises = [];
-  for (let imgName of imgNames) {
-    promises.push(
-      firebaseUtil
-        .storage()
-        .ref()
-        .child(
-          `${
-            mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR
-          }${imgName}`
-        )
-        .getDownloadURL()
-        .then((uri) => {
-          allImgs.push(uri);
-        })
-    );
+  try {
+    let allImgs = [];
+    let promises = [];
+    for (let imgName of imgNames) {
+      promises.push(
+        firebaseUtil
+          .storage()
+          .ref()
+          .child(
+            `${
+              mode === "tx" ? SELLERITEMS_UPLOAD_FILEDIR : USER_FILEDIR
+            }${imgName}`
+          )
+          .getDownloadURL()
+          .then((uri) => {
+            allImgs.push(uri);
+          })
+          .catch((err) => console.log(err.message))
+      );
+    }
+    return Promise.all(promises).then(() => {
+      return allImgs;
+    });
+  } catch (err) {
+    console.log(err);
   }
-  return Promise.all(promises).then(() => {
-    return allImgs;
-  });
 };
 
 const getPrediction = async (image, ms) => {
