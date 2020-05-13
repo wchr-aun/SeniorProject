@@ -44,7 +44,8 @@ exports.createAccount = functions.https.onCall((data, context) => {
       notificationToken: admin.firestore.FieldValue.arrayUnion(notificationToken)
     }).then(() => {
       buyerDB.doc(userRecord.uid).set({
-        enableSearch: false
+        enableSearch: false,
+        phoneNo
       }).catch(err => {
         console.log("Error has occurred in createAccount() while adding the account " + userRecord.uid + " to firestore")
         console.log(err)
@@ -122,6 +123,7 @@ exports.sellWaste = functions.https.onCall((data, context) => {
               createTimestamp: new Date(),
               assignedTime,
               txStatus: 0,
+              commentable: 'not commentable',
               img
             }).then(() => {
               const message = getTitleAndBody({
@@ -266,7 +268,8 @@ exports.changeTxStatus = functions.https.onCall((data, context) => {
               default:
                 transaction.update(txDB.doc(data.txID), {
                   txStatus: data.status,
-                  completedTime: new Date()
+                  completedTime: new Date(),
+                  commentable: 'commentable'
                 })
                 break
             }
@@ -291,7 +294,7 @@ exports.editBuyerInfo = functions.https.onCall((data, context) => {
     const addr = data.addr.readable || {}
     const enableSearch = data.enableSearch || false
     const zipcode = Number(data.addr.zipcode)
-    return buyerDB.doc(context.auth.uid).set({
+    return buyerDB.doc(context.auth.uid).update({
       addr,
       zipcode,
       addr_geopoint: geo.point(data.addr.latitude, data.addr.longitude),
@@ -326,6 +329,10 @@ exports.editUserInfo = functions.https.onCall((data, context) => {
     }).then(() => {
       auth.updateUser(context.auth.uid, {
         phoneNumber: phoneNo
+      }).then(() => {
+        buyerDB.doc(context.auth.uid).update({
+          phoneNo
+        })
       })
     }).catch(err => {
       console.log("Error has occurred in editUserInfo() while updating the document " + context.auth.uid)
@@ -485,8 +492,13 @@ exports.sendComment = functions.https.onCall((data,context) => {
             comment: data.comment,
             rating: data.rating,
             user: context.auth.uid,
-            timestamp: new Date()
+            timestamp: new Date(),
+            txID: data.txID
           })
+        })
+
+        transaction.update(txDB.doc(data.txID), {
+          commentable: 'commented'
         })
         return true
       })
