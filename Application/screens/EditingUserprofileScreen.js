@@ -124,9 +124,7 @@ export default EditingUserprofileScreen = (props) => {
       district: "",
       province: "กรุงเทพมหานครฯ",
       postalCode: "",
-      phoneNo: userProfile.phoneNo
-        ? userProfile.phoneNo.replace("+66", "0")
-        : "",
+      phoneNo: userProfile.phoneNo,
     },
     inputValidities: {
       name: true,
@@ -175,7 +173,7 @@ export default EditingUserprofileScreen = (props) => {
       return;
     }
 
-    let userAddrString;
+    let userAddrString = "";
     if (formState.inputValues.province === "กรุงเทพมหานคร")
       userAddrString =
         formState.inputValues.shallowAddr +
@@ -221,7 +219,7 @@ export default EditingUserprofileScreen = (props) => {
       setIsLoading(false);
       return;
     }
-
+    console.log(userAddrObj);
     // passed to editUserInfo()
     let user = {
       name: formState.inputValues.name,
@@ -248,20 +246,6 @@ export default EditingUserprofileScreen = (props) => {
         setError(err.message);
       });
   };
-
-  if (isAddrModalVisible) {
-    return (
-      <ModalShowInteractMap
-        setModalVisible={setIsAddrModalVisible}
-        modalVisible={isAddrModalVisible}
-        origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
-        setUserAddrObj={setUserAddrObj}
-        addrReadable={addrReadable}
-        zipcode={formState.inputValues.postalCode}
-        signupMode={false}
-      />
-    );
-  }
 
   // For User signout
   const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ");
@@ -300,6 +284,49 @@ export default EditingUserprofileScreen = (props) => {
     setIsInOperation(false);
     setIsImgEdit(false);
   };
+
+  if (isAddrModalVisible && addrCord) {
+    console.log(addrCord.latitude);
+    console.log(addrCord.longitude);
+    console.log(addrReadable);
+    // return (
+    //   // <ModalShowInteractMap
+    //   //   setModalVisible={setIsAddrModalVisible}
+    //   //   modalVisible={isAddrModalVisible}
+    //   //   origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
+    //   //   setUserAddrObj={setUserAddrObj}
+    //   //   addrReadable={addrReadable}
+    //   //   zipcode={formState.inputValues.postalCode}
+    //   //   signupMode={false}
+    //   // />
+
+    return (
+      <ModalShowInteractMap
+        setModalVisible={setIsAddrModalVisible}
+        modalVisible={isAddrModalVisible}
+        origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
+        setSellerAddr={setUserAddrObj}
+        addrReadable={addrReadable}
+        zipcode={formState.inputValues.postalCode}
+        signupMode={false}
+      />
+    );
+
+    //   // Object {
+    //   //   "addrReadable": "58 mhu 8 ตำบล phrapathom jedi อำเภอ mueng จังหวัด nakhonpathom 73000",
+    //   //   "modalVisible": true,
+    //   //   "origin": Object {
+    //   //     "latitude": 13.819727799999999,
+    //   //     "longitude": 100.060057,
+    //   //   },
+    //   //   "setModalVisible": [Function bound dispatchAction],
+    //   //   "setSellerAddr": [Function bound dispatchAction],
+    //   //   "signupMode": true,
+    //   //   "zipcode": "73000",
+    //   // }
+    // );
+  }
+
   return (
     <View
       style={{

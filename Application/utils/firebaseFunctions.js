@@ -25,7 +25,7 @@ export const getUsers = async () => {
             zipcode: doc.data().zipcode,
           },
           email: auth.currentUser.email,
-          phoneNo: doc.data().phoneNo,
+          phoneNo: doc.data().phoneNo.replace("+660", "0").replace("+66", "0"),
         };
       } else throw new Error("The document doesn't exist");
     })
@@ -518,28 +518,27 @@ export const querySellers = async (queryData) => {
 export const searchBuyer = async (uid) => {
   return firestore
     .collection("buyerLists")
-    .doc(uid)
+    .doc(uid.toLowerCase())
     .get()
     .then((doc) => {
-      // if (doc.exists) return { txId: doc.id, detail: doc.data() };
       if (doc.exists) {
-        // console.log(doc.data().review[0].timestamp.seconds);
-        const sorted_comments = doc.data().review.sort((a, b) => {
-          return b.timestamp.seconds - a.timestamp.seconds;
-        });
+        let sorted_comments = [];
+        if (doc.data().review) {
+          sorted_comments = doc.data().review.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+          });
+        }
+
         return {
-          txId: doc.id,
+          buyerId: doc.id,
           detail: { ...doc.data(), review: sorted_comments },
         };
-      } else return "No such users";
+      } else throw new Error("no such user");
     })
     .catch((err) => {
-      console.log("can't searchBuyer");
-      Alert.alert(
-        "เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล & รับข้อมูล",
-        err.message,
-        [{ text: "OK" }]
-      );
+      Alert.alert("เกิดข้อผิดพลาดในระหว่างการส่งข้อมูล", err.message, [
+        { text: "OK" },
+      ]);
     });
 };
 

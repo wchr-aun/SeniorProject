@@ -3,7 +3,7 @@ import { StyleSheet, View, Button, Modal, Alert } from "react-native";
 import Colors from "../constants/Colors";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import MapView, { Marker, Polyline, Circle } from "react-native-maps";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -15,38 +15,38 @@ const LATITUDE_DELTA = 0.005; //adjust this for initial zoomin-zoomout
 const LONGTITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const polylineReducer = (state, action) => {
-  return {coords: action}
+  return { coords: action };
 };
 
-export default ModalShowInteractMap = props => {
-  console.log("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
-  console.log(props)
+export default ModalShowInteractMap = (props) => {
+  console.log(props);
   const [zoomCord, setZoomCord] = useState({
     latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGTITUDE_DELTA
+    longitudeDelta: LONGTITUDE_DELTA,
   });
   const [selectedLocation, setSelectedLocation] = useState();
   const [selectedLocationReadable, setSelectedLocationReadable] = useState();
   const [markerCoordinates, setMarkerCoordinates] = useState({
     latitude: props.origin.latitude,
-    longitude: props.origin.longitude
+    longitude: props.origin.longitude,
   });
-  const [polylineState, dispatchPolyline] = useReducer(
-    polylineReducer,
-    { coords: [] }
-  );
+  const [polylineState, dispatchPolyline] = useReducer(polylineReducer, {
+    coords: [],
+  });
 
   const isPathOptimize = props.pathOptimize ? true : false;
 
   useEffect(() => {
+    console.log("From ModelShowInteract");
+    console.log(props.origin);
     setSelectedLocation({
       lat: props.origin.latitude,
-      lng: props.origin.longitude
+      lng: props.origin.longitude,
     });
     if (isPathOptimize)
-      libary.getDirections(props.origin, props.destination).then(polyline => {
-        dispatchPolyline(polyline)
-      })
+      libary.getDirections(props.origin, props.destination).then((polyline) => {
+        dispatchPolyline(polyline);
+      });
   }, []);
 
   const mapRegion = {
@@ -57,17 +57,17 @@ export default ModalShowInteractMap = props => {
       ? markerCoordinates.longitude
       : props.origin.longitude,
     latitudeDelta: zoomCord.latitudeDelta,
-    longitudeDelta: zoomCord.longitudeDelta
+    longitudeDelta: zoomCord.longitudeDelta,
   };
 
-  const selectLocationHandler = event => {
+  const selectLocationHandler = (event) => {
     setSelectedLocation({
       lat: event.nativeEvent.coordinate.latitude,
-      lng: event.nativeEvent.coordinate.longitude
+      lng: event.nativeEvent.coordinate.longitude,
     });
     setMarkerCoordinates({
       latitude: event.nativeEvent.coordinate.latitude,
-      longitude: event.nativeEvent.coordinate.longitude
+      longitude: event.nativeEvent.coordinate.longitude,
     });
   };
 
@@ -88,7 +88,7 @@ export default ModalShowInteractMap = props => {
         : selectedLocationReadable[0],
       zipcode: props.signupMode
         ? props.zipcode
-        : parseInt(selectedLocationReadable[0].postalCode, 10)
+        : parseInt(selectedLocationReadable[0].postalCode, 10),
     });
     props.setModalVisible(false);
   };
@@ -106,7 +106,7 @@ export default ModalShowInteractMap = props => {
       <View
         style={{
           width: wp("100%"),
-          height: hp("100%")
+          height: hp("100%"),
         }}
       >
         <View
@@ -114,16 +114,16 @@ export default ModalShowInteractMap = props => {
             width: "100%",
             height: "5%",
             flexDirection: "row",
-            backgroundColor: Colors.soft_primary_dark,
+            backgroundColor: Colors.secondary,
             paddingVertical: 10,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
             <ThaiBoldText
               style={{
-                color: Colors.on_primary_dark.low_constrast,
-                fontSize: 15
+                color: Colors.on_primary_bright.low_constrast,
+                fontSize: 15,
               }}
             >
               เลือกตำแหน่งของคุณ
@@ -133,16 +133,16 @@ export default ModalShowInteractMap = props => {
         <View
           style={{
             width: "100%",
-            height: "85%"
+            height: "85%",
           }}
         >
           <MapView
             style={styles.map}
             region={mapRegion}
             onPress={selectLocationHandler}
-            showsMyLocationButton = {true}
-            showsUserLocation = {true}
-            followsUserLocation = {true}
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            followsUserLocation={true}
           >
             {isPathOptimize ? (
               <>
@@ -151,12 +151,12 @@ export default ModalShowInteractMap = props => {
                   strokeWidth={4}
                   strokeColor="hotpink"
                 />
-                {props.destination.map(destination => (
+                {props.destination.map((destination) => (
                   <Marker
                     key={destination.txId}
                     coordinate={{
                       latitude: destination.latitude,
-                      longitude: destination.longitude
+                      longitude: destination.longitude,
                     }}
                   />
                 ))}
@@ -173,7 +173,8 @@ export default ModalShowInteractMap = props => {
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            backgroundColor: Colors.hard_primary_dark
+            backgroundColor: Colors.secondary,
+            paddingBottom: getStatusBarHeight(),
           }}
         >
           <CustomButton
@@ -181,7 +182,7 @@ export default ModalShowInteractMap = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 50
+              maxHeight: 50,
             }}
             btnColor={Colors.button.cancel.btnBackground}
             onPress={() => props.setModalVisible(false)}
@@ -190,7 +191,7 @@ export default ModalShowInteractMap = props => {
           >
             <ThaiRegText
               style={{
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               ปิดหน้าต่าง
@@ -202,7 +203,7 @@ export default ModalShowInteractMap = props => {
               width: "40%",
               height: "100%",
               borderRadius: 8,
-              maxHeight: 50
+              maxHeight: 50,
             }}
             btnColor={Colors.button.submit_primary_bright.btnBackground}
             onPress={confirmLocationHandler}
@@ -211,7 +212,7 @@ export default ModalShowInteractMap = props => {
           >
             <ThaiRegText
               style={{
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               ยืนยัน
@@ -225,6 +226,6 @@ export default ModalShowInteractMap = props => {
 
 const styles = StyleSheet.create({
   map: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });

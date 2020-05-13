@@ -13,7 +13,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as buyerAction from "../../store/actions/buyerAction";
 
 import ThaiRegText from "../../components/ThaiRegText";
@@ -86,43 +86,28 @@ export default EditBuyerInfomationScreen = (props) => {
             justifyContent: "space-around",
           }}
         >
-          <CustomButton
-            onPress={
-              isEditingMode
-                ? () => setEnableSearch((preState) => !preState)
-                : null
-            }
-            style={{
-              width: "20%",
-              maxHeight: 50,
-              borderRadius: 5,
-            }}
-            btnColor={
-              enableSearch
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.soft_primary_dark
-            }
-            btnTitleColor={
-              enableSearch
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.primary_dark
-            }
-            btnTitleFontSize={10}
-          >
+          <View style={{ minWidth: "20%", maxWidth: "24%", maxHeight: 50 }}>
             {isEditingMode ? (
-              <MaterialIcons
-                name={enableSearch ? "check-box" : "check-box-outline-blank"}
-                size={14}
-              />
+              <CustomButton
+                onPress={() => setIsEditingMode(false)}
+                style={{
+                  flex: 1,
+                  borderRadius: 5,
+                }}
+                btnColor={Colors.soft_primary_dark}
+                btnTitleColor={Colors.primary_dark}
+                btnTitleFontSize={10}
+              >
+                <ThaiBoldText
+                  style={{
+                    fontSize: 14,
+                  }}
+                >
+                  ยกเลิกแก้ไข
+                </ThaiBoldText>
+              </CustomButton>
             ) : null}
-            <ThaiBoldText
-              style={{
-                fontSize: 14,
-              }}
-            >
-              {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
-            </ThaiBoldText>
-          </CustomButton>
+          </View>
           <View style={{ alignItems: "center", width: "50%" }}>
             <ThaiBoldText
               style={{
@@ -133,6 +118,7 @@ export default EditBuyerInfomationScreen = (props) => {
               กำหนดราคารับซื้อขยะ
             </ThaiBoldText>
           </View>
+
           <CustomButton
             style={{
               width: "20%",
@@ -157,7 +143,9 @@ export default EditBuyerInfomationScreen = (props) => {
             }
             btnTitleFontSize={10}
           >
-            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขข้อมูล"}
+            <ThaiMdText>
+              {isEditingMode ? "ยืนยันแก้ไข" : "แก้ไขข้อมูล"}
+            </ThaiMdText>
           </CustomButton>
         </View>
 
@@ -169,6 +157,50 @@ export default EditBuyerInfomationScreen = (props) => {
             paddingBottom: getStatusBarHeight(),
           }}
         >
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "90%",
+              height: 50,
+              backgroundColor: enableSearch
+                ? isEditingMode
+                  ? Colors.button.submit_primary_bright.btnBackground
+                  : Colors.button.submit_primary_bright.btnBackgroundDisabled
+                : isEditingMode
+                ? Colors.button.submit_primary_dark.btnBackground
+                : Colors.button.submit_primary_dark.btnBackgroundDisabled,
+              alignSelf: "center",
+              borderRadius: 4,
+              padding: 10,
+              marginVertical: 10,
+            }}
+            onPress={
+              isEditingMode
+                ? () => setEnableSearch((preState) => !preState)
+                : null
+            }
+          >
+            <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+              <MaterialCommunityIcons
+                name="map-search-outline"
+                size={24}
+                color={Colors.on_primary_dark.low_constrast}
+              />
+            </View>
+            <View style={{ justifyContent: "center", marginHorizontal: 3 }}>
+              <ThaiBoldText
+                style={{
+                  fontSize: 20,
+                  color: Colors.on_primary_dark.low_constrast,
+                }}
+              >
+                {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
+              </ThaiBoldText>
+            </View>
+          </TouchableOpacity>
+
           <SectionList
             sections={wasteListSectionFormat ? wasteListSectionFormat : []}
             refreshing={isLoading}
@@ -299,84 +331,6 @@ export default EditBuyerInfomationScreen = (props) => {
             }}
           />
         </View>
-        {/* <View
-          style={{
-            height: "10%",
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-            paddingHorizontal: 5,
-            backgroundColor: Colors.hard_primary_dark,
-            paddingBottom: getStatusBarHeight(),
-          }}
-        >
-          <CustomButton
-            onPress={
-              isEditingMode
-                ? () => setEnableSearch((preState) => !preState)
-                : null
-            }
-            style={{
-              width: "50%",
-              height: "80%",
-              maxHeight: 50,
-              borderRadius: 5,
-            }}
-            btnColor={
-              enableSearch
-                ? Colors.button.submit_primary_bright.btnBackground
-                : Colors.soft_primary_dark
-            }
-            btnTitleColor={
-              enableSearch
-                ? Colors.button.submit_primary_bright.btnText
-                : Colors.primary_dark
-            }
-            btnTitleFontSize={10}
-          >
-            {isEditingMode ? (
-              <MaterialIcons
-                name={enableSearch ? "check-box" : "check-box-outline-blank"}
-                size={14}
-              />
-            ) : null}
-            <ThaiBoldText
-              style={{
-                fontSize: 14,
-              }}
-            >
-              {enableSearch ? " ถูกค้นหาได้" : " ถูกค้นหาไม่ได้"}
-            </ThaiBoldText>
-          </CustomButton>
-          <CustomButton
-            style={{
-              width: "30%",
-              height: "80%",
-              maxHeight: 50,
-              marginHorizontal: 5,
-              borderRadius: 5,
-              borderColor: isEditingMode
-                ? Colors.button.start_operation_info.btnText
-                : Colors.button.finish_operation_info.btnText,
-              borderWidth: 0.75,
-            }}
-            onPress={toggleModeHandler}
-            btnColor={
-              isEditingMode
-                ? Colors.button.start_operation_info.btnBackground
-                : Colors.button.finish_operation_info.btnBackground
-            }
-            btnTitleColor={
-              isEditingMode
-                ? Colors.button.start_operation_info.btnText
-                : Colors.button.finish_operation_info.btnText
-            }
-            btnTitleFontSize={10}
-          >
-            {isEditingMode ? "ยืนยันการแก้ไข" : "แก้ไขข้อมูล"}
-          </CustomButton>
-        </View> */}
       </KeyboardAvoidingView>
     </View>
   );

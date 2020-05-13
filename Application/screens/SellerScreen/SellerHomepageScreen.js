@@ -50,10 +50,13 @@ export default SellerHomepageScreen = (props) => {
   // Show comming transaction
   useEffect(() => {
     if (transactions) {
+      let completedTx = transactions[5].filter(
+        (tx) => tx.detail.commentable != "commented"
+      );
       let tmpTxShow = transactions[3]
         .concat(transactions[1])
-        .concat(transactions[2])
-        .concat(transactions[5]);
+        .concat(completedTx)
+        .concat(transactions[2]);
       setTxShow(tmpTxShow);
     }
   }, [transactions]);

@@ -426,7 +426,9 @@ export default BuyerDetailScreen = (props) => {
               <ThaiMdText
                 style={{ fontSize: 14, color: Colors.primary_bright_variant }}
               >
-                {buyerInfo.detail.description}
+                {buyerInfo.detail.description
+                  ? buyerInfo.detail.description
+                  : ""}
               </ThaiMdText>
             </ThaiRegText>
           </View>
@@ -573,6 +575,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4,
+    elevation: 2,
   },
 });
