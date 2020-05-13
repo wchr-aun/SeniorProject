@@ -31,9 +31,7 @@ export const fetchQuickTransaction = (queryData) => {
   return async (dispatch) => {
     try {
       // search buyer
-      console.log(queryData);
       let SellerList = await querySellers(queryData);
-      console.log(SellerList);
       let cleanedFormatSellerList = [];
       // let assignedTimeForUpdatingTx = [];
 
