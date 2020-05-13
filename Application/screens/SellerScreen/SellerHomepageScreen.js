@@ -53,7 +53,6 @@ export default SellerHomepageScreen = (props) => {
       let completedTx = transactions[5].filter(
         (tx) => tx.detail.commentable != "commented"
       );
-      console.log(completedTx);
       let tmpTxShow = transactions[3]
         .concat(transactions[1])
         .concat(completedTx)
