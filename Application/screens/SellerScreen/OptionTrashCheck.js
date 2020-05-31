@@ -121,6 +121,32 @@ export default OptionTrashCheck = (props) => {
   // use the picked image for prediction process
   const getPredictionHandler = async () => {
     setIsInOperation(true);
+    // const result = [
+    //   {
+    //     class: "plastic_bottle",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32",
+    //   },
+    //   {
+    //     class: "plastic_bottle",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32",
+    //   },
+    //   {
+    //     class: "plastic_bottle",
+    //     score: "0.9232149",
+    //     xmax: "410",
+    //     xmin: "168",
+    //     ymax: "770",
+    //     ymin: "32",
+    //   },
+    // ];
     try {
       const res = await libary.getPrediction(pickedImage, 10000);
       if (res.results) {
@@ -146,6 +172,12 @@ export default OptionTrashCheck = (props) => {
       );
       setPickedImage("");
     }
+    // await setTimeout(() => console.log("1000ms run"), 5000);
+    // dispatch({
+    //   type: GET_PREDICTION,
+    //   results: result,
+    //   wasteTypesDB,
+    // });
     setIsInOperation(false);
   };
 

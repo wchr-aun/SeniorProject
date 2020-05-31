@@ -80,6 +80,7 @@ export default function (state = initialState, action) {
       };
     case CONFIRM_SELLERITEMSCAMERA:
       console.log("CONFIRM_CAMERA Reducer Run");
+      console.log(action);
       // console.log(action);
       // for ( const majorType in action.sellerItemsCameraObj){
       //   for ( const subType in action.sellerItemsCameraObj[majorType] ){

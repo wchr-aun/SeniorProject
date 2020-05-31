@@ -83,12 +83,12 @@ export default ModalShowInteractMap = (props) => {
     props.setSellerAddr({
       latitude: selectedLocation.lat,
       longitude: selectedLocation.lng,
-      readable: props.signupMode
-        ? props.addrReadable
-        : selectedLocationReadable[0],
-      zipcode: props.signupMode
-        ? props.zipcode
-        : parseInt(selectedLocationReadable[0].postalCode, 10),
+      // readable: props.signupMode
+      //   ? props.addrReadable
+      //   : selectedLocationReadable[0],
+      // zipcode: props.signupMode
+      //   ? props.zipcode
+      //   : parseInt(selectedLocationReadable[0].postalCode, 10),
     });
     props.setModalVisible(false);
   };

@@ -23,6 +23,9 @@ export const getUsers = async () => {
             latitude: doc.data().addr_geopoint.geopoint.latitude,
             longitude: doc.data().addr_geopoint.geopoint.longitude,
             zipcode: doc.data().zipcode,
+            address_detail: doc.data().address_detail
+              ? doc.data().address_detail
+              : {},
           },
           email: auth.currentUser.email,
           phoneNo: doc.data().phoneNo.replace("+660", "0").replace("+66", "0"),

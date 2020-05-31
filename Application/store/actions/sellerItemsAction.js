@@ -80,21 +80,27 @@ export const getBuyerList = (queryData) => {
       // search buyer
       let favBuyerList = await getFavBuyers();
       let buyerList = await queryBuyers(queryData);
+      console.log("queryData");
+      console.log(queryData);
+      console.log("buyerList");
+      console.log(buyerList);
 
-      // label fav flag
-      for (let i = 0; i < buyerList.length; i++) {
-        if (favBuyerList.includes(buyerList[i]["id"])) {
-          buyerList[i]["isFav"] = true;
-        } else {
-          buyerList[i]["isFav"] = false;
+      if (buyerList.length > 0) {
+        // label fav flag
+        for (let i = 0; i < buyerList.length; i++) {
+          if (favBuyerList.includes(buyerList[i]["id"])) {
+            buyerList[i]["isFav"] = true;
+          } else {
+            buyerList[i]["isFav"] = false;
+          }
         }
-      }
 
-      // dispatch
-      dispatch({
-        type: GET_BUYER_LIST,
-        buyerList: buyerList,
-      });
+        // dispatch
+        dispatch({
+          type: GET_BUYER_LIST,
+          buyerList: buyerList,
+        });
+      }
     } catch (err) {
       throw new Error(err.message);
     }

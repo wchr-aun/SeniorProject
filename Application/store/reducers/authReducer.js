@@ -7,15 +7,16 @@ const initialState = {
     surname: "",
     addr: "",
     enableAddr: "",
-    enableSearch: ""
+    enableSearch: "",
   },
-  userRole: ""
+  userRole: "",
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
       console.log("SIGNIN");
+      console.log(action);
       return {
         userProfile: {
           uid: action.userProfile.uid,
@@ -24,16 +25,16 @@ export default (state = initialState, action) => {
           addr: action.userProfile.addr,
           enableSearch: action.userProfile.enableSearch,
           img: action.userProfile.img,
-          phoneNo: action.userProfile.phoneNo
+          phoneNo: action.userProfile.phoneNo,
         },
-        userRole: action.userRole
+        userRole: action.userRole,
       };
     case CHANGE_ROLE:
       console.log("CHANGE_ROLE");
 
       return {
         ...state,
-        userRole: action.userRole
+        userRole: action.userRole,
       };
     case LOGOUT:
       console.log("LOGOUT");

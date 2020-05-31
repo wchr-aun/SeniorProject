@@ -541,7 +541,12 @@ export default ChooseBuyerScreen = (props) => {
           />
         </View>
 
-        <View style={{ width: "100%", height: "70%" }}>
+        <View
+          style={{
+            width: "100%",
+            height: buyerChoiceState.haveEleSelected ? "70%" : "90%",
+          }}
+        >
           <TouchableOpacity onPress={quickSellHandler}>
             <View
               style={{

@@ -122,7 +122,7 @@ export default EditingUserprofileScreen = (props) => {
       shallowAddr: "",
       subdistrict: "",
       district: "",
-      province: "กรุงเทพมหานครฯ",
+      province: "",
       postalCode: "",
       phoneNo: userProfile.phoneNo,
     },
@@ -169,7 +169,7 @@ export default EditingUserprofileScreen = (props) => {
   const searchMapHandler = async () => {
     // do async task
     if (!formState.addrFormIsValid) {
-      setError("Please fill all the addresses");
+      setError("โปรดเติมที่อยู่ให้ครบ");
       return;
     }
 
@@ -197,7 +197,9 @@ export default EditingUserprofileScreen = (props) => {
         " " +
         formState.inputValues.postalCode;
     setAddrReadable(userAddrString);
+    setIsInOperation(true);
     let result = await getManualStringLocation(userAddrString);
+    setIsInOperation(false);
     setAddrCord(result);
     setIsAddrModalVisible(true);
   };
@@ -209,7 +211,7 @@ export default EditingUserprofileScreen = (props) => {
   };
 
   // firebase call cloud function
-  const editConfirmHandler = async () => {
+  const editConfirmHandler = useCallback(async () => {
     setIsLoading(true);
     setIsInOperation(true);
     setTextInOperation("กำลังแก้ไขข้อมูล");
@@ -219,14 +221,28 @@ export default EditingUserprofileScreen = (props) => {
       setIsLoading(false);
       return;
     }
-    console.log(userAddrObj);
     // passed to editUserInfo()
     let user = {
       name: formState.inputValues.name,
       surname: formState.inputValues.surname,
-      addr: userAddrObj,
+      addr: {
+        address_detail: {
+          shallowAddr: formState.inputValues.shallowAddr,
+          subdistrict: formState.inputValues.subdistrict,
+          district: formState.inputValues.district,
+          province: formState.inputValues.province,
+          postalCode: formState.inputValues.postalCode,
+        },
+        latitude: userAddrObj.latitude,
+        longitude: userAddrObj.longitude,
+        readable: addrReadable,
+        zipcode: formState.inputValues.postalCode,
+      },
       phoneNo: formState.inputValues.phoneNo.replace("0", "+66"),
     };
+
+    console.log("user obj before confirm editing");
+    console.log(user);
 
     editUserInfo(user)
       .then(() => {
@@ -245,7 +261,7 @@ export default EditingUserprofileScreen = (props) => {
         setIsInOperation(false);
         setError(err.message);
       });
-  };
+  }, [formState.inputValues]);
 
   // For User signout
   const [textInOperation, setTextInOperation] = useState("กำลังดำเนินการ");
@@ -286,20 +302,6 @@ export default EditingUserprofileScreen = (props) => {
   };
 
   if (isAddrModalVisible && addrCord) {
-    console.log(addrCord.latitude);
-    console.log(addrCord.longitude);
-    console.log(addrReadable);
-    // return (
-    //   // <ModalShowInteractMap
-    //   //   setModalVisible={setIsAddrModalVisible}
-    //   //   modalVisible={isAddrModalVisible}
-    //   //   origin={{ latitude: addrCord.latitude, longitude: addrCord.longitude }}
-    //   //   setUserAddrObj={setUserAddrObj}
-    //   //   addrReadable={addrReadable}
-    //   //   zipcode={formState.inputValues.postalCode}
-    //   //   signupMode={false}
-    //   // />
-
     return (
       <ModalShowInteractMap
         setModalVisible={setIsAddrModalVisible}
