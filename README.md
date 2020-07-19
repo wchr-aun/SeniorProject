@@ -3,9 +3,9 @@
 Waste Separation Using Image Processing and Trading System to Solve Environmental Problems Occurring from Waste Pollution
 
 ### Implemented by
-- Thanason Eiamyingsakul<br>
-- Narawit Tubtimtoe<br>
-- Watcharin Sirinaovakul
+- <a href="https://github.com/ttn37">Thanason Eiamyingsakul</a><br>
+- <a href="https://github.com/nonna4822">Narawit Tubtimtoe</a><br>
+- <a href="https://github.com/wchr-aun">Watcharin Sirinaovakul</a>
 
 This project is parts of CPE401 and CPE402, also known as Senior Project. Also, this project is implemented for the purpose of competition in National Software Contest 2020 (NSC2020).
 
