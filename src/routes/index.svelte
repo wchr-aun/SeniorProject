@@ -6,9 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Senior Project &lt;To Be Change&gt;</title>
 </svelte:head>
 
-<div class="container">
-	Content
-</div>
+<div class="container">Content</div>

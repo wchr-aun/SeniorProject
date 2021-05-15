@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [master, develop-renovate]
+  pull_request:
+    branches: [master, develop-renovate]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: CultureHQ/actions-yarn@v1.0.1
+        with:
+          node-version: 14
+      - run: yarn
+      - run: yarn build
