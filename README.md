@@ -1,41 +1,38 @@
-# SeniorProject
-## Name of the project
-Waste Separation Using Image Processing and Trading System to Solve Environmental Problems Occurring from Waste Pollution
+# create-svelte
 
-### Implemented by
-- <a href="https://github.com/ttn37">Thanason Eiamyingsakul</a><br>
-- <a href="https://github.com/nonna4822">Narawit Tubtimtoe</a><br>
-- <a href="https://github.com/wchr-aun">Watcharin Sirinaovakul</a>
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
 
-This project is parts of CPE401 and CPE402, also known as Senior Project. Also, this project is implemented for the purpose of competition in National Software Contest 2020 (NSC2020).
+## Creating a project
 
-## Abstract
-Currently, there are many problems with waste pollution, for example, air pollution problems caused by landfill or water pollution problems from dumping waste into rivers and seas. These problems affect both the physical health of people and the surrounding environment. Thailand is also one country that has been dealing with a growing amount of waste. However, the ability to properly manage waste in that country is in the opposite direction. One of the ways to reduce the mentioned problems is to have efficient waste management, such as waste separation, waste recycling, and convenience management, etc. This project aims to create a system that enables efficient waste management. The application provides knowledge about waste using image processing techniques. The prices of waste that can be sold will be shown to increases incentives for waste management. Moreover, users can buy or sell junk easily using the trading system in the application for their convenience. Also, we provide some inside-information through data visualization so that those involved in waste management can take these data for further analysis.
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Awards
-- Second Runner Up, Best Senior Projects 2020 - Computer Engineering Department, KMUTT
-- Received a supporting fund on the semi-final round, National Software Contest 2020 - NSTDA
+```bash
+# create a new project in the current directory
+npm init svelte@next
 
-# Technologies used in the project
-## Application part
-- React Native JS
-- Firebase
-  - Authentication
-  - Firestore
-  - Cloud Functions
-  - Storage
-- Google Maps Service
-- Expo
-## Website part
-<a href="https://senior-project-83de1.firebaseapp.com/">Demo website</a>
-- VueJS
-- ChartJS
-- BulmaCSS
-## Model part
-<a href="https://github.com/ttn37/frcnn_server">Link to the code</a>
-- TensorFlow
-- Faster RCNN Architecture
-- Google Cloud
+# create a new project in my-app
+npm init svelte@next my-app
+```
 
+> Note: the `@next` is temporary
 
-### <a href="/FinalReport.pdf">Full Report (in Thai)</a>
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+
+```bash
+npm run build
+```
+
+> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
