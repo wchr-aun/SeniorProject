@@ -6,6 +6,16 @@
 
 <div class="flex flex-col h-screen justify-between">
 	<Header />
-	<main class="mb-auto h-10 px-40 py-10"><slot /></main>
+	<div class="px-24">
+		<main class="bg-gray-200 px-16 py-10 fit-screen">
+			<slot />
+		</main>
+	</div>
 	<Footer />
 </div>
+
+<style>
+	.fit-screen {
+		min-height: 75vh;
+	}
+</style>

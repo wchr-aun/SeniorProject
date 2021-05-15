@@ -38,5 +38,9 @@
 		"commitizen": {
 			"path": "cz-emoji"
 		}
+	},
+	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^5.15.3",
+		"svelte-fa": "^2.2.0"
 	}
 }
