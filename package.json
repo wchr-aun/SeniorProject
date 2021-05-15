@@ -8,7 +8,8 @@
 		"lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --write --plugin-search-dir=. .",
 		"clean": "rimraf ./node_modules",
-		"commit": "cz"
+		"commit": "cz",
+		"start": "node ./build/index.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^1.0.0-next.20",
