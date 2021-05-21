@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Modal from '$lib/Modal/index.svelte';
+	import ConfirmModal from '$lib/Modal/ConfirmModal/index.svelte';
+	import { EModalSize } from '$lib/Modal/model';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 	export let pages: {
@@ -65,19 +66,22 @@
 								<a
 									class="block px-4 py-2 text-sm text-gray-700"
 									role="menuitem"
-									id="user-menu-item-0">
+									id="user-menu-item-0"
+								>
 									Your Profile
 								</a>
 								<a
 									class="block px-4 py-2 text-sm text-gray-700"
 									role="menuitem"
-									id="user-menu-item-1">
+									id="user-menu-item-1"
+								>
 									Settings
 								</a>
 								<a
 									class="block px-4 py-2 text-sm text-gray-700"
 									role="menuitem"
-									id="user-menu-item-2">
+									id="user-menu-item-2"
+								>
 									Sign out
 								</a>
 							</div>
@@ -92,18 +96,18 @@
 					Login
 				</button>
 				{#if modalShown}
-					<Modal
+					<ConfirmModal
 						icon={faSignInAlt}
 						heading="Login"
 						confirmBtn="Login"
 						cancelBtn="Cancel"
-						size="max-w-3xl"
+						size={EModalSize.XL3}
 						on:confirm={() => (isLogin = true)}
 						on:cancel={() => (modalShown = !modalShown)}
 						on:clickBg={() => (modalShown = !modalShown)}
 					>
 						<p>// LOGIN STUFF HERE</p>
-					</Modal>
+					</ConfirmModal>
 				{/if}
 			{/if}
 		</div>
