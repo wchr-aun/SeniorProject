@@ -2,39 +2,16 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { createEventDispatcher } from 'svelte';
+	import { _colorToneMapping, EModalColorTone, EModalSize } from '../model';
 
 	export let icon: IconDefinition;
 	export let heading: string;
 	export let confirmBtn: string;
 	export let cancelBtn: string;
-	export let colorTone: 'RED' | 'GRAY' | 'WHITE' = 'GRAY';
-	export let size:
-		| 'max-w-lg'
-		| 'max-w-xl'
-		| 'max-w-2xl'
-		| 'max-w-3xl'
-		| 'max-w-4xl'
-		| 'max-w-5xl'
-		| 'max-w-6xl' = 'max-w-lg';
+	export let colorTone: EModalColorTone = EModalColorTone.GRAY;
+	export let size: EModalSize = EModalSize.LG;
 
 	const dispatch = createEventDispatcher();
-	const _colorToneMapping = {
-		RED: {
-			circle: 'bg-red-100',
-			icon: 'text-red-600',
-			button: 'bg-red-600 focus:ring-red-500 hover:bg-red-700'
-		},
-		GRAY: {
-			circle: 'bg-gray-100',
-			icon: 'text-gray-600',
-			button: 'bg-gray-600 focus:ring-gray-500 hover:bg-gray-700'
-		},
-		WHITE: {
-			circle: 'bg-white-100',
-			icon: 'text-white-600',
-			button: 'bg-white-600 focus:ring-white-500 hover:bg-white-700'
-		}
-	};
 </script>
 
 <div
@@ -75,7 +52,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+			<div class="bg-gray-50 px-4 py-3 flex flex-row-reverse">
 				<button
 					type="button"
 					class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm
