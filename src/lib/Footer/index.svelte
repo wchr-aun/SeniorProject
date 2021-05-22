@@ -3,8 +3,8 @@
 	import { faGithub } from '@fortawesome/free-brands-svg-icons';
 </script>
 
-<div class="h-12 bg-gray-400 px-24 py-3 text-white inline-grid justify-items-end">
-	<div class="inline-flex space-x-2">
+<div class="h-16 bg-gray-200 px-6 text-gray-600 inline-grid justify-items-end">
+	<div class="inline-flex space-x-2 self-center">
 		<p>Senior Project Extended @ 2021</p>
 		<span>|</span>
 		<a
