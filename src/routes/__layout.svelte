@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Header from '$lib/Header/index.svelte';
 	import Footer from '$lib/Footer/index.svelte';
+	import Navigation from '$lib/Navigation/index.svelte';
 	import '../app.postcss';
 
 	const pages = [
@@ -11,14 +11,18 @@
 	];
 </script>
 
-<div class="flex flex-col h-screen justify-between">
-	<Header {pages} defaultPage={pages[0].name} />
-	<div class="px-24">
-		<main class="bg-gray-100 px-16 py-10 fit-screen">
-			<slot />
-		</main>
+<div class="flex">
+	<div class="fixed min-w-max">
+		<Navigation {pages} />
 	</div>
-	<Footer />
+	<div class="flex flex-grow pl-64 flex-col h-screen justify-between">
+		<div>
+			<main class="bg-gray-100 px-10 py-10 fit-screen">
+				<slot />
+			</main>
+		</div>
+		<Footer />
+	</div>
 </div>
 
 <style>
@@ -26,6 +30,6 @@
 		background-color: rgba(31, 41, 55, 1);
 	}
 	.fit-screen {
-		min-height: 85vh;
+		min-height: 91.5vh;
 	}
 </style>
