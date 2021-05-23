@@ -2,8 +2,8 @@
 	export let tag: string;
 	export let heading: string;
 	export let content: string;
-	export let aboveHeading: string = '';
-	export let link: string = '';
+	export let aboveHeading = '';
+	export let link = '';
 </script>
 
 <div class="px-10 my-4 py-6 rounded shadow-xl bg-white mx-auto">
