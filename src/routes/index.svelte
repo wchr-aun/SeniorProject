@@ -3,9 +3,9 @@
 </script>
 
 <script lang="ts">
-	import WarningModal from '$lib/Modal/DialogModal/index.svelte';
-	import Card from '$lib/Card/index.svelte';
-	import { EModalColorTone } from '$lib/Modal/model';
+	import WarningModal from '$lib/components/Modal/DialogModal/index.svelte';
+	import Card from '$lib/components/Card/index.svelte';
+	import { EModalColorTone } from '$lib/components/Modal/model';
 	import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 	let warningShown = false;
@@ -16,7 +16,7 @@
 </svelte:head>
 
 <div class="container">
-	<Card />
+	<Card heading="Heading Card" content="Content Card" tag="News" />
 
 	<button
 		on:click={() => (warningShown = !warningShown)}
