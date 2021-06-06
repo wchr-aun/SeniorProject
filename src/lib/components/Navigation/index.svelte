@@ -2,8 +2,8 @@
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import { onDestroy } from 'svelte';
-	import { isLogin$, toggleLoginModal } from '$lib/store';
+	import { onDestroy, onMount } from 'svelte';
+	import { isLogin$, toggleLoginModal, userProfile$ } from '$lib/store';
 
 	export let pages: {
 		icon?: IconDefinition;
@@ -14,6 +14,23 @@
 	let currentPage = '';
 	let projectName = 'Senior Project';
 	let isLogin: boolean;
+	let displayName = '';
+	let photoUrl = '';
+
+	const subscription = [];
+
+	onMount(() => {
+		subscription.push(
+			userProfile$.subscribe((userProfile) => {
+				if (!userProfile) return;
+				displayName =
+					userProfile.displayName?.length > 20
+						? `${userProfile.displayName.slice(0, 18)}...`
+						: userProfile.displayName;
+				photoUrl = userProfile.photoUrl;
+			})
+		);
+	});
 
 	const unsubscribe = isLogin$.subscribe((status) => {
 		isLogin = status;
@@ -49,10 +66,10 @@
 					<span
 						class="inline-flex bg-green-500 w-2 h-2 absolute right-0 bottom-0 rounded-full ring-2 ring-white transform translate-x-1/3 translate-y-1/3"
 					/>
-					<span class="w-8 h-8 object-cover rounded-full" src="" />
+					<img class="w-8 h-8 object-cover rounded-full" src={photoUrl} alt="pfp" />
 				</div>
 				<div>
-					<h3 class="font-semibold tracking-wide text-gray-800">Name Surname</h3>
+					<h3 class="font-semibold tracking-wide text-gray-800">{displayName}</h3>
 					<p class="text-sm text-gray-700">View Profile</p>
 				</div>
 			{:else}

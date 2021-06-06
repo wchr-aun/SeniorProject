@@ -13,6 +13,11 @@
 			errorShown = true;
 			errorMsg = e.toString();
 		};
+
+		window.onunhandledrejection = (e) => {
+			errorShown = true;
+			errorMsg = e.toString();
+		};
 	});
 </script>
 
