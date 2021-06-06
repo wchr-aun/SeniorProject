@@ -6,8 +6,8 @@
 
 	export let icon: IconDefinition;
 	export let heading: string;
-	export let confirmBtn: string = '';
-	export let cancelBtn: string = '';
+	export let confirmBtn = '';
+	export let cancelBtn = '';
 	export let colorTone: EModalColorTone = EModalColorTone.GRAY;
 	export let size: EModalSize = EModalSize.LG;
 

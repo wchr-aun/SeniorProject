@@ -14,8 +14,8 @@
 	let currentPage = '';
 	let projectName = 'Senior Project';
 	let isLogin: boolean;
-	let displayName: string = '';
-	let photoUrl: string = '';
+	let displayName = '';
+	let photoUrl = '';
 
 	const subscription = [];
 

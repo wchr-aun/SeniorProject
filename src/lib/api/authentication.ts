@@ -1,5 +1,5 @@
 import axios from 'axios';
 
-export function apiAuthentication(token: string) {
-	return axios.get('http://localhost:8000/test', { headers: { Authorization: `Bearer ${token}` } });
+export function apiAuthentication(token: string): void {
+	axios.get(import.meta.env.VITE_API_URL, { headers: { Authorization: `Bearer ${token}` } });
 }
