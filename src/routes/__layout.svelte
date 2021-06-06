@@ -14,8 +14,8 @@
 	];
 </script>
 
-<GlobalErrorHandler />
 <LoginModal />
+<GlobalErrorHandler />
 <div class="flex static">
 	<div class="fixed min-w-max">
 		<Navigation {pages} />
