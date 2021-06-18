@@ -3,6 +3,7 @@
 	import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 	import { EModalColorTone } from '$lib/components/Modal/model';
 	import ErrorModal from '$lib/components/Modal/DialogModal/index.svelte';
+	import { setIsLoading } from '$lib/store';
 
 	let errorShown = false;
 	// let errorHeader: string;
@@ -12,11 +13,13 @@
 		window.onerror = (e) => {
 			errorShown = true;
 			errorMsg = e.toString();
+			setIsLoading(false);
 		};
 
-		window.onunhandledrejection = (e) => {
+		window.onunhandledrejection = async (e) => {
 			errorShown = true;
 			errorMsg = e.toString();
+			setIsLoading(false);
 		};
 	});
 </script>

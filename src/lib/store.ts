@@ -10,12 +10,13 @@ export function setIsLogin(status: boolean): void {
 	isLogin$.set(status);
 }
 
-export const authToken$ = writable<string>(null);
-export function setAuthToken(token: string): void {
-	authToken$.set(token);
+export const userProfile$ =
+	writable<{ displayName: string; phoneNumber: string; photoUrl: string }>(null);
+export function setUserProfile(displayName: string, phoneNumber: string, photoUrl: string): void {
+	userProfile$.set({ displayName, phoneNumber, photoUrl });
 }
 
-export const userProfile$ = writable<{ displayName: string; photoUrl: string }>(null);
-export function setUserProfile(displayName: string, photoUrl: string): void {
-	userProfile$.set({ displayName, photoUrl });
+export const isLoading$ = writable<boolean>(false);
+export function setIsLoading(v: boolean): void {
+	isLoading$.set(v);
 }

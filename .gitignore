@@ -5,3 +5,4 @@ node_modules
 /functions
 firebase.json
 .env
+.vscode
