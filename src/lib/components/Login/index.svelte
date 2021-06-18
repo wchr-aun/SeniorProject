@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from 'svelte-fa';
 	import { onDestroy, onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { EModalSize } from '$lib/components/Modal/model';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 	import { faGoogle } from '@fortawesome/free-brands-svg-icons';
@@ -9,12 +10,12 @@
 		isLogin$,
 		toggleLoginModal,
 		setIsLogin,
-		setAuthToken,
-		setUserProfile
+		setUserProfile,
+		setIsLoading
 	} from '$lib/store';
 	import LoginModal from '$lib/components/Modal/ConfirmModal/index.svelte';
-	import { apiAuthentication } from '$lib/api/authentication';
-	import { auth, provider } from '$lib/firebase.module.svelte';
+	import { apiGetAuthentication, apiPostAuthentication } from '$lib/api/authentication';
+	import { auth, provider } from '$lib/firebase';
 
 	let modalShown: boolean;
 	let loginModalShown: boolean;
@@ -33,20 +34,35 @@
 				modalShown = status && !isLogin;
 			})
 		);
+
+		auth.onAuthStateChanged(async (user) => {
+			setIsLoading(true);
+			if (!user && !isLogin) {
+				setIsLoading(false);
+				return;
+			}
+
+			const response = await apiGetAuthentication();
+			setIsLoading(false);
+			setIsLogin(true);
+
+			if (response.new) {
+				await apiPostAuthentication(user.displayName, user.phoneNumber, user.photoURL);
+				setUserProfile(user.displayName, user.phoneNumber, user.photoURL);
+				goto('/settings', {});
+				return;
+			}
+
+			setUserProfile(response.fullname, response.phonenumber, response.photourl);
+		});
 	});
 
 	onDestroy(() => {
 		subscription.forEach((unsub) => unsub());
 	});
 
-	async function handleLoginWithGoogle() {
-		const result = await auth.signInWithPopup(provider);
-		if (!result) return;
-		await apiAuthentication(result.user['za']);
-		console.log(result);
-		setAuthToken(result.user['za']);
-		setUserProfile(result.user.displayName, result.user.photoURL);
-		setIsLogin(true);
+	function handleLoginWithGoogle() {
+		auth.signInWithPopup(provider);
 		toggleLoginModal();
 	}
 </script>

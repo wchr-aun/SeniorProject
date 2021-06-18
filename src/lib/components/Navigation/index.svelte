@@ -1,22 +1,29 @@
+<script lang="ts" context="module">
+	export interface IPage {
+		icon?: IconDefinition;
+		url: string;
+		name: string;
+		requireLogin?: boolean;
+	}
+</script>
+
 <script lang="ts">
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { onDestroy, onMount } from 'svelte';
 	import { isLogin$, toggleLoginModal, userProfile$ } from '$lib/store';
+	import { goto } from '$app/navigation';
+	import { ROUTES } from '$lib/constants/routes';
+	import { page } from '$app/stores';
 
-	export let pages: {
-		icon?: IconDefinition;
-		url: string;
-		name: string;
-	}[];
+	export let pages: IPage[];
 
 	let currentPage = '';
 	let projectName = 'Senior Project';
 	let isLogin: boolean;
 	let displayName = '';
 	let photoUrl = '';
-
 	const subscription = [];
 
 	onMount(() => {
@@ -32,11 +39,10 @@
 		);
 	});
 
-	const unsubscribe = isLogin$.subscribe((status) => {
-		isLogin = status;
-	});
+	subscription.push(page.subscribe((p) => (currentPage = p.path)));
+	subscription.push(isLogin$.subscribe((status) => (isLogin = status)));
 
-	onDestroy(() => unsubscribe());
+	onDestroy(() => subscription.forEach((unsub) => unsub()));
 </script>
 
 <div class="min-h-screen bg-white">
@@ -44,19 +50,21 @@
 		<div class="p-4 text-xl self-center">{projectName}</div>
 		<ul class="p-2 space-y-2 flex-1 overflow-auto" style="scrollbar-width: thin;">
 			{#each pages as page}
-				<li>
-					<a
-						href={page.url}
-						class="flex space-x-2 items-center text-gray-600 p-2 rounded-lg {currentPage ===
-						page.name
-							? 'bg-gray-200'
-							: 'hover:text-gray-900 hover:bg-gray-200'}"
-						on:click={() => (currentPage = page.name)}
-					>
-						<Fa icon={page.icon} />
-						<span class="text-gray-900">{page.name}</span>
-					</a>
-				</li>
+				{#if !page.requireLogin || isLogin}
+					<li>
+						<a
+							href={page.url}
+							class="flex space-x-2 items-center text-gray-600 p-2 rounded-lg {currentPage ===
+							page.url
+								? 'bg-gray-200'
+								: 'hover:text-gray-900 hover:bg-gray-200'}"
+							on:click={() => (currentPage = page.name)}
+						>
+							<Fa icon={page.icon} />
+							<span class="text-gray-900">{page.name}</span>
+						</a>
+					</li>
+				{/if}
 			{/each}
 		</ul>
 
@@ -68,9 +76,9 @@
 					/>
 					<img class="w-8 h-8 object-cover rounded-full" src={photoUrl} alt="pfp" />
 				</div>
-				<div>
+				<div class="cursor-pointer" on:click={() => goto(ROUTES.SETTINGS)}>
 					<h3 class="font-semibold tracking-wide text-gray-800">{displayName}</h3>
-					<p class="text-sm text-gray-700">View Profile</p>
+					<p class="text-sm text-gray-700">Edit Profile</p>
 				</div>
 			{:else}
 				<button

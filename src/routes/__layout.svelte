@@ -1,21 +1,33 @@
+<script context="module" lang="ts">
+	import { authGuard } from '$lib/guards';
+	import type { LoadInput, LoadOutput } from '@sveltejs/kit';
+
+	export async function load({ page, fetch, session, context }: LoadInput): Promise<LoadOutput> {
+		return await authGuard({ page, fetch, session, context });
+	}
+</script>
+
 <script lang="ts">
 	import '../app.postcss';
 	import { faHome, faSearch, faGlobe, faChartLine } from '@fortawesome/free-solid-svg-icons';
-	import GlobalErrorHandler from '$lib/errorHandler.module.svelte';
+	import GlobalErrorHandler from '$lib/components/ErrorHandler/index.svelte';
 	import Footer from '$lib/components/Footer/index.svelte';
-	import Navigation from '$lib/components/Navigation/index.svelte';
-	import LoginModal from '$lib/login.module.svelte';
+	import Navigation, { IPage } from '$lib/components/Navigation/index.svelte';
+	import LoginModal from '$lib/components/Login/index.svelte';
+	import Loading from '$lib/components/Loading/index.svelte';
+	import { ROUTES } from '$lib/constants/routes';
 
-	const pages = [
-		{ icon: faHome, url: '/', name: 'Home' },
-		{ icon: faSearch, url: '/search', name: 'Search' },
-		{ icon: faGlobe, url: '/discover', name: 'Discover' },
-		{ icon: faChartLine, url: '/analytics', name: 'Analytics' }
+	const pages: IPage[] = [
+		{ icon: faHome, url: ROUTES.HOME, name: 'Home' },
+		{ icon: faSearch, url: ROUTES.SEARCH, name: 'Search' },
+		{ icon: faGlobe, url: ROUTES.DISCOVER, name: 'Discover' },
+		{ icon: faChartLine, url: ROUTES.ANALYTICS, name: 'Analytics' }
 	];
 </script>
 
 <LoginModal />
 <GlobalErrorHandler />
+<Loading />
 <div class="flex static">
 	<div class="fixed min-w-max">
 		<Navigation {pages} />
