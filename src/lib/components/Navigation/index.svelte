@@ -1,12 +1,3 @@
-<script lang="ts" context="module">
-	export interface IPage {
-		icon?: IconDefinition;
-		url: string;
-		name: string;
-		requireLogin?: boolean;
-	}
-</script>
-
 <script lang="ts">
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import { ROUTES } from '$lib/constants/routes';
 	import { page } from '$app/stores';
+	import type { IPage } from '$lib/models';
 
 	export let pages: IPage[];
 

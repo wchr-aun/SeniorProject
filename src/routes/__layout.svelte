@@ -12,10 +12,11 @@
 	import { faHome, faSearch, faGlobe, faChartLine } from '@fortawesome/free-solid-svg-icons';
 	import GlobalErrorHandler from '$lib/components/ErrorHandler/index.svelte';
 	import Footer from '$lib/components/Footer/index.svelte';
-	import Navigation, { IPage } from '$lib/components/Navigation/index.svelte';
+	import Navigation from '$lib/components/Navigation/index.svelte';
 	import LoginModal from '$lib/components/Login/index.svelte';
 	import Loading from '$lib/components/Loading/index.svelte';
 	import { ROUTES } from '$lib/constants/routes';
+	import type { IPage } from '$lib/models';
 
 	const pages: IPage[] = [
 		{ icon: faHome, url: ROUTES.HOME, name: 'Home' },
