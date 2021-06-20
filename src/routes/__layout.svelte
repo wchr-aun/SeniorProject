@@ -12,11 +12,19 @@
 	import { faHome, faSearch, faGlobe, faChartLine } from '@fortawesome/free-solid-svg-icons';
 	import GlobalErrorHandler from '$lib/components/ErrorHandler/index.svelte';
 	import Footer from '$lib/components/Footer/index.svelte';
-	import Navigation from '$lib/components/Navigation/index.svelte';
+	import Sidepanel from '$lib/components/Navigation/Sidepanel/index.svelte';
+	import Bottombar from '$lib/components/Navigation/Bottombar/index.svelte';
 	import LoginModal from '$lib/components/Login/index.svelte';
 	import Loading from '$lib/components/Loading/index.svelte';
 	import { ROUTES } from '$lib/constants/routes';
 	import type { IPage } from '$lib/models';
+	import { onMount } from 'svelte';
+
+	let w: number;
+	onMount(() => {
+		w = window.innerWidth;
+		window.onresize = () => (w = window.innerWidth);
+	});
 
 	const pages: IPage[] = [
 		{ icon: faHome, url: ROUTES.HOME, name: 'Home' },
@@ -29,25 +37,21 @@
 <LoginModal />
 <GlobalErrorHandler />
 <Loading />
-<div class="flex static">
-	<div class="fixed min-w-max">
-		<Navigation {pages} />
-	</div>
-	<div class="flex flex-grow pl-64 flex-col h-screen justify-between">
-		<div>
-			<main class="bg-gray-100 px-10 py-10 fit-screen">
+<div class="flex flex-col lg:flex-row justify-between h-screen">
+	{#if w < 1024}
+		<main class="bg-gray-100 px-10 py-10 flex-grow">
+			<slot />
+		</main>
+		<div class="flex-none"><Bottombar {pages} /></div>
+	{:else}
+		<div class="fixed">
+			<Sidepanel {pages} />
+		</div>
+		<div class="flex flex-grow pl-64 flex-col h-screen justify-between">
+			<main class="bg-gray-100 px-10 py-10 flex-grow">
 				<slot />
 			</main>
+			<Footer />
 		</div>
-		<Footer />
-	</div>
+	{/if}
 </div>
-
-<style>
-	:global(body) {
-		background-color: rgba(31, 41, 55, 1);
-	}
-	.fit-screen {
-		min-height: calc(100vh - 4rem);
-	}
-</style>

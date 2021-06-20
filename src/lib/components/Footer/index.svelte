@@ -1,5 +1,5 @@
 <script>
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from '$lib/components/Fa/index.svelte';
 	import { faGithub } from '@fortawesome/free-brands-svg-icons';
 </script>
 

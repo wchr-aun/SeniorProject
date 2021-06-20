@@ -6,19 +6,22 @@
 	import { setIsLoading } from '$lib/store';
 
 	let errorShown = false;
-	// let errorHeader: string;
+	let errorHeader: string;
 	let errorMsg: string;
 
 	onMount(() => {
 		window.onerror = (e) => {
 			errorShown = true;
+			errorHeader = 'Unhandled Error';
 			errorMsg = e.toString();
 			setIsLoading(false);
 		};
 
-		window.onunhandledrejection = async (e) => {
+		window.onunhandledrejection = async (e: PromiseRejectionEvent) => {
+			console.log(e.reason.response);
 			errorShown = true;
-			errorMsg = e.toString();
+			errorHeader = e.reason?.response?.data?.title || 'Unknown Error';
+			errorMsg = e.reason?.response?.data?.msg || e.reason;
 			setIsLoading(false);
 		};
 	});
@@ -28,7 +31,7 @@
 	<ErrorModal
 		icon={faExclamation}
 		colorTone={EModalColorTone.RED}
-		heading="Unhandled Error"
+		heading={errorHeader}
 		confirmBtn="OK"
 		on:confirm={() => (errorShown = !errorShown)}
 	>

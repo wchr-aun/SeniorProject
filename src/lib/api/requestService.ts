@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { auth } from '$lib/firebase';
 import { setIsLoading } from '$lib/store';
 
@@ -10,30 +10,17 @@ export async function requestService<T>(
 ): Promise<T> {
 	setIsLoading(true);
 
-	const token = await auth.currentUser.getIdToken(true);
+	const token = await auth.currentUser.getIdToken();
 	const config = { headers: { Authorization: `Bearer ${token}` } };
 	const query = generateQuery(params);
 	let response: T;
 	try {
-		switch (method) {
-			case 'GET':
-				response = (await axios.get(`${url}?${query}`, config)).data;
-				break;
-			case 'POST':
-				response = (await axios.post(url, body, config)).data;
-				break;
-			case 'PUT':
-				response = (await axios.put(url, body, config)).data;
-				break;
-			case 'PATCH':
-				response = await (await axios.patch(url, body, config)).data;
-				break;
-			case 'DELETE':
-				response = await (await axios.delete(`${url}?${query}`, config)).data;
-				break;
-			default:
-				break;
-		}
+		response = await sendRequest(method, url, query, body, config).catch(async (e: AxiosError) => {
+			if (!e.response || e.response.status !== 401) throw e;
+			const token = await auth.currentUser.getIdToken(true);
+			const config = { headers: { Authorization: `Bearer ${token}` } };
+			return await sendRequest(method, url, query, body, config);
+		});
 		setIsLoading(false);
 		return response;
 	} catch (err) {
@@ -51,4 +38,31 @@ function generateQuery(params: Record<string, string | number | boolean>) {
 		query += key + '=' + encodeURIComponent(params[key]);
 	}
 	return query;
+}
+
+async function sendRequest(
+	method: string,
+	url: string,
+	query: string,
+	body: Record<string, string | number | boolean>,
+	config: AxiosRequestConfig
+) {
+	switch (method) {
+		case 'GET':
+			return (await axios.get(`${url}?${query}`, config)).data;
+		case 'POST':
+			return (await axios.post(url, body, config)).data;
+		case 'PUT':
+			return (await axios.put(url, body, config)).data;
+		case 'PATCH':
+			return await (
+				await axios.patch(url, body, config)
+			).data;
+		case 'DELETE':
+			return await (
+				await axios.delete(`${url}?${query}`, config)
+			).data;
+		default:
+			return null;
+	}
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
+	import Fa from '$lib/components/Fa/index.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { EModalSize } from '$lib/components/Modal/model';
@@ -16,12 +16,14 @@
 	import LoginModal from '$lib/components/Modal/ConfirmModal/index.svelte';
 	import { apiGetAuthentication, apiPostAuthentication } from '$lib/api/authentication';
 	import { auth, provider } from '$lib/firebase';
+	import { ROUTES } from '$lib/constants/routes';
 
 	let modalShown: boolean;
 	let loginModalShown: boolean;
 	let isLogin: boolean;
-
 	const subscription = [];
+
+	subscription.push(isLogin$.subscribe((status) => (isLogin = status)));
 
 	onMount(() => {
 		subscription.push(
@@ -36,20 +38,17 @@
 		);
 
 		auth.onAuthStateChanged(async (user) => {
-			setIsLoading(true);
-			if (!user && !isLogin) {
-				setIsLoading(false);
-				return;
-			}
+			if (!user || isLogin) return;
 
+			setIsLoading(true);
 			const response = await apiGetAuthentication();
-			setIsLoading(false);
 			setIsLogin(true);
+			setIsLoading(false);
 
 			if (response.new) {
 				await apiPostAuthentication(user.displayName, user.phoneNumber, user.photoURL);
 				setUserProfile(user.displayName, user.phoneNumber, user.photoURL);
-				goto('/settings', {});
+				goto(ROUTES.SETTINGS);
 				return;
 			}
 

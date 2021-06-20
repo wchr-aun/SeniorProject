@@ -6,4 +6,4 @@ export const ROUTES = {
 	SETTINGS: '/settings'
 };
 
-export const PROTECTE_ROUTES = ['/settings'];
+export const PROTECTED_ROUTES = [ROUTES.SETTINGS];

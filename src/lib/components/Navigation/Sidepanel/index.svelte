@@ -1,7 +1,6 @@
 <script lang="ts">
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from '$lib/components/Fa/index.svelte';
 	import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { onDestroy, onMount } from 'svelte';
 	import { isLogin$, toggleLoginModal, userProfile$ } from '$lib/store';
 	import { goto } from '$app/navigation';

@@ -8,7 +8,8 @@
 		"lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --write --plugin-search-dir=. .",
 		"clean": "rimraf ./node_modules",
-		"commit": "yarn format && git add --all && cz && git push",
+		"commit:full": "yarn format && git add --all && cz && git push",
+		"commit": "cz",
 		"start": "npx http-server ./build",
 		"pkg-check": "npm-check"
 	},
@@ -47,7 +48,6 @@
 		"@fortawesome/free-solid-svg-icons": "^5.15.3",
 		"@sveltejs/kit": "next",
 		"axios": "^0.21.1",
-		"firebase": "^8.6.5",
-		"svelte-fa": "^2.2.0"
+		"firebase": "^8.6.5"
 	}
 }
