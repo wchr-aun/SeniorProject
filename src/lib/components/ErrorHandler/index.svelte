@@ -18,7 +18,6 @@
 		};
 
 		window.onunhandledrejection = async (e: PromiseRejectionEvent) => {
-			console.log(e.reason.response);
 			errorShown = true;
 			errorHeader = e.reason?.response?.data?.title || 'Unknown Error';
 			errorMsg = e.reason?.response?.data?.msg || e.reason;

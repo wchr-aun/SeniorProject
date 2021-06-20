@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { IPage } from '$lib/models';
-	import { onDestroy, onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { isLogin$, toggleLoginModal, userProfile$ } from '$lib/store';
+	import { onDestroy } from 'svelte';
+	import { isLogin$, toggleLoginModal } from '$lib/store';
 	import Fa from '$lib/components/Fa/index.svelte';
 	import { ROUTES } from '$lib/constants/routes';
 	import { faCog, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,9 +10,7 @@
 
 	let isLogin: boolean;
 	const subscription = [];
-	let currentPage = '';
 
-	subscription.push(page.subscribe((p) => (currentPage = p.path)));
 	subscription.push(isLogin$.subscribe((status) => (isLogin = status)));
 
 	onDestroy(() => subscription.forEach((unsub) => unsub()));

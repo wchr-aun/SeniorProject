@@ -55,13 +55,9 @@ async function sendRequest(
 		case 'PUT':
 			return (await axios.put(url, body, config)).data;
 		case 'PATCH':
-			return await (
-				await axios.patch(url, body, config)
-			).data;
+			return (await axios.patch(url, body, config)).data;
 		case 'DELETE':
-			return await (
-				await axios.delete(`${url}?${query}`, config)
-			).data;
+			return (await axios.delete(`${url}?${query}`, config)).data;
 		default:
 			return null;
 	}
