@@ -1,6 +1,6 @@
 <script lang="ts">
+	import Fa from '$lib/components/Fa/index.svelte';
 	import { faSearch, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
 
 	export let suggestionList: string[] = [];
 </script>

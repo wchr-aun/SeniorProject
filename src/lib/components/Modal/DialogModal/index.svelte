@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Fa from 'svelte-fa/src/fa.svelte';
+	import Fa from '$lib/components/Fa/index.svelte';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { createEventDispatcher } from 'svelte';
 	import { _colorToneMapping, EModalColorTone, EModalSize } from '../model';
@@ -14,44 +14,27 @@
 </script>
 
 <div
-	class="fixed z-10 inset-0 overflow-y-auto"
-	aria-labelledby="modal-title"
-	role="dialog"
-	aria-modal="true"
+	class="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none"
+	style="background: rgba(0,0,0,.2);"
 >
-	<div
-		class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-	>
-		<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" />
-		<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true" />
-		<div
-			class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full {size}"
-		>
-			<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-				<div class="sm:flex sm:items-start">
-					<div
-						class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10
-            {_colorToneMapping[colorTone].circle}"
-					>
-						<Fa class={_colorToneMapping[colorTone].icon} {icon} />
-					</div>
-					<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-						<h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-							{heading}
-						</h3>
-						<div class="mt-2">
-							<p class="text-sm text-gray-500">
-								<slot />
-							</p>
-						</div>
-					</div>
+	<div class="w-full {size} p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-white ">
+		<div class="">
+			<div class="text-center flex-auto justify-center">
+				<div
+					class="mx-auto flex items-center justify-center h-12 w-12 rounded-full
+					{_colorToneMapping[colorTone].circle}"
+				>
+					<Fa class={_colorToneMapping[colorTone].icon} {icon} size="2x" />
 				</div>
+				<h2 class="text-xl font-bold py-4 ">{heading}</h2>
+				<p class="text-sm text-gray-500 px-8">
+					<slot />
+				</p>
 			</div>
-			<div class="bg-gray-50 px-4 py-3 grid justify-items-center">
+			<div class="pt-5 text-center space-x-4 md:block">
 				<button
-					type="button"
-					class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm
-          {_colorToneMapping[colorTone].button}"
+					class="mb-2 md:mb-0 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg
+					{_colorToneMapping[colorTone].button}"
 					on:click={() => dispatch('confirm')}
 				>
 					{confirmBtn}
