@@ -9,7 +9,13 @@
 
 <script lang="ts">
 	import '../app.postcss';
-	import { faHome, faSearch, faGlobe, faChartLine } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faHome,
+		faSearch,
+		faGlobe,
+		faChartLine,
+		faUser
+	} from '@fortawesome/free-solid-svg-icons';
 	import GlobalErrorHandler from '$lib/components/ErrorHandler/index.svelte';
 	import Footer from '$lib/components/Footer/index.svelte';
 	import Sidepanel from '$lib/components/Navigation/Sidepanel/index.svelte';
@@ -30,7 +36,8 @@
 		{ icon: faHome, url: ROUTES.HOME, name: 'Home' },
 		{ icon: faSearch, url: ROUTES.SEARCH, name: 'Search' },
 		{ icon: faGlobe, url: ROUTES.DISCOVER, name: 'Discover' },
-		{ icon: faChartLine, url: ROUTES.ANALYTICS, name: 'Analytics' }
+		{ icon: faChartLine, url: ROUTES.ANALYTICS, name: 'Analytics' },
+		{ icon: faUser, url: ROUTES.SEARCH_BUYER, name: 'Find Buyer' }
 	];
 </script>
 
